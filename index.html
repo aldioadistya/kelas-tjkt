@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KelasKu Glass — X TKJ 1</title>
+    <title>KelasKu Glass — X TJKT 1</title>
     
     <!-- PWA Support -->
     <link rel="manifest" href="manifest.json">
@@ -91,7 +91,6 @@
             background: var(--text-main);
         }
 
-        /* ===== BACKGROUND AMBIENT GLOW ===== */
         body {
             display: flex;
             justify-content: center;
@@ -127,7 +126,6 @@
             100% { transform: translate(-30px, 50px) scale(0.95); }
         }
 
-        /* ===== CONTAINER PHONE SHELL ===== */
         .phone {
             width: 100%;
             max-width: 430px;
@@ -155,7 +153,6 @@
             }
         }
 
-        /* ===== STATUSBAR ===== */
         .statusbar {
             height: 44px;
             display: flex;
@@ -192,10 +189,8 @@
             color: var(--text-main);
             transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-
         .theme-btn:active { transform: scale(0.88); }
 
-        /* ===== SCREEN SCROLL AREA ===== */
         .screen {
             flex: 1;
             overflow-y: auto;
@@ -205,7 +200,6 @@
         }
         .screen::-webkit-scrollbar { display: none; }
 
-        /* ===== HERO CARD ===== */
         .hero {
             background: var(--primary-gradient);
             border-radius: var(--radius-xl);
@@ -288,7 +282,6 @@
             color: #fff;
         }
 
-        /* ===== STAT GRID ===== */
         .stat-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -305,7 +298,6 @@
             box-shadow: var(--glass-shadow);
             transition: transform 0.2s ease, background 0.2s ease;
         }
-
         .stat-card:hover {
             background: var(--glass-card-hover);
             transform: translateY(-2px);
@@ -345,7 +337,6 @@
             line-height: 1.1;
         }
 
-        /* ===== SECTIONS & CARDS ===== */
         .section {
             margin-top: 20px;
         }
@@ -412,7 +403,6 @@
         .row-sub { font-size: 11.5px; color: var(--text-soft); margin-top: 2px; }
         .empty { text-align: center; padding: 24px 12px; color: var(--text-soft); font-size: 12.5px; font-weight: 500; }
 
-        /* ===== TAB BAR GLASS ===== */
         .tabbar {
             display: flex;
             background: rgba(255, 255, 255, 0.1);
@@ -475,14 +465,12 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* ===== PAGE HEAD ===== */
         .pagehead {
             padding: 6px 4px 10px;
         }
         .pagehead h1 { font-family: 'Sora', sans-serif; font-size: 22px; font-weight: 800; color: var(--text-main); letter-spacing: -0.5px; }
         .pagehead p { font-size: 12.5px; color: var(--text-soft); margin-top: 3px; font-weight: 500; }
 
-        /* ===== KAS KELAS ===== */
         .balance-card {
             background: var(--accent-gold);
             border-radius: var(--radius-xl);
@@ -529,7 +517,6 @@
         .btn-ghost { background: var(--glass-card); border: 1px solid var(--glass-border); color: var(--text-main); }
         .btn-danger { background: var(--rose); color: #fff; }
         .btn-block { width: 100%; }
-
         .btn:active { transform: scale(0.96); }
 
         .tx-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--glass-border); }
@@ -541,13 +528,6 @@
         .tx-amt.plus { color: var(--teal); }
         .tx-amt.minus { color: var(--rose); }
         .tx-delete { background: none; border: none; color: var(--rose); font-size: 16px; cursor: pointer; padding: 4px; opacity: 0.6; }
-
-        .month-head { display: flex; align-items: center; justify-content: space-between; padding: 4px 0 8px; margin-bottom: 4px; }
-        .month-name { font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 800; color: var(--primary); }
-        .month-sum { font-size: 12px; font-weight: 800; }
-        .month-sum.pos { color: var(--teal); }
-        .month-sum.neg { color: var(--rose); }
-        .block { margin-bottom: 18px; }
 
         .fab-add {
             display: flex;
@@ -570,19 +550,78 @@
 
         /* ===== CALENDAR GLASS ===== */
         .cal-card { margin-top: 12px; }
-        .cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-        .cal-month { font-family: 'Sora', sans-serif; font-size: 14.5px; font-weight: 800; color: var(--text-main); }
-        .cal-nav-btn { width: 32px; height: 32px; border-radius: 10px; border: 1px solid var(--glass-border); background: var(--glass-card); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-main); font-size: 13px; font-weight: 700; }
+        .cal-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            padding: 0 2px;
+        }
+        .cal-month {
+            font-family: 'Sora', sans-serif;
+            font-size: 14.5px;
+            font-weight: 800;
+            color: var(--text-main);
+            flex: 1;
+            text-align: center;
+            margin: 0 4px;
+        }
+        .cal-nav-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            border: 1px solid var(--glass-border);
+            background: var(--glass-card);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-main);
+            font-size: 13px;
+            font-weight: 700;
+            flex-shrink: 0;
+            transition: background 0.2s;
+        }
+        .cal-nav-btn:active {
+            background: var(--glass-card-hover);
+        }
+        .cal-nav-btn.minimize-btn {
+            font-size: 14px;
+            line-height: 1;
+        }
+        .cal-btn-group {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
         .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
         .cal-dow { text-align: center; font-size: 10.5px; font-weight: 800; color: var(--text-soft); padding-bottom: 6px; }
-        .cal-day { position: relative; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 12.5px; font-weight: 700; border-radius: 12px; cursor: pointer; color: var(--text-main); }
+        .cal-day {
+            position: relative; aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+            font-size: 12.5px; font-weight: 700; border-radius: 12px; cursor: pointer; color: var(--text-main);
+            transition: all 0.15s ease;
+        }
         .cal-day.empty { cursor: default; }
-        .cal-day.today { border: 2px solid var(--primary); }
+        .cal-day.today { border: 2px solid var(--primary); font-weight: 900; background: rgba(99,102,241,0.08); }
         .cal-day.selected { background: var(--primary-gradient); color: #fff; box-shadow: 0 4px 12px rgba(99,102,241,0.3); }
         .cal-day.future { color: var(--text-muted); opacity: 0.4; cursor: default; }
         .cal-dot { position: absolute; bottom: 4px; width: 5px; height: 5px; border-radius: 50%; background: var(--amber); }
         .cal-day.selected .cal-dot { background: #fff; }
         .cal-day.full .cal-dot { background: var(--teal); }
+
+        /* ===== CALENDAR COLLAPSED STATE ===== */
+        .cal-body-wrap {
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease, margin 0.3s ease;
+            max-height: 500px;
+            opacity: 1;
+            margin-top: 0;
+        }
+        .cal-body-wrap.collapsed {
+            max-height: 0 !important;
+            opacity: 0;
+            margin-top: -10px;
+        }
 
         /* ===== SUMMARY & ROSTER ===== */
         .summary-row { display: flex; gap: 12px; margin-top: 14px; }
@@ -600,7 +639,6 @@
         .toggle-btn.done { background: var(--teal); border-color: transparent; color: #fff; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
         .s-remove { width: 24px; height: 24px; border-radius: 50%; border: none; background: var(--rose-glass); color: var(--rose); font-size: 14px; font-weight: 800; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
 
-        /* ===== MODE SWITCH & CHIPS ===== */
         .mode-switch { display: flex; gap: 6px; background: var(--glass-card); border: 1px solid var(--glass-border); border-radius: 16px; padding: 4px; margin-top: 12px; }
         .mode-btn { flex: 1; text-align: center; padding: 10px 8px; border-radius: 12px; font-size: 12.5px; font-weight: 800; cursor: pointer; color: var(--text-soft); background: none; border: none; transition: all 0.2s; }
         .mode-btn.active { background: var(--primary-gradient); color: #fff; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3); }
@@ -610,7 +648,6 @@
         .day-chip { flex-shrink: 0; padding: 8px 16px; border-radius: 99px; font-size: 12px; font-weight: 700; background: var(--glass-card); border: 1px solid var(--glass-border); color: var(--text-soft); cursor: pointer; transition: all 0.2s; }
         .day-chip.active { background: var(--primary-gradient); color: #fff; border-color: transparent; box-shadow: 0 4px 12px rgba(99,102,241,0.25); }
 
-        /* ===== TUGAS ITEMS ===== */
         .task-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--glass-border); }
         .task-item:last-child { border-bottom: none; }
         .checkbox { width: 22px; height: 22px; border-radius: 8px; border: 2px solid var(--glass-border); flex-shrink: 0; margin-top: 1px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 12px; transition: all 0.2s; }
@@ -624,7 +661,6 @@
         .pill-soon { background: var(--amber-glass); color: var(--amber); }
         .pill-file { background: var(--violet-glass); color: var(--violet); cursor: pointer; }
 
-        /* ===== MODAL GLASS ===== */
         .modal-bg { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(8px); display: none; align-items: flex-end; z-index: 50; }
         .modal-bg.open { display: flex; }
         .modal { background: var(--glass-card); backdrop-filter: blur(24px); border: 1px solid var(--glass-border); width: 100%; border-radius: 28px 28px 0 0; padding: 24px; animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); max-height: 85%; overflow-y: auto; box-shadow: var(--glass-shadow); }
@@ -639,7 +675,6 @@
         .modal-actions { display: flex; gap: 10px; margin-top: 18px; }
         .modal-actions .btn { flex: 1; }
 
-        /* ===== LAPORAN SISWA ===== */
         .report-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--glass-border); cursor: pointer; }
         .report-item:last-child { border-bottom: none; }
         .report-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
@@ -651,14 +686,12 @@
         .report-status.resolved { background: var(--teal-glass); color: var(--teal); }
         .report-status.rejected { background: var(--rose-glass); color: var(--rose); }
 
-        /* ===== PENGUMUMAN ===== */
         .announce-item { display: flex; gap: 12px; align-items: flex-start; padding: 12px 0; border-bottom: 1px solid var(--glass-border); }
         .announce-item:last-child { border-bottom: none; }
         .announce-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--amber); margin-top: 6px; flex-shrink: 0; box-shadow: 0 0 10px var(--amber); }
         .announce-text { font-size: 13.5px; font-weight: 600; color: var(--text-main); line-height: 1.4; }
         .announce-date { font-size: 11px; color: var(--text-soft); margin-top: 3px; }
 
-        /* ===== LOGIN OVERLAY ===== */
         .login-overlay {
             position: absolute;
             inset: 0;
@@ -710,7 +743,6 @@
         .login-sub { font-size: 12.5px; color: var(--text-soft); margin-bottom: 20px; margin-top: 2px; }
         .login-error { font-size: 12px; color: var(--rose); font-weight: 700; margin-bottom: 12px; display: none; }
 
-        /* ===== ACCESS CONTROL CLASSIFIERS ===== */
         .admin-only { display: none !important; }
         .is-admin .admin-only { display: flex !important; }
         .is-admin button.admin-only { display: inline-flex !important; }
@@ -741,7 +773,7 @@
     <!-- ===== STATUSBAR ===== -->
     <div class="statusbar">
         <span id="clock">09:41</span>
-        <span>KelasKu Glass · X TKJ 1</span>
+        <span>KelasKu Glass · X TJKT 1</span>
         <div class="statusbar-right">
             <button class="theme-btn" id="theme-btn-small" onclick="toggleTheme()">🌙</button>
         </div>
@@ -752,7 +784,7 @@
         <div class="login-hero">
             <div class="login-logo">🎒</div>
             <div class="login-hero-title">KelasKu Glass</div>
-            <div class="login-hero-sub">X TKJ 1 — SMKN Digital</div>
+            <div class="login-hero-sub">X TJKT 1 — SMKN Digital</div>
         </div>
         <div class="login-card">
             <div class="login-welcome">Selamat datang 👋</div>
@@ -782,10 +814,10 @@
                         <div class="hero-eyebrow">Aplikasi Kelas Digital</div>
                         <div class="hero-name" id="greeting-user">Halo, Pengurus Kelas 👋</div>
                     </div>
-                    <div class="avatar">XT</div>
+                    <div class="avatar">TJ</div>
                 </div>
                 <div class="hero-tags">
-                    <span class="htag">🏫 X TKJ 1</span>
+                    <span class="htag">🏫 X TJKT 1</span>
                     <span class="htag" id="tag-today">Rabu, 02 Sep</span>
                     <span class="htag" id="tag-role" style="display:none; background:rgba(244,63,94,0.3);">👁️ Lihat Saja</span>
                 </div>
@@ -842,13 +874,19 @@
         <!-- HP -->
         <div class="view" id="view-hp">
             <div class="pagehead"><h1>Pengumpulan HP</h1><p>Absensi kedisiplinan pengumpulan smartphone</p></div>
-            <div class="card cal-card">
+            <div class="card cal-card" id="hp-cal-card">
                 <div class="cal-head">
                     <div class="cal-nav-btn" onclick="calShift(-1)">‹</div>
-                    <div class="cal-month" id="cal-month-label"></div>
-                    <div class="cal-nav-btn" onclick="calShift(1)">›</div>
+                    <div class="cal-month" id="cal-month-label">September 2026</div>
+                    <div class="cal-btn-group">
+                        <button class="cal-nav-btn minimize-btn" id="hp-cal-toggle" onclick="toggleCalendar('hp')" title="Minimize / Expand">−</button>
+                        <div class="cal-nav-btn" onclick="calShift(1)">›</div>
+                    </div>
                 </div>
-                <div id="cal-body"><div class="cal-grid" id="cal-dow-row"></div><div class="cal-grid" id="cal-grid" style="margin-top:4px;"></div></div>
+                <div class="cal-body-wrap" id="hp-cal-body">
+                    <div id="cal-dow-row" class="cal-grid"></div>
+                    <div id="cal-grid" class="cal-grid" style="margin-top:4px;"></div>
+                </div>
             </div>
             <div class="summary-row">
                 <div class="summary-box" style="background:var(--teal-glass); border-color:rgba(16,185,129,0.3);"><div class="n" style="color:var(--teal)" id="hp-collected">0</div><div class="l" style="color:var(--teal)">Sudah Titip</div></div>
@@ -876,13 +914,19 @@
             </div>
             
             <div id="jadwal-mode-piket" style="display:none;">
-                <div class="card cal-card">
+                <div class="card cal-card" id="piket-cal-card">
                     <div class="cal-head">
                         <div class="cal-nav-btn" onclick="piketCalShift(-1)">‹</div>
-                        <div class="cal-month" id="piket-cal-month-label"></div>
-                        <div class="cal-nav-btn" onclick="piketCalShift(1)">›</div>
+                        <div class="cal-month" id="piket-cal-month-label">September 2026</div>
+                        <div class="cal-btn-group">
+                            <button class="cal-nav-btn minimize-btn" id="piket-cal-toggle" onclick="toggleCalendar('piket')" title="Minimize / Expand">−</button>
+                            <div class="cal-nav-btn" onclick="piketCalShift(1)">›</div>
+                        </div>
                     </div>
-                    <div id="piket-cal-body"><div class="cal-grid" id="piket-cal-dow-row"></div><div class="cal-grid" id="piket-cal-grid" style="margin-top:4px;"></div></div>
+                    <div class="cal-body-wrap" id="piket-cal-body">
+                        <div id="piket-cal-dow-row" class="cal-grid"></div>
+                        <div id="piket-cal-grid" class="cal-grid" style="margin-top:4px;"></div>
+                    </div>
                 </div>
                 <div class="summary-row">
                     <div class="summary-box" style="background:var(--teal-glass);"><div class="n" style="color:var(--teal)" id="piket-collected">0</div><div class="l" style="color:var(--teal)">Sudah Piket</div></div>
@@ -937,7 +981,6 @@
                         <button class="btn btn-danger" style="padding:6px 12px; font-size:11px;" onclick="logout()">Keluar</button>
                     </div>
 
-                    <!-- ====== BARIS MODE TAMPILAN (TERANG/GELAP) ====== -->
                     <div class="acc-row" style="border-bottom:1px solid var(--glass-border); padding-bottom:12px; margin-bottom:12px;">
                         <span style="font-weight:700; color:var(--text-main);">Mode Tampilan</span>
                         <button class="btn btn-ghost" style="padding:6px 12px; font-size:11px;" onclick="toggleTheme()">
@@ -1089,16 +1132,19 @@ let state = {
     jadwalMode: 'pelajaran',
     selectedDay: TODAY_NAME,
     hpSelectedDate: todayKey(),
-    calYear: new Date().getFullYear(), calMonth: new Date().getMonth(),
+    calYear: 2026,
+    calMonth: 8,
     piketSelectedDate: todayKey(),
-    piketCalYear: new Date().getFullYear(), piketCalMonth: new Date().getMonth(),
+    piketCalYear: 2026,
+    piketCalMonth: 8,
     tugasFilter: 'Semua',
     darkMode: true,
     users: [
         { id: 1, username: 'admin1', password: 'admin1', role: 'admin' },
         { id: 2, username: 'admin2', password: 'admin2', role: 'admin' },
         { id: 3, username: 'user1', password: 'user1', role: 'siswa' }
-    ]
+    ],
+    calMinimized: { hp: false, piket: false }
 };
 let currentUser = null;
 let localSettings = { session: null };
@@ -1113,6 +1159,7 @@ async function loadState() {
             state = Object.assign(state, JSON.parse(r.value));
             if(!state.users) state.users = [{ id:1, username:'admin1', password:'admin1', role:'admin' }];
             if(!state.reports) state.reports = [];
+            if(!state.calMinimized) state.calMinimized = { hp: false, piket: false };
         }
     } catch(e) {}
     try {
@@ -1154,7 +1201,6 @@ function toggleTheme() {
 function applyTheme() {
     document.body.classList.toggle('dark', state.darkMode);
     document.getElementById('theme-btn-small').textContent = state.darkMode ? '☀️' : '🌙';
-    // Update label di Pengaturan
     const label = document.getElementById('theme-label-setting');
     if (label) label.textContent = state.darkMode ? '☀️ Terang' : '🌙 Gelap';
 }
@@ -1202,6 +1248,28 @@ function guardReadOnly() {
         return true;
     }
     return false;
+}
+
+/* ==================================================
+   CALENDAR MINIMIZE / EXPAND
+   ================================================== */
+function toggleCalendar(type) {
+    const key = type === 'hp' ? 'hp' : 'piket';
+    state.calMinimized[key] = !state.calMinimized[key];
+    saveState();
+    updateCalendarUI(type);
+}
+
+function updateCalendarUI(type) {
+    const key = type === 'hp' ? 'hp' : 'piket';
+    const bodyEl = document.getElementById(type + '-cal-body');
+    const btnEl = document.getElementById(type + '-cal-toggle');
+    if (!bodyEl || !btnEl) return;
+    
+    const isMinimized = state.calMinimized[key];
+    bodyEl.classList.toggle('collapsed', isMinimized);
+    btnEl.textContent = isMinimized ? '+' : '−';
+    btnEl.title = isMinimized ? 'Expand' : 'Minimize';
 }
 
 /* ==================================================
@@ -1303,36 +1371,69 @@ function removeStudent(name) {
 }
 
 /* ==================================================
-   CALENDER SYSTEM
+   CALENDER SYSTEM — STABIL (SEPTEMBER 2026)
    ================================================== */
 function renderMiniCalendar(prefix, year, month, selectedDate, dict, selectFnName) {
     document.getElementById(prefix+'-month-label').textContent = MONTH_LABEL[month] + ' ' + year;
     document.getElementById(prefix+'-dow-row').innerHTML = DOW_LABEL.map(d => `<div class="cal-dow">${d}</div>`).join('');
+    
     const firstDow = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month+1, 0).getDate();
     const todayStr = todayKey();
+    
     let cells = '';
-    for(let i=0; i<firstDow; i++) cells += `<div class="cal-day empty"></div>`;
+    for(let i=0; i<firstDow; i++) {
+        cells += `<div class="cal-day empty"></div>`;
+    }
     for(let d=1; d<=daysInMonth; d++) {
         const key = dateKeyOf(year, month, d);
-        const isToday = key === todayStr;
-        const isSelected = key === selectedDate;
-        const rec = dict[key];
-        const hasData = rec && Object.values(rec).some(v => v);
+        const isToday = (key === todayStr);
+        const isSelected = (key === selectedDate);
+        const rec = dict[key] || {};
+        const hasData = Object.values(rec).some(v => v === true);
+        
         let cls = 'cal-day';
         if(isToday) cls += ' today';
         if(isSelected) cls += ' selected';
-        cells += `<div class="${cls}" onclick="${selectFnName}('${key}')">${d}${hasData ? '<span class="cal-dot"></span>' : ''}</div>`;
+        const dotHtml = hasData ? '<span class="cal-dot"></span>' : '';
+        cells += `<div class="${cls}" onclick="${selectFnName}('${key}')">${d}${dotHtml}</div>`;
     }
     document.getElementById(prefix+'-grid').innerHTML = cells;
 }
-function renderHpCalendar() { renderMiniCalendar('cal', state.calYear, state.calMonth, state.hpSelectedDate, state.hp, 'selectHpDate'); }
-function renderPiketCalendar() { renderMiniCalendar('piket-cal', state.piketCalYear, state.piketCalMonth, state.piketSelectedDate, state.piket, 'selectPiketDate'); }
 
-function calShift(delta) { state.calMonth += delta; if(state.calMonth<0){state.calMonth=11;state.calYear--;} if(state.calMonth>11){state.calMonth=0;state.calYear++;} renderHpCalendar(); }
-function piketCalShift(delta) { state.piketCalMonth += delta; if(state.piketCalMonth<0){state.piketCalMonth=11;state.piketCalYear--;} if(state.piketCalMonth>11){state.piketCalMonth=0;state.piketCalYear++;} renderPiketCalendar(); }
-function selectHpDate(key) { state.hpSelectedDate = key; saveState(); renderHpCalendar(); renderHp(); }
-function selectPiketDate(key) { state.piketSelectedDate = key; saveState(); renderPiketCalendar(); renderPiket(); }
+function renderHpCalendar() { 
+    renderMiniCalendar('cal', state.calYear, state.calMonth, state.hpSelectedDate, state.hp, 'selectHpDate');
+    updateCalendarUI('hp');
+}
+function renderPiketCalendar() { 
+    renderMiniCalendar('piket-cal', state.piketCalYear, state.piketCalMonth, state.piketSelectedDate, state.piket, 'selectPiketDate');
+    updateCalendarUI('piket');
+}
+
+function calShift(delta) {
+    state.calMonth += delta;
+    if(state.calMonth < 0) { state.calMonth = 11; state.calYear--; }
+    if(state.calMonth > 11) { state.calMonth = 0; state.calYear++; }
+    renderHpCalendar();
+}
+function piketCalShift(delta) {
+    state.piketCalMonth += delta;
+    if(state.piketCalMonth < 0) { state.piketCalMonth = 11; state.piketCalYear--; }
+    if(state.piketCalMonth > 11) { state.piketCalMonth = 0; state.piketCalYear++; }
+    renderPiketCalendar();
+}
+function selectHpDate(key) {
+    state.hpSelectedDate = key;
+    saveState();
+    renderHpCalendar();
+    renderHp();
+}
+function selectPiketDate(key) {
+    state.piketSelectedDate = key;
+    saveState();
+    renderPiketCalendar();
+    renderPiket();
+}
 
 function openStatsModal(type) {
     const dict = type === 'hp' ? state.hp : state.piket;
@@ -1415,7 +1516,7 @@ function hapusKas(id) {
     saveState(); renderKas(); renderBeranda();
 }
 function openExportModal() {
-    let txt = "REKAP KAS KELAS X TKJ 1\n==================\n";
+    let txt = "REKAP KAS KELAS X TJKT 1\n==================\n";
     state.kas.forEach(t => { txt += `[${t.tanggal}] ${t.jenis.toUpperCase()}: ${t.ket} (${rupiah(t.jumlah)})\n`; });
     document.getElementById('export-text').value = txt;
     openModal('export');
@@ -1616,7 +1717,7 @@ function goTo(name) {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     const t = document.querySelector(`.tab[data-tab="${name}"]`);
     if(t) t.classList.add('active');
-    if(name === 'reports') renderReports();
+    if(name === 'laporan') renderReports();
     if(name === 'settings') renderAccountList();
 }
 
