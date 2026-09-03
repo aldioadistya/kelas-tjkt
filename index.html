@@ -12,6 +12,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="KelasKu">
     <meta name="theme-color" content="#1E2749">
+    <meta name="mobile-web-app-capable" content="yes">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,7 +21,7 @@
     <!-- ===== FIREBASE ===== -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-
+    
     <style>
         /* ===== RESET & VARIABLES ===== */
         :root {
@@ -45,7 +46,6 @@
             --radius-md: 16px;
             --radius-sm: 10px;
             --shadow-card: 0 2px 10px rgba(28,31,42,0.05);
-            --shadow-pop: 0 24px 50px -18px rgba(20,22,35,0.35);
         }
         body.dark {
             --bg: #0E1220;
@@ -68,33 +68,64 @@
             --shadow-card: 0 2px 16px rgba(0,0,0,0.4);
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        html, body { margin: 0; padding: 0; }
+        html, body { margin: 0; padding: 0; height: 100%; }
         body {
-            background: #CFCBBE;
+            background: var(--bg);
             font-family: 'Inter', sans-serif;
             color: var(--ink);
             display: flex;
             justify-content: center;
+            align-items: center;
             min-height: 100vh;
-            padding: 28px 12px;
             transition: background .3s ease;
         }
-        body.dark { background: #05070D; }
+        body.dark { background: var(--bg); }
+        
         .phone {
-            width: 100%; max-width: 412px; background: var(--bg); border-radius: 26px;
-            box-shadow: var(--shadow-pop); overflow: hidden; display: flex;
-            flex-direction: column; height: 860px; position: relative;
+            width: 100%;
+            max-width: 412px;
+            height: 100vh;
+            max-height: 860px;
+            background: var(--bg);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
             transition: background .3s ease;
         }
         .statusbar {
-            height: 38px; display: flex; align-items: center; justify-content: space-between;
-            padding: 0 18px; font-family: 'Sora', sans-serif; font-size: 12px; font-weight: 600;
-            color: var(--ink); flex-shrink: 0; border-bottom: 1px solid var(--line);
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 18px;
+            font-family: 'Sora', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--ink);
+            flex-shrink: 0;
+            border-bottom: 1px solid var(--line);
+            background: var(--bg);
+            z-index: 25;
         }
-        .theme-btn {
-            width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--line);
-            background: var(--paper); color: var(--ink); display: flex; align-items: center;
-            justify-content: center; cursor: pointer; font-size: 13px;
+        .statusbar-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .theme-btn-small {
+            background: none;
+            border: 1px solid var(--line);
+            border-radius: 50%;
+            width: 26px;
+            height: 26px;
+            font-size: 13px;
+            cursor: pointer;
+            color: var(--ink);
+            background: var(--paper);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .screen { flex: 1; overflow-y: auto; overflow-x: hidden; padding-bottom: 8px; scrollbar-width: none; }
         .screen::-webkit-scrollbar { display: none; }
@@ -163,7 +194,7 @@
             font-family: 'Inter', sans-serif; font-size: 9.5px; font-weight: 600;
             padding: 4px 0; position: relative;
         }
-        .tab svg { width: 18px; height: 18px; }
+        .tab svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
         .tab.active { color: var(--navy); }
         body.dark .tab.active { color: var(--gold); }
         .tab.active .tab-dot { display: block; }
@@ -204,7 +235,6 @@
         .tx-amt.plus { color: var(--teal); }
         .tx-amt.minus { color: var(--rose); }
         .tx-delete { background: none; border: none; color: var(--danger); font-size: 16px; cursor: pointer; padding: 4px; opacity: 0.5; flex-shrink: 0; }
-        .tx-delete:active { opacity: 1; }
         .month-head { display: flex; align-items: center; justify-content: space-between; padding: 2px 0 8px; margin-bottom: 4px; }
         .month-name { font-family: 'Sora', sans-serif; font-size: 12.5px; font-weight: 700; color: var(--navy-2); }
         body.dark .month-name { color: var(--gold); }
@@ -396,6 +426,98 @@
         .viewer-mode .admin-only { display: none !important; }
         .report-detail-only-admin { display: none; }
         .is-admin .report-detail-only-admin { display: block; }
+
+        /* ===== SETTINGS ===== */
+        .settings-section-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--ink-soft);
+            text-transform: uppercase;
+            letter-spacing: .4px;
+            margin: 14px 0 2px;
+        }
+        .setting-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 11px 0;
+            border-bottom: 1px solid var(--line);
+        }
+        .setting-row:last-child { border-bottom: none; }
+        .setting-label { font-size: 13px; font-weight: 600; }
+        .setting-sub { font-size: 11px; color: var(--ink-soft); margin-top: 1px; }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .switch-track {
+            position: absolute;
+            cursor: pointer;
+            inset: 0;
+            background: var(--line);
+            border-radius: 99px;
+            transition: .2s;
+        }
+        .switch-track::before {
+            content: "";
+            position: absolute;
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background: #fff;
+            border-radius: 50%;
+            transition: .2s;
+        }
+        .switch input:checked + .switch-track { background: var(--navy); }
+        .switch input:checked + .switch-track::before { transform: translateX(20px); }
+        .acc-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 0;
+            border-bottom: 1px solid var(--line);
+        }
+        .acc-row:last-child { border-bottom: none; }
+        .acc-name { font-size: 12.5px; font-weight: 700; flex: 1; }
+        .acc-badge {
+            font-size: 9.5px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 99px;
+        }
+        .acc-badge.admin { background: var(--violet-soft); color: var(--violet); }
+        .acc-badge.siswa { background: var(--line); color: var(--ink-soft); }
+        .btn-settings {
+            padding: 6px 16px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 700;
+            font-size: 11px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .btn-settings.danger { background: var(--danger); color: #fff; }
+        .btn-settings.primary { background: var(--navy); color: #fff; }
+        .btn-settings.success { background: var(--teal); color: #fff; }
+        .icon-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.18);
+            background: rgba(255,255,255,0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #fff;
+            flex-shrink: 0;
+        }
+        .icon-btn svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
     </style>
 </head>
 <body>
@@ -405,7 +527,9 @@
     <div class="statusbar">
         <span id="clock">09:41</span>
         <span>KelasKu · X TKJ 1</span>
-        <button class="theme-btn" id="theme-btn" onclick="toggleTheme()">🌙</button>
+        <div class="statusbar-right">
+            <button class="theme-btn-small" id="theme-btn-small" onclick="toggleTheme()">🌙</button>
+        </div>
     </div>
 
     <!-- ===== LOGIN OVERLAY ===== -->
@@ -455,8 +579,8 @@
                         <div class="hero-name" id="greeting-user">Halo, Petugas Kelas 👋</div>
                     </div>
                     <div class="hero-actions" style="display:flex; gap:8px; align-items:center;">
-                        <div class="icon-btn" onclick="openSettingsModal()" title="Pengaturan" style="width:36px; height:36px; border-radius:50%; border:1px solid rgba(255,255,255,0.18); background:rgba(255,255,255,0.12); display:flex; align-items:center; justify-content:center; cursor:pointer; color:#fff;">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:17px; height:17px;"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.65 1.65 0 004.6 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+                        <div class="icon-btn" onclick="openSettingsModal()" title="Pengaturan">
+                            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.65 1.65 0 004.6 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
                         </div>
                         <div class="avatar">XT</div>
                     </div>
@@ -595,23 +719,77 @@
             </div>
         </div>
 
-        <!-- STRUKTUR KELAS -->
-        <div class="view" id="view-struktur">
-            <div class="pagehead"><h1>Struktur Kelas</h1><p>Susunan pengurus &amp; seksi kelas X TKJ 1</p></div>
-            <div class="section" style="margin-top:14px;"><button class="fab-add admin-only" onclick="openStrukturModal()" style="margin-top:0;">＋ Tambah Jabatan</button></div>
-            <div class="section"><div class="card" id="struktur-list"></div></div>
+        <!-- SETTINGS -->
+        <div class="view" id="view-settings">
+            <div class="pagehead"><h1>⚙️ Pengaturan</h1><p>Atur tampilan dan data aplikasi</p></div>
+            <div class="section">
+                <div class="card">
+                    <!-- Dark Mode -->
+                    <div class="setting-row">
+                        <div>
+                            <div class="setting-label">🌙 Mode Gelap</div>
+                            <div class="setting-sub">Tampilan lebih nyaman di malam hari</div>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="dark-toggle" onchange="toggleThemeFromSettings(this.checked)">
+                            <span class="switch-track"></span>
+                        </label>
+                    </div>
+
+                    <!-- Account Info -->
+                    <div class="setting-row" style="flex-direction:column; align-items:stretch; gap:4px;">
+                        <div>
+                            <div class="setting-label" id="account-whoami">-</div>
+                            <div class="setting-sub" id="account-role-label">-</div>
+                        </div>
+                        <button class="btn btn-ghost btn-block" onclick="logout()">Keluar</button>
+                    </div>
+
+                    <!-- Manage Accounts (Admin only) -->
+                    <div id="account-manage-wrap" style="display:none;">
+                        <div class="settings-section-title">Kelola Akun (Admin)</div>
+                        <div class="card" id="account-list" style="padding:4px 12px; margin-bottom:10px;"></div>
+                        <div class="field">
+                            <label>Username baru</label>
+                            <input type="text" id="acc-username" placeholder="cth: bendahara2">
+                        </div>
+                        <div class="field">
+                            <label>Sandi</label>
+                            <input type="text" id="acc-password" placeholder="Buat sandi">
+                        </div>
+                        <div class="field">
+                            <label>Peran</label>
+                            <select id="acc-role">
+                                <option value="admin">Admin (Akses penuh)</option>
+                                <option value="siswa">Siswa (Lihat saja)</option>
+                            </select>
+                        </div>
+                        <button class="fab-add" style="margin-top:2px;" onclick="addAccount()">＋ Tambah Akun</button>
+                    </div>
+
+                    <!-- Backup -->
+                    <div class="settings-section-title">Cadangkan Data</div>
+                    <div class="setting-row" style="border-bottom:none; gap:8px; flex-wrap:wrap;">
+                        <button class="btn btn-ghost" style="flex:1;" onclick="exportBackup()">⬇️ Unduh Backup</button>
+                        <button class="btn btn-ghost" style="flex:1;" onclick="document.getElementById('import-file-input').click()">⬆️ Pulihkan Data</button>
+                    </div>
+                    <input type="file" id="import-file-input" accept="application/json" style="display:none;" onchange="importBackup(this.files[0])">
+                    <div class="setting-sub" style="margin-top:4px;">Simpan file backup .json biar data kelas nggak hilang.</div>
+                </div>
+            </div>
         </div>
+
     </div>
 
     <!-- ===== TAB BAR ===== -->
     <div class="tabbar">
-        <button class="tab active" data-tab="beranda" onclick="goTo('beranda')"><span class="tab-dot"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg> Beranda</button>
-        <button class="tab" data-tab="kas" onclick="goTo('kas')"><span class="tab-dot"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg> Kas</button>
-        <button class="tab" data-tab="hp" onclick="goTo('hp')"><span class="tab-dot"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"/><line x1="11" y1="18" x2="13" y2="18"/></svg> HP</button>
-        <button class="tab" data-tab="jadwal" onclick="goTo('jadwal')"><span class="tab-dot"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg> Jadwal</button>
-        <button class="tab" data-tab="tugas" onclick="goTo('tugas')"><span class="tab-dot"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3 8-8"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg> Tugas</button>
-        <button class="tab" data-tab="laporan" onclick="goTo('laporan'); renderReports();"><span class="tab-dot"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg> Laporan</button>
-        <button class="tab" data-tab="struktur" onclick="goTo('struktur')"><span class="tab-dot"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7" r="3"/><path d="M5 21v-2a5 5 0 015-5h4a5 5 0 015 5v2"/></svg> Struktur</button>
+        <button class="tab active" data-tab="beranda" onclick="goTo('beranda')"><span class="tab-dot"></span><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg> Beranda</button>
+        <button class="tab" data-tab="kas" onclick="goTo('kas')"><span class="tab-dot"></span><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg> Kas</button>
+        <button class="tab" data-tab="hp" onclick="goTo('hp')"><span class="tab-dot"></span><svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><line x1="11" y1="18" x2="13" y2="18"/></svg> HP</button>
+        <button class="tab" data-tab="jadwal" onclick="goTo('jadwal')"><span class="tab-dot"></span><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg> Jadwal</button>
+        <button class="tab" data-tab="tugas" onclick="goTo('tugas')"><span class="tab-dot"></span><svg viewBox="0 0 24 24"><path d="M9 11l3 3 8-8"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg> Tugas</button>
+        <button class="tab" data-tab="laporan" onclick="goTo('laporan'); renderReports();"><span class="tab-dot"></span><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg> Laporan</button>
+        <button class="tab" data-tab="settings" onclick="goTo('settings'); updateSettingsUI();"><span class="tab-dot"></span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.65 1.65 0 004.6 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg> Setelan</button>
     </div>
 
     <!-- ===== MODALS ===== -->
@@ -631,16 +809,12 @@
 
     <div class="modal-bg" id="modal-report"><div class="modal"><h3 id="report-modal-title">Buat Laporan Baru</h3><div class="field"><label>Kategori Laporan</label><select id="report-kategori"><option value="Kekerasan/Berantem">Kekerasan / Berantem</option><option value="Bullying">Bullying / Perundungan</option><option value="Kerusakan Fasilitas">Kerusakan Fasilitas</option><option value="Pencurian">Pencurian</option><option value="Pelanggaran Tata Tertib">Pelanggaran Tata Tertib</option><option value="Lainnya">Lainnya</option></select></div><div class="field"><label>Judul Laporan</label><input id="report-judul" type="text" placeholder="Contoh: Keributan di kelas saat jam kosong"></div><div class="field"><label>Deskripsi Kejadian</label><textarea id="report-deskripsi" placeholder="Ceritakan kejadian secara jelas..."></textarea></div><div class="field"><label>Tanggal Kejadian</label><input id="report-tanggal" type="date"></div><div class="field"><label>Keseriusan</label><select id="report-urgensi"><option value="rendah">Rendah</option><option value="sedang" selected>Sedang</option><option value="tinggi">Tinggi</option><option value="darurat">Darurat</option></select></div><div class="field field-checkbox"><input type="checkbox" id="report-anonim"><label for="report-anonim">🙈 Laporkan secara anonim (nama pelapor tidak muncul)</label></div><input type="hidden" id="report-edit-id"><div id="report-status-field" style="display:none;" class="admin-only"><div class="field"><label>Status Laporan</label><select id="report-status"><option value="pending">Menunggu</option><option value="reviewed">Ditinjau</option><option value="resolved">Selesai</option><option value="rejected">Ditolak</option></select></div></div><div class="modal-actions"><button class="btn btn-danger admin-only" id="report-delete-btn" style="display:none;" onclick="deleteReport()">Hapus</button><button class="btn btn-ghost" onclick="closeModal('report')">Batal</button><button class="btn btn-navy" onclick="submitReport()">Kirim Laporan</button></div></div></div>
 
-    <div class="modal-bg" id="modal-struktur"><div class="modal"><h3 id="struktur-modal-title">Tambah Jabatan</h3><div class="field"><label>Nama Jabatan</label><input type="text" id="struktur-jabatan" placeholder="cth: Ketua Kelas / Seksi Olahraga"></div><div class="field"><label>Diisi oleh</label><select id="struktur-nama"><option value="">— Belum diisi —</option></select></div><div class="modal-actions"><button class="btn btn-danger admin-only" id="struktur-delete-btn" style="display:none;" onclick="deleteStruktur()">Hapus</button><button class="btn btn-ghost" onclick="closeModal('struktur')">Batal</button><button class="btn btn-navy" onclick="submitStruktur()">Simpan</button></div></div></div>
-
-    <!-- MODAL SETTINGS -->
-    <div class="modal-bg" id="modal-settings"><div class="modal"><h3>⚙️ Pengaturan</h3><div class="settings-section-title" style="font-size:11px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.4px;margin:14px 0 2px;">Akun</div><div class="setting-row" style="display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--line);"><div><div class="setting-label" style="font-size:13px;font-weight:600;" id="account-whoami">-</div><div class="setting-sub" style="font-size:11px;color:var(--ink-soft);margin-top:1px;" id="account-role-label">-</div></div><button class="btn btn-ghost" onclick="logout()">Keluar</button></div><div id="account-manage-wrap" style="display:none;"><div class="settings-section-title" style="font-size:11px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.4px;margin:14px 0 2px;">Kelola Akun (Admin)</div><div class="card" id="account-list" style="padding:4px 12px;"></div><div class="field" style="margin-top:10px;"><label>Username baru</label><input type="text" id="acc-username" placeholder="cth: bendahara2"></div><div class="field"><label>Sandi</label><input type="text" id="acc-password" placeholder="Buat sandi"></div><div class="field"><label>Peran</label><select id="acc-role"><option value="admin">Admin (Akses penuh)</option><option value="siswa">Siswa (Lihat saja)</option></select></div><button class="fab-add" style="margin-top:2px;" onclick="addAccount()">＋ Tambah Akun</button></div><div class="settings-section-title" style="font-size:11px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.4px;margin:14px 0 2px;">Cadangkan Data</div><div class="setting-row" style="display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--line);gap:8px;flex-wrap:wrap;"><button class="btn btn-ghost" style="flex:1;" onclick="exportBackup()">⬇️ Unduh Backup</button><button class="btn btn-ghost" style="flex:1;" onclick="document.getElementById('import-file-input').click()">⬆️ Pulihkan Data</button></div><div class="setting-sub" style="font-size:11px;color:var(--ink-soft);margin-top:4px;">Simpan file backup .json biar data kelas nggak hilang.</div><input type="file" id="import-file-input" accept="application/json" style="display:none;" onchange="importBackup(this.files[0])"><div class="modal-actions"><button class="btn btn-navy btn-block" onclick="closeModal('settings')">Selesai</button></div></div></div>
 </div>
 
 <script>
-// ============================================================
-// FIREBASE CONFIG — GANTI DENGAN PUNYA ANDA
-// ============================================================
+/* ==================================================
+   FIREBASE & STORAGE
+   ================================================== */
 const firebaseConfig = {
     apiKey: "AIzaSyAhrh00F2N07_Lx-QT6sHi_ygsvWfds1eQ",
     authDomain: "apps-kelas.firebaseapp.com",
@@ -653,9 +827,6 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const FS_COLLECTION = 'kelasku';
 
-// ============================================================
-// STORAGE WRAPPER (Firestore + localStorage)
-// ============================================================
 window.storage = {
     async get(key, shared) {
         if(!shared) { const v = localStorage.getItem(key); return v !== null ? { key, value: v, shared } : null; }
@@ -672,6 +843,13 @@ window.storage = {
         if(!shared) { localStorage.removeItem(key); return { key, deleted: true, shared }; }
         await db.collection(FS_COLLECTION).doc(key).delete();
         return { key, deleted: true, shared };
+    },
+    async list(prefix, shared) {
+        prefix = prefix || '';
+        if(!shared) { const keys = Object.keys(localStorage).filter(k => k.startsWith(prefix)); return { keys, prefix, shared }; }
+        const snap = await db.collection(FS_COLLECTION).get();
+        const keys = snap.docs.map(d => d.id).filter(k => k.startsWith(prefix));
+        return { keys, prefix, shared };
     }
 };
 
@@ -688,9 +866,9 @@ function watchLiveSync() {
     });
 }
 
-// ============================================================
-// DATA & STATE
-// ============================================================
+/* ==================================================
+   DATA & STATE
+   ================================================== */
 const STUDENTS_DEFAULT = ["Aldio Adistya","Bagas Saputra","Citra Ramadhani","Dwi Lestari","Eka Prasetyo","Fajar Nugraha","Gita Anggraini","Hendra Wijaya"];
 const JADWAL_DEFAULT = {
     "Senin":[{ jam:"07:15-08:45", mapel:"Matematika", guru:"Bu Rina" },{ jam:"08:45-10:15", mapel:"Pemrograman Dasar", guru:"Pak Andi" }],
@@ -730,15 +908,6 @@ let state = {
     tugasFilter: 'Semua',
     darkMode: false,
     calCollapsed: true, piketCalCollapsed: true,
-    struktur: [
-        { id:1, jabatan:'Wali Kelas', nama:'' },
-        { id:2, jabatan:'Ketua Kelas', nama:'' },
-        { id:3, jabatan:'Wakil Ketua Kelas', nama:'' },
-        { id:4, jabatan:'Sekretaris', nama:'' },
-        { id:5, jabatan:'Bendahara', nama:'' },
-        { id:6, jabatan:'Seksi Kebersihan', nama:'' },
-        { id:7, jabatan:'Seksi Keamanan', nama:'' }
-    ],
     users: [
         { id: 1, username: 'admin1', password: 'admin1', role: 'admin' },
         { id: 2, username: 'admin2', password: 'admin2', role: 'admin' },
@@ -748,9 +917,9 @@ let state = {
 let currentUser = null;
 let localSettings = { session: null };
 
-// ============================================================
-// FUNGSI HELPERS / RENDER (ringkas)
-// ============================================================
+/* ==================================================
+   LOAD / SAVE
+   ================================================== */
 async function loadState() {
     try {
         const r = await window.storage.get('kelasku-state', true);
@@ -764,15 +933,6 @@ async function loadState() {
                 ];
             }
             if(!state.reports) state.reports = [];
-            if(!state.struktur) state.struktur = [
-                { id:1, jabatan:'Wali Kelas', nama:'' },
-                { id:2, jabatan:'Ketua Kelas', nama:'' },
-                { id:3, jabatan:'Wakil Ketua Kelas', nama:'' },
-                { id:4, jabatan:'Sekretaris', nama:'' },
-                { id:5, jabatan:'Bendahara', nama:'' },
-                { id:6, jabatan:'Seksi Kebersihan', nama:'' },
-                { id:7, jabatan:'Seksi Keamanan', nama:'' }
-            ];
         }
     } catch(e) {}
     try {
@@ -800,14 +960,30 @@ async function saveLocalSettings() {
     try { await window.storage.set('kelasku-local', JSON.stringify(localSettings), false); } catch(e) {}
 }
 
-// ===== THEME =====
-function toggleTheme() { state.darkMode = !state.darkMode; applyTheme(); saveState(); }
+/* ==================================================
+   THEME
+   ================================================== */
+function toggleTheme() {
+    state.darkMode = !state.darkMode;
+    applyTheme();
+    saveState();
+    updateSettingsUI();
+}
+function toggleThemeFromSettings(checked) {
+    state.darkMode = checked;
+    applyTheme();
+    saveState();
+}
 function applyTheme() {
     document.body.classList.toggle('dark', state.darkMode);
-    document.getElementById('theme-btn').textContent = state.darkMode ? '☀️' : '🌙';
+    document.getElementById('theme-btn-small').textContent = state.darkMode ? '☀️' : '🌙';
+    const toggle = document.getElementById('dark-toggle');
+    if(toggle) toggle.checked = state.darkMode;
 }
 
-// ===== LOGIN =====
+/* ==================================================
+   LOGIN
+   ================================================== */
 function showLogin() {
     document.getElementById('login-overlay').style.display = 'flex';
     document.getElementById('login-username').value = '';
@@ -859,7 +1035,111 @@ function guardReadOnly() {
     return false;
 }
 
-// ===== NAV & MODAL =====
+/* ==================================================
+   ACCOUNT MANAGEMENT
+   ================================================== */
+function openSettingsModal() { populateAccRoleOptions(); updateSettingsUI(); openModal('settings'); }
+function populateAccRoleOptions() {
+    document.getElementById('acc-role').innerHTML = `<option value="admin">Admin (Akses penuh)</option><option value="siswa">Siswa (Lihat saja)</option>`;
+}
+function updateSettingsUI() {
+    if(!currentUser) return;
+    document.getElementById('account-whoami').textContent = '👤 ' + currentUser.username;
+    document.getElementById('account-role-label').textContent = currentUser.role === 'admin' ? 'Admin · akses penuh' : 'Siswa · lihat saja';
+    document.getElementById('account-manage-wrap').style.display = currentUser.role === 'admin' ? 'block' : 'none';
+    if(currentUser.role === 'admin') renderAccountList();
+    document.getElementById('dark-toggle').checked = state.darkMode;
+}
+function renderAccountList() {
+    const wrap = document.getElementById('account-list');
+    wrap.innerHTML = state.users.map(u => `
+        <div class="acc-row">
+            <span class="acc-name">${u.username}<br><span style="font-weight:500;color:var(--ink-soft);font-size:10.5px;">${u.role==='admin'?'Admin':'Siswa'}</span></span>
+            <span class="acc-badge ${u.role}">${u.role==='admin'?'Akses penuh':'Lihat saja'}</span>
+            <button class="s-remove" onclick="deleteAccount(${u.id})" title="Hapus akun">×</button>
+        </div>
+    `).join('');
+}
+function addAccount() {
+    if(!currentUser || currentUser.role !== 'admin') { alert('Hanya admin yang bisa menambah akun.'); return; }
+    const username = document.getElementById('acc-username').value.trim();
+    const password = document.getElementById('acc-password').value;
+    const role = document.getElementById('acc-role').value;
+    if(!username || !password) { alert('Username dan sandi wajib diisi.'); return; }
+    if(state.users.some(u => u.username.toLowerCase() === username.toLowerCase())) {
+        alert('Username itu sudah dipakai, pilih yang lain.'); return;
+    }
+    state.users.push({ id: Date.now(), username, password, role });
+    saveState(); renderAccountList();
+    document.getElementById('acc-username').value = ''; document.getElementById('acc-password').value = '';
+}
+function deleteAccount(id) {
+    if(!currentUser || currentUser.role !== 'admin') { alert('Hanya admin yang bisa menghapus akun.'); return; }
+    const target = state.users.find(u => u.id === id);
+    if(!target) return;
+    const adminCount = state.users.filter(u => u.role === 'admin').length;
+    if(target.role === 'admin' && adminCount <= 1) {
+        alert('Tidak bisa menghapus admin terakhir. Tambah admin lain dulu ya.');
+        return;
+    }
+    if(!confirm('Hapus akun "' + target.username + '"? Sandinya ikut terhapus.')) return;
+    state.users = state.users.filter(u => u.id !== id);
+    saveState(); renderAccountList();
+    if(currentUser && currentUser.id === id) logout();
+}
+
+/* ==================================================
+   BACKUP
+   ================================================== */
+function exportBackup() {
+    const payload = { exportedAt: new Date().toISOString(), state };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const d = new Date();
+    a.href = url; a.download = 'kelasku-backup-' + d.getFullYear() + String(d.getMonth()+1).padStart(2,'0') + String(d.getDate()).padStart(2,'0') + '.json';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+}
+function importBackup(file) {
+    if(!file) return;
+    if(guardReadOnly()) { document.getElementById('import-file-input').value = ''; return; }
+    if(!confirm('Memulihkan backup akan menimpa semua data kelas saat ini. Lanjutkan?')) {
+        document.getElementById('import-file-input').value = ''; return;
+    }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        try {
+            const parsed = JSON.parse(e.target.result);
+            const restored = parsed.state ? parsed.state : parsed;
+            if(!restored || typeof restored !== 'object') throw new Error('format tidak valid');
+            state = Object.assign(state, restored);
+            if(!state.users || !state.users.length) {
+                state.users = [
+                    { id:1, username:'admin1', password:'admin1', role:'admin' },
+                    { id:2, username:'admin2', password:'admin2', role:'admin' },
+                    { id:3, username:'user1', password:'user1', role:'siswa' }
+                ];
+            }
+            if(!state.reports) state.reports = [];
+            ensureRecord(state.hp, state.hpSelectedDate);
+            ensureRecord(state.piket, state.piketSelectedDate);
+            applyTheme(); saveState();
+            if(currentUser && !state.users.find(u => u.username === currentUser.username)) {
+                currentUser = null; localSettings.session = null; saveLocalSettings();
+                renderAll(); closeModal('settings');
+                alert('Data berhasil dipulihkan ✅ Silakan masuk lagi.');
+                showLogin(); return;
+            }
+            renderAll(); closeModal('settings'); alert('Data berhasil dipulihkan ✅');
+        } catch(err) { alert('Gagal memulihkan: file backup tidak valid.'); }
+        document.getElementById('import-file-input').value = '';
+    };
+    reader.readAsText(file);
+}
+
+/* ==================================================
+   NAV & MODAL
+   ================================================== */
 function goTo(name) {
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
     document.getElementById('view-'+name).classList.add('active');
@@ -868,12 +1148,14 @@ function goTo(name) {
     if(tabEl) tabEl.classList.add('active');
     document.querySelector('.screen').scrollTop = 0;
     if(name === 'laporan') renderReports();
-    if(name === 'struktur') renderStruktur();
+    if(name === 'settings') updateSettingsUI();
 }
 function openModal(name) { document.getElementById('modal-'+name).classList.add('open'); }
 function closeModal(name) { document.getElementById('modal-'+name).classList.remove('open'); }
 
-// ===== HELPERS =====
+/* ==================================================
+   HELPERS
+   ================================================== */
 function rupiah(n) { return "Rp" + Math.round(n).toLocaleString('id-ID'); }
 function initials(name) { return name.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase(); }
 function formatTanggal(d) { return d.toLocaleDateString('id-ID', { weekday:'long', day:'numeric', month:'short' }); }
@@ -883,7 +1165,9 @@ function daysDiff(dateStr) {
     return Math.round((d-t)/86400000);
 }
 
-// ===== ROSTER (HP & PIKET) =====
+/* ==================================================
+   ROSTER (HP & PIKET)
+   ================================================== */
 function ensureRecord(dict, dateKey) {
     if(!dict[dateKey]) dict[dateKey] = {};
     const rec = dict[dateKey];
@@ -930,7 +1214,9 @@ function resetRoster(type) {
     renderBeranda();
 }
 
-// ===== SISWA =====
+/* ==================================================
+   SISWA
+   ================================================== */
 function openStudentModal() { document.getElementById('student-nama').value = ''; openModal('student'); }
 function submitStudent() {
     if(guardReadOnly()) return;
@@ -949,7 +1235,9 @@ function removeStudent(name) {
     saveState(); renderHp(); renderPiket(); renderBeranda();
 }
 
-// ===== KALENDER =====
+/* ==================================================
+   KALENDER
+   ================================================== */
 function renderMiniCalendar(prefix, year, month, selectedDate, dict, selectFnName) {
     document.getElementById(prefix+'-month-label').textContent = MONTH_LABEL[month] + ' ' + year;
     document.getElementById(prefix+'-dow-row').innerHTML = DOW_LABEL.map(d => `<div class="cal-dow">${d}</div>`).join('');
@@ -1009,7 +1297,9 @@ function piketCalShift(delta) {
 function selectHpDate(key) { state.hpSelectedDate = key; ensureRecord(state.hp, key); saveState(); renderHpCalendar(); renderHp(); }
 function selectPiketDate(key) { state.piketSelectedDate = key; ensureRecord(state.piket, key); saveState(); renderPiketCalendar(); renderPiket(); }
 
-// ===== STATISTIK =====
+/* ==================================================
+   STATISTIK
+   ================================================== */
 function computeAttendanceStats(dict) {
     const todayStr = todayKey();
     const dates = Object.keys(dict).filter(k => k <= todayStr);
@@ -1038,7 +1328,9 @@ function openStatsModal(type) {
     openModal('stats');
 }
 
-// ===== PENGUMUMAN =====
+/* ==================================================
+   PENGUMUMAN
+   ================================================== */
 function renderPengumuman() {
     const list = document.getElementById('pengumuman-list');
     const sorted = [...state.pengumuman].sort((a,b) => b.id - a.id);
@@ -1089,7 +1381,9 @@ function deletePengumuman(id) {
     saveState(); renderPengumuman();
 }
 
-// ===== KAS =====
+/* ==================================================
+   KAS
+   ================================================== */
 function renderKas() {
     const masuk = state.kas.filter(t => t.jenis === 'masuk').reduce((a,t) => a + t.jumlah, 0);
     const keluar = state.kas.filter(t => t.jenis === 'keluar').reduce((a,t) => a + t.jumlah, 0);
@@ -1179,7 +1473,9 @@ function copyExportText() {
     }
 }
 
-// ===== JADWAL =====
+/* ==================================================
+   JADWAL
+   ================================================== */
 function renderDayTabs() {
     document.getElementById('day-tabs').innerHTML = DAY_NAMES.map(d => `<div class="day-chip ${state.selectedDay===d?'active':''}" onclick="selectDay('${d}')">${d}</div>`).join('');
 }
@@ -1262,7 +1558,9 @@ function deleteJadwalCurrent() {
     saveState(); renderJadwalList(); renderBeranda(); closeModal('jadwal');
 }
 
-// ===== TUGAS =====
+/* ==================================================
+   TUGAS
+   ================================================== */
 function subjectOf(t) { return (t.mapel && t.mapel.trim()) ? t.mapel.trim() : 'Umum'; }
 function renderSubjectChips() {
     const subjects = ['Semua', ...new Set(state.tugas.map(subjectOf))];
@@ -1358,7 +1656,9 @@ function submitTugas() {
     } else { finish(null); }
 }
 
-// ===== BERANDA =====
+/* ==================================================
+   BERANDA
+   ================================================== */
 function renderBeranda() {
     document.getElementById('tag-today').textContent = formatTanggal(new Date());
     renderReminders();
@@ -1392,7 +1692,9 @@ function renderBeranda() {
     renderPengumuman();
 }
 
-// ===== REMINDERS =====
+/* ==================================================
+   REMINDERS
+   ================================================== */
 function computeReminders() {
     const items = [];
     const todayStr = todayKey();
@@ -1433,7 +1735,9 @@ function renderReminders() {
     `;
 }
 
-// ===== LAPORAN SISWA =====
+/* ==================================================
+   LAPORAN SISWA
+   ================================================== */
 function renderReports() {
     const filter = document.getElementById('report-filter').value;
     let list = [...state.reports];
@@ -1551,175 +1855,15 @@ function deleteReport() {
     saveState(); renderReports(); closeModal('report');
 }
 
-// ===== STRUKTUR KELAS =====
-function renderStruktur() {
-    const list = document.getElementById('struktur-list');
-    if(!list) return;
-    list.innerHTML = state.struktur.length ? state.struktur.map(s => `
-        <div class="student-row" style="cursor:pointer;" onclick="openStrukturModal(${s.id})">
-          <div class="struk-avatar" style="width:28px;height:28px;border-radius:50%;background:var(--gold-soft);color:#9A6B0C;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">${s.nama ? initials(s.nama) : '?'}</div>
-          <div style="flex:1;"><div style="font-size:13px;font-weight:700;">${s.jabatan}</div><div style="font-size:11.5px;color:var(--ink-soft);">${s.nama || 'Belum diisi'}</div></div>
-          <div style="color:var(--ink-soft); font-size:16px;">›</div>
-        </div>
-    `).join('') : `<div class="empty">Belum ada struktur kelas. Ketuk "＋ Tambah Jabatan" untuk mulai.</div>`;
-}
-function openStrukturModal(id) {
-    const sel = document.getElementById('struktur-nama');
-    sel.innerHTML = '<option value="">— Belum diisi —</option>' + state.students.map(n => `<option value="${n}">${n}</option>`).join('');
-    const delBtn = document.getElementById('struktur-delete-btn');
-    if(id) {
-        const item = state.struktur.find(x => x.id === id);
-        document.getElementById('struktur-modal-title').textContent = 'Edit Jabatan';
-        document.getElementById('struktur-edit-id').value = id;
-        document.getElementById('struktur-jabatan').value = item.jabatan;
-        sel.value = item.nama || '';
-        delBtn.style.display = 'block';
-    } else {
-        document.getElementById('struktur-modal-title').textContent = 'Tambah Jabatan';
-        document.getElementById('struktur-edit-id').value = '';
-        document.getElementById('struktur-jabatan').value = '';
-        sel.value = '';
-        delBtn.style.display = 'none';
-    }
-    openModal('struktur');
-}
-function submitStruktur() {
-    if(guardReadOnly()) return;
-    const jabatan = document.getElementById('struktur-jabatan').value.trim();
-    const nama = document.getElementById('struktur-nama').value;
-    if(!jabatan){ alert('Nama jabatan wajib diisi ya.'); return; }
-    const id = document.getElementById('struktur-edit-id').value;
-    if(id){
-        const item = state.struktur.find(x=>x.id===Number(id));
-        if(item){ item.jabatan = jabatan; item.nama = nama; }
-    } else {
-        state.struktur.push({ id: Date.now(), jabatan, nama });
-    }
-    saveState(); renderStruktur(); closeModal('struktur');
-}
-function deleteStruktur() {
-    if(guardReadOnly()) return;
-    const id = Number(document.getElementById('struktur-edit-id').value);
-    if(!confirm('Hapus jabatan ini dari struktur kelas?')) return;
-    state.struktur = state.struktur.filter(x=>x.id!==id);
-    saveState(); renderStruktur(); closeModal('struktur');
-}
-
-// ===== SETTINGS (AKUN) =====
-function openSettingsModal() {
-    populateAccRoleOptions(); updateAccountUI(); openModal('settings');
-}
-function populateAccRoleOptions() {
-    document.getElementById('acc-role').innerHTML = `<option value="admin">Admin (Akses penuh)</option><option value="siswa">Siswa (Lihat saja)</option>`;
-}
-function updateAccountUI() {
-    if(!currentUser) return;
-    document.getElementById('account-whoami').textContent = '👤 ' + currentUser.username;
-    document.getElementById('account-role-label').textContent = currentUser.role === 'admin' ? 'Admin · akses penuh' : 'Siswa · lihat saja';
-    document.getElementById('account-manage-wrap').style.display = currentUser.role === 'admin' ? 'block' : 'none';
-    if(currentUser.role === 'admin') renderAccountList();
-}
-function renderAccountList() {
-    const wrap = document.getElementById('account-list');
-    wrap.innerHTML = state.users.map(u => `
-        <div class="acc-row" style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);">
-            <span class="acc-name" style="font-size:12.5px;font-weight:700;flex:1;">${u.username}<br><span style="font-weight:500;color:var(--ink-soft);font-size:10.5px;">${u.role==='admin'?'Admin':'Siswa'}</span></span>
-            <span class="acc-badge" style="font-size:9.5px;font-weight:700;padding:2px 8px;border-radius:99px;background:${u.role==='admin'?'var(--violet-soft)':'var(--line)'};color:${u.role==='admin'?'var(--violet)':'var(--ink-soft)'};">${u.role==='admin'?'Akses penuh':'Lihat saja'}</span>
-            <button class="s-remove" onclick="deleteAccount(${u.id})" title="Hapus akun">×</button>
-        </div>
-    `).join('');
-}
-function addAccount() {
-    if(!currentUser || currentUser.role !== 'admin') { alert('Hanya admin yang bisa menambah akun.'); return; }
-    const username = document.getElementById('acc-username').value.trim();
-    const password = document.getElementById('acc-password').value;
-    const role = document.getElementById('acc-role').value;
-    if(!username || !password) { alert('Username dan sandi wajib diisi.'); return; }
-    if(state.users.some(u => u.username.toLowerCase() === username.toLowerCase())) {
-        alert('Username itu sudah dipakai, pilih yang lain.'); return;
-    }
-    state.users.push({ id: Date.now(), username, password, role });
-    saveState(); renderAccountList();
-    document.getElementById('acc-username').value = ''; document.getElementById('acc-password').value = '';
-}
-function deleteAccount(id) {
-    if(!currentUser || currentUser.role !== 'admin') { alert('Hanya admin yang bisa menghapus akun.'); return; }
-    const target = state.users.find(u => u.id === id);
-    if(!target) return;
-    const adminCount = state.users.filter(u => u.role === 'admin').length;
-    if(target.role === 'admin' && adminCount <= 1) {
-        alert('Tidak bisa menghapus admin terakhir. Tambah admin lain dulu ya.');
-        return;
-    }
-    if(!confirm('Hapus akun "' + target.username + '"? Sandinya ikut terhapus.')) return;
-    state.users = state.users.filter(u => u.id !== id);
-    saveState(); renderAccountList();
-    if(currentUser && currentUser.id === id) logout();
-}
-
-// ===== BACKUP =====
-function exportBackup() {
-    const payload = { exportedAt: new Date().toISOString(), state };
-    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    const d = new Date();
-    a.href = url; a.download = 'kelasku-backup-' + d.getFullYear() + String(d.getMonth()+1).padStart(2,'0') + String(d.getDate()).padStart(2,'0') + '.json';
-    document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
-}
-function importBackup(file) {
-    if(!file) return;
-    if(guardReadOnly()) { document.getElementById('import-file-input').value = ''; return; }
-    if(!confirm('Memulihkan backup akan menimpa semua data kelas saat ini. Lanjutkan?')) {
-        document.getElementById('import-file-input').value = ''; return;
-    }
-    const reader = new FileReader();
-    reader.onload = (e) => {
-        try {
-            const parsed = JSON.parse(e.target.result);
-            const restored = parsed.state ? parsed.state : parsed;
-            if(!restored || typeof restored !== 'object') throw new Error('format tidak valid');
-            state = Object.assign(state, restored);
-            if(!state.users || !state.users.length) {
-                state.users = [
-                    { id:1, username:'admin1', password:'admin1', role:'admin' },
-                    { id:2, username:'admin2', password:'admin2', role:'admin' },
-                    { id:3, username:'user1', password:'user1', role:'siswa' }
-                ];
-            }
-            if(!state.reports) state.reports = [];
-            if(!state.struktur) state.struktur = [
-                { id:1, jabatan:'Wali Kelas', nama:'' },
-                { id:2, jabatan:'Ketua Kelas', nama:'' },
-                { id:3, jabatan:'Wakil Ketua Kelas', nama:'' },
-                { id:4, jabatan:'Sekretaris', nama:'' },
-                { id:5, jabatan:'Bendahara', nama:'' },
-                { id:6, jabatan:'Seksi Kebersihan', nama:'' },
-                { id:7, jabatan:'Seksi Keamanan', nama:'' }
-            ];
-            ensureRecord(state.hp, state.hpSelectedDate);
-            ensureRecord(state.piket, state.piketSelectedDate);
-            applyTheme(); saveState();
-            if(currentUser && !state.users.find(u => u.username === currentUser.username)) {
-                currentUser = null; localSettings.session = null; saveLocalSettings();
-                renderAll(); closeModal('settings');
-                alert('Data berhasil dipulihkan ✅ Silakan masuk lagi.');
-                showLogin(); return;
-            }
-            renderAll(); closeModal('settings'); alert('Data berhasil dipulihkan ✅');
-        } catch(err) { alert('Gagal memulihkan: file backup tidak valid.'); }
-        document.getElementById('import-file-input').value = '';
-    };
-    reader.readAsText(file);
-}
-
-// ===== RENDER ALL & CLOCK =====
+/* ==================================================
+   RENDER ALL & CLOCK
+   ================================================== */
 function renderAll() {
     renderBeranda(); renderKas();
     renderHpCalendar(); renderHp();
     renderPiketCalendar(); renderPiket();
     renderDayTabs(); renderJadwalList();
-    renderTugas(); renderReports(); renderStruktur();
+    renderTugas(); renderReports();
 }
 function updateClock() {
     const d = new Date();
@@ -1729,14 +1873,15 @@ function updateClock() {
     document.getElementById('tag-today').textContent = todayName + ', ' + String(d.getDate()).padStart(2,'0') + ' ' + bln;
 }
 
-// ============================================================
-// INIT
-// ============================================================
+/* ==================================================
+   INIT
+   ================================================== */
 loadState();
 watchLiveSync();
 setInterval(updateClock, 30000);
 updateClock();
 console.log('KelasKu siap! Login dengan admin1/admin2/user1');
 </script>
+
 </body>
 </html>
