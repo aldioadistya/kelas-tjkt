@@ -16,7 +16,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-    <!-- App Check tidak disertakan (tanpa billing) -->
     
     <style>
         /* ===== DESIGN TOKENS ===== */
@@ -574,7 +573,6 @@
             </div>
             <div class="field-hint" style="color:var(--teal);">🔒 Login menggunakan Firebase Authentication (Email &amp; Password)</div>
             <div class="field-hint">Pendaftar pertama otomatis menjadi Super Admin.</div>
-            <div class="field-hint" style="color:var(--amber);">ℹ️ App Check disabled (no billing account required)</div>
         </div>
     </div>
 
@@ -737,9 +735,6 @@
                             <span style="font-size:12px; color:var(--text-main);">Status Auth:</span>
                             <span id="auth-status" style="font-size:11px; font-weight:700; color:var(--amber);">⏳ Memuat...</span>
                         </div>
-                        <div style="margin-top:6px; padding:8px 10px; background:var(--amber-glass); border-radius:8px; border:1px solid var(--glass-border); font-size:11px; color:var(--text-main);">
-                            ℹ️ App Check disabled (no billing account required) — Keamanan tetap terjaga dengan Authentication &amp; Firestore Rules
-                        </div>
                     </div>
                 </div>
             </div>
@@ -795,8 +790,6 @@ function showNotification(message, type = 'success', duration = 2800) {
 // ============================================================
 // FIREBASE (tanpa App Check)
 // ============================================================
-console.log('ℹ️ App Check disabled (no billing account required)');
-
 const firebaseConfig = {
     apiKey: "AIzaSyAhrh00F2N07_Lx-QT6sHi_ygsvWfds1eQ",
     authDomain: "apps-kelas.firebaseapp.com",
@@ -912,7 +905,7 @@ function showLogin() { document.getElementById('login-overlay').style.display = 
 function hideLogin() { document.getElementById('login-overlay').style.display = 'none'; }
 
 // ============================================================
-// STORAGE
+// STORAGE - DIPERBAIKI
 // ============================================================
 const storage = {
     async get(key, shared) {
@@ -922,6 +915,7 @@ const storage = {
             if (!snap.exists) return null;
             return { value: snap.data().value };
         } catch (e) {
+            console.warn('Firestore get error, fallback localStorage', e);
             const v = localStorage.getItem(key);
             return v ? { value: v } : null;
         }
@@ -930,42 +924,55 @@ const storage = {
         if (!shared) { localStorage.setItem(key, value); return; }
         try {
             await db.collection(FS_COLLECTION).doc(key).set({ value, updatedAt: Date.now() });
+            localStorage.setItem(key, value); // cache lokal juga
         } catch (e) {
+            console.warn('Firestore set error, hanya ke localStorage', e);
             localStorage.setItem(key, value);
         }
     }
 };
 
+let _savePending = false;
+let _skipNextSync = false;
+
+async function saveState() {
+    if (_savePending) return;
+    _savePending = true;
+    try {
+        // Pastikan data selalu tersimpan ke Firestore dan localStorage
+        await storage.set('kelasku-state', JSON.stringify(state), true);
+        console.log('State saved successfully');
+    } catch (e) {
+        console.error('Save state error:', e);
+    } finally {
+        _savePending = false;
+    }
+}
+
 async function loadState() {
     try {
         const r = await storage.get('kelasku-state', true);
         if (r && r.value) {
-            state = Object.assign(state, JSON.parse(r.value));
-            // Pastikan state memiliki semua properti
+            const loaded = JSON.parse(r.value);
+            // Merge dengan state default, jangan timpa yang sudah ada
+            state = Object.assign(state, loaded);
+            // Pastikan properti penting tetap ada
             if (!state.reports) state.reports = [];
             if (!state.piketJadwal) state.piketJadwal = {};
             if (!state.calMinimized) state.calMinimized = { hp: false, piket: false };
-            if (!state.jadwal || Object.keys(state.jadwal).length === 0) {
-                state.jadwal = {
-                    Senin:[{jam:"07:15-08:45", mapel:"Matematika", guru:"Bu Rina"}],
-                    Selasa:[{jam:"07:15-08:45", mapel:"Administrasi Jaringan", guru:"Pak Budi"}],
-                    Rabu:[{jam:"07:15-07:45", mapel:"Projek IPAS", guru:"Bu Hanadi"}],
-                    Kamis:[{jam:"07:15-08:45", mapel:"Pemrograman Web", guru:"Pak Reza"}],
-                    Jumat:[{jam:"07:15-08:45", mapel:"Pendidikan Agama", guru:"Pak Yusuf"}]
-                };
-            }
+            // pastikan jadwal untuk setiap hari ada
+            DAY_NAMES.forEach(day => {
+                if (!state.jadwal[day]) state.jadwal[day] = [];
+                if (!state.piketJadwal[day]) state.piketJadwal[day] = [];
+            });
         }
-        // Inisialisasi tanggal terpilih jika belum ada
         if (!state.hpSelectedDate) state.hpSelectedDate = todayKey();
         if (!state.piketSelectedDate) state.piketSelectedDate = todayKey();
-        // Pastikan record untuk tanggal hari ini ada
         ensureRecord(state.hp, state.hpSelectedDate);
         ensureRecord(state.piket, state.piketSelectedDate);
-    } catch(e) {}
-}
-
-async function saveState() {
-    try { await storage.set('kelasku-state', JSON.stringify(state), true); } catch(e) {}
+    } catch(e) {
+        console.warn('Load state error, using defaults', e);
+    }
 }
 
 // ============================================================
@@ -1108,9 +1115,11 @@ async function resetData() {
     localStorage.removeItem('kelasku-local');
     const todayStr = todayKey();
     state = { kas: [], students: ["Aldio Adistya","Bagas Saputra","Citra Ramadhani","Dwi Lestari","Eka Prasetyo","Fajar Nugraha","Gita Anggraini","Hendra Wijaya"], hp: {}, piket: {}, piketJadwal: {}, tugas: [], jadwal: { Senin:[{jam:"07:15-08:45", mapel:"Matematika", guru:"Bu Rina"}], Selasa:[{jam:"07:15-08:45", mapel:"Administrasi Jaringan", guru:"Pak Budi"}], Rabu:[{jam:"07:15-07:45", mapel:"Projek IPAS", guru:"Bu Hanadi"}], Kamis:[{jam:"07:15-08:45", mapel:"Pemrograman Web", guru:"Pak Reza"}], Jumat:[{jam:"07:15-08:45", mapel:"Pendidikan Agama", guru:"Pak Yusuf"}] }, pengumuman: [], reports: [], jadwalMode: 'pelajaran', selectedDay: 'Senin', calMinimized: { hp: false, piket: false }, hpSelectedDate: todayStr, piketSelectedDate: todayStr };
+    DAY_NAMES.forEach(day => { state.piketJadwal[day] = []; });
     ensureRecord(state.hp, todayStr);
     ensureRecord(state.piket, todayStr);
-    saveState(); location.reload();
+    await saveState();
+    location.reload();
 }
 function clearLocalData() {
     if (!confirm('Hapus cache lokal?')) return;
@@ -1120,19 +1129,23 @@ function clearLocalData() {
 }
 
 // ============================================================
-// WATCH LIVE SYNC
+// WATCH LIVE SYNC (DIPERBAIKI agar tidak timpa data lokal)
 // ============================================================
 let liveSyncStarted = false;
 function watchLiveSync() {
     if (!authReady || liveSyncStarted) return;
     liveSyncStarted = true;
     db.collection(FS_COLLECTION).doc('kelasku-state').onSnapshot((snap) => {
+        if (_skipNextSync) { _skipNextSync = false; return; }
         if (!snap.exists) return;
         try {
             const saved = JSON.parse(snap.data().value);
+            // Gabungkan dengan state yang ada, jangan timpa data yang baru diubah
             state = Object.assign(state, saved);
             if (document.getElementById('login-overlay').style.display === 'none') renderAll();
-        } catch(e) {}
+        } catch(e) {
+            console.warn('Sync error', e);
+        }
     });
 }
 
@@ -1159,10 +1172,8 @@ function ensureRecord(dict, dateKey) {
 // ============================================================
 // RENDER FUNGSI LENGKAP
 // ============================================================
-let hpSelectedDate = todayKey();
 let calYear = 2026;
-let calMonth = 8; // September (0-based: 8 = September)
-let piketSelectedDate = todayKey();
+let calMonth = 8; // September
 let piketCalYear = 2026;
 let piketCalMonth = 8;
 
@@ -1190,8 +1201,8 @@ function renderBeranda() {
     const piketToday = state.piket[todayKey()] || {};
     const todayPiketDay = dayNameOf(todayKey());
     let piketTodayAssigned = state.students;
-    if (state.piketJadwal && state.piketJadwal[todayPiketDay] !== undefined) {
-        piketTodayAssigned = state.piketJadwal[todayPiketDay] || [];
+    if (state.piketJadwal && state.piketJadwal[todayPiketDay] && state.piketJadwal[todayPiketDay].length > 0) {
+        piketTodayAssigned = state.piketJadwal[todayPiketDay];
     }
     document.getElementById('home-piket-count').textContent = piketTodayAssigned.filter(s => piketToday[s]).length + "/" + piketTodayAssigned.length;
     document.getElementById('home-tugas').textContent = state.tugas.filter(t => !t.selesai).length;
@@ -1255,8 +1266,8 @@ function renderRosterView(cfg) {
         <div class="student-row">
           <div class="s-avatar">${n.slice(0,2).toUpperCase()}</div>
           <div class="s-name">${n}</div>
-          <button class="toggle-btn ${rec[n]?'done':''}" onclick="${cfg.toggleFn}('${n.replace(/'/g,"\\'")}')">${rec[n] ? '✓ Sudah' : 'Belum'}</button>
-          <button class="s-remove admin-only" onclick="removeStudent('${n.replace(/'/g,"\\'")}')">×</button>
+          <button class="toggle-btn ${rec[n]?'done':''}" onclick="window.${cfg.toggleFn}('${n.replace(/'/g,"\\'")}')">${rec[n] ? '✓ Sudah' : 'Belum'}</button>
+          <button class="s-remove admin-only" onclick="window.removeStudent('${n.replace(/'/g,"\\'")}')">×</button>
         </div>
     `).join('');
 }
@@ -1267,7 +1278,10 @@ function renderHp() {
 function renderPiket() {
     const date = state.piketSelectedDate || todayKey();
     const day = dayNameOf(date);
-    const assigned = (state.piketJadwal && state.piketJadwal[day] !== undefined) ? state.piketJadwal[day] : null;
+    let assigned = null;
+    if (state.piketJadwal && state.piketJadwal[day] && state.piketJadwal[day].length > 0) {
+        assigned = state.piketJadwal[day];
+    }
     renderRosterView({ dict: state.piket, selectedDate: date, names: assigned, collectedId:'piket-collected', remainingId:'piket-remaining', dateLabelId:'piket-date-label', listId:'piket-list', toggleFn:'togglePiket' });
 }
 function toggleHp(name) {
@@ -1345,12 +1359,14 @@ function selectHpDate(key) {
     saveState();
     renderHpCalendar();
     renderHp();
+    renderBeranda();
 }
 function selectPiketDate(key) {
     state.piketSelectedDate = key;
     saveState();
     renderPiketCalendar();
     renderPiket();
+    renderBeranda();
 }
 function toggleCalendar(type) {
     const key = type === 'hp' ? 'hp' : 'piket';
@@ -1378,7 +1394,9 @@ function openStatsModal(type) {
         let relevant = state.students;
         if (type === 'piket') {
             const day = dayNameOf(dk);
-            if (state.piketJadwal && state.piketJadwal[day] !== undefined) relevant = state.piketJadwal[day] || [];
+            if (state.piketJadwal && state.piketJadwal[day] && state.piketJadwal[day].length > 0) {
+                relevant = state.piketJadwal[day];
+            }
         }
         relevant.forEach(s => { if (s in rec) { totals[s]++; if (rec[s]) trues[s]++; } });
     });
