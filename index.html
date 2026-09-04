@@ -16,7 +16,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-    <!-- 🔥 TAMBAHAN: Firebase App Check -->
+    <!-- Firebase App Check -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check-compat.js"></script>
     
     <style>
@@ -994,14 +994,14 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 // ==================================================
-// 🔥 FIREBASE APP CHECK — AKTIFKAN DI SINI
+// 🔥 FIREBASE APP CHECK — SITE KEY YANG BENAR
 // ==================================================
 const appCheck = firebase.appCheck();
 appCheck.activate(
-    '6LcmF6ktAAAAAJm-w3nLccS59hP_m3NlFIwYhSS4', // Site Key (Publik)
+    '6LcmF6ktAAAAAAJm-w3nLccS59hP_m3NIFIwYhSS4', // ✅ Site Key BENAR dari Google Cloud Console
     true // isTokenAutoRefreshEnabled
 );
-console.log('✅ Firebase App Check activated with reCAPTCHA v3');
+console.log('✅ Firebase App Check activated with correct reCAPTCHA v3 Site Key');
 
 const auth = firebase.auth();
 const db = firebase.firestore();
@@ -2079,4 +2079,21 @@ function goTo(name) {
     if (name === 'settings') renderAccountList();
 }
 function openModal(name) { document.getElementById('modal-'+name).classList.add('open'); }
-function closeModal(name) { document.getElementById('modal-'+name
+function closeModal(name) { document.getElementById('modal-'+name).classList.remove('open'); }
+
+function renderAll() {
+    renderBeranda(); renderKas(); renderHpCalendar(); renderHp();
+    renderPiketCalendar(); renderPiket(); renderDayTabs(); renderJadwalList();
+    renderTugas(); renderReports();
+}
+
+// ===== CLOCK =====
+function updateClock() {
+    const d = new Date();
+    document.getElementById('clock').textContent = String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+}
+updateClock();
+setInterval(updateClock, 15000);
+</script>
+</body>
+</html>
