@@ -757,7 +757,7 @@
         <button class="tab" data-tab="settings" onclick="goTo('settings')"><span class="tab-dot"></span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06A1.65 1.65 0 0019.4 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>Setelan</button>
     </div>
 
-    <!-- Modals -->
+    <!-- Modals (semua lengkap) -->
     <div class="modal-bg" id="modal-kas"><div class="modal"><h3>Tambah Transaksi Kas</h3><div class="field"><label>Jenis</label><select id="kas-jenis"><option value="masuk">Pemasukan (+)</option><option value="keluar">Pengeluaran (-)</option></select></div><div class="field"><label>Keterangan</label><input id="kas-ket" type="text" placeholder="Contoh: Kas Mingguan"></div><div class="field"><label>Jumlah (Rp)</label><input id="kas-jumlah" type="number" placeholder="0"></div><div class="field"><label>Lampiran (opsional)</label><input type="file" id="kas-file" accept=".jpg,.png,.pdf,.doc,.docx,.xlsx"></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('kas')">Batal</button><button class="btn btn-primary" onclick="submitKas()">Simpan</button></div></div></div>
     <div class="modal-bg" id="modal-tugas"><div class="modal"><h3>Tambah Tugas</h3><div class="field"><label>Nama Tugas</label><input id="tugas-nama" type="text" placeholder="Contoh: Laporan Jaringan"></div><div class="field"><label>Mata Pelajaran</label><input id="tugas-mapel" type="text" placeholder="Contoh: Administrasi Jaringan"></div><div class="field"><label>Tenggat</label><input id="tugas-tenggat" type="date"></div><div class="field"><label>Deskripsi</label><textarea id="tugas-deskripsi" placeholder="Deskripsi tugas..."></textarea></div><div class="field"><label>Lampiran (opsional)</label><input type="file" id="tugas-file" accept=".pdf,.doc,.docx,.jpg,.png,.jpeg,.zip"></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('tugas')">Batal</button><button class="btn btn-primary" onclick="submitTugas()">Simpan</button></div></div></div>
     <div class="modal-bg" id="modal-student"><div class="modal"><h3>Tambah Siswa</h3><div class="field"><label>Nama Lengkap</label><input id="student-nama" type="text" placeholder="Contoh: Muhammad Rizky"></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('student')">Batal</button><button class="btn btn-primary" onclick="submitStudent()">Tambah</button></div></div></div>
@@ -842,6 +842,7 @@ const DAY_NAMES = ["Senin","Selasa","Rabu","Kamis","Jumat"];
 const SCHOOL_DAYS = ["Senin","Selasa","Rabu","Kamis","Jumat"];
 const FULL_DAY_NAMES = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
 const MONTH_LABEL = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+const DOW_LABEL = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
 let darkMode = localStorage.getItem('kelasku-theme') === 'dark';
 
 // ============================================================
@@ -940,6 +941,16 @@ async function loadState() {
         if (!state.reports) state.reports = [];
         if (!state.piketJadwal) state.piketJadwal = {};
         if (!state.calMinimized) state.calMinimized = { hp: false, piket: false };
+        // pastikan jadwal default
+        if (!state.jadwal || Object.keys(state.jadwal).length === 0) {
+            state.jadwal = {
+                Senin:[{jam:"07:15-08:45", mapel:"Matematika", guru:"Bu Rina"}],
+                Selasa:[{jam:"07:15-08:45", mapel:"Administrasi Jaringan", guru:"Pak Budi"}],
+                Rabu:[{jam:"07:15-07:45", mapel:"Projek IPAS", guru:"Bu Hanadi"}],
+                Kamis:[{jam:"07:15-08:45", mapel:"Pemrograman Web", guru:"Pak Reza"}],
+                Jumat:[{jam:"07:15-08:45", mapel:"Pendidikan Agama", guru:"Pak Yusuf"}]
+            };
+        }
     } catch(e) {}
 }
 
@@ -1113,68 +1124,542 @@ function watchLiveSync() {
 }
 
 // ============================================================
-// RENDER FUNCTIONS
+// FUNGSI UTILITY
+// ============================================================
+function todayKey() {
+    const d = new Date();
+    return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function dateKeyOf(y,m,d){ return y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0'); }
+function dayNameOf(dateKey) {
+    const [y,m,d] = dateKey.split('-').map(Number);
+    return FULL_DAY_NAMES[new Date(y, m-1, d).getDay()];
+}
+function rupiah(n) { return "Rp " + Math.round(n).toLocaleString('id-ID'); }
+
+// ============================================================
+// RENDER FUNGSI LENGKAP
 // ============================================================
 function renderAll() {
-    renderBeranda(); renderKas(); renderHp(); renderPiket(); renderJadwalList(); renderTugas(); renderReports();
+    renderBeranda();
+    renderKas();
+    renderHpCalendar();
+    renderHp();
+    renderPiketCalendar();
+    renderPiket();
+    renderDayTabs();
+    renderJadwalList();
+    renderTugas();
+    renderReports();
+    renderAccountList();
 }
 
 function renderBeranda() {
     const saldo = state.kas.reduce((a,t) => a + (t.jenis === 'masuk' ? t.jumlah : -t.jumlah), 0);
-    document.getElementById('home-saldo').textContent = 'Rp' + saldo.toLocaleString();
+    document.getElementById('home-saldo').textContent = rupiah(saldo);
     const hpToday = state.hp[todayKey()] || {};
     document.getElementById('home-hp').textContent = Object.values(hpToday).filter(v=>v).length + "/" + state.students.length;
     const piketToday = state.piket[todayKey()] || {};
-    document.getElementById('home-piket-count').textContent = Object.values(piketToday).filter(v=>v).length + "/" + state.students.length;
+    const todayPiketDay = dayNameOf(todayKey());
+    let piketTodayAssigned = state.students;
+    if (state.piketJadwal && state.piketJadwal[todayPiketDay] !== undefined) {
+        piketTodayAssigned = state.piketJadwal[todayPiketDay] || [];
+    }
+    document.getElementById('home-piket-count').textContent = piketTodayAssigned.filter(s => piketToday[s]).length + "/" + piketTodayAssigned.length;
     document.getElementById('home-tugas').textContent = state.tugas.filter(t => !t.selesai).length;
-    const todayJadwal = state.jadwal['Jumat'] || [];
-    document.getElementById('home-jadwal-list').innerHTML = todayJadwal.map(j => `
+    const todayJadwal = state.jadwal[DAY_NAMES[new Date().getDay()-1]] || [];
+    document.getElementById('home-jadwal-list').innerHTML = todayJadwal.length ? todayJadwal.map(j => `
         <div class="row-item"><div class="row-time">${j.jam}</div><div><div class="row-title">${j.mapel}</div><div class="row-sub">${j.guru}</div></div></div>
-    `).join('') || `<div class="empty">Tidak ada pelajaran hari ini 🎉</div>`;
+    `).join('') : `<div class="empty">Tidak ada pelajaran hari ini 🎉</div>`;
+    const piketSiswa = state.students.filter(s => piketToday[s]);
+    document.getElementById('home-piket-list').innerHTML = piketSiswa.length ? `
+        <div style="display:flex; flex-wrap:wrap; gap:4px;">
+            ${piketSiswa.map(s => `<span class="htag" style="background:var(--teal-glass); color:var(--teal); font-size:10px;">${s}</span>`).join('')}
+        </div>
+    ` : `<div class="empty">Belum ada siswa piket terdata.</div>`;
     renderPengumuman();
+}
+
+function renderPengumuman() {
+    const list = document.getElementById('pengumuman-list');
+    list.innerHTML = state.pengumuman.length ? state.pengumuman.slice().reverse().map(p => `
+        <div class="announce-item">
+          <div class="announce-dot"></div>
+          <div style="flex:1;"><div class="announce-text">${p.text}</div><div class="announce-date">${p.date}</div></div>
+          <button class="s-remove admin-only" onclick="deletePengumuman(${p.id})">×</button>
+        </div>
+    `).join('') : `<div class="empty">Belum ada pengumuman.</div>`;
 }
 
 function renderKas() {
     const masuk = state.kas.filter(t => t.jenis === 'masuk').reduce((a,t) => a + t.jumlah, 0);
     const keluar = state.kas.filter(t => t.jenis === 'keluar').reduce((a,t) => a + t.jumlah, 0);
-    document.getElementById('kas-saldo').textContent = 'Rp' + (masuk - keluar).toLocaleString();
-    document.getElementById('kas-in').textContent = 'Rp' + masuk.toLocaleString();
-    document.getElementById('kas-out').textContent = 'Rp' + keluar.toLocaleString();
+    document.getElementById('kas-saldo').textContent = rupiah(masuk - keluar);
+    document.getElementById('kas-in').textContent = rupiah(masuk);
+    document.getElementById('kas-out').textContent = rupiah(keluar);
     const list = document.getElementById('kas-list');
-    list.innerHTML = state.kas.map(t => `
+    list.innerHTML = state.kas.length ? state.kas.slice().reverse().map(t => `
         <div class="tx-item">
             <div class="tx-icon" style="background:${t.jenis==='masuk'?'var(--teal-glass)':'var(--rose-glass)'}">${t.jenis==='masuk'?'⬇️':'⬆️'}</div>
-            <div><div class="tx-title">${t.ket}</div><div class="tx-sub">${t.tanggal}</div></div>
-            <div class="tx-amt ${t.jenis==='masuk'?'plus':'minus'}">${t.jenis==='masuk'?'+':'-'}Rp${t.jumlah.toLocaleString()}</div>
+            <div><div class="tx-title">${t.ket}</div><div class="tx-sub">${t.tanggal}${t.file ? ` · 📎 ${t.file}` : ''}</div></div>
+            <div class="tx-amt ${t.jenis==='masuk'?'plus':'minus'}">${t.jenis==='masuk'?'+':'-'}${rupiah(t.jumlah)}</div>
+            <button class="tx-delete admin-only" onclick="hapusKas(${t.id})">✕</button>
         </div>
-    `).join('') || `<div class="empty">Belum ada riwayat kas.</div>`;
+    `).join('') : `<div class="empty">Belum ada riwayat kas.</div>`;
 }
 
-function renderHp() { /* ... */ }
-function renderPiket() { /* ... */ }
-function renderJadwalList() { /* ... */ }
-function renderTugas() { /* ... */ }
-function renderReports() { /* ... */ }
-function renderPengumuman() { /* ... */ }
-
-// ============================================================
-// NAVIGATION
-// ============================================================
-function goTo(name) {
-    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-    document.getElementById('view-'+name).classList.add('active');
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    const t = document.querySelector(`.tab[data-tab="${name}"]`);
-    if (t) t.classList.add('active');
-    if (name === 'settings') renderAccountList();
+// ===== ROSTER =====
+function ensureRecord(dict, dateKey) {
+    if (!dict[dateKey]) dict[dateKey] = {};
+    const rec = dict[dateKey];
+    state.students.forEach(s => { if (!(s in rec)) rec[s] = false; });
+    return rec;
+}
+function renderRosterView(cfg) {
+    const rec = ensureRecord(cfg.dict, cfg.selectedDate);
+    const names = cfg.names !== undefined && cfg.names !== null ? cfg.names : state.students;
+    const collected = names.length ? names.filter(n => rec[n]).length : 0;
+    document.getElementById(cfg.collectedId).textContent = collected;
+    document.getElementById(cfg.remainingId).textContent = names.length - collected;
+    const [y,m,d] = cfg.selectedDate.split('-').map(Number);
+    const labelDate = new Date(y, m-1, d);
+    document.getElementById(cfg.dateLabelId).textContent = (cfg.selectedDate === todayKey() ? 'Hari ini · ' : '') + labelDate.toLocaleDateString('id-ID', { weekday:'long', day:'numeric', month:'long' });
+    const list = document.getElementById(cfg.listId);
+    if (!names.length) {
+        list.innerHTML = `<div class="empty">Tidak ada siswa yang dijadwalkan piket pada hari ini.</div>`;
+        return;
+    }
+    list.innerHTML = names.map(n => `
+        <div class="student-row">
+          <div class="s-avatar">${n.slice(0,2).toUpperCase()}</div>
+          <div class="s-name">${n}</div>
+          <button class="toggle-btn ${rec[n]?'done':''}" onclick="${cfg.toggleFn}('${n.replace(/'/g,"\\'")}')">${rec[n] ? '✓ Sudah' : 'Belum'}</button>
+          <button class="s-remove admin-only" onclick="removeStudent('${n.replace(/'/g,"\\'")}')">×</button>
+        </div>
+    `).join('');
+}
+function renderHp() {
+    renderRosterView({ dict: state.hp, selectedDate: state.hpSelectedDate || todayKey(), collectedId:'hp-collected', remainingId:'hp-remaining', dateLabelId:'hp-date-label', listId:'hp-list', toggleFn:'toggleHp' });
+}
+function renderPiket() {
+    const day = dayNameOf(state.piketSelectedDate || todayKey());
+    const assigned = (state.piketJadwal && state.piketJadwal[day] !== undefined) ? state.piketJadwal[day] : null;
+    renderRosterView({ dict: state.piket, selectedDate: state.piketSelectedDate || todayKey(), names: assigned, collectedId:'piket-collected', remainingId:'piket-remaining', dateLabelId:'piket-date-label', listId:'piket-list', toggleFn:'togglePiket' });
+}
+function toggleHp(name) {
+    if (guardReadOnly()) return;
+    const rec = ensureRecord(state.hp, state.hpSelectedDate || todayKey());
+    rec[name] = !rec[name];
+    saveState(); renderHp(); renderHpCalendar(); renderBeranda();
+}
+function togglePiket(name) {
+    if (guardReadOnly()) return;
+    const rec = ensureRecord(state.piket, state.piketSelectedDate || todayKey());
+    rec[name] = !rec[name];
+    saveState(); renderPiket(); renderPiketCalendar(); renderBeranda();
+}
+function removeStudent(name) {
+    if (guardReadOnly()) return;
+    state.students = state.students.filter(s => s !== name);
+    saveState(); renderHp(); renderPiket(); renderBeranda();
+}
+function submitStudent() {
+    if (guardReadOnly()) return;
+    const nama = document.getElementById('student-nama').value.trim();
+    if (!nama) return;
+    if (!state.students.includes(nama)) state.students.push(nama);
+    saveState(); renderHp(); renderPiket(); closeModal('student');
+    showNotification('Siswa berhasil ditambahkan.', 'success');
+}
+function resetRoster(type) {
+    if (guardReadOnly()) return;
+    const dict = type === 'hp' ? state.hp : state.piket;
+    const keys = Object.keys(dict);
+    keys.forEach(k => {
+        Object.keys(dict[k]).forEach(s => dict[k][s] = false);
+    });
+    saveState(); renderAll();
 }
 
-function openModal(name) { document.getElementById('modal-'+name).classList.add('open'); }
-function closeModal(name) { document.getElementById('modal-'+name).classList.remove('open'); }
+// ===== CALENDAR =====
+let hpSelectedDate = todayKey();
+let calYear = new Date().getFullYear();
+let calMonth = new Date().getMonth();
+let piketSelectedDate = todayKey();
+let piketCalYear = new Date().getFullYear();
+let piketCalMonth = new Date().getMonth();
+state.hpSelectedDate = hpSelectedDate;
+state.piketSelectedDate = piketSelectedDate;
 
-// ============================================================
-// ACCOUNT MANAGEMENT (hanya superadmin)
-// ============================================================
+function renderMiniCalendar(prefix, year, month, selectedDate, dict, selectFnName) {
+    document.getElementById(prefix+'-month-label').textContent = MONTH_LABEL[month] + ' ' + year;
+    document.getElementById(prefix+'-dow-row').innerHTML = DOW_LABEL.map(d => `<div class="cal-dow">${d}</div>`).join('');
+    const firstDow = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month+1, 0).getDate();
+    const todayStr = todayKey();
+    let cells = '';
+    for (let i=0; i<firstDow; i++) cells += `<div class="cal-day empty"></div>`;
+    for (let d=1; d<=daysInMonth; d++) {
+        const key = dateKeyOf(year, month, d);
+        const isToday = (key === todayStr);
+        const isSelected = (key === selectedDate);
+        const rec = dict[key] || {};
+        const hasData = Object.values(rec).some(v => v === true);
+        let cls = 'cal-day';
+        if (isToday) cls += ' today';
+        if (isSelected) cls += ' selected';
+        const dotHtml = hasData ? '<span class="cal-dot"></span>' : '';
+        cells += `<div class="${cls}" onclick="${selectFnName}('${key}')">${d}${dotHtml}</div>`;
+    }
+    document.getElementById(prefix+'-grid').innerHTML = cells;
+}
+function renderHpCalendar() {
+    renderMiniCalendar('cal', calYear, calMonth, hpSelectedDate, state.hp, 'selectHpDate');
+    updateCalendarUI('hp');
+}
+function renderPiketCalendar() {
+    renderMiniCalendar('piket-cal', piketCalYear, piketCalMonth, piketSelectedDate, state.piket, 'selectPiketDate');
+    updateCalendarUI('piket');
+}
+function calShift(delta) { calMonth += delta; if (calMonth<0){calMonth=11;calYear--;} if (calMonth>11){calMonth=0;calYear++;} renderHpCalendar(); }
+function piketCalShift(delta) { piketCalMonth += delta; if (piketCalMonth<0){piketCalMonth=11;piketCalYear--;} if (piketCalMonth>11){piketCalMonth=0;piketCalYear++;} renderPiketCalendar(); }
+function selectHpDate(key) { hpSelectedDate = key; renderHpCalendar(); renderHp(); }
+function selectPiketDate(key) { piketSelectedDate = key; renderPiketCalendar(); renderPiket(); }
+
+function toggleCalendar(type) {
+    const key = type === 'hp' ? 'hp' : 'piket';
+    state.calMinimized[key] = !state.calMinimized[key];
+    saveState();
+    updateCalendarUI(type);
+}
+function updateCalendarUI(type) {
+    const key = type === 'hp' ? 'hp' : 'piket';
+    const bodyEl = document.getElementById(type + '-cal-body');
+    const btnEl = document.getElementById(type + '-cal-toggle');
+    if (!bodyEl || !btnEl) return;
+    const isMinimized = state.calMinimized[key];
+    bodyEl.classList.toggle('collapsed', isMinimized);
+    btnEl.textContent = isMinimized ? '+' : '−';
+}
+
+function openStatsModal(type) {
+    const dict = type === 'hp' ? state.hp : state.piket;
+    document.getElementById('stats-title').textContent = type === 'hp' ? '📊 Statistik Kumpul HP' : '📊 Statistik Piket';
+    const dates = Object.keys(dict).filter(k => k <= todayKey());
+    const totals = {}, trues = {};
+    state.students.forEach(s => { totals[s]=0; trues[s]=0; });
+    dates.forEach(dk => {
+        const rec = dict[dk];
+        let relevant = state.students;
+        if (type === 'piket') {
+            const day = dayNameOf(dk);
+            if (state.piketJadwal && state.piketJadwal[day] !== undefined) relevant = state.piketJadwal[day] || [];
+        }
+        relevant.forEach(s => { if (s in rec) { totals[s]++; if (rec[s]) trues[s]++; } });
+    });
+    const data = state.students.map(s => ({ name:s, total: totals[s], done: trues[s], pct: totals[s] ? Math.round(trues[s]/totals[s]*100) : 0 }));
+    document.getElementById('stats-content').innerHTML = data.map(d => `
+        <div class="stat-bar-row">
+            <div class="stat-bar-name">${d.name}</div>
+            <div class="stat-bar-track"><div class="stat-bar-fill" style="width:${d.pct}%; background:${d.pct>=80?'var(--teal)':d.pct>=50?'var(--amber)':'var(--rose)'};"></div></div>
+            <div class="stat-bar-value">${d.done}/${d.total} (${d.pct}%)</div>
+        </div>
+    `).join('');
+    openModal('stats');
+}
+
+// ===== JADWAL PIKET =====
+let piketJadwalActiveDay = 'Senin';
+function openPiketJadwalModal() {
+    if (guardReadOnly()) return;
+    if (!state.piketJadwal) state.piketJadwal = {};
+    let active = dayNameOf(piketSelectedDate);
+    if (!SCHOOL_DAYS.includes(active)) active = 'Senin';
+    piketJadwalActiveDay = active;
+    renderPiketJadwalDayTabs();
+    renderPiketJadwalChecklist();
+    openModal('piket-jadwal');
+}
+function selectPiketJadwalDay(day) {
+    piketJadwalActiveDay = day;
+    renderPiketJadwalDayTabs();
+    renderPiketJadwalChecklist();
+}
+function renderPiketJadwalDayTabs() {
+    document.getElementById('piket-jadwal-day-tabs').innerHTML = SCHOOL_DAYS.map(d => `<div class="day-chip ${piketJadwalActiveDay===d?'active':''}" onclick="selectPiketJadwalDay('${d}')">${d}</div>`).join('');
+}
+function renderPiketJadwalChecklist() {
+    if (!state.piketJadwal) state.piketJadwal = {};
+    const assigned = state.piketJadwal[piketJadwalActiveDay] || [];
+    const summaryEl = document.getElementById('piket-jadwal-summary');
+    if (summaryEl) {
+        summaryEl.textContent = assigned.length
+            ? `📌 Hari ${piketJadwalActiveDay}: ${assigned.length} siswa ditugaskan`
+            : `📌 Hari ${piketJadwalActiveDay}: tidak ada siswa yang ditugaskan (kosong)`;
+    }
+    const wrap = document.getElementById('piket-jadwal-checklist');
+    wrap.innerHTML = state.students.length ? state.students.map(s => `
+        <label class="piket-jadwal-row">
+            <input type="checkbox" ${assigned.includes(s) ? 'checked' : ''} onchange="togglePiketJadwalStudent('${s.replace(/'/g,"\\'")}', this.checked)">
+            <span>${s}</span>
+        </label>
+    `).join('') : '<div class="empty">Belum ada data siswa. Tambahkan dulu di halaman Piket/HP.</div>';
+}
+function togglePiketJadwalStudent(name, checked) {
+    if (guardReadOnly()) return;
+    if (!state.piketJadwal) state.piketJadwal = {};
+    if (!state.piketJadwal[piketJadwalActiveDay]) state.piketJadwal[piketJadwalActiveDay] = [];
+    const arr = state.piketJadwal[piketJadwalActiveDay];
+    if (checked) { if (!arr.includes(name)) arr.push(name); }
+    else { state.piketJadwal[piketJadwalActiveDay] = arr.filter(n => n !== name); }
+    const summaryEl = document.getElementById('piket-jadwal-summary');
+    if (summaryEl) {
+        const count = state.piketJadwal[piketJadwalActiveDay].length;
+        summaryEl.textContent = count
+            ? `📌 Hari ${piketJadwalActiveDay}: ${count} siswa ditugaskan`
+            : `📌 Hari ${piketJadwalActiveDay}: tidak ada siswa yang ditugaskan (kosong)`;
+    }
+    saveState();
+    renderPiket(); renderPiketCalendar(); renderBeranda();
+}
+
+// ===== JADWAL PELAJARAN =====
+function renderDayTabs() {
+    document.getElementById('day-tabs').innerHTML = DAY_NAMES.map(d => `<div class="day-chip ${state.selectedDay===d?'active':''}" onclick="selectDay('${d}')">${d}</div>`).join('');
+}
+function selectDay(d) { state.selectedDay = d; renderDayTabs(); renderJadwalList(); }
+function renderJadwalList() {
+    const items = state.jadwal[state.selectedDay] || [];
+    document.getElementById('jadwal-list').innerHTML = items.length ? items.map(j => `
+        <div class="row-item" onclick="openJadwalModal(${j.id})">
+            <div class="row-time">${j.jam}</div>
+            <div><div class="row-title">${j.mapel}</div><div class="row-sub">${j.guru}</div></div>
+        </div>
+    `).join('') : `<div class="empty">Tidak ada jadwal pelajaran.</div>`;
+}
+function openJadwalModal(id) {
+    document.getElementById('jadwal-hari').innerHTML = DAY_NAMES.map(d => `<option value="${d}">${d}</option>`).join('');
+    document.getElementById('jadwal-mulai').value = '';
+    document.getElementById('jadwal-selesai').value = '';
+    document.getElementById('jadwal-mapel').value = '';
+    document.getElementById('jadwal-guru').value = '';
+    document.getElementById('jadwal-edit-id').value = '';
+    document.getElementById('jadwal-delete-btn').style.display = 'none';
+    document.getElementById('jadwal-modal-title').textContent = 'Atur Jam Pelajaran';
+    openModal('jadwal');
+}
+function submitJadwal() {
+    if (guardReadOnly()) return;
+    const hari = document.getElementById('jadwal-hari').value;
+    const mulai = document.getElementById('jadwal-mulai').value;
+    const selesai = document.getElementById('jadwal-selesai').value;
+    const mapel = document.getElementById('jadwal-mapel').value.trim();
+    const guru = document.getElementById('jadwal-guru').value.trim();
+    if (!mapel || !mulai || !selesai) { showNotification('Isi semua field!', 'warning'); return; }
+    if (!state.jadwal[hari]) state.jadwal[hari] = [];
+    state.jadwal[hari].push({ id: Date.now(), jam: mulai+'-'+selesai, mapel, guru });
+    saveState(); renderJadwalList(); renderBeranda(); closeModal('jadwal');
+    showNotification('Jadwal berhasil ditambahkan.', 'success');
+}
+function deleteJadwalCurrent() {
+    if (guardReadOnly()) return;
+    const editId = document.getElementById('jadwal-edit-id').value;
+    if (!editId) return;
+    if (!confirm('Hapus jadwal ini?')) return;
+    for (let day in state.jadwal) {
+        state.jadwal[day] = state.jadwal[day].filter(j => j.id !== Number(editId));
+    }
+    saveState(); renderJadwalList(); renderBeranda(); closeModal('jadwal');
+    showNotification('Jadwal dihapus.', 'info');
+}
+function setJadwalMode(mode) {
+    state.jadwalMode = mode;
+    document.getElementById('mode-pelajaran').classList.toggle('active', mode==='pelajaran');
+    document.getElementById('mode-piket').classList.toggle('active', mode==='piket');
+    document.getElementById('jadwal-mode-pelajaran').style.display = mode==='pelajaran' ? 'block':'none';
+    document.getElementById('jadwal-mode-piket').style.display = mode==='piket' ? 'block':'none';
+}
+
+// ===== TUGAS =====
+function renderTugas() {
+    const open = state.tugas.filter(t => !t.selesai);
+    const done = state.tugas.filter(t => t.selesai);
+    document.getElementById('tugas-open-list').innerHTML = open.length ? open.map(t => `
+        <div class="task-item">
+            <div class="checkbox" onclick="toggleTugas(${t.id})"></div>
+            <div style="flex:1;">
+                <div class="task-title">${t.nama}</div>
+                <div class="task-meta"><span class="pill pill-due">📅 ${t.tenggat || 'Tanpa tenggat'}</span></div>
+                ${t.deskripsi ? `<div class="task-desc">${t.deskripsi}</div>` : ''}
+                ${t.file ? `<div class="task-file" onclick="window.open('${t.file}','_blank')">📎 ${t.file}</div>` : ''}
+            </div>
+            <button class="s-remove admin-only" onclick="deleteTugas(${t.id})">×</button>
+        </div>
+    `).join('') : `<div class="empty">Tidak ada tugas aktif 🎉</div>`;
+    document.getElementById('tugas-done-list').innerHTML = done.length ? done.map(t => `
+        <div class="task-item">
+            <div class="checkbox checked" onclick="toggleTugas(${t.id})">✓</div>
+            <div style="flex:1;">
+                <div class="task-title checked">${t.nama}</div>
+                ${t.deskripsi ? `<div class="task-desc" style="text-decoration:line-through; color:var(--text-muted);">${t.deskripsi}</div>` : ''}
+                ${t.file ? `<div class="task-file" onclick="window.open('${t.file}','_blank')">📎 ${t.file}</div>` : ''}
+            </div>
+        </div>
+    `).join('') : `<div class="empty">Belum ada tugas selesai.</div>`;
+}
+function submitTugas() {
+    if (guardReadOnly()) return;
+    const nama = document.getElementById('tugas-nama').value.trim();
+    const mapel = document.getElementById('tugas-mapel').value.trim();
+    const tenggat = document.getElementById('tugas-tenggat').value;
+    const deskripsi = document.getElementById('tugas-deskripsi').value.trim();
+    const fileInput = document.getElementById('tugas-file');
+    let fileName = '';
+    if (fileInput.files.length > 0) fileName = fileInput.files[0].name;
+    if (!nama) { showNotification('Nama tugas wajib diisi.', 'warning'); return; }
+    state.tugas.push({ id: Date.now(), nama, mapel, tenggat, deskripsi, file: fileName, selesai: false });
+    fileInput.value = '';
+    document.getElementById('tugas-deskripsi').value = '';
+    saveState(); renderTugas(); renderBeranda(); closeModal('tugas');
+    showNotification('Tugas berhasil ditambahkan.', 'success');
+}
+function toggleTugas(id) {
+    if (guardReadOnly()) return;
+    const t = state.tugas.find(x => x.id === id);
+    if (t) t.selesai = !t.selesai;
+    saveState(); renderTugas(); renderBeranda();
+}
+function deleteTugas(id) {
+    if (guardReadOnly()) return;
+    state.tugas = state.tugas.filter(t => t.id !== id);
+    saveState(); renderTugas(); renderBeranda();
+    showNotification('Tugas dihapus.', 'info');
+}
+
+// ===== LAPORAN =====
+function renderReports() {
+    const filter = document.getElementById('report-filter').value;
+    let list = [...state.reports];
+    if (filter !== 'all') list = list.filter(r => r.status === filter);
+    const wrap = document.getElementById('report-list');
+    wrap.innerHTML = list.length ? list.reverse().map(r => `
+        <div class="report-item" onclick="openReportModal(${r.id})">
+            <div class="report-icon">${r.urgensi==='darurat'?'🚨':'📌'}</div>
+            <div style="flex:1;">
+                <div class="report-title">${r.judul}</div>
+                <div class="report-meta">
+                    <span>${r.kategori}</span> • <span>${r.anonim ? 'Anonim' : (r.pelapor || 'Siswa')}</span>
+                    ${r.file ? `<span class="report-file" onclick="event.stopPropagation();window.open('${r.file}','_blank')">📎 ${r.file}</span>` : ''}
+                    <span class="report-status ${r.status}">${r.status}</span>
+                </div>
+            </div>
+        </div>
+    `).join('') : `<div class="empty">Belum ada laporan.</div>`;
+}
+function openReportModal(id) {
+    const delBtn = document.getElementById('report-delete-btn');
+    if (id && currentUser && (currentUser.role === 'superadmin' || currentUser.role === 'admin')) {
+        const r = state.reports.find(x => x.id === id);
+        if (!r) return;
+        document.getElementById('report-edit-id').value = r.id;
+        document.getElementById('report-judul').value = r.judul;
+        document.getElementById('report-deskripsi').value = r.deskripsi;
+        document.getElementById('report-status-field').style.display = 'block';
+        document.getElementById('report-status').value = r.status || 'pending';
+        delBtn.style.removeProperty('display');
+    } else {
+        document.getElementById('report-edit-id').value = '';
+        document.getElementById('report-judul').value = '';
+        document.getElementById('report-deskripsi').value = '';
+        document.getElementById('report-status-field').style.display = 'none';
+        delBtn.style.setProperty('display', 'none', 'important');
+        document.getElementById('report-file').value = '';
+    }
+    openModal('report');
+}
+function submitReport() {
+    const editId = document.getElementById('report-edit-id').value;
+    const fileInput = document.getElementById('report-file');
+    let fileName = '';
+    if (fileInput.files.length > 0) fileName = fileInput.files[0].name;
+    if (editId && currentUser && (currentUser.role === 'superadmin' || currentUser.role === 'admin')) {
+        const r = state.reports.find(x => x.id === Number(editId));
+        if (r) { r.status = document.getElementById('report-status').value; if (fileName) r.file = fileName; }
+        saveState(); renderReports(); closeModal('report');
+        showNotification('Laporan berhasil diperbarui.', 'success');
+        return;
+    }
+    const judul = document.getElementById('report-judul').value.trim();
+    const deskripsi = document.getElementById('report-deskripsi').value.trim();
+    const kategori = document.getElementById('report-kategori').value;
+    const urgensi = document.getElementById('report-urgensi').value;
+    const anonim = document.getElementById('report-anonim').checked;
+    if (!judul || !deskripsi) { showNotification('Judul dan deskripsi wajib diisi.', 'warning'); return; }
+    state.reports.push({ id: Date.now(), judul, deskripsi, kategori, urgensi, anonim, pelapor: anonim ? 'Anonim' : (currentUser ? currentUser.username : 'Siswa'), status: 'pending', date: new Date().toLocaleDateString('id-ID'), file: fileName });
+    fileInput.value = '';
+    saveState(); renderReports(); closeModal('report');
+    showNotification('Laporan berhasil dikirim!', 'success');
+}
+function deleteReport() {
+    if (guardReadOnly()) return;
+    const editId = Number(document.getElementById('report-edit-id').value);
+    if (!confirm('Hapus laporan ini?')) return;
+    state.reports = state.reports.filter(r => r.id !== editId);
+    saveState(); renderReports(); closeModal('report');
+    showNotification('Laporan dihapus.', 'info');
+}
+
+// ===== KAS ACTION =====
+function submitKas() {
+    if (guardReadOnly()) return;
+    const jenis = document.getElementById('kas-jenis').value;
+    const ket = document.getElementById('kas-ket').value.trim();
+    const jumlah = parseFloat(document.getElementById('kas-jumlah').value);
+    const fileInput = document.getElementById('kas-file');
+    let fileName = '';
+    if (fileInput.files.length > 0) fileName = fileInput.files[0].name;
+    if (!ket || !jumlah) { showNotification('Isi semua field transaksi.', 'warning'); return; }
+    state.kas.push({ id: Date.now(), jenis, ket, jumlah, tanggal: new Date().toLocaleDateString('id-ID'), file: fileName });
+    fileInput.value = '';
+    saveState(); renderKas(); renderBeranda(); closeModal('kas');
+    showNotification('Transaksi kas berhasil ditambahkan.', 'success');
+}
+function hapusKas(id) {
+    if (guardReadOnly()) return;
+    state.kas = state.kas.filter(t => t.id !== id);
+    saveState(); renderKas(); renderBeranda();
+    showNotification('Transaksi kas dihapus.', 'info');
+}
+function openExportModal() {
+    let txt = "REKAP KAS KELAS X TJKT 1\n==================\n";
+    state.kas.forEach(t => { txt += `[${t.tanggal}] ${t.jenis.toUpperCase()}: ${t.ket} (${rupiah(t.jumlah)})${t.file ? ' [File: '+t.file+']' : ''}\n`; });
+    document.getElementById('export-text').value = txt;
+    openModal('export');
+}
+function copyExportText() {
+    const el = document.getElementById('export-text');
+    el.select(); document.execCommand('copy');
+    showNotification('Rekap kas telah disalin ke clipboard.', 'success');
+}
+
+// ===== PENGUMUMAN ACTION =====
+function openPengumumanModal() { document.getElementById('pengumuman-teks').value = ''; openModal('pengumuman'); }
+function submitPengumuman() {
+    if (guardReadOnly()) return;
+    const text = document.getElementById('pengumuman-teks').value.trim();
+    if (!text) return;
+    state.pengumuman.push({ id: Date.now(), text, date: new Date().toLocaleDateString('id-ID') });
+    saveState(); renderPengumuman(); closeModal('pengumuman');
+    showNotification('Pengumuman berhasil dipublikasikan.', 'success');
+}
+function deletePengumuman(id) {
+    if (guardReadOnly()) return;
+    state.pengumuman = state.pengumuman.filter(p => p.id !== id);
+    saveState(); renderPengumuman();
+    showNotification('Pengumuman dihapus.', 'info');
+}
+
+// ===== ACCOUNT MANAGEMENT =====
 async function renderAccountList() {
     const wrap = document.getElementById('account-list');
     if (!wrap || !isSuperAdmin()) return;
@@ -1198,7 +1683,6 @@ async function renderAccountList() {
         wrap.innerHTML = '<div class="empty">Gagal memuat akun.</div>';
     }
 }
-
 async function addAccount() {
     if (guardAccountManagement()) return;
     const nama = document.getElementById('acc-nama').value.trim();
@@ -1221,7 +1705,6 @@ async function addAccount() {
         showNotification(authErrorMessage(e.code), 'error');
     }
 }
-
 async function toggleAccountActive(uid, makeActive) {
     if (guardAccountManagement()) return;
     if (uid === currentUser.uid) { showNotification('Tidak dapat menonaktifkan akun sendiri.', 'warning'); return; }
@@ -1235,35 +1718,44 @@ async function toggleAccountActive(uid, makeActive) {
     }
 }
 
+// ===== EXPORT / IMPORT =====
+function exportBackup() {
+    const payload = { exportedAt: new Date().toISOString(), state };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'kelasku-backup-' + todayKey() + '.json';
+    a.click(); URL.revokeObjectURL(url);
+    showNotification('Backup berhasil diunduh!', 'success');
+}
+function importBackup(file) {
+    if (!file || guardReadOnly()) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        try {
+            const parsed = JSON.parse(e.target.result);
+            state = Object.assign(state, parsed.state || parsed);
+            saveState(); renderAll();
+            showNotification('Data berhasil dipulihkan!', 'success');
+        } catch(err) { showNotification('File backup tidak valid.', 'error'); }
+    };
+    reader.readAsText(file);
+}
+
 // ============================================================
-// FUNGSI DUMMY UNTUK MENGHINDARI ERROR
+// NAVIGATION
 // ============================================================
-function toggleCalendar(type) {}
-function calShift(delta) {}
-function piketCalShift(delta) {}
-function setJadwalMode(mode) {}
-function openJadwalModal() {}
-function submitJadwal() {}
-function deleteJadwalCurrent() {}
-function openPiketJadwalModal() {}
-function resetRoster(type) {}
-function openStudentModal() {}
-function submitStudent() {}
-function openPengumumanModal() {}
-function submitPengumuman() {}
-function submitTugas() {}
-function toggleTugas(id) {}
-function deleteTugas(id) {}
-function openReportModal() {}
-function submitReport() {}
-function deleteReport() {}
-function submitKas() {}
-function hapusKas(id) {}
-function openExportModal() {}
-function copyExportText() {}
-function openStatsModal(type) {}
-function exportBackup() {}
-function importBackup(file) {}
+function goTo(name) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.getElementById('view-'+name).classList.add('active');
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    const t = document.querySelector(`.tab[data-tab="${name}"]`);
+    if (t) t.classList.add('active');
+    if (name === 'settings') renderAccountList();
+}
+
+function openModal(name) { document.getElementById('modal-'+name).classList.add('open'); }
+function closeModal(name) { document.getElementById('modal-'+name).classList.remove('open'); }
 
 // ============================================================
 // CLOCK
@@ -1315,7 +1807,15 @@ window.hapusKas = hapusKas;
 window.openExportModal = openExportModal;
 window.copyExportText = copyExportText;
 window.openStatsModal = openStatsModal;
-window.todayKey = function() { return new Date().toISOString().slice(0,10); };
+window.selectHpDate = selectHpDate;
+window.selectPiketDate = selectPiketDate;
+window.selectDay = selectDay;
+window.toggleHp = toggleHp;
+window.togglePiket = togglePiket;
+window.removeStudent = removeStudent;
+window.togglePiketJadwalStudent = togglePiketJadwalStudent;
+window.selectPiketJadwalDay = selectPiketJadwalDay;
+window.todayKey = todayKey;
 </script>
 </body>
 </html>
