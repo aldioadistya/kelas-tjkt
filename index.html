@@ -6,6 +6,7 @@
     <title>KelasKu Glass — X TJKT 1</title>
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#0F172A">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -184,6 +185,7 @@
         .login-card .field-hint { font-size:11px; color:var(--text-soft); margin-top:12px; text-align:center; }
         .login-card .field-hint b { color:var(--primary); }
 
+        /* ===== HERO CARD ===== */
         .hero {
             background:var(--primary-gradient);
             border-radius:var(--radius-xl);
@@ -1951,4 +1953,149 @@ function deleteTugas(id) {
 // ===== LAPORAN =====
 function renderReports() {
     const filter = document.getElementById('report-filter').value;
-    let list = [...state
+    let list = [...state.reports];
+    if (filter !== 'all') list = list.filter(r => r.status === filter);
+    const wrap = document.getElementById('report-list');
+    wrap.innerHTML = list.length ? list.reverse().map(r => `
+        <div class="report-item" onclick="openReportModal(${r.id})">
+            <div class="report-icon">${r.urgensi==='darurat'?'🚨':'📌'}</div>
+            <div style="flex:1;">
+                <div class="report-title">${r.judul}</div>
+                <div class="report-meta">
+                    <span>${r.kategori}</span> • <span>${r.anonim ? 'Anonim' : (r.pelapor || 'Siswa')}</span>
+                    ${r.file ? `<span class="report-file" onclick="event.stopPropagation();window.open('${r.file}','_blank')">📎 ${r.file}</span>` : ''}
+                    <span class="report-status ${r.status}">${r.status}</span>
+                </div>
+            </div>
+        </div>
+    `).join('') : `<div class="empty">Belum ada laporan.</div>`;
+}
+function openReportModal(id) {
+    const delBtn = document.getElementById('report-delete-btn');
+    if (id && currentUser && (currentUser.role === 'superadmin' || currentUser.role === 'admin')) {
+        const r = state.reports.find(x => x.id === id);
+        if (!r) return;
+        document.getElementById('report-edit-id').value = r.id;
+        document.getElementById('report-judul').value = r.judul;
+        document.getElementById('report-deskripsi').value = r.deskripsi;
+        document.getElementById('report-status-field').style.display = 'block';
+        document.getElementById('report-status').value = r.status || 'pending';
+        delBtn.style.removeProperty('display');
+    } else {
+        document.getElementById('report-edit-id').value = '';
+        document.getElementById('report-judul').value = '';
+        document.getElementById('report-deskripsi').value = '';
+        document.getElementById('report-status-field').style.display = 'none';
+        delBtn.style.setProperty('display', 'none', 'important');
+        document.getElementById('report-file').value = '';
+    }
+    openModal('report');
+}
+function submitReport() {
+    const editId = document.getElementById('report-edit-id').value;
+    const fileInput = document.getElementById('report-file');
+    let fileName = '';
+    if (fileInput.files.length > 0) {
+        fileName = fileInput.files[0].name;
+    }
+    if (editId && currentUser && (currentUser.role === 'superadmin' || currentUser.role === 'admin')) {
+        const r = state.reports.find(x => x.id === Number(editId));
+        if (r) {
+            r.status = document.getElementById('report-status').value;
+            if (fileName) r.file = fileName;
+        }
+        saveState(); renderReports(); closeModal('report');
+        showNotification('Laporan berhasil diperbarui.', 'success');
+        return;
+    }
+    const judul = document.getElementById('report-judul').value.trim();
+    const deskripsi = document.getElementById('report-deskripsi').value.trim();
+    const kategori = document.getElementById('report-kategori').value;
+    const urgensi = document.getElementById('report-urgensi').value;
+    const anonim = document.getElementById('report-anonim').checked;
+    if (!judul || !deskripsi) {
+        showNotification('Judul dan deskripsi wajib diisi.', 'warning');
+        return;
+    }
+    state.reports.push({
+        id: Date.now(),
+        judul,
+        deskripsi,
+        kategori,
+        urgensi,
+        anonim,
+        pelapor: anonim ? 'Anonim' : (currentUser ? currentUser.username : 'Siswa'),
+        status: 'pending',
+        date: new Date().toLocaleDateString('id-ID'),
+        file: fileName
+    });
+    fileInput.value = '';
+    saveState(); renderReports(); closeModal('report');
+    showNotification('Laporan berhasil dikirim!', 'success');
+}
+function deleteReport() {
+    if (guardReadOnly()) return;
+    const editId = Number(document.getElementById('report-edit-id').value);
+    if (!confirm('Hapus laporan ini?')) return;
+    state.reports = state.reports.filter(r => r.id !== editId);
+    saveState(); renderReports(); closeModal('report');
+    showNotification('Laporan dihapus.', 'info');
+}
+
+// ===== BERANDA =====
+function renderBeranda() {
+    document.getElementById('greeting-user').textContent = 'Halo, ' + (currentUser ? currentUser.username : 'Pengurus Kelas') + ' 👋';
+    document.getElementById('tag-today').textContent = new Date().toLocaleDateString('id-ID', { weekday:'long', day:'2-digit', month:'short' });
+    const saldo = state.kas.reduce((a,t) => a + (t.jenis === 'masuk' ? t.jumlah : -t.jumlah), 0);
+    document.getElementById('home-saldo').textContent = rupiah(saldo);
+    const hpToday = state.hp[todayKey()] || {};
+    document.getElementById('home-hp').textContent = Object.values(hpToday).filter(v=>v).length + "/" + state.students.length;
+    const piketToday = state.piket[todayKey()] || {};
+    const todayPiketDay = dayNameOf(todayKey());
+    let piketTodayAssigned = state.students;
+    if (state.piketJadwal && state.piketJadwal[todayPiketDay] !== undefined) {
+        piketTodayAssigned = state.piketJadwal[todayPiketDay] || [];
+    }
+    document.getElementById('home-piket-count').textContent = piketTodayAssigned.filter(s => piketToday[s]).length + "/" + piketTodayAssigned.length;
+    document.getElementById('home-tugas').textContent = state.tugas.filter(t => !t.selesai).length;
+    const todayJadwal = state.jadwal[TODAY_NAME] || [];
+    document.getElementById('home-jadwal-list').innerHTML = todayJadwal.length ? todayJadwal.map(j => `
+        <div class="row-item"><div class="row-time">${j.jam}</div><div><div class="row-title">${j.mapel}</div><div class="row-sub">${j.guru}</div></div></div>
+    `).join('') : `<div class="empty">Tidak ada pelajaran hari ini 🎉</div>`;
+    document.getElementById('home-piket-list').innerHTML = piketTodayAssigned.length ? `
+        <div style="display:flex; flex-wrap:wrap; gap:4px;">
+            ${piketTodayAssigned.map(s => `<span class="htag" style="background:${piketToday[s] ? 'var(--teal-glass)' : 'var(--rose-glass)'}; color:${piketToday[s] ? 'var(--teal)' : 'var(--rose)'}; font-size:10px;">${s}${piketToday[s] ? ' ✓' : ''}</span>`).join('')}
+        </div>
+    ` : `<div class="empty">Tidak ada jadwal piket untuk hari ini.</div>`;
+    renderPengumuman();
+}
+
+// ===== NAVIGATION =====
+function goTo(name) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.getElementById('view-'+name).classList.add('active');
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    const t = document.querySelector(`.tab[data-tab="${name}"]`);
+    if (t) t.classList.add('active');
+    if (name === 'laporan') renderReports();
+    if (name === 'settings') renderAccountList();
+}
+function openModal(name) { document.getElementById('modal-'+name).classList.add('open'); }
+function closeModal(name) { document.getElementById('modal-'+name).classList.remove('open'); }
+
+function renderAll() {
+    renderBeranda(); renderKas(); renderHpCalendar(); renderHp();
+    renderPiketCalendar(); renderPiket(); renderDayTabs(); renderJadwalList();
+    renderTugas(); renderReports();
+}
+
+// ===== CLOCK =====
+function updateClock() {
+    const d = new Date();
+    document.getElementById('clock').textContent = String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+}
+updateClock();
+setInterval(updateClock, 15000);
+</script>
+</body>
+</html>
