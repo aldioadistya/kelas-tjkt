@@ -601,11 +601,9 @@
                 <span class="section-link" style="font-size:12px; cursor:pointer;" onclick="doForgotPassword()">Lupa password?</span>
             </div>
             <div style="display:flex; gap:6px; margin-top:8px;">
-                <button class="btn btn-ghost cache-btn" style="flex:1; padding:6px 10px; font-size:10px;" onclick="clearLocalData()">🧹 Bersihkan Cache</button>
-                <button class="btn btn-ghost cache-btn" style="flex:1; padding:6px 10px; font-size:10px;" onclick="resetData()">🔄 Reset Data</button>
+                <button class="btn btn-ghost cache-btn btn-block" style="padding:6px 10px; font-size:10px;" onclick="clearLocalData()">🧹 Bersihkan Cache</button>
             </div>
             <div class="field-hint" style="color:var(--teal);">🔒 Login menggunakan Firebase Authentication (Email &amp; Password)</div>
-            <div class="field-hint">Pendaftar pertama otomatis menjadi Super Admin.</div>
         </div>
     </div>
 
@@ -768,6 +766,11 @@
                             <button class="btn btn-ghost" style="flex:1; padding:8px; font-size:10px;" onclick="document.getElementById('import-file-input').click()">⬆️ Import</button>
                         </div>
                         <input type="file" id="import-file-input" accept="application/json" style="display:none;" onchange="importBackup(this.files[0])">
+                    </div>
+                    <div class="superadmin-only" style="margin-top:12px; border-top:1px solid var(--glass-border); padding-top:10px;">
+                        <div style="font-size:11px; font-weight:800; color:var(--rose); text-transform:uppercase; margin-bottom:8px;">⚠️ Zona Berbahaya</div>
+                        <button class="btn btn-danger btn-block" style="padding:9px; font-size:11px;" onclick="resetData()">🔄 Reset Semua Data Kelas</button>
+                        <div class="field-hint">Menghapus semua data (kas, siswa, tugas, piket, dll) dan mengembalikan ke pengaturan awal. Tidak bisa dibatalkan.</div>
                     </div>
                     <div style="margin-top:12px; border-top:1px solid var(--glass-border); padding-top:10px;">
                         <div style="font-size:11px; font-weight:800; color:var(--text-soft); text-transform:uppercase; margin-bottom:8px;">Keamanan Firebase</div>
@@ -1150,7 +1153,8 @@ function guardAccountManagement() {
 // RESET
 // ============================================================
 async function resetData() {
-    if (!confirm('Reset semua data ke default?')) return;
+    if (guardAccountManagement()) return;
+    if (!confirm('Reset semua data ke default? Semua kas, siswa, tugas, dan piket akan hilang. Tindakan ini tidak bisa dibatalkan.')) return;
     localStorage.removeItem('kelasku-state');
     localStorage.removeItem('kelasku-local');
     const todayStr = todayKey();
