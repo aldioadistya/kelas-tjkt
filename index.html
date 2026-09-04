@@ -41,6 +41,7 @@
             --radius-lg: 16px;
             --radius-md: 12px;
             --radius-sm: 8px;
+            --input-bg: rgba(255,255,255,0.08);
         }
         body.dark {
             --bg-gradient: linear-gradient(135deg, #090d16 0%, #0f172a 50%, #1e1035 100%);
@@ -53,6 +54,7 @@
             --text-muted: #64748b;
             --primary: #818cf8;
             --primary-gradient: linear-gradient(135deg, #818cf8 0%, #6366f1 100%);
+            --input-bg: rgba(255,255,255,0.06);
         }
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; font-family: 'Plus Jakarta Sans', sans-serif; }
         html, body { height: 100%; overflow: hidden; background: var(--text-main); }
@@ -406,10 +408,11 @@
         .field input, .field select, .field textarea {
             width:100%; border:1px solid var(--glass-border); border-radius:var(--radius-md);
             padding:10px 12px; font-size:13px;
-            background:rgba(255,255,255,0.06); color:var(--text-main);
+            background:var(--input-bg); color:var(--text-main);
             outline:none; transition:border-color 0.15s;
         }
         .field input:focus, .field select:focus, .field textarea:focus { border-color:var(--primary); }
+        .field input::placeholder, .field select::placeholder { color:var(--text-muted); }
         .field textarea { min-height:80px; resize:vertical; }
         .field-hint { font-size:10px; color:var(--text-soft); margin-top:4px; }
         .modal-actions { display:flex; gap:8px; margin-top:14px; }
@@ -726,7 +729,21 @@
         <div class="modal-actions"><button class="btn btn-primary" onclick="closeModal('piket-jadwal')">Selesai</button></div>
     </div></div>
     <div class="modal-bg" id="modal-pengumuman"><div class="modal"><h3>Tambah Pengumuman</h3><div class="field"><label>Isi</label><input id="pengumuman-teks" type="text" placeholder="Tulis informasi untuk kelas..."></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('pengumuman')">Batal</button><button class="btn btn-primary" onclick="submitPengumuman()">Publikasikan</button></div></div></div>
-    <div class="modal-bg" id="modal-jadwal"><div class="modal"><h3>Atur Jam Pelajaran</h3><div class="field"><label>Hari</label><select id="jadwal-hari"></select></div><div class="field"><label>Jam Mulai</label><input id="jadwal-mulai" type="time"></div><div class="field"><label>Jam Selesai</label><input id="jadwal-selesai" type="time"></div><div class="field"><label>Mata Pelajaran</label><input id="jadwal-mapel" type="text" placeholder="Mata Pelajaran"></div><div class="field"><label>Guru</label><input id="jadwal-guru" type="text" placeholder="Nama Guru"></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('jadwal')">Batal</button><button class="btn btn-primary" onclick="submitJadwal()">Simpan</button></div></div></div>
+    <!-- MODAL JADWAL DIPERBAIKI -->
+    <div class="modal-bg" id="modal-jadwal"><div class="modal">
+        <h3 id="jadwal-modal-title">Atur Jam Pelajaran</h3>
+        <div class="field"><label>Hari</label><select id="jadwal-hari"><option value="Senin">Senin</option><option value="Selasa">Selasa</option><option value="Rabu">Rabu</option><option value="Kamis">Kamis</option><option value="Jumat">Jumat</option></select></div>
+        <div class="field"><label>Jam Mulai</label><input id="jadwal-mulai" type="time"></div>
+        <div class="field"><label>Jam Selesai</label><input id="jadwal-selesai" type="time"></div>
+        <div class="field"><label>Mata Pelajaran</label><input id="jadwal-mapel" type="text" placeholder="Mata Pelajaran"></div>
+        <div class="field"><label>Guru</label><input id="jadwal-guru" type="text" placeholder="Nama Guru"></div>
+        <input type="hidden" id="jadwal-edit-id" value="">
+        <div class="modal-actions">
+            <button class="btn btn-danger admin-only" id="jadwal-delete-btn" style="display:none;" onclick="deleteJadwalCurrent()">Hapus</button>
+            <button class="btn btn-ghost" onclick="closeModal('jadwal')">Batal</button>
+            <button class="btn btn-primary" onclick="submitJadwal()">Simpan</button>
+        </div>
+    </div></div>
     <div class="modal-bg" id="modal-stats"><div class="modal"><h3 id="stats-title">📊 Statistik</h3><div id="stats-content" style="max-height:300px; overflow-y:auto;"></div><div class="modal-actions"><button class="btn btn-primary btn-block" onclick="closeModal('stats')">Tutup</button></div></div></div>
     <div class="modal-bg" id="modal-export"><div class="modal"><h3>Rekap Kas</h3><div class="field"><textarea id="export-text" readonly style="height:160px; font-family:monospace; font-size:11px;"></textarea></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('export')">Tutup</button><button class="btn btn-primary" onclick="copyExportText()">📋 Salin</button></div></div></div>
     <div class="modal-bg" id="modal-report"><div class="modal"><h3>Buat Laporan</h3><div class="field"><label>Kategori</label><select id="report-kategori"><option value="Kekerasan/Berantem">Kekerasan</option><option value="Bullying">Bullying</option><option value="Kerusakan Fasilitas">Kerusakan</option><option value="Pencurian">Pencurian</option><option value="Pelanggaran Tata Tertib">Pelanggaran</option><option value="Lainnya">Lainnya</option></select></div><div class="field"><label>Judul</label><input id="report-judul" type="text" placeholder="Ringkasan singkat"></div><div class="field"><label>Deskripsi</label><textarea id="report-deskripsi" placeholder="Jelaskan kronologi..."></textarea></div><div class="field"><label>Tanggal Kejadian</label><input id="report-tanggal" type="date"></div><div class="field"><label>Urgensi</label><select id="report-urgensi"><option value="rendah">Rendah</option><option value="sedang" selected>Sedang</option><option value="tinggi">Tinggi</option><option value="darurat">Darurat 🚨</option></select></div><div class="field" style="display:flex; align-items:center; gap:6px;"><input type="checkbox" id="report-anonim" style="width:16px;height:16px;"><label for="report-anonim" style="margin:0; text-transform:none; font-size:11px;">Anonim 🙈</label></div><input type="hidden" id="report-edit-id"><div id="report-status-field" style="display:none;" class="admin-only"><div class="field"><label>Status</label><select id="report-status"><option value="pending">Menunggu</option><option value="reviewed">Ditinjau</option><option value="resolved">Selesai</option><option value="rejected">Ditolak</option></select></div></div><div class="modal-actions"><button class="btn btn-danger admin-only" id="report-delete-btn" style="display:none;" onclick="deleteReport()">Hapus</button><button class="btn btn-ghost" onclick="closeModal('report')">Batal</button><button class="btn btn-primary" onclick="submitReport()">Kirim</button></div></div></div>
@@ -890,7 +907,7 @@ const DOW_LABEL = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
 const MONTH_LABEL = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
 const TODAY_INDEX = new Date().getDay();
 const TODAY_NAME = DAY_NAMES[TODAY_INDEX-1] || "Senin";
-const SCHOOL_DAYS = ["Senin","Selasa","Rabu","Kamis","Jumat"]; // digunakan untuk tab piket jadwal
+const SCHOOL_DAYS = ["Senin","Selasa","Rabu","Kamis","Jumat"];
 
 function buildDefaultJadwal() {
     const out = {}; let idc = 1;
@@ -953,7 +970,7 @@ async function saveState() {
     }, 300);
 }
 
-// ===== THEME (lokal per perangkat) =====
+// ===== THEME =====
 let darkMode = (localStorage.getItem('kelasku-theme') !== 'light');
 function toggleTheme() {
     darkMode = !darkMode;
@@ -1125,7 +1142,7 @@ function updateCalendarUI(type) {
     btnEl.textContent = isMinimized ? '+' : '−';
 }
 
-// ===== ACCOUNTS (Firebase Auth + Firestore profiles) =====
+// ===== ACCOUNTS =====
 async function renderAccountList() {
     const wrap = document.getElementById('account-list');
     if (!wrap || !isSuperAdmin()) return;
@@ -1228,7 +1245,6 @@ function ensureRecord(dict, dateKey) {
 }
 function renderRosterView(cfg) {
     const rec = ensureRecord(cfg.dict, cfg.selectedDate);
-    // names bisa null (fallback ke semua siswa), atau array (bisa kosong)
     const names = cfg.names !== undefined && cfg.names !== null ? cfg.names : state.students;
     const collected = names.length ? names.filter(n => rec[n]).length : 0;
     document.getElementById(cfg.collectedId).textContent = collected;
@@ -1253,8 +1269,6 @@ function renderRosterView(cfg) {
 function renderHp() { renderRosterView({ dict: state.hp, selectedDate: hpSelectedDate, collectedId:'hp-collected', remainingId:'hp-remaining', dateLabelId:'hp-date-label', listId:'hp-list', toggleFn:'toggleHp' }); }
 function renderPiket() {
     const day = dayNameOf(piketSelectedDate);
-    // Jika state.piketJadwal[day] === undefined, berarti belum diatur sama sekali → fallback semua siswa.
-    // Jika sudah diatur (array, bisa kosong), gunakan array tersebut.
     const assigned = (state.piketJadwal && state.piketJadwal[day] !== undefined) ? state.piketJadwal[day] : null;
     renderRosterView({ dict: state.piket, selectedDate: piketSelectedDate, names: assigned, collectedId:'piket-collected', remainingId:'piket-remaining', dateLabelId:'piket-date-label', listId:'piket-list', toggleFn:'togglePiket' });
 }
@@ -1313,12 +1327,11 @@ function piketCalShift(delta) { piketCalMonth += delta; if (piketCalMonth<0){pik
 function selectHpDate(key) { hpSelectedDate = key; renderHpCalendar(); renderHp(); }
 function selectPiketDate(key) { piketSelectedDate = key; renderPiketCalendar(); renderPiket(); }
 
-// ===== JADWAL PIKET PER HARI (admin) =====
+// ===== JADWAL PIKET =====
 let piketJadwalActiveDay = 'Senin';
 function openPiketJadwalModal() {
     if (guardReadOnly()) return;
     if (!state.piketJadwal) state.piketJadwal = {};
-    // default aktif ke hari yang sesuai, tapi jika Sabtu/Minggu, set ke Senin
     let active = dayNameOf(piketSelectedDate);
     if (!SCHOOL_DAYS.includes(active)) active = 'Senin';
     piketJadwalActiveDay = active;
@@ -1461,6 +1474,99 @@ function copyExportText() {
     alert('Rekap kas telah disalin!');
 }
 
+// ===== JADWAL PELAJARAN (FIXED) =====
+let editingJadwalId = null;
+
+function openJadwalModal(id) {
+    // Reset semua field terlebih dahulu
+    document.getElementById('jadwal-mulai').value = '';
+    document.getElementById('jadwal-selesai').value = '';
+    document.getElementById('jadwal-mapel').value = '';
+    document.getElementById('jadwal-guru').value = '';
+    document.getElementById('jadwal-edit-id').value = '';
+    document.getElementById('jadwal-delete-btn').style.display = 'none';
+
+    // Set select hari ke default (Senin)
+    const select = document.getElementById('jadwal-hari');
+    select.value = 'Senin';
+
+    if (id) {
+        // Cari jadwal berdasarkan id di semua hari
+        let found = null;
+        let foundDay = null;
+        for (let day in state.jadwal) {
+            const item = state.jadwal[day].find(j => j.id === id);
+            if (item) {
+                found = item;
+                foundDay = day;
+                break;
+            }
+        }
+        if (found) {
+            select.value = foundDay;
+            const jamParts = found.jam.split('-');
+            document.getElementById('jadwal-mulai').value = jamParts[0] || '';
+            document.getElementById('jadwal-selesai').value = jamParts[1] || '';
+            document.getElementById('jadwal-mapel').value = found.mapel || '';
+            document.getElementById('jadwal-guru').value = found.guru || '';
+            document.getElementById('jadwal-edit-id').value = found.id;
+            document.getElementById('jadwal-delete-btn').style.display = 'inline-flex';
+            document.getElementById('jadwal-modal-title').textContent = 'Edit Jam Pelajaran';
+        } else {
+            document.getElementById('jadwal-modal-title').textContent = 'Atur Jam Pelajaran';
+        }
+    } else {
+        document.getElementById('jadwal-modal-title').textContent = 'Atur Jam Pelajaran';
+    }
+    openModal('jadwal');
+}
+
+function submitJadwal() {
+    if (guardReadOnly()) return;
+    const hari = document.getElementById('jadwal-hari').value;
+    const mulai = document.getElementById('jadwal-mulai').value;
+    const selesai = document.getElementById('jadwal-selesai').value;
+    const mapel = document.getElementById('jadwal-mapel').value.trim();
+    const guru = document.getElementById('jadwal-guru').value.trim();
+    if (!mapel || !mulai || !selesai) {
+        alert('Isi semua field!');
+        return;
+    }
+    const editId = document.getElementById('jadwal-edit-id').value;
+    if (editId) {
+        // Edit mode
+        for (let day in state.jadwal) {
+            const idx = state.jadwal[day].findIndex(j => j.id === Number(editId));
+            if (idx !== -1) {
+                state.jadwal[day][idx] = { id: Number(editId), jam: mulai+'-'+selesai, mapel, guru };
+                break;
+            }
+        }
+    } else {
+        // Tambah baru
+        if (!state.jadwal[hari]) state.jadwal[hari] = [];
+        state.jadwal[hari].push({ id: Date.now(), jam: mulai+'-'+selesai, mapel, guru });
+    }
+    saveState();
+    renderJadwalList();
+    renderBeranda();
+    closeModal('jadwal');
+}
+
+function deleteJadwalCurrent() {
+    if (guardReadOnly()) return;
+    const editId = document.getElementById('jadwal-edit-id').value;
+    if (!editId) return;
+    if (!confirm('Hapus jadwal ini?')) return;
+    for (let day in state.jadwal) {
+        state.jadwal[day] = state.jadwal[day].filter(j => j.id !== Number(editId));
+    }
+    saveState();
+    renderJadwalList();
+    renderBeranda();
+    closeModal('jadwal');
+}
+
 // ===== JADWAL & TUGAS =====
 function setJadwalMode(mode) {
     state.jadwalMode = mode;
@@ -1481,22 +1587,6 @@ function renderJadwalList() {
             <div><div class="row-title">${j.mapel}</div><div class="row-sub">${j.guru}</div></div>
         </div>
     `).join('') : `<div class="empty">Tidak ada jadwal pelajaran.</div>`;
-}
-function openJadwalModal(id) {
-    document.getElementById('jadwal-hari').innerHTML = DAY_NAMES.map(d => `<option value="${d}">${d}</option>`).join('');
-    openModal('jadwal');
-}
-function submitJadwal() {
-    if (guardReadOnly()) return;
-    const hari = document.getElementById('jadwal-hari').value;
-    const mulai = document.getElementById('jadwal-mulai').value;
-    const selesai = document.getElementById('jadwal-selesai').value;
-    const mapel = document.getElementById('jadwal-mapel').value.trim();
-    const guru = document.getElementById('jadwal-guru').value.trim();
-    if (!mapel) return;
-    if (!state.jadwal[hari]) state.jadwal[hari] = [];
-    state.jadwal[hari].push({ id: Date.now(), jam: mulai+'-'+selesai, mapel, guru });
-    saveState(); renderJadwalList(); renderBeranda(); closeModal('jadwal');
 }
 function renderTugas() {
     const open = state.tugas.filter(t => !t.selesai);
@@ -1603,7 +1693,7 @@ function submitReport() {
 function deleteReport() {
     if (guardReadOnly()) return;
     const editId = Number(document.getElementById('report-edit-id').value);
-    if (!confirm('Hapus laporan ini? Tindakan ini tidak dapat dibatalkan.')) return;
+    if (!confirm('Hapus laporan ini?')) return;
     state.reports = state.reports.filter(r => r.id !== editId);
     saveState(); renderReports(); closeModal('report');
 }
