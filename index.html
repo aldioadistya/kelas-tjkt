@@ -11,9 +11,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Firebase SDK (Compat) -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <!-- 🔥 TAMBAHAN: Firebase App Check -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check-compat.js"></script>
+    
     <style>
         /* ===== OPTIMIZED LIGHTWEIGHT DESIGN ===== */
         :root {
@@ -91,7 +96,6 @@
         }
         @media (max-width:480px){ .phone{ max-height:100vh; border-radius:0; border:none; } }
 
-        /* ===== STATUSBAR ===== */
         .statusbar {
             height:50px;
             display:flex;
@@ -180,7 +184,6 @@
         .login-card .field-hint { font-size:11px; color:var(--text-soft); margin-top:12px; text-align:center; }
         .login-card .field-hint b { color:var(--primary); }
 
-        /* ===== HERO CARD ===== */
         .hero {
             background:var(--primary-gradient);
             border-radius:var(--radius-xl);
@@ -263,7 +266,6 @@
         .row-sub { font-size:11px; color:var(--text-soft); margin-top:1px; }
         .empty { text-align:center; padding:20px 10px; color:var(--text-soft); font-size:12px; font-weight:500; }
 
-        /* ===== TAB BAR (DIPERBESAR) ===== */
         .tabbar {
             display:flex;
             background:rgba(255,255,255,0.06);
@@ -990,6 +992,17 @@ const firebaseConfig = {
     appId: "1:24953961039:web:4ad80d05e9f4be771c083a"
 };
 firebase.initializeApp(firebaseConfig);
+
+// ==================================================
+// 🔥 FIREBASE APP CHECK — AKTIFKAN DI SINI
+// ==================================================
+const appCheck = firebase.appCheck();
+appCheck.activate(
+    '6LcmF6ktAAAAAJm-w3nLccS59hP_m3NlFIwYhSS4', // Site Key (Publik)
+    true // isTokenAutoRefreshEnabled
+);
+console.log('✅ Firebase App Check activated with reCAPTCHA v3');
+
 const auth = firebase.auth();
 const db = firebase.firestore();
 const FS_COLLECTION = 'kelasku';
@@ -2066,21 +2079,4 @@ function goTo(name) {
     if (name === 'settings') renderAccountList();
 }
 function openModal(name) { document.getElementById('modal-'+name).classList.add('open'); }
-function closeModal(name) { document.getElementById('modal-'+name).classList.remove('open'); }
-
-function renderAll() {
-    renderBeranda(); renderKas(); renderHpCalendar(); renderHp();
-    renderPiketCalendar(); renderPiket(); renderDayTabs(); renderJadwalList();
-    renderTugas(); renderReports();
-}
-
-// ===== CLOCK =====
-function updateClock() {
-    const d = new Date();
-    document.getElementById('clock').textContent = String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
-}
-updateClock();
-setInterval(updateClock, 15000);
-</script>
-</body>
-</html>
+function closeModal(name) { document.getElementById('modal-'+name
