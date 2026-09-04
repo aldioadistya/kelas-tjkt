@@ -632,7 +632,8 @@
                     <div class="summary-box" style="background:var(--teal-glass);"><div class="n" style="color:var(--teal)" id="piket-collected">0</div><div class="l" style="color:var(--teal)">Sudah Piket</div></div>
                     <div class="summary-box" style="background:var(--rose-glass);"><div class="n" style="color:var(--rose)" id="piket-remaining">0</div><div class="l" style="color:var(--rose)">Belum Piket</div></div>
                 </div>
-                <div class="section"><div class="section-head"><div class="date-label" id="piket-date-label">Hari Ini</div><div style="display:flex;gap:8px;"><div class="section-link admin-only" onclick="openPiketJadwalModal()">⚙️ Atur Jadwal</div><div class="section-link" onclick="openStatsModal('piket')">📊 Statistik</div><div class="section-link admin-only" onclick="resetRoster('piket')">Reset</div></div></div><div class="card" id="piket-list"></div><button class="fab-add admin-only" style="margin-top:10px;" onclick="openStudentModal()">＋ Tambah Siswa</button></div>
+                <button class="btn btn-ghost admin-only" style="width:100%; margin-top:10px; padding:11px;" onclick="openPiketJadwalModal()">⚙️ Atur Jadwal Piket per Hari</button>
+                <div class="section"><div class="section-head"><div class="date-label" id="piket-date-label">Hari Ini</div><div style="display:flex;gap:8px;"><div class="section-link" onclick="openStatsModal('piket')">📊 Statistik</div><div class="section-link admin-only" onclick="resetRoster('piket')">Reset</div></div></div><div class="card" id="piket-list"></div><button class="fab-add admin-only" style="margin-top:10px;" onclick="openStudentModal()">＋ Tambah Siswa</button></div>
             </div>
         </div>
 
