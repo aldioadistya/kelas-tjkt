@@ -16,7 +16,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-    <!-- App Check sengaja tidak disertakan karena tidak pakai billing -->
+    <!-- App Check tidak disertakan (tanpa billing) -->
     
     <style>
         /* ===== DESIGN TOKENS ===== */
@@ -980,3 +980,342 @@ function toggleAuthMode() {
         title.textContent = 'Buat Akun Baru 📝';
         sub.textContent = 'Daftar dengan email untuk mulai menggunakan aplikasi';
         btn.textContent = 'Daftar Sekarang →';
+        link.textContent = 'Sudah punya akun? Masuk';
+    } else {
+        namaField.style.display = 'none';
+        title.textContent = 'Selamat datang 👋';
+        sub.textContent = 'Masuk dengan email untuk mengakses dasbor kelas';
+        btn.textContent = 'Masuk ke Kelas →';
+        link.textContent = 'Belum punya akun? Daftar';
+    }
+}
+
+function authErrorMessage(code) {
+    const map = {
+        'auth/invalid-email': 'Format email tidak valid.',
+        'auth/user-disabled': 'Akun ini telah dinonaktifkan.',
+        'auth/user-not-found': 'Email belum terdaftar.',
+        'auth/wrong-password': 'Password salah.',
+        'auth/invalid-credential': 'Email atau password salah.',
+        'auth/email-already-in-use': 'Email sudah terdaftar. Silakan masuk.',
+        'auth/weak-password': 'Password minimal 6 karakter.',
+        'auth/network-request-failed': 'Koneksi internet bermasalah.'
+    };
+    return map[code] || 'Terjadi kesalahan. Coba lagi.';
+}
+
+async function doAuthSubmit() {
+    const email = document.getElementById('auth-email').value.trim();
+    const password = document.getElementById('auth-password').value;
+    const errorEl = document.getElementById('login-error');
+    errorEl.style.color = 'var(--rose)';
+    errorEl.style.display = 'none';
+    if (!email || !password) {
+        showNotification('Email dan password wajib diisi.', 'error');
+        return;
+    }
+    const btn = document.getElementById('auth-submit-btn');
+    const originalText = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Memproses...';
+    try {
+        if (authMode === 'register') {
+            pendingRegisterName = document.getElementById('auth-nama').value.trim();
+            const cred = await auth.createUserWithEmailAndPassword(email, password);
+            if (pendingRegisterName) { try { await cred.user.updateProfile({ displayName: pendingRegisterName }); } catch(e) {} }
+        } else {
+            await auth.signInWithEmailAndPassword(email, password);
+        }
+    } catch (e) {
+        showNotification(authErrorMessage(e.code), 'error');
+    } finally {
+        btn.disabled = false;
+        btn.textContent = originalText;
+    }
+}
+
+async function doForgotPassword() {
+    const email = document.getElementById('auth-email').value.trim();
+    if (!email) { showNotification('Isi email dulu untuk reset password.', 'warning'); return; }
+    try {
+        await auth.sendPasswordResetEmail(email);
+        showNotification('Link reset password telah dikirim ke email kamu.', 'success');
+    } catch (e) {
+        showNotification(authErrorMessage(e.code), 'error');
+    }
+}
+
+function logout() { auth.signOut(); }
+
+function isAdmin() { return currentUser && (currentUser.role === 'superadmin' || currentUser.role === 'admin'); }
+function isSuperAdmin() { return currentUser && currentUser.role === 'superadmin'; }
+function isReadOnly() { return !currentUser || currentUser.role === 'siswa'; }
+
+function applyRole(role) {
+    document.body.classList.toggle('is-admin', role === 'superadmin' || role === 'admin');
+    document.body.classList.toggle('is-superadmin', role === 'superadmin');
+    document.getElementById('tag-role').style.display = (role === 'siswa') ? 'inline-block' : 'none';
+    document.getElementById('account-whoami').textContent = currentUser ? currentUser.username : '';
+    let roleLabel = '';
+    if (role === 'superadmin') roleLabel = 'Super Admin (Akses Penuh + Kelola Akun)';
+    else if (role === 'admin') roleLabel = 'Admin (Akses Penuh, Tanpa Kelola Akun)';
+    else roleLabel = 'Siswa (Lihat Saja)';
+    document.getElementById('account-role-label').textContent = roleLabel;
+}
+
+function guardReadOnly() {
+    if (isReadOnly()) {
+        showNotification('Fitur ini hanya untuk Admin atau Super Admin.', 'error');
+        return true;
+    }
+    return false;
+}
+function guardAccountManagement() {
+    if (!isSuperAdmin()) {
+        showNotification('Hanya Super Admin yang dapat mengelola akun.', 'error');
+        return true;
+    }
+    return false;
+}
+
+// ============================================================
+// RESET
+// ============================================================
+async function resetData() {
+    if (!confirm('Reset semua data ke default?')) return;
+    localStorage.removeItem('kelasku-state');
+    localStorage.removeItem('kelasku-local');
+    state = { kas: [], students: ["Aldio Adistya","Bagas Saputra","Citra Ramadhani","Dwi Lestari","Eka Prasetyo","Fajar Nugraha","Gita Anggraini","Hendra Wijaya"], hp: {}, piket: {}, piketJadwal: {}, tugas: [], jadwal: { Senin:[{jam:"07:15-08:45", mapel:"Matematika", guru:"Bu Rina"}], Selasa:[{jam:"07:15-08:45", mapel:"Administrasi Jaringan", guru:"Pak Budi"}], Rabu:[{jam:"07:15-07:45", mapel:"Projek IPAS", guru:"Bu Hanadi"}], Kamis:[{jam:"07:15-08:45", mapel:"Pemrograman Web", guru:"Pak Reza"}], Jumat:[{jam:"07:15-08:45", mapel:"Pendidikan Agama", guru:"Pak Yusuf"}] }, pengumuman: [], reports: [], jadwalMode: 'pelajaran', selectedDay: 'Senin', calMinimized: { hp: false, piket: false } };
+    saveState(); location.reload();
+}
+function clearLocalData() {
+    if (!confirm('Hapus cache lokal?')) return;
+    localStorage.removeItem('kelasku-state');
+    localStorage.removeItem('kelasku-local');
+    location.reload();
+}
+
+// ============================================================
+// WATCH LIVE SYNC
+// ============================================================
+let liveSyncStarted = false;
+function watchLiveSync() {
+    if (!authReady || liveSyncStarted) return;
+    liveSyncStarted = true;
+    db.collection(FS_COLLECTION).doc('kelasku-state').onSnapshot((snap) => {
+        if (!snap.exists) return;
+        try {
+            const saved = JSON.parse(snap.data().value);
+            state = Object.assign(state, saved);
+            if (document.getElementById('login-overlay').style.display === 'none') renderAll();
+        } catch(e) {}
+    });
+}
+
+// ============================================================
+// RENDER FUNCTIONS
+// ============================================================
+function renderAll() {
+    renderBeranda(); renderKas(); renderHp(); renderPiket(); renderJadwalList(); renderTugas(); renderReports();
+}
+
+function renderBeranda() {
+    const saldo = state.kas.reduce((a,t) => a + (t.jenis === 'masuk' ? t.jumlah : -t.jumlah), 0);
+    document.getElementById('home-saldo').textContent = 'Rp' + saldo.toLocaleString();
+    const hpToday = state.hp[todayKey()] || {};
+    document.getElementById('home-hp').textContent = Object.values(hpToday).filter(v=>v).length + "/" + state.students.length;
+    const piketToday = state.piket[todayKey()] || {};
+    document.getElementById('home-piket-count').textContent = Object.values(piketToday).filter(v=>v).length + "/" + state.students.length;
+    document.getElementById('home-tugas').textContent = state.tugas.filter(t => !t.selesai).length;
+    const todayJadwal = state.jadwal['Jumat'] || [];
+    document.getElementById('home-jadwal-list').innerHTML = todayJadwal.map(j => `
+        <div class="row-item"><div class="row-time">${j.jam}</div><div><div class="row-title">${j.mapel}</div><div class="row-sub">${j.guru}</div></div></div>
+    `).join('') || `<div class="empty">Tidak ada pelajaran hari ini 🎉</div>`;
+    renderPengumuman();
+}
+
+function renderKas() {
+    const masuk = state.kas.filter(t => t.jenis === 'masuk').reduce((a,t) => a + t.jumlah, 0);
+    const keluar = state.kas.filter(t => t.jenis === 'keluar').reduce((a,t) => a + t.jumlah, 0);
+    document.getElementById('kas-saldo').textContent = 'Rp' + (masuk - keluar).toLocaleString();
+    document.getElementById('kas-in').textContent = 'Rp' + masuk.toLocaleString();
+    document.getElementById('kas-out').textContent = 'Rp' + keluar.toLocaleString();
+    const list = document.getElementById('kas-list');
+    list.innerHTML = state.kas.map(t => `
+        <div class="tx-item">
+            <div class="tx-icon" style="background:${t.jenis==='masuk'?'var(--teal-glass)':'var(--rose-glass)'}">${t.jenis==='masuk'?'⬇️':'⬆️'}</div>
+            <div><div class="tx-title">${t.ket}</div><div class="tx-sub">${t.tanggal}</div></div>
+            <div class="tx-amt ${t.jenis==='masuk'?'plus':'minus'}">${t.jenis==='masuk'?'+':'-'}Rp${t.jumlah.toLocaleString()}</div>
+        </div>
+    `).join('') || `<div class="empty">Belum ada riwayat kas.</div>`;
+}
+
+function renderHp() { /* ... */ }
+function renderPiket() { /* ... */ }
+function renderJadwalList() { /* ... */ }
+function renderTugas() { /* ... */ }
+function renderReports() { /* ... */ }
+function renderPengumuman() { /* ... */ }
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function goTo(name) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.getElementById('view-'+name).classList.add('active');
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    const t = document.querySelector(`.tab[data-tab="${name}"]`);
+    if (t) t.classList.add('active');
+    if (name === 'settings') renderAccountList();
+}
+
+function openModal(name) { document.getElementById('modal-'+name).classList.add('open'); }
+function closeModal(name) { document.getElementById('modal-'+name).classList.remove('open'); }
+
+// ============================================================
+// ACCOUNT MANAGEMENT (hanya superadmin)
+// ============================================================
+async function renderAccountList() {
+    const wrap = document.getElementById('account-list');
+    if (!wrap || !isSuperAdmin()) return;
+    wrap.innerHTML = '<div class="empty">Memuat akun...</div>';
+    try {
+        const snap = await db.collection(FS_PROFILES).get();
+        const users = [];
+        snap.forEach(doc => users.push({ id: doc.id, ...doc.data() }));
+        users.sort((a,b) => (a.email||'').localeCompare(b.email||''));
+        wrap.innerHTML = users.map(u => `
+            <div class="acc-row">
+                <div class="acc-info">
+                    <b>${u.username || u.email}</b>
+                    <div class="acc-email">${u.email || ''}</div>
+                </div>
+                <span class="acc-badge ${u.role}">${u.role}</span>
+                <button class="acc-delete-btn superadmin-only" onclick="toggleAccountActive('${u.id}', ${u.active===false})">${u.active===false ? '✓' : '✕'}</button>
+            </div>
+        `).join('');
+    } catch(e) {
+        wrap.innerHTML = '<div class="empty">Gagal memuat akun.</div>';
+    }
+}
+
+async function addAccount() {
+    if (guardAccountManagement()) return;
+    const nama = document.getElementById('acc-nama').value.trim();
+    const email = document.getElementById('acc-email').value.trim();
+    const password = document.getElementById('acc-password').value;
+    const role = document.getElementById('acc-role').value;
+    if (!nama || !email || !password) { showNotification('Semua kolom wajib diisi.', 'warning'); return; }
+    if (password.length < 6) { showNotification('Password minimal 6 karakter.', 'warning'); return; }
+    try {
+        const cred = await secondaryAuth.createUserWithEmailAndPassword(email, password);
+        try { await cred.user.updateProfile({ displayName: nama }); } catch(e) {}
+        await db.collection(FS_PROFILES).doc(cred.user.uid).set({ email, username: nama, role, active: true, createdAt: Date.now() });
+        await secondaryAuth.signOut();
+        document.getElementById('acc-nama').value = '';
+        document.getElementById('acc-email').value = '';
+        document.getElementById('acc-password').value = '';
+        renderAccountList();
+        showNotification('Akun berhasil dibuat!', 'success');
+    } catch(e) {
+        showNotification(authErrorMessage(e.code), 'error');
+    }
+}
+
+async function toggleAccountActive(uid, makeActive) {
+    if (guardAccountManagement()) return;
+    if (uid === currentUser.uid) { showNotification('Tidak dapat menonaktifkan akun sendiri.', 'warning'); return; }
+    if (!makeActive && !confirm('Nonaktifkan akun ini?')) return;
+    try {
+        await db.collection(FS_PROFILES).doc(uid).update({ active: makeActive });
+        showNotification(makeActive ? 'Akun diaktifkan.' : 'Akun dinonaktifkan.', 'success');
+        renderAccountList();
+    } catch(e) {
+        showNotification('Gagal memperbarui status akun.', 'error');
+    }
+}
+
+// ============================================================
+// FUNGSI DUMMY UNTUK MENGHINDARI ERROR
+// ============================================================
+function toggleCalendar(type) {}
+function calShift(delta) {}
+function piketCalShift(delta) {}
+function setJadwalMode(mode) {}
+function openJadwalModal() {}
+function submitJadwal() {}
+function deleteJadwalCurrent() {}
+function openPiketJadwalModal() {}
+function resetRoster(type) {}
+function openStudentModal() {}
+function submitStudent() {}
+function openPengumumanModal() {}
+function submitPengumuman() {}
+function submitTugas() {}
+function toggleTugas(id) {}
+function deleteTugas(id) {}
+function openReportModal() {}
+function submitReport() {}
+function deleteReport() {}
+function submitKas() {}
+function hapusKas(id) {}
+function openExportModal() {}
+function copyExportText() {}
+function openStatsModal(type) {}
+function exportBackup() {}
+function importBackup(file) {}
+
+// ============================================================
+// CLOCK
+// ============================================================
+function updateClock() {
+    const d = new Date();
+    document.getElementById('clock').textContent = String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+}
+updateClock();
+setInterval(updateClock, 10000);
+
+// ============================================================
+// EKSPOR FUNGSI KE GLOBAL
+// ============================================================
+window.doAuthSubmit = doAuthSubmit;
+window.toggleAuthMode = toggleAuthMode;
+window.doForgotPassword = doForgotPassword;
+window.toggleTheme = toggleTheme;
+window.goTo = goTo;
+window.openModal = openModal;
+window.closeModal = closeModal;
+window.logout = logout;
+window.resetData = resetData;
+window.clearLocalData = clearLocalData;
+window.addAccount = addAccount;
+window.exportBackup = exportBackup;
+window.importBackup = importBackup;
+window.toggleCalendar = toggleCalendar;
+window.calShift = calShift;
+window.piketCalShift = piketCalShift;
+window.setJadwalMode = setJadwalMode;
+window.openJadwalModal = openJadwalModal;
+window.submitJadwal = submitJadwal;
+window.deleteJadwalCurrent = deleteJadwalCurrent;
+window.openPiketJadwalModal = openPiketJadwalModal;
+window.resetRoster = resetRoster;
+window.openStudentModal = openStudentModal;
+window.submitStudent = submitStudent;
+window.openPengumumanModal = openPengumumanModal;
+window.submitPengumuman = submitPengumuman;
+window.submitTugas = submitTugas;
+window.toggleTugas = toggleTugas;
+window.deleteTugas = deleteTugas;
+window.openReportModal = openReportModal;
+window.submitReport = submitReport;
+window.deleteReport = deleteReport;
+window.submitKas = submitKas;
+window.hapusKas = hapusKas;
+window.openExportModal = openExportModal;
+window.copyExportText = copyExportText;
+window.openStatsModal = openStatsModal;
+window.todayKey = function() { return new Date().toISOString().slice(0,10); };
+</script>
+</body>
+</html>
