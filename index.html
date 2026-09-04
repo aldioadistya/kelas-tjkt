@@ -719,7 +719,7 @@
         <!-- TUGAS -->
         <div class="view" id="view-tugas">
             <div class="pagehead"><h1>Manajemen Tugas</h1><p>Pantau tenggat &amp; kumpulkan berkas tugas</p></div>
-            <div class="section"><button class="fab-add admin-only" onclick="openModal('tugas')">＋ Tambah Tugas</button></div>
+            <div class="section"><button class="fab-add admin-only" onclick="openTugasModal()">＋ Tambah Tugas</button></div>
             <div class="section"><div class="section-head"><div class="section-title">Belum Selesai</div></div><div class="card" id="tugas-open-list"></div></div>
             <div class="section"><div class="section-head"><div class="section-title">Sudah Selesai</div></div><div class="card" id="tugas-done-list"></div></div>
         </div>
@@ -804,7 +804,7 @@
 
     <!-- Modals -->
     <div class="modal-bg" id="modal-kas"><div class="modal"><h3>Tambah Transaksi Kas</h3><div class="field"><label>Jenis</label><select id="kas-jenis"><option value="masuk">Pemasukan (+)</option><option value="keluar">Pengeluaran (-)</option></select></div><div class="field"><label>Keterangan</label><input id="kas-ket" type="text" placeholder="Contoh: Kas Mingguan"></div><div class="field"><label>Jumlah (Rp)</label><input id="kas-jumlah" type="number" placeholder="0"></div><div class="field"><label>Lampiran (opsional)</label><input type="file" id="kas-file" accept=".jpg,.png,.pdf,.doc,.docx,.xlsx"></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('kas')">Batal</button><button class="btn btn-primary" onclick="submitKas()">Simpan</button></div></div></div>
-    <div class="modal-bg" id="modal-tugas"><div class="modal"><h3>Tambah Tugas</h3><div class="field"><label>Nama Tugas</label><input id="tugas-nama" type="text" placeholder="Contoh: Laporan Jaringan"></div><div class="field"><label>Mata Pelajaran</label><input id="tugas-mapel" type="text" placeholder="Contoh: Administrasi Jaringan"></div><div class="field"><label>Tenggat</label><input id="tugas-tenggat" type="date"></div><div class="field"><label>Deskripsi</label><textarea id="tugas-deskripsi" placeholder="Deskripsi tugas..."></textarea></div><div class="field"><label>Lampiran (opsional)</label><input type="file" id="tugas-file" accept=".pdf,.doc,.docx,.jpg,.png,.jpeg,.zip"></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('tugas')">Batal</button><button class="btn btn-primary" onclick="submitTugas()">Simpan</button></div></div></div>
+    <div class="modal-bg" id="modal-tugas"><div class="modal"><h3 id="tugas-modal-title">Tambah Tugas</h3><div class="field"><label>Nama Tugas</label><input id="tugas-nama" type="text" placeholder="Contoh: Laporan Jaringan"></div><div class="field"><label>Mata Pelajaran</label><input id="tugas-mapel" type="text" placeholder="Contoh: Administrasi Jaringan"></div><div class="field"><label>Tenggat</label><input id="tugas-tenggat" type="date"></div><div class="field"><label>Deskripsi</label><textarea id="tugas-deskripsi" placeholder="Deskripsi tugas..."></textarea></div><div class="field"><label>Lampiran (opsional)</label><input type="file" id="tugas-file" accept=".pdf,.doc,.docx,.jpg,.png,.jpeg,.zip"><div class="field-hint" id="tugas-file-current" style="display:none;"></div></div><input type="hidden" id="tugas-edit-id" value=""><div class="modal-actions"><button class="btn btn-danger admin-only" id="tugas-delete-btn" style="display:none;" onclick="deleteTugasCurrent()">Hapus</button><button class="btn btn-ghost" onclick="closeModal('tugas')">Batal</button><button class="btn btn-primary" onclick="submitTugas()">Simpan</button></div></div></div>
     <div class="modal-bg" id="modal-student"><div class="modal"><h3>Tambah Siswa</h3><div class="field"><label>Nama Lengkap</label><input id="student-nama" type="text" placeholder="Contoh: Muhammad Rizky"></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('student')">Batal</button><button class="btn btn-primary" onclick="submitStudent()">Tambah</button></div></div></div>
     <div class="modal-bg" id="modal-piket-jadwal"><div class="modal"><h3>Atur Jadwal Piket</h3><div class="field-hint" style="margin:-6px 0 10px;">Pilih hari, lalu centang siswa yang bertugas piket pada hari itu. Kosongkan semua centang = tidak ada piket hari itu.</div><div class="day-tabs" id="piket-jadwal-day-tabs" style="flex-wrap:wrap;"></div><div id="piket-jadwal-summary" class="piket-jadwal-summary"></div><div id="piket-jadwal-checklist" style="max-height:280px; overflow-y:auto; margin-top:4px;"></div><div class="modal-actions"><button class="btn btn-primary" onclick="closeModal('piket-jadwal')">Selesai</button></div></div></div>
     <div class="modal-bg" id="modal-pengumuman"><div class="modal"><h3>Tambah Pengumuman</h3><div class="field"><label>Isi</label><input id="pengumuman-teks" type="text" placeholder="Tulis informasi untuk kelas..."></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('pengumuman')">Batal</button><button class="btn btn-primary" onclick="submitPengumuman()">Publikasikan</button></div></div></div>
@@ -1604,26 +1604,54 @@ function renderTugas() {
     const done = state.tugas.filter(t => t.selesai);
     document.getElementById('tugas-open-list').innerHTML = open.length ? open.map(t => `
         <div class="task-item">
-            <div class="checkbox" onclick="toggleTugas(${t.id})"></div>
-            <div style="flex:1;">
+            <div class="checkbox" onclick="event.stopPropagation(); toggleTugas(${t.id})"></div>
+            <div style="flex:1; cursor:pointer;" onclick="openTugasModal(${t.id})">
                 <div class="task-title">${t.nama}</div>
                 <div class="task-meta"><span class="pill pill-due">📅 ${t.tenggat || 'Tanpa tenggat'}</span></div>
                 ${t.deskripsi ? `<div class="task-desc">${t.deskripsi}</div>` : ''}
-                ${t.file ? `<div class="task-file" onclick="window.open('${t.file}','_blank')">📎 ${t.file}</div>` : ''}
+                ${t.file ? `<div class="task-file" onclick="event.stopPropagation(); window.open('${t.file}','_blank')">📎 ${t.file}</div>` : ''}
             </div>
-            <button class="s-remove admin-only" onclick="deleteTugas(${t.id})">×</button>
+            <button class="s-remove admin-only" onclick="event.stopPropagation(); deleteTugas(${t.id})">×</button>
         </div>
     `).join('') : `<div class="empty">Tidak ada tugas aktif 🎉</div>`;
     document.getElementById('tugas-done-list').innerHTML = done.length ? done.map(t => `
         <div class="task-item">
-            <div class="checkbox checked" onclick="toggleTugas(${t.id})">✓</div>
-            <div style="flex:1;">
+            <div class="checkbox checked" onclick="event.stopPropagation(); toggleTugas(${t.id})">✓</div>
+            <div style="flex:1; cursor:pointer;" onclick="openTugasModal(${t.id})">
                 <div class="task-title checked">${t.nama}</div>
                 ${t.deskripsi ? `<div class="task-desc" style="text-decoration:line-through; color:var(--text-muted);">${t.deskripsi}</div>` : ''}
-                ${t.file ? `<div class="task-file" onclick="window.open('${t.file}','_blank')">📎 ${t.file}</div>` : ''}
+                ${t.file ? `<div class="task-file" onclick="event.stopPropagation(); window.open('${t.file}','_blank')">📎 ${t.file}</div>` : ''}
             </div>
         </div>
     `).join('') : `<div class="empty">Belum ada tugas selesai.</div>`;
+}
+function openTugasModal(id) {
+    const fileInput = document.getElementById('tugas-file');
+    const fileHint = document.getElementById('tugas-file-current');
+    fileInput.value = '';
+    if (id) {
+        const t = state.tugas.find(x => x.id === Number(id));
+        if (!t) return;
+        document.getElementById('tugas-nama').value = t.nama || '';
+        document.getElementById('tugas-mapel').value = t.mapel || '';
+        document.getElementById('tugas-tenggat').value = t.tenggat || '';
+        document.getElementById('tugas-deskripsi').value = t.deskripsi || '';
+        document.getElementById('tugas-edit-id').value = t.id;
+        document.getElementById('tugas-modal-title').textContent = 'Edit Tugas';
+        document.getElementById('tugas-delete-btn').style.display = '';
+        if (t.file) { fileHint.textContent = `📎 File saat ini: ${t.file} (pilih file baru untuk mengganti)`; fileHint.style.display = 'block'; }
+        else { fileHint.style.display = 'none'; }
+    } else {
+        document.getElementById('tugas-nama').value = '';
+        document.getElementById('tugas-mapel').value = '';
+        document.getElementById('tugas-tenggat').value = '';
+        document.getElementById('tugas-deskripsi').value = '';
+        document.getElementById('tugas-edit-id').value = '';
+        document.getElementById('tugas-modal-title').textContent = 'Tambah Tugas';
+        document.getElementById('tugas-delete-btn').style.display = 'none';
+        fileHint.style.display = 'none';
+    }
+    openModal('tugas');
 }
 function submitTugas() {
     if (guardReadOnly()) return;
@@ -1631,15 +1659,36 @@ function submitTugas() {
     const mapel = document.getElementById('tugas-mapel').value.trim();
     const tenggat = document.getElementById('tugas-tenggat').value;
     const deskripsi = document.getElementById('tugas-deskripsi').value.trim();
+    const editId = document.getElementById('tugas-edit-id').value;
     const fileInput = document.getElementById('tugas-file');
     let fileName = '';
     if (fileInput.files.length > 0) fileName = fileInput.files[0].name;
     if (!nama) { showNotification('Nama tugas wajib diisi.', 'warning'); return; }
+    if (editId) {
+        const t = state.tugas.find(x => x.id === Number(editId));
+        if (t) {
+            t.nama = nama; t.mapel = mapel; t.tenggat = tenggat; t.deskripsi = deskripsi;
+            if (fileName) t.file = fileName;
+        }
+        fileInput.value = '';
+        saveState(); renderTugas(); renderBeranda(); closeModal('tugas');
+        showNotification('Tugas berhasil diperbarui.', 'success');
+        return;
+    }
     state.tugas.push({ id: Date.now(), nama, mapel, tenggat, deskripsi, file: fileName, selesai: false });
     fileInput.value = '';
     document.getElementById('tugas-deskripsi').value = '';
     saveState(); renderTugas(); renderBeranda(); closeModal('tugas');
     showNotification('Tugas berhasil ditambahkan.', 'success');
+}
+function deleteTugasCurrent() {
+    if (guardReadOnly()) return;
+    const editId = document.getElementById('tugas-edit-id').value;
+    if (!editId) return;
+    if (!confirm('Hapus tugas ini?')) return;
+    state.tugas = state.tugas.filter(t => t.id !== Number(editId));
+    saveState(); renderTugas(); renderBeranda(); closeModal('tugas');
+    showNotification('Tugas dihapus.', 'info');
 }
 function toggleTugas(id) {
     if (guardReadOnly()) return;
@@ -1952,6 +2001,8 @@ window.submitPengumuman = submitPengumuman;
 window.submitTugas = submitTugas;
 window.toggleTugas = toggleTugas;
 window.deleteTugas = deleteTugas;
+window.openTugasModal = openTugasModal;
+window.deleteTugasCurrent = deleteTugasCurrent;
 window.openReportModal = openReportModal;
 window.submitReport = submitReport;
 window.deleteReport = deleteReport;
