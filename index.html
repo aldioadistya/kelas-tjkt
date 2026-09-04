@@ -496,7 +496,7 @@
         .is-superadmin button.superadmin-only { display:inline-flex !important; }
         .is-superadmin div.superadmin-only { display:block !important; }
 
-        /* ===== ACCOUNT MANAGEMENT - STYLING BARU ===== */
+        /* ===== ACCOUNT MANAGEMENT - STYLING ===== */
         .account-filter-tabs {
             display:flex;
             gap:4px;
@@ -1036,8 +1036,6 @@ const FULL_DAY_NAMES = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"
 const MONTH_LABEL = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
 const DOW_LABEL = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
 let darkMode = localStorage.getItem('kelasku-theme') === 'dark';
-
-// ===== VARIABEL UNTUK FILTER AKUN =====
 let accountFilter = 'all';
 
 // ============================================================
@@ -1105,7 +1103,7 @@ function showLogin() { document.getElementById('login-overlay').style.display = 
 function hideLogin() { document.getElementById('login-overlay').style.display = 'none'; }
 
 // ============================================================
-// STORAGE - DIPERBAIKI
+// STORAGE
 // ============================================================
 const storage = {
     async get(key, shared) {
@@ -1191,6 +1189,7 @@ applyTheme();
 // AUTH FUNCTIONS
 // ============================================================
 let authMode = 'login';
+
 function toggleAuthMode() {
     authMode = authMode === 'login' ? 'register' : 'login';
     const namaField = document.getElementById('auth-nama-field');
@@ -1921,7 +1920,6 @@ async function renderAccountList() {
         snap.forEach(doc => users.push({ id: doc.id, ...doc.data() }));
         users.sort((a,b) => (a.email||'').localeCompare(b.email||''));
 
-        // Hitung jumlah per role
         const counts = { all: users.length, superadmin: 0, admin: 0, siswa: 0 };
         users.forEach(u => {
             if (u.role === 'superadmin') counts.superadmin++;
@@ -1934,13 +1932,11 @@ async function renderAccountList() {
         document.getElementById('count-siswa').textContent = counts.siswa;
         document.getElementById('account-total').textContent = counts.all;
 
-        // Filter berdasarkan role
         let filtered = users;
         if (accountFilter !== 'all') {
             filtered = filtered.filter(u => u.role === accountFilter);
         }
 
-        // Filter berdasarkan search
         const query = document.getElementById('account-search')?.value?.toLowerCase() || '';
         if (query) {
             filtered = filtered.filter(u => 
@@ -1950,4 +1946,21 @@ async function renderAccountList() {
         }
 
         if (filtered.length === 0) {
-            wrap.innerHTML = `<div class="empty">${query ? '🔍 Tidak ada akun yang cocok dengan pencarian.' : 'Tidak ada
+            wrap.innerHTML = `<div class="empty">${query ? '🔍 Tidak ada akun yang cocok dengan pencarian.' : 'Tidak ada akun dengan peran ini.'}</div>`;
+            return;
+        }
+
+        wrap.innerHTML = filtered.map(u => `
+            <div class="acc-row">
+                <div class="acc-info">
+                    <b>${u.username || u.email}</b>
+                    <div class="acc-email">${u.email || ''}</div>
+                </div>
+                <span class="acc-badge ${u.role}">${u.role}</span>
+                <button class="acc-delete-btn superadmin-only" onclick="toggleAccountActive('${u.id}', ${u.active===false})" title="${u.active===false ? 'Aktifkan' : 'Nonaktifkan'}">
+                    ${u.active===false ? '✅' : '⛔'}
+                </button>
+            </div>
+        `).join('');
+    } catch(e) {
+        wrap.innerHTML = '<div class="
