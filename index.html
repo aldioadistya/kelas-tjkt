@@ -748,14 +748,16 @@
                             <div style="padding-top:10px;">
                                 <input type="text" id="account-search" placeholder="🔍 Cari nama atau email..." oninput="filterAccountList()" style="width:100%; border:1px solid var(--glass-border); border-radius:var(--radius-md); padding:9px 12px; font-size:12.5px; background:var(--input-bg); color:var(--text-main); outline:none; margin-bottom:10px;">
                                 <div id="account-list" style="max-height:280px; overflow-y:auto; padding-right:2px;"></div>
-                                <div style="margin-top:12px; border-top:1px solid var(--glass-border); padding-top:10px;">
-                                    <div style="font-size:10px; font-weight:700; color:var(--text-soft); text-transform:uppercase; letter-spacing:0.3px; margin-bottom:8px;">Tambah Akun Baru</div>
-                                    <div class="field" style="margin-top:0;"><label>Nama Lengkap</label><input type="text" id="acc-nama" placeholder="Nama siswa/guru"></div>
-                                    <div class="field"><label>Email</label><input type="email" id="acc-email" placeholder="nama@email.com"></div>
-                                    <div class="field"><label>Password</label><input type="password" id="acc-password" placeholder="Minimal 6 karakter"></div>
-                                    <div class="field"><label>Peran</label><select id="acc-role"><option value="superadmin">Super Admin</option><option value="admin">Admin</option><option value="siswa" selected>Siswa</option></select></div>
-                                    <button class="fab-add" style="margin-top:6px; padding:10px; font-size:12px;" onclick="addAccount()">＋ Tambah Akun</button>
-                                </div>
+                                <details class="role-group" style="margin-top:12px;">
+                                    <summary>➕ Tambah Akun Baru</summary>
+                                    <div class="role-body" style="padding-top:10px;">
+                                        <div class="field" style="margin-top:0;"><label>Nama Lengkap</label><input type="text" id="acc-nama" placeholder="Nama siswa/guru"></div>
+                                        <div class="field"><label>Email</label><input type="email" id="acc-email" placeholder="nama@email.com"></div>
+                                        <div class="field"><label>Password</label><input type="password" id="acc-password" placeholder="Minimal 6 karakter"></div>
+                                        <div class="field"><label>Peran</label><select id="acc-role"><option value="superadmin">Super Admin</option><option value="admin">Admin</option><option value="siswa" selected>Siswa</option></select></div>
+                                        <button class="fab-add" style="margin-top:6px; padding:10px; font-size:12px;" onclick="addAccount()">＋ Tambah Akun</button>
+                                    </div>
+                                </details>
                             </div>
                         </details>
                     </div>
