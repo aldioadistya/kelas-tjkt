@@ -719,7 +719,7 @@
     <div class="modal-bg" id="modal-student"><div class="modal"><h3>Tambah Siswa</h3><div class="field"><label>Nama Lengkap</label><input id="student-nama" type="text" placeholder="Contoh: Muhammad Rizky"></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('student')">Batal</button><button class="btn btn-primary" onclick="submitStudent()">Tambah</button></div></div></div>
     <div class="modal-bg" id="modal-piket-jadwal"><div class="modal">
         <h3>Atur Jadwal Piket</h3>
-        <div class="field-hint" style="margin:-6px 0 10px;">Pilih hari, lalu centang siswa yang bertugas piket pada hari itu. Kosongkan semua centang = tampilkan semua siswa (belum diatur).</div>
+        <div class="field-hint" style="margin:-6px 0 10px;">Pilih hari, lalu centang siswa yang bertugas piket pada hari itu. Kosongkan semua centang = tidak ada piket hari itu.</div>
         <div class="day-tabs" id="piket-jadwal-day-tabs" style="flex-wrap:wrap;"></div>
         <div id="piket-jadwal-summary" class="piket-jadwal-summary"></div>
         <div id="piket-jadwal-checklist" style="max-height:280px; overflow-y:auto; margin-top:4px;"></div>
@@ -748,8 +748,6 @@ const db = firebase.firestore();
 const FS_COLLECTION = 'kelasku';
 const FS_PROFILES = 'kelasku_profiles';
 
-// App kedua khusus untuk Super Admin membuat akun baru dari Pengaturan,
-// supaya sesi login Super Admin sendiri tidak ikut tergantikan/keluar.
 const secondaryApp = firebase.initializeApp(firebaseConfig, 'Secondary');
 const secondaryAuth = secondaryApp.auth();
 secondaryAuth.setPersistence(firebase.auth.Auth.Persistence.NONE).catch(()=>{});
@@ -775,8 +773,6 @@ auth.onAuthStateChanged(async (user) => {
     }
 });
 
-// Ambil (atau buat) profil peran pengguna di Firestore, lalu masuk ke aplikasi.
-// Pendaftar pertama di seluruh koleksi profil otomatis dijadikan Super Admin.
 async function loadUserProfile(user) {
     try {
         const ref = db.collection(FS_PROFILES).doc(user.uid);
@@ -831,7 +827,6 @@ const storage = {
             return v !== null ? { key, value: v, shared: false } : null;
         }
         if (!authReady) {
-            // Fallback ke localStorage jika auth belum siap
             const v = localStorage.getItem(key);
             return v !== null ? { key, value: v, shared: false } : null;
         }
@@ -895,6 +890,7 @@ const DOW_LABEL = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
 const MONTH_LABEL = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
 const TODAY_INDEX = new Date().getDay();
 const TODAY_NAME = DAY_NAMES[TODAY_INDEX-1] || "Senin";
+const SCHOOL_DAYS = ["Senin","Selasa","Rabu","Kamis","Jumat"]; // digunakan untuk tab piket jadwal
 
 function buildDefaultJadwal() {
     const out = {}; let idc = 1;
@@ -921,21 +917,15 @@ let state = {
     tugasFilter: 'Semua',
     calMinimized: { hp: false, piket: false }
 };
-// Tampilan kalender (tanggal/bulan yang sedang dilihat) sengaja TIDAK disimpan
-// ke Firestore bersama — ini murni tampilan lokal tiap perangkat, supaya
-// setiap dibuka selalu otomatis mengikuti hari ini, bukan ikut tersangkut
-// pada tanggal terakhir yang diklik pengguna lain.
-const _nowInit = new Date();
 let hpSelectedDate = todayKey();
-let calYear = _nowInit.getFullYear();
-let calMonth = _nowInit.getMonth();
+let calYear = new Date().getFullYear();
+let calMonth = new Date().getMonth();
 let piketSelectedDate = todayKey();
-let piketCalYear = _nowInit.getFullYear();
-let piketCalMonth = _nowInit.getMonth();
+let piketCalYear = new Date().getFullYear();
+let piketCalMonth = new Date().getMonth();
 let currentUser = null;
-
-// Data kelas (state) diambil sekali dari Firestore lalu dijaga tetap segar oleh watchLiveSync().
 let classDataLoaded = false;
+
 async function ensureClassDataLoaded() {
     if (classDataLoaded) return;
     classDataLoaded = true;
@@ -963,7 +953,7 @@ async function saveState() {
     }, 300);
 }
 
-// ===== THEME (preferensi lokal per-perangkat, TIDAK disinkron ke Firestore) =====
+// ===== THEME (lokal per perangkat) =====
 let darkMode = (localStorage.getItem('kelasku-theme') !== 'light');
 function toggleTheme() {
     darkMode = !darkMode;
@@ -976,13 +966,13 @@ function applyTheme() {
     const label = document.getElementById('theme-label-setting');
     if (label) label.textContent = darkMode ? '☀️ Terang' : '🌙 Gelap';
 }
-applyTheme(); // terapkan segera saat halaman dibuka, bahkan sebelum login
+applyTheme();
 
 // ===== AUTH =====
 function showLogin() { document.getElementById('login-overlay').style.display = 'flex'; }
 function hideLogin() { document.getElementById('login-overlay').style.display = 'none'; }
 
-let authMode = 'login'; // 'login' | 'register'
+let authMode = 'login';
 function toggleAuthMode() {
     authMode = authMode === 'login' ? 'register' : 'login';
     const namaField = document.getElementById('auth-nama-field');
@@ -1040,7 +1030,6 @@ async function doAuthSubmit() {
         } else {
             await auth.signInWithEmailAndPassword(email, password);
         }
-        // Setelah sukses, onAuthStateChanged akan memuat profil & menyembunyikan layar login.
     } catch (e) {
         errorEl.textContent = authErrorMessage(e.code);
         errorEl.style.display = 'block';
@@ -1107,8 +1096,6 @@ async function resetData() {
     const _nowReset = new Date();
     hpSelectedDate = todayKey(); calYear = _nowReset.getFullYear(); calMonth = _nowReset.getMonth();
     piketSelectedDate = todayKey(); piketCalYear = _nowReset.getFullYear(); piketCalMonth = _nowReset.getMonth();
-    // Simpan langsung (tanpa jeda debounce saveState) supaya data ter-reset
-    // benar-benar tersimpan ke Firestore SEBELUM halaman di-reload.
     if (saveTimeout) { clearTimeout(saveTimeout); saveTimeout = null; }
     _skipNextSync = true;
     try { await storage.set('kelasku-state', JSON.stringify(state), true); } catch(e) {}
@@ -1195,7 +1182,6 @@ async function addAccount() {
     if (!nama || !email || !password) { alert('Semua kolom wajib diisi.'); return; }
     if (password.length < 6) { alert('Password minimal 6 karakter.'); return; }
     try {
-        // Dibuat lewat app Firebase kedua supaya sesi login Super Admin tidak ikut berpindah.
         const cred = await secondaryAuth.createUserWithEmailAndPassword(email, password);
         try { await cred.user.updateProfile({ displayName: nama }); } catch (e) {}
         await db.collection(FS_PROFILES).doc(cred.user.uid).set({
@@ -1226,7 +1212,7 @@ function importBackup(file) {
         try {
             const parsed = JSON.parse(e.target.result);
             state = Object.assign(state, parsed.state || parsed);
-            delete state.users; // backup lama mungkin membawa akun & password lokal — akun kini dikelola via Firebase Auth
+            delete state.users;
             saveState(); renderAll(); alert('Data berhasil dipulihkan!');
         } catch(err) { alert('File backup tidak valid.'); }
     };
@@ -1242,27 +1228,34 @@ function ensureRecord(dict, dateKey) {
 }
 function renderRosterView(cfg) {
     const rec = ensureRecord(cfg.dict, cfg.selectedDate);
-    const names = cfg.names && cfg.names.length ? cfg.names : state.students;
-    const collected = names.filter(n => rec[n]).length;
+    // names bisa null (fallback ke semua siswa), atau array (bisa kosong)
+    const names = cfg.names !== undefined && cfg.names !== null ? cfg.names : state.students;
+    const collected = names.length ? names.filter(n => rec[n]).length : 0;
     document.getElementById(cfg.collectedId).textContent = collected;
     document.getElementById(cfg.remainingId).textContent = names.length - collected;
     const [y,m,d] = cfg.selectedDate.split('-').map(Number);
     const labelDate = new Date(y, m-1, d);
     document.getElementById(cfg.dateLabelId).textContent = (cfg.selectedDate === todayKey() ? 'Hari ini · ' : '') + labelDate.toLocaleDateString('id-ID', { weekday:'long', day:'numeric', month:'long' });
     const list = document.getElementById(cfg.listId);
-    list.innerHTML = names.length ? names.map(n => `
+    if (!names.length) {
+        list.innerHTML = `<div class="empty">Tidak ada siswa yang dijadwalkan piket pada hari ini.</div>`;
+        return;
+    }
+    list.innerHTML = names.map(n => `
         <div class="student-row">
           <div class="s-avatar">${n.slice(0,2).toUpperCase()}</div>
           <div class="s-name">${n}</div>
           <button class="toggle-btn ${rec[n]?'done':''}" onclick="${cfg.toggleFn}('${n.replace(/'/g,"\\'")}')">${rec[n] ? '✓ Sudah' : 'Belum'}</button>
           <button class="s-remove admin-only" onclick="removeStudent('${n.replace(/'/g,"\\'")}')">×</button>
         </div>
-    `).join('') : `<div class="empty">Belum ada data siswa.</div>`;
+    `).join('');
 }
 function renderHp() { renderRosterView({ dict: state.hp, selectedDate: hpSelectedDate, collectedId:'hp-collected', remainingId:'hp-remaining', dateLabelId:'hp-date-label', listId:'hp-list', toggleFn:'toggleHp' }); }
 function renderPiket() {
     const day = dayNameOf(piketSelectedDate);
-    const assigned = (state.piketJadwal && state.piketJadwal[day] && state.piketJadwal[day].length) ? state.piketJadwal[day] : null;
+    // Jika state.piketJadwal[day] === undefined, berarti belum diatur sama sekali → fallback semua siswa.
+    // Jika sudah diatur (array, bisa kosong), gunakan array tersebut.
+    const assigned = (state.piketJadwal && state.piketJadwal[day] !== undefined) ? state.piketJadwal[day] : null;
     renderRosterView({ dict: state.piket, selectedDate: piketSelectedDate, names: assigned, collectedId:'piket-collected', remainingId:'piket-remaining', dateLabelId:'piket-date-label', listId:'piket-list', toggleFn:'togglePiket' });
 }
 function toggleHp(name) { if (guardReadOnly()) return; const rec = ensureRecord(state.hp, hpSelectedDate); rec[name] = !rec[name]; saveState(); renderHp(); renderHpCalendar(); renderBeranda(); }
@@ -1325,7 +1318,10 @@ let piketJadwalActiveDay = 'Senin';
 function openPiketJadwalModal() {
     if (guardReadOnly()) return;
     if (!state.piketJadwal) state.piketJadwal = {};
-    piketJadwalActiveDay = dayNameOf(piketSelectedDate);
+    // default aktif ke hari yang sesuai, tapi jika Sabtu/Minggu, set ke Senin
+    let active = dayNameOf(piketSelectedDate);
+    if (!SCHOOL_DAYS.includes(active)) active = 'Senin';
+    piketJadwalActiveDay = active;
     renderPiketJadwalDayTabs();
     renderPiketJadwalChecklist();
     openModal('piket-jadwal');
@@ -1336,7 +1332,7 @@ function selectPiketJadwalDay(day) {
     renderPiketJadwalChecklist();
 }
 function renderPiketJadwalDayTabs() {
-    document.getElementById('piket-jadwal-day-tabs').innerHTML = FULL_DAY_NAMES.map(d => `<div class="day-chip ${piketJadwalActiveDay===d?'active':''}" onclick="selectPiketJadwalDay('${d}')">${d}</div>`).join('');
+    document.getElementById('piket-jadwal-day-tabs').innerHTML = SCHOOL_DAYS.map(d => `<div class="day-chip ${piketJadwalActiveDay===d?'active':''}" onclick="selectPiketJadwalDay('${d}')">${d}</div>`).join('');
 }
 function renderPiketJadwalChecklist() {
     if (!state.piketJadwal) state.piketJadwal = {};
@@ -1345,7 +1341,7 @@ function renderPiketJadwalChecklist() {
     if (summaryEl) {
         summaryEl.textContent = assigned.length
             ? `📌 Hari ${piketJadwalActiveDay}: ${assigned.length} siswa ditugaskan`
-            : `📌 Hari ${piketJadwalActiveDay}: belum diatur — sementara semua siswa akan tampil di daftar piket`;
+            : `📌 Hari ${piketJadwalActiveDay}: tidak ada siswa yang ditugaskan (kosong)`;
     }
     const wrap = document.getElementById('piket-jadwal-checklist');
     wrap.innerHTML = state.students.length ? state.students.map(s => `
@@ -1367,7 +1363,7 @@ function togglePiketJadwalStudent(name, checked) {
         const count = state.piketJadwal[piketJadwalActiveDay].length;
         summaryEl.textContent = count
             ? `📌 Hari ${piketJadwalActiveDay}: ${count} siswa ditugaskan`
-            : `📌 Hari ${piketJadwalActiveDay}: belum diatur — sementara semua siswa akan tampil di daftar piket`;
+            : `📌 Hari ${piketJadwalActiveDay}: tidak ada siswa yang ditugaskan (kosong)`;
     }
     saveState();
     renderPiket(); renderPiketCalendar(); renderBeranda();
@@ -1383,7 +1379,7 @@ function openStatsModal(type) {
         let relevant = state.students;
         if (type === 'piket') {
             const day = dayNameOf(dk);
-            if (state.piketJadwal && state.piketJadwal[day] && state.piketJadwal[day].length) relevant = state.piketJadwal[day];
+            if (state.piketJadwal && state.piketJadwal[day] !== undefined) relevant = state.piketJadwal[day] || [];
         }
         relevant.forEach(s => { if (s in rec) { totals[s]++; if (rec[s]) trues[s]++; } });
     });
@@ -1622,7 +1618,10 @@ function renderBeranda() {
     document.getElementById('home-hp').textContent = Object.values(hpToday).filter(v=>v).length + "/" + state.students.length;
     const piketToday = state.piket[todayKey()] || {};
     const todayPiketDay = dayNameOf(todayKey());
-    const piketTodayAssigned = (state.piketJadwal && state.piketJadwal[todayPiketDay] && state.piketJadwal[todayPiketDay].length) ? state.piketJadwal[todayPiketDay] : state.students;
+    let piketTodayAssigned = state.students;
+    if (state.piketJadwal && state.piketJadwal[todayPiketDay] !== undefined) {
+        piketTodayAssigned = state.piketJadwal[todayPiketDay] || [];
+    }
     document.getElementById('home-piket-count').textContent = piketTodayAssigned.filter(s => piketToday[s]).length + "/" + piketTodayAssigned.length;
     document.getElementById('home-tugas').textContent = state.tugas.filter(t => !t.selesai).length;
     const todayJadwal = state.jadwal[TODAY_NAME] || [];
@@ -1633,7 +1632,7 @@ function renderBeranda() {
         <div style="display:flex; flex-wrap:wrap; gap:4px;">
             ${piketTodayAssigned.map(s => `<span class="htag" style="background:${piketToday[s] ? 'var(--teal-glass)' : 'var(--rose-glass)'}; color:${piketToday[s] ? 'var(--teal)' : 'var(--rose)'}; font-size:10px;">${s}${piketToday[s] ? ' ✓' : ''}</span>`).join('')}
         </div>
-    ` : `<div class="empty">Belum ada jadwal piket untuk hari ini.</div>`;
+    ` : `<div class="empty">Tidak ada jadwal piket untuk hari ini.</div>`;
     renderPengumuman();
 }
 
@@ -1663,11 +1662,6 @@ function updateClock() {
 }
 updateClock();
 setInterval(updateClock, 15000);
-
-// ===== INIT =====
-// Alur render pertama kali dipicu oleh auth.onAuthStateChanged() di atas:
-// begitu Firebase Auth mengenali status login (atau logout), loadUserProfile()
-// akan menampilkan layar login atau memuat data kelas & dasbor secara otomatis.
 </script>
 </body>
 </html>
