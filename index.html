@@ -11,7 +11,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <!-- Firebase SDK (Compat) -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
@@ -92,19 +91,34 @@
         }
         @media (max-width:480px){ .phone{ max-height:100vh; border-radius:0; border:none; } }
 
+        /* ===== STATUSBAR ===== */
         .statusbar {
-            height:44px; display:flex; align-items:center; justify-content:space-between;
-            padding:0 18px; font-size:13px; font-weight:700; color:var(--text-main);
-            flex-shrink:0; z-index:30;
+            height:50px;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            padding:0 20px;
+            font-size:14px;
+            font-weight:700;
+            color:var(--text-main);
+            flex-shrink:0;
+            z-index:30;
             background:rgba(255,255,255,0.04);
             border-bottom:1px solid var(--glass-border);
         }
-        .statusbar-right { display:flex; align-items:center; gap:8px; }
+        .statusbar-right { display:flex; align-items:center; gap:10px; }
         .theme-btn {
-            background:var(--glass-card); border:1px solid var(--glass-border);
-            width:28px; height:28px; border-radius:50%;
-            display:flex; align-items:center; justify-content:center;
-            cursor:pointer; font-size:13px; color:var(--text-main);
+            background:var(--glass-card);
+            border:1px solid var(--glass-border);
+            width:32px;
+            height:32px;
+            border-radius:50%;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            cursor:pointer;
+            font-size:15px;
+            color:var(--text-main);
             transition:transform 0.15s;
         }
         .theme-btn:active { transform:scale(0.9); }
@@ -117,6 +131,56 @@
         }
         .screen::-webkit-scrollbar { display:none; }
 
+        /* ===== LOGIN OVERLAY ===== */
+        .login-overlay {
+            position:absolute; inset:0; z-index:60;
+            background:var(--glass-bg); backdrop-filter:blur(20px);
+            display:flex; flex-direction:column; overflow-y:auto;
+            padding:0 16px 20px;
+        }
+        .login-hero {
+            text-align:center; background:var(--primary-gradient);
+            padding:30px 20px 40px; color:#fff;
+            border-radius:0 0 28px 28px;
+            box-shadow:0 8px 24px rgba(99,102,241,0.2);
+            margin:0 -16px 0 -16px;
+        }
+        .login-logo {
+            width:56px; height:56px; border-radius:16px;
+            background:rgba(255,255,255,0.15);
+            display:flex; align-items:center; justify-content:center;
+            font-size:28px; margin:0 auto 10px;
+            border:1px solid rgba(255,255,255,0.2);
+        }
+        .login-hero-title { font-family:'Sora',sans-serif; font-size:22px; font-weight:800; }
+        .login-hero-sub { font-size:11px; opacity:0.85; margin-top:2px; font-weight:600; letter-spacing:0.5px; text-transform:uppercase; }
+        .login-card {
+            background:var(--glass-card); backdrop-filter:blur(12px);
+            border:1px solid var(--glass-border);
+            margin:-24px 0 0; border-radius:24px;
+            padding:22px 18px; box-shadow:var(--glass-shadow);
+            flex:1;
+        }
+        .login-welcome { font-family:'Sora',sans-serif; font-size:18px; font-weight:800; color:var(--text-main); }
+        .login-sub { font-size:13px; color:var(--text-soft); margin-bottom:16px; margin-top:2px; }
+        .login-error { font-size:13px; color:var(--rose); font-weight:700; margin-bottom:10px; display:none; }
+        .login-card .field { margin-bottom:14px; }
+        .login-card .field label { font-size:11px; font-weight:800; color:var(--text-soft); display:block; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.3px; }
+        .login-card .field input {
+            width:100%; border:1px solid var(--glass-border); border-radius:var(--radius-md);
+            padding:12px 14px; font-size:15px;
+            background:var(--input-bg); color:var(--text-main);
+            outline:none; transition:border-color 0.15s;
+        }
+        .login-card .field input:focus { border-color:var(--primary); }
+        .login-card .btn { width:100%; padding:14px; font-size:15px; margin-top:6px; }
+        .login-card .login-actions { display:flex; justify-content:space-between; margin-top:12px; }
+        .login-card .login-actions span { font-size:12px; }
+        .login-card .cache-btn { padding:6px 12px; font-size:11px; margin-top:10px; }
+        .login-card .field-hint { font-size:11px; color:var(--text-soft); margin-top:12px; text-align:center; }
+        .login-card .field-hint b { color:var(--primary); }
+
+        /* ===== HERO CARD ===== */
         .hero {
             background:var(--primary-gradient);
             border-radius:var(--radius-xl);
@@ -199,26 +263,57 @@
         .row-sub { font-size:11px; color:var(--text-soft); margin-top:1px; }
         .empty { text-align:center; padding:20px 10px; color:var(--text-soft); font-size:12px; font-weight:500; }
 
+        /* ===== TAB BAR (DIPERBESAR) ===== */
         .tabbar {
             display:flex;
             background:rgba(255,255,255,0.06);
             backdrop-filter:blur(12px);
             -webkit-backdrop-filter:blur(12px);
             border-top:1px solid var(--glass-border);
-            padding:6px 4px 12px;
-            flex-shrink:0; z-index:30;
+            padding:10px 4px 14px;
+            flex-shrink:0;
+            z-index:30;
+            min-height:68px;
         }
         .tab {
-            flex:1; display:flex; flex-direction:column; align-items:center; gap:2px;
-            background:none; border:none; cursor:pointer;
-            color:var(--text-soft); font-size:9px; font-weight:700;
-            padding:4px 0; position:relative;
+            flex:1;
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            gap:3px;
+            background:none;
+            border:none;
+            cursor:pointer;
+            color:var(--text-soft);
+            font-size:11px;
+            font-weight:700;
+            padding:6px 0;
+            position:relative;
             transition:color 0.15s;
         }
-        .tab svg { width:18px; height:18px; stroke:currentColor; fill:none; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; transition:transform 0.15s; }
+        .tab svg {
+            width:24px;
+            height:24px;
+            stroke:currentColor;
+            fill:none;
+            stroke-width:2.2;
+            stroke-linecap:round;
+            stroke-linejoin:round;
+            transition:transform 0.15s;
+        }
         .tab.active { color:var(--primary); }
         .tab.active svg { transform:translateY(-1px) scale(1.05); }
-        .tab-dot { display:none; width:4px; height:4px; border-radius:50%; background:var(--primary); position:absolute; bottom:0; left:50%; transform:translateX(-50%); }
+        .tab-dot {
+            display:none;
+            width:5px;
+            height:5px;
+            border-radius:50%;
+            background:var(--primary);
+            position:absolute;
+            bottom:0;
+            left:50%;
+            transform:translateX(-50%);
+        }
         .tab.active .tab-dot { display:block; }
 
         .view { display:none; }
@@ -249,7 +344,7 @@
 
         .btn {
             border:none; border-radius:var(--radius-md);
-            padding:10px 16px; font-weight:700; font-size:12px;
+            padding:10px 16px; font-weight:700; font-size:13px;
             cursor:pointer; transition:transform 0.15s;
             display:inline-flex; align-items:center; justify-content:center; gap:6px;
         }
@@ -386,6 +481,8 @@
         .task-meta { display:flex; gap:4px; margin-top:4px; flex-wrap:wrap; }
         .pill { font-size:9.5px; font-weight:700; padding:2px 8px; border-radius:99px; }
         .pill-due { background:var(--rose-glass); color:var(--rose); }
+        .task-desc { font-size:11px; color:var(--text-soft); margin-top:3px; line-height:1.4; }
+        .task-file { font-size:10px; color:var(--primary); cursor:pointer; display:inline-block; margin-top:3px; }
 
         .modal-bg {
             position:absolute; inset:0; background:rgba(0,0,0,0.35);
@@ -418,36 +515,6 @@
         .modal-actions { display:flex; gap:8px; margin-top:14px; }
         .modal-actions .btn { flex:1; }
 
-        .login-overlay {
-            position:absolute; inset:0; z-index:60;
-            background:var(--glass-bg); backdrop-filter:blur(20px);
-            display:flex; flex-direction:column; overflow-y:auto;
-        }
-        .login-hero {
-            text-align:center; background:var(--primary-gradient);
-            padding:40px 20px 60px; color:#fff;
-            border-radius:0 0 28px 28px;
-            box-shadow:0 8px 24px rgba(99,102,241,0.2);
-        }
-        .login-logo {
-            width:56px; height:56px; border-radius:16px;
-            background:rgba(255,255,255,0.15);
-            display:flex; align-items:center; justify-content:center;
-            font-size:26px; margin:0 auto 12px;
-            border:1px solid rgba(255,255,255,0.2);
-        }
-        .login-hero-title { font-family:'Sora',sans-serif; font-size:22px; font-weight:800; }
-        .login-hero-sub { font-size:11px; opacity:0.85; margin-top:2px; font-weight:600; letter-spacing:0.5px; text-transform:uppercase; }
-        .login-card {
-            background:var(--glass-card); backdrop-filter:blur(12px);
-            border:1px solid var(--glass-border);
-            margin:-32px 16px 16px; border-radius:24px;
-            padding:22px 18px; box-shadow:var(--glass-shadow);
-        }
-        .login-welcome { font-family:'Sora',sans-serif; font-size:17px; font-weight:800; color:var(--text-main); }
-        .login-sub { font-size:12px; color:var(--text-soft); margin-bottom:16px; margin-top:2px; }
-        .login-error { font-size:12px; color:var(--rose); font-weight:700; margin-bottom:10px; display:none; }
-
         .admin-only { display:none !important; }
         .is-admin .admin-only { display:flex !important; }
         .is-admin button.admin-only { display:inline-flex !important; }
@@ -457,7 +524,20 @@
         .is-superadmin button.superadmin-only { display:inline-flex !important; }
         .is-superadmin div.superadmin-only { display:block !important; }
 
-        .acc-row { display:flex; align-items:center; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--glass-border); }
+        .acc-row {
+            display:flex; align-items:center; justify-content:space-between;
+            padding:8px 0; border-bottom:1px solid var(--glass-border);
+        }
+        .acc-row .acc-info {
+            flex:1; min-width:0; overflow:hidden;
+        }
+        .acc-row .acc-info b {
+            overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+            color:var(--text-main);
+        }
+        .acc-row .acc-info .acc-email {
+            font-size:9px; color:var(--text-soft); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+        }
         .acc-badge { font-size:9px; font-weight:800; padding:2px 8px; border-radius:99px; }
         .acc-badge.superadmin { background:var(--violet-glass); color:var(--violet); }
         .acc-badge.admin { background:var(--violet-glass); color:var(--violet); }
@@ -487,6 +567,7 @@
         .report-status.reviewed { background:var(--violet-glass); color:var(--violet); }
         .report-status.resolved { background:var(--teal-glass); color:var(--teal); }
         .report-status.rejected { background:var(--rose-glass); color:var(--rose); }
+        .report-file { font-size:9px; color:var(--primary); cursor:pointer; }
 
         .piket-jadwal-row { display:flex; align-items:center; gap:10px; padding:11px 10px; border-radius:12px; margin-bottom:6px; background:var(--glass-card); border:1px solid var(--glass-border); cursor:pointer; transition:background 0.15s; }
         .piket-jadwal-row input[type="checkbox"] { width:20px; height:20px; accent-color:var(--primary); flex-shrink:0; }
@@ -519,10 +600,87 @@
             appearance: auto;
         }
 
+        body.dark .acc-row .acc-info b {
+            color: #f1f5f9 !important;
+        }
+        body.dark .acc-row .acc-info .acc-email {
+            color: #94a3b8 !important;
+        }
+        body.dark .acc-row select {
+            color: #f1f5f9 !important;
+            background: rgba(255,255,255,0.08) !important;
+            border-color: rgba(255,255,255,0.15) !important;
+        }
+        body.dark .acc-row select option {
+            background: #1e293b;
+            color: #f1f5f9;
+        }
+
+        .category-header {
+            font-size:12px; font-weight:800; color:var(--text-soft);
+            text-transform:uppercase; letter-spacing:0.5px;
+            margin:12px 0 8px; padding-bottom:4px;
+            border-bottom:1px solid var(--glass-border);
+        }
+
+        /* ===== TOAST NOTIFICATION ===== */
+        .toast-container {
+            position:absolute; bottom:80px; left:50%; transform:translateX(-50%);
+            z-index:999; width:calc(100% - 32px); max-width:380px;
+            pointer-events:none;
+        }
+        .toast {
+            background:var(--glass-card); backdrop-filter:blur(16px);
+            border:1px solid var(--glass-border);
+            border-radius:var(--radius-lg);
+            padding:14px 18px;
+            margin-bottom:8px;
+            box-shadow:var(--glass-shadow);
+            display:flex; align-items:center; gap:12px;
+            pointer-events:auto;
+            animation:toastSlide 0.4s cubic-bezier(0.34,1.56,0.64,1);
+            transition:opacity 0.3s ease, transform 0.3s ease;
+            color:var(--text-main);
+        }
+        .toast.hiding { opacity:0; transform:translateY(20px); }
+        @keyframes toastSlide {
+            from { opacity:0; transform:translateY(40px) scale(0.96); }
+            to { opacity:1; transform:translateY(0) scale(1); }
+        }
+        .toast-icon { font-size:18px; flex-shrink:0; line-height:1; }
+        .toast-msg { font-size:13px; font-weight:600; flex:1; }
+        .toast-close {
+            background:none; border:none; color:var(--text-soft);
+            font-size:16px; cursor:pointer; padding:2px;
+            line-height:1; opacity:0.6; transition:opacity 0.2s;
+        }
+        .toast-close:hover { opacity:1; }
+        .toast.success { border-left:3px solid var(--teal); }
+        .toast.success .toast-icon { color:var(--teal); }
+        .toast.error { border-left:3px solid var(--rose); }
+        .toast.error .toast-icon { color:var(--rose); }
+        .toast.warning { border-left:3px solid var(--amber); }
+        .toast.warning .toast-icon { color:var(--amber); }
+        .toast.info { border-left:3px solid var(--primary); }
+        .toast.info .toast-icon { color:var(--primary); }
+
         @media (max-width:380px) {
+            .statusbar { height:44px; font-size:12px; padding:0 14px; }
+            .theme-btn { width:28px; height:28px; font-size:13px; }
+            .tabbar { padding:6px 2px 10px; min-height:58px; }
+            .tab { font-size:9px; }
+            .tab svg { width:20px; height:20px; }
             .hero-name { font-size:16px; }
             .stat-value { font-size:14px; }
             .balance-value { font-size:24px; }
+            .login-hero { padding:24px 16px 32px; }
+            .login-card { padding:16px 14px; }
+        }
+        @media (max-width:340px) {
+            .statusbar span:not(#clock) { display:none; }
+            .tabbar { padding:4px 0 8px; min-height:50px; }
+            .tab svg { width:18px; height:18px; }
+            .tab { font-size:8px; }
         }
     </style>
 </head>
@@ -555,22 +713,22 @@
             <div class="field" id="auth-nama-field" style="display:none;"><label>Nama Lengkap</label><input type="text" id="auth-nama" placeholder="Nama lengkap kamu"></div>
             <div class="field"><label>Email</label><input type="email" id="auth-email" placeholder="nama@email.com" autocomplete="email"></div>
             <div class="field"><label>Password</label><input type="password" id="auth-password" placeholder="Minimal 6 karakter" autocomplete="current-password" onkeydown="if(event.key==='Enter') doAuthSubmit();"></div>
-            <button class="btn btn-primary btn-block" style="margin-top:10px;" id="auth-submit-btn" onclick="doAuthSubmit()">Masuk ke Kelas →</button>
-            <div style="display:flex; justify-content:space-between; margin-top:12px;">
-                <span class="section-link" style="font-size:11px; cursor:pointer;" onclick="toggleAuthMode()" id="auth-toggle-link">Belum punya akun? Daftar</span>
-                <span class="section-link" style="font-size:11px; cursor:pointer;" onclick="doForgotPassword()">Lupa password?</span>
+            <button class="btn btn-primary btn-block" id="auth-submit-btn" onclick="doAuthSubmit()">Masuk ke Kelas →</button>
+            <div class="login-actions">
+                <span class="section-link" style="font-size:12px; cursor:pointer;" onclick="toggleAuthMode()" id="auth-toggle-link">Belum punya akun? Daftar</span>
+                <span class="section-link" style="font-size:12px; cursor:pointer;" onclick="doForgotPassword()">Lupa password?</span>
             </div>
-            <div style="text-align:center; margin-top:10px;">
-                <button class="btn btn-ghost" style="padding:6px 10px; font-size:10px;" onclick="clearLocalData()">🧹 Bersihkan Cache</button>
+            <div style="display:flex; gap:6px; margin-top:8px;">
+                <button class="btn btn-ghost cache-btn" style="flex:1; padding:6px 10px; font-size:10px;" onclick="clearLocalData()">🧹 Bersihkan Cache</button>
+                <button class="btn btn-ghost cache-btn" style="flex:1; padding:6px 10px; font-size:10px;" onclick="resetData()">🔄 Reset Data</button>
             </div>
-            <div class="field-hint" style="text-align:center; margin-top:12px; color:var(--teal);">
-                🔒 Login menggunakan Firebase Authentication (Email &amp; Password)
-            </div>
-            <div class="field-hint" style="text-align:center; margin-top:6px;">
-                Pendaftar pertama otomatis menjadi Super Admin.
-            </div>
+            <div class="field-hint" style="color:var(--teal);">🔒 Login menggunakan Firebase Authentication (Email &amp; Password)</div>
+            <div class="field-hint">Pendaftar pertama otomatis menjadi Super Admin.</div>
         </div>
     </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
 
     <!-- Main Views -->
     <div class="screen">
@@ -703,13 +861,16 @@
                         <button class="btn btn-ghost" style="padding:4px 10px; font-size:10px;" onclick="toggleTheme()"><span id="theme-label-setting">☀️ Terang</span></button>
                     </div>
                     <div id="account-manage-wrap" class="superadmin-only" style="margin-top:12px; border-top:1px solid var(--glass-border); padding-top:10px;">
-                        <div style="font-size:11px; font-weight:800; color:var(--text-soft); text-transform:uppercase; margin-bottom:8px;">Kelola Akun (Super Admin)</div>
+                        <div class="category-header">👥 Manajemen Pengguna</div>
                         <div id="account-list"></div>
-                        <div class="field" style="margin-top:8px;"><label>Nama Lengkap</label><input type="text" id="acc-nama" placeholder="Nama siswa/guru"></div>
-                        <div class="field"><label>Email</label><input type="email" id="acc-email" placeholder="nama@email.com"></div>
-                        <div class="field"><label>Password</label><input type="password" id="acc-password" placeholder="Minimal 6 karakter"></div>
-                        <div class="field"><label>Peran</label><select id="acc-role"><option value="superadmin">Super Admin</option><option value="admin">Admin</option><option value="siswa" selected>Siswa</option></select></div>
-                        <button class="fab-add" style="margin-top:6px; padding:10px; font-size:12px;" onclick="addAccount()">＋ Tambah Akun</button>
+                        <div style="margin-top:12px; border-top:1px solid var(--glass-border); padding-top:10px;">
+                            <div style="font-size:10px; font-weight:700; color:var(--text-soft); text-transform:uppercase; letter-spacing:0.3px; margin-bottom:8px;">Tambah Akun Baru</div>
+                            <div class="field" style="margin-top:0;"><label>Nama Lengkap</label><input type="text" id="acc-nama" placeholder="Nama siswa/guru"></div>
+                            <div class="field"><label>Email</label><input type="email" id="acc-email" placeholder="nama@email.com"></div>
+                            <div class="field"><label>Password</label><input type="password" id="acc-password" placeholder="Minimal 6 karakter"></div>
+                            <div class="field"><label>Peran</label><select id="acc-role"><option value="superadmin">Super Admin</option><option value="admin">Admin</option><option value="siswa" selected>Siswa</option></select></div>
+                            <button class="fab-add" style="margin-top:6px; padding:10px; font-size:12px;" onclick="addAccount()">＋ Tambah Akun</button>
+                        </div>
                     </div>
                     <div style="margin-top:16px; border-top:1px solid var(--glass-border); padding-top:10px;">
                         <div style="font-size:11px; font-weight:800; color:var(--text-soft); text-transform:uppercase; margin-bottom:8px;">Backup &amp; Pemulihan</div>
@@ -743,9 +904,13 @@
     </div>
 
     <!-- Modals -->
-    <div class="modal-bg" id="modal-kas"><div class="modal"><h3>Tambah Transaksi Kas</h3><div class="field"><label>Jenis</label><select id="kas-jenis"><option value="masuk">Pemasukan (+)</option><option value="keluar">Pengeluaran (-)</option></select></div><div class="field"><label>Keterangan</label><input id="kas-ket" type="text" placeholder="Contoh: Kas Mingguan"></div><div class="field"><label>Jumlah (Rp)</label><input id="kas-jumlah" type="number" placeholder="0"></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('kas')">Batal</button><button class="btn btn-primary" onclick="submitKas()">Simpan</button></div></div></div>
-    <div class="modal-bg" id="modal-tugas"><div class="modal"><h3>Tambah Tugas</h3><div class="field"><label>Nama Tugas</label><input id="tugas-nama" type="text" placeholder="Contoh: Laporan Jaringan"></div><div class="field"><label>Mata Pelajaran</label><input id="tugas-mapel" type="text" placeholder="Contoh: Administrasi Jaringan"></div><div class="field"><label>Tenggat</label><input id="tugas-tenggat" type="date"></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('tugas')">Batal</button><button class="btn btn-primary" onclick="submitTugas()">Simpan</button></div></div></div>
+    <!-- Modal Kas dengan upload file -->
+    <div class="modal-bg" id="modal-kas"><div class="modal"><h3>Tambah Transaksi Kas</h3><div class="field"><label>Jenis</label><select id="kas-jenis"><option value="masuk">Pemasukan (+)</option><option value="keluar">Pengeluaran (-)</option></select></div><div class="field"><label>Keterangan</label><input id="kas-ket" type="text" placeholder="Contoh: Kas Mingguan"></div><div class="field"><label>Jumlah (Rp)</label><input id="kas-jumlah" type="number" placeholder="0"></div><div class="field"><label>Lampiran (opsional)</label><input type="file" id="kas-file" accept=".jpg,.png,.pdf,.doc,.docx,.xlsx"></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('kas')">Batal</button><button class="btn btn-primary" onclick="submitKas()">Simpan</button></div></div></div>
+
+    <div class="modal-bg" id="modal-tugas"><div class="modal"><h3>Tambah Tugas</h3><div class="field"><label>Nama Tugas</label><input id="tugas-nama" type="text" placeholder="Contoh: Laporan Jaringan"></div><div class="field"><label>Mata Pelajaran</label><input id="tugas-mapel" type="text" placeholder="Contoh: Administrasi Jaringan"></div><div class="field"><label>Tenggat</label><input id="tugas-tenggat" type="date"></div><div class="field"><label>Deskripsi</label><textarea id="tugas-deskripsi" placeholder="Deskripsi tugas..."></textarea></div><div class="field"><label>Lampiran (opsional)</label><input type="file" id="tugas-file" accept=".pdf,.doc,.docx,.jpg,.png,.jpeg,.zip"></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('tugas')">Batal</button><button class="btn btn-primary" onclick="submitTugas()">Simpan</button></div></div></div>
+
     <div class="modal-bg" id="modal-student"><div class="modal"><h3>Tambah Siswa</h3><div class="field"><label>Nama Lengkap</label><input id="student-nama" type="text" placeholder="Contoh: Muhammad Rizky"></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('student')">Batal</button><button class="btn btn-primary" onclick="submitStudent()">Tambah</button></div></div></div>
+
     <div class="modal-bg" id="modal-piket-jadwal"><div class="modal">
         <h3>Atur Jadwal Piket</h3>
         <div class="field-hint" style="margin:-6px 0 10px;">Pilih hari, lalu centang siswa yang bertugas piket pada hari itu. Kosongkan semua centang = tidak ada piket hari itu.</div>
@@ -754,8 +919,9 @@
         <div id="piket-jadwal-checklist" style="max-height:280px; overflow-y:auto; margin-top:4px;"></div>
         <div class="modal-actions"><button class="btn btn-primary" onclick="closeModal('piket-jadwal')">Selesai</button></div>
     </div></div>
+
     <div class="modal-bg" id="modal-pengumuman"><div class="modal"><h3>Tambah Pengumuman</h3><div class="field"><label>Isi</label><input id="pengumuman-teks" type="text" placeholder="Tulis informasi untuk kelas..."></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('pengumuman')">Batal</button><button class="btn btn-primary" onclick="submitPengumuman()">Publikasikan</button></div></div></div>
-    <!-- MODAL JADWAL DIPERBAIKI -->
+
     <div class="modal-bg" id="modal-jadwal"><div class="modal">
         <h3 id="jadwal-modal-title">Atur Jam Pelajaran</h3>
         <div class="field"><label>Hari</label><select id="jadwal-hari">
@@ -773,12 +939,47 @@
             <button class="btn btn-primary" onclick="submitJadwal()">Simpan</button>
         </div>
     </div></div>
+
     <div class="modal-bg" id="modal-stats"><div class="modal"><h3 id="stats-title">📊 Statistik</h3><div id="stats-content" style="max-height:300px; overflow-y:auto;"></div><div class="modal-actions"><button class="btn btn-primary btn-block" onclick="closeModal('stats')">Tutup</button></div></div></div>
+
     <div class="modal-bg" id="modal-export"><div class="modal"><h3>Rekap Kas</h3><div class="field"><textarea id="export-text" readonly style="height:160px; font-family:monospace; font-size:11px;"></textarea></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('export')">Tutup</button><button class="btn btn-primary" onclick="copyExportText()">📋 Salin</button></div></div></div>
-    <div class="modal-bg" id="modal-report"><div class="modal"><h3>Buat Laporan</h3><div class="field"><label>Kategori</label><select id="report-kategori"><option value="Kekerasan/Berantem">Kekerasan</option><option value="Bullying">Bullying</option><option value="Kerusakan Fasilitas">Kerusakan</option><option value="Pencurian">Pencurian</option><option value="Pelanggaran Tata Tertib">Pelanggaran</option><option value="Lainnya">Lainnya</option></select></div><div class="field"><label>Judul</label><input id="report-judul" type="text" placeholder="Ringkasan singkat"></div><div class="field"><label>Deskripsi</label><textarea id="report-deskripsi" placeholder="Jelaskan kronologi..."></textarea></div><div class="field"><label>Tanggal Kejadian</label><input id="report-tanggal" type="date"></div><div class="field"><label>Urgensi</label><select id="report-urgensi"><option value="rendah">Rendah</option><option value="sedang" selected>Sedang</option><option value="tinggi">Tinggi</option><option value="darurat">Darurat 🚨</option></select></div><div class="field" style="display:flex; align-items:center; gap:6px;"><input type="checkbox" id="report-anonim" style="width:16px;height:16px;"><label for="report-anonim" style="margin:0; text-transform:none; font-size:11px;">Anonim 🙈</label></div><input type="hidden" id="report-edit-id"><div id="report-status-field" style="display:none;" class="admin-only"><div class="field"><label>Status</label><select id="report-status"><option value="pending">Menunggu</option><option value="reviewed">Ditinjau</option><option value="resolved">Selesai</option><option value="rejected">Ditolak</option></select></div></div><div class="modal-actions"><button class="btn btn-danger admin-only" id="report-delete-btn" style="display:none;" onclick="deleteReport()">Hapus</button><button class="btn btn-ghost" onclick="closeModal('report')">Batal</button><button class="btn btn-primary" onclick="submitReport()">Kirim</button></div></div></div>
+
+    <div class="modal-bg" id="modal-report"><div class="modal"><h3>Buat Laporan</h3><div class="field"><label>Kategori</label><select id="report-kategori"><option value="Kekerasan/Berantem">Kekerasan</option><option value="Bullying">Bullying</option><option value="Kerusakan Fasilitas">Kerusakan</option><option value="Pencurian">Pencurian</option><option value="Pelanggaran Tata Tertib">Pelanggaran</option><option value="Lainnya">Lainnya</option></select></div><div class="field"><label>Judul</label><input id="report-judul" type="text" placeholder="Ringkasan singkat"></div><div class="field"><label>Deskripsi</label><textarea id="report-deskripsi" placeholder="Jelaskan kronologi..."></textarea></div><div class="field"><label>Tanggal Kejadian</label><input id="report-tanggal" type="date"></div><div class="field"><label>Urgensi</label><select id="report-urgensi"><option value="rendah">Rendah</option><option value="sedang" selected>Sedang</option><option value="tinggi">Tinggi</option><option value="darurat">Darurat 🚨</option></select></div><div class="field" style="display:flex; align-items:center; gap:6px;"><input type="checkbox" id="report-anonim" style="width:16px;height:16px;"><label for="report-anonim" style="margin:0; text-transform:none; font-size:11px;">Anonim 🙈</label></div>
+        <div class="field"><label>Lampiran (opsional)</label><input type="file" id="report-file" accept=".pdf,.doc,.docx,.jpg,.png,.jpeg,.zip"></div>
+        <input type="hidden" id="report-edit-id"><div id="report-status-field" style="display:none;" class="admin-only"><div class="field"><label>Status</label><select id="report-status"><option value="pending">Menunggu</option><option value="reviewed">Ditinjau</option><option value="resolved">Selesai</option><option value="rejected">Ditolak</option></select></div></div>
+        <div class="modal-actions"><button class="btn btn-danger admin-only" id="report-delete-btn" style="display:none;" onclick="deleteReport()">Hapus</button><button class="btn btn-ghost" onclick="closeModal('report')">Batal</button><button class="btn btn-primary" onclick="submitReport()">Kirim</button></div></div></div>
 </div>
 
 <script>
+// ===== TOAST NOTIFICATION SYSTEM =====
+function showNotification(message, type = 'success', duration = 2800) {
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+    const icons = {
+        success: '✅',
+        error: '❌',
+        warning: '⚠️',
+        info: 'ℹ️'
+    };
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.innerHTML = `
+        <span class="toast-icon">${icons[type] || 'ℹ️'}</span>
+        <span class="toast-msg">${message}</span>
+        <button class="toast-close" onclick="this.parentElement.remove()">✕</button>
+    `;
+    container.appendChild(toast);
+    const timer = setTimeout(() => {
+        toast.classList.add('hiding');
+        setTimeout(() => { if (toast.parentElement) toast.remove(); }, 300);
+    }, duration);
+    toast.addEventListener('click', () => {
+        clearTimeout(timer);
+        toast.classList.add('hiding');
+        setTimeout(() => { if (toast.parentElement) toast.remove(); }, 300);
+    });
+}
+
 // ===== FIREBASE =====
 const firebaseConfig = {
     apiKey: "AIzaSyAhrh00F2N07_Lx-QT6sHi_ygsvWfds1eQ",
@@ -839,10 +1040,8 @@ async function loadUserProfile(user) {
         }
         const profile = snap.data();
         if (profile.active === false) {
-            const errorEl = document.getElementById('login-error');
-            errorEl.style.color = 'var(--rose)';
-            errorEl.textContent = 'Akun ini telah dinonaktifkan. Hubungi Super Admin.';
-            errorEl.style.display = 'block';
+            document.getElementById('login-error').textContent = 'Akun ini telah dinonaktifkan. Hubungi Super Admin.';
+            document.getElementById('login-error').style.display = 'block';
             await auth.signOut();
             return;
         }
@@ -859,10 +1058,8 @@ async function loadUserProfile(user) {
         renderAll();
         watchLiveSync();
     } catch (e) {
-        const errorEl = document.getElementById('login-error');
-        errorEl.style.color = 'var(--rose)';
-        errorEl.textContent = 'Gagal memuat profil pengguna. Periksa koneksi internet.';
-        errorEl.style.display = 'block';
+        document.getElementById('login-error').textContent = 'Gagal memuat profil pengguna. Periksa koneksi internet.';
+        document.getElementById('login-error').style.display = 'block';
     }
 }
 
@@ -1064,7 +1261,10 @@ async function doAuthSubmit() {
     const errorEl = document.getElementById('login-error');
     errorEl.style.color = 'var(--rose)';
     errorEl.style.display = 'none';
-    if (!email || !password) { errorEl.textContent = 'Email dan password wajib diisi.'; errorEl.style.display = 'block'; return; }
+    if (!email || !password) {
+        showNotification('Email dan password wajib diisi.', 'error');
+        return;
+    }
     const btn = document.getElementById('auth-submit-btn');
     const originalText = btn.textContent;
     btn.disabled = true; btn.textContent = 'Memproses...';
@@ -1077,8 +1277,7 @@ async function doAuthSubmit() {
             await auth.signInWithEmailAndPassword(email, password);
         }
     } catch (e) {
-        errorEl.textContent = authErrorMessage(e.code);
-        errorEl.style.display = 'block';
+        showNotification(authErrorMessage(e.code), 'error');
     } finally {
         btn.disabled = false; btn.textContent = originalText;
     }
@@ -1086,17 +1285,12 @@ async function doAuthSubmit() {
 
 async function doForgotPassword() {
     const email = document.getElementById('auth-email').value.trim();
-    const errorEl = document.getElementById('login-error');
-    if (!email) { errorEl.style.color = 'var(--rose)'; errorEl.textContent = 'Isi email dulu untuk reset password.'; errorEl.style.display = 'block'; return; }
+    if (!email) { showNotification('Isi email dulu untuk reset password.', 'warning'); return; }
     try {
         await auth.sendPasswordResetEmail(email);
-        errorEl.style.color = 'var(--teal)';
-        errorEl.textContent = 'Link reset password telah dikirim ke email kamu.';
-        errorEl.style.display = 'block';
+        showNotification('Link reset password telah dikirim ke email kamu.', 'success');
     } catch (e) {
-        errorEl.style.color = 'var(--rose)';
-        errorEl.textContent = authErrorMessage(e.code);
-        errorEl.style.display = 'block';
+        showNotification(authErrorMessage(e.code), 'error');
     }
 }
 
@@ -1116,11 +1310,17 @@ function applyRole(role) {
     document.getElementById('account-role-label').textContent = roleLabel;
 }
 function guardReadOnly() {
-    if (isReadOnly()) { alert('Hanya Admin atau Super Admin.'); return true; }
+    if (isReadOnly()) {
+        showNotification('Fitur ini hanya dapat diubah oleh Admin atau Super Admin.', 'error');
+        return true;
+    }
     return false;
 }
 function guardAccountManagement() {
-    if (!isSuperAdmin()) { alert('Hanya Super Admin yang dapat mengelola akun.'); return true; }
+    if (!isSuperAdmin()) {
+        showNotification('Hanya Super Admin yang dapat mengelola akun sistem.', 'error');
+        return true;
+    }
     return false;
 }
 
@@ -1183,12 +1383,12 @@ async function renderAccountList() {
         users.sort((a, b) => (a.email || '').localeCompare(b.email || ''));
         wrap.innerHTML = users.length ? users.map(u => `
             <div class="acc-row">
-                <div style="flex:1; min-width:0; overflow:hidden;">
+                <div class="acc-info">
                     <div style="display:flex; align-items:center; gap:6px;">
                         <b style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${u.username || u.email}</b>
                         ${u.active === false ? '<span style="font-size:9px; color:var(--rose); font-weight:800;">NONAKTIF</span>' : ''}
                     </div>
-                    <div style="font-size:9px; color:var(--text-soft); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${u.email || ''}</div>
+                    <div class="acc-email">${u.email || ''}</div>
                 </div>
                 <select style="font-size:10px; padding:3px 6px; border-radius:6px; border:1px solid var(--glass-border); background:var(--glass-card); color:var(--text-main);" onchange="changeAccountRole('${u.id}', this.value)" ${u.id === currentUser.uid ? 'disabled' : ''}>
                     <option value="superadmin" ${u.role === 'superadmin' ? 'selected' : ''}>Super Admin</option>
@@ -1204,20 +1404,33 @@ async function renderAccountList() {
 }
 async function changeAccountRole(uid, role) {
     if (guardAccountManagement()) return;
-    if (uid === currentUser.uid) { alert('Tidak dapat mengubah peran akun sendiri.'); renderAccountList(); return; }
+    if (uid === currentUser.uid) {
+        showNotification('Tidak dapat mengubah peran akun sendiri.', 'warning');
+        renderAccountList();
+        return;
+    }
     try {
         await db.collection(FS_PROFILES).doc(uid).update({ role });
+        showNotification('Peran akun berhasil diubah.', 'success');
         renderAccountList();
-    } catch (e) { alert('Gagal mengubah peran.'); }
+    } catch (e) {
+        showNotification('Gagal mengubah peran.', 'error');
+    }
 }
 async function toggleAccountActive(uid, makeActive) {
     if (guardAccountManagement()) return;
-    if (uid === currentUser.uid) { alert('Tidak dapat menonaktifkan akun sendiri.'); return; }
+    if (uid === currentUser.uid) {
+        showNotification('Tidak dapat menonaktifkan akun sendiri.', 'warning');
+        return;
+    }
     if (!makeActive && !confirm('Nonaktifkan akun ini? Pemilik akun tidak akan bisa masuk lagi.')) return;
     try {
         await db.collection(FS_PROFILES).doc(uid).update({ active: makeActive });
+        showNotification(makeActive ? 'Akun berhasil diaktifkan.' : 'Akun berhasil dinonaktifkan.', 'success');
         renderAccountList();
-    } catch (e) { alert('Gagal memperbarui status akun.'); }
+    } catch (e) {
+        showNotification('Gagal memperbarui status akun.', 'error');
+    }
 }
 async function addAccount() {
     if (guardAccountManagement()) return;
@@ -1225,8 +1438,14 @@ async function addAccount() {
     const email = document.getElementById('acc-email').value.trim();
     const password = document.getElementById('acc-password').value;
     const role = document.getElementById('acc-role').value;
-    if (!nama || !email || !password) { alert('Semua kolom wajib diisi.'); return; }
-    if (password.length < 6) { alert('Password minimal 6 karakter.'); return; }
+    if (!nama || !email || !password) {
+        showNotification('Semua kolom wajib diisi.', 'warning');
+        return;
+    }
+    if (password.length < 6) {
+        showNotification('Password minimal 6 karakter.', 'warning');
+        return;
+    }
     try {
         const cred = await secondaryAuth.createUserWithEmailAndPassword(email, password);
         try { await cred.user.updateProfile({ displayName: nama }); } catch (e) {}
@@ -1238,9 +1457,9 @@ async function addAccount() {
         document.getElementById('acc-email').value = '';
         document.getElementById('acc-password').value = '';
         renderAccountList();
-        alert('Akun berhasil dibuat!');
+        showNotification('Akun berhasil dibuat!', 'success');
     } catch (e) {
-        alert(authErrorMessage(e.code));
+        showNotification(authErrorMessage(e.code), 'error');
     }
 }
 function exportBackup() {
@@ -1250,6 +1469,7 @@ function exportBackup() {
     const a = document.createElement('a');
     a.href = url; a.download = 'kelasku-backup-' + todayKey() + '.json';
     a.click(); URL.revokeObjectURL(url);
+    showNotification('Backup berhasil diunduh!', 'success');
 }
 function importBackup(file) {
     if (!file || guardReadOnly()) return;
@@ -1259,8 +1479,11 @@ function importBackup(file) {
             const parsed = JSON.parse(e.target.result);
             state = Object.assign(state, parsed.state || parsed);
             delete state.users;
-            saveState(); renderAll(); alert('Data berhasil dipulihkan!');
-        } catch(err) { alert('File backup tidak valid.'); }
+            saveState(); renderAll();
+            showNotification('Data berhasil dipulihkan!', 'success');
+        } catch(err) {
+            showNotification('File backup tidak valid.', 'error');
+        }
     };
     reader.readAsText(file);
 }
@@ -1310,11 +1533,13 @@ function submitStudent() {
     if (!nama) return;
     if (!state.students.includes(nama)) state.students.push(nama);
     saveState(); renderHp(); renderPiket(); closeModal('student');
+    showNotification('Siswa berhasil ditambahkan.', 'success');
 }
 function removeStudent(name) {
     if (guardReadOnly()) return;
     state.students = state.students.filter(s => s !== name);
     saveState(); renderHp(); renderPiket();
+    showNotification('Siswa dihapus.', 'info');
 }
 function resetRoster(type) {
     if (guardReadOnly()) return;
@@ -1324,6 +1549,7 @@ function resetRoster(type) {
         Object.keys(dict[k]).forEach(s => dict[k][s] = false);
     });
     saveState(); renderAll();
+    showNotification('Data ' + (type === 'hp' ? 'HP' : 'Piket') + ' telah direset.', 'info');
 }
 
 // ===== CALENDAR =====
@@ -1454,11 +1680,13 @@ function submitPengumuman() {
     if (!text) return;
     state.pengumuman.push({ id: Date.now(), text, date: new Date().toLocaleDateString('id-ID') });
     saveState(); renderPengumuman(); closeModal('pengumuman');
+    showNotification('Pengumuman berhasil dipublikasikan.', 'success');
 }
 function deletePengumuman(id) {
     if (guardReadOnly()) return;
     state.pengumuman = state.pengumuman.filter(p => p.id !== id);
     saveState(); renderPengumuman();
+    showNotification('Pengumuman dihapus.', 'info');
 }
 function rupiah(n) { return "Rp " + Math.round(n).toLocaleString('id-ID'); }
 function renderKas() {
@@ -1471,7 +1699,10 @@ function renderKas() {
     list.innerHTML = state.kas.length ? state.kas.slice().reverse().map(t => `
         <div class="tx-item">
             <div class="tx-icon" style="background:${t.jenis==='masuk'?'var(--teal-glass)':'var(--rose-glass)'}">${t.jenis==='masuk'?'⬇️':'⬆️'}</div>
-            <div><div class="tx-title">${t.ket}</div><div class="tx-sub">${t.tanggal}</div></div>
+            <div>
+                <div class="tx-title">${t.ket}</div>
+                <div class="tx-sub">${t.tanggal}${t.file ? ` · 📎 ${t.file}` : ''}</div>
+            </div>
             <div class="tx-amt ${t.jenis==='masuk'?'plus':'minus'}">${t.jenis==='masuk'?'+':'-'}${rupiah(t.jumlah)}</div>
             <button class="tx-delete admin-only" onclick="hapusKas(${t.id})">✕</button>
         </div>
@@ -1482,32 +1713,52 @@ function submitKas() {
     const jenis = document.getElementById('kas-jenis').value;
     const ket = document.getElementById('kas-ket').value.trim();
     const jumlah = parseFloat(document.getElementById('kas-jumlah').value);
-    if (!ket || !jumlah) return;
-    state.kas.push({ id: Date.now(), jenis, ket, jumlah, tanggal: new Date().toLocaleDateString('id-ID') });
-    saveState(); renderKas(); renderBeranda(); closeModal('kas');
+    const fileInput = document.getElementById('kas-file');
+    let fileName = '';
+    if (fileInput.files.length > 0) {
+        fileName = fileInput.files[0].name;
+    }
+    if (!ket || !jumlah) {
+        showNotification('Isi semua field transaksi.', 'warning');
+        return;
+    }
+    state.kas.push({
+        id: Date.now(),
+        jenis,
+        ket,
+        jumlah,
+        tanggal: new Date().toLocaleDateString('id-ID'),
+        file: fileName
+    });
+    fileInput.value = '';
+    saveState();
+    renderKas();
+    renderBeranda();
+    closeModal('kas');
+    showNotification('Transaksi kas berhasil ditambahkan.', 'success');
 }
 function hapusKas(id) {
     if (guardReadOnly()) return;
     state.kas = state.kas.filter(t => t.id !== id);
     saveState(); renderKas(); renderBeranda();
+    showNotification('Transaksi kas dihapus.', 'info');
 }
 function openExportModal() {
     let txt = "REKAP KAS KELAS X TJKT 1\n==================\n";
-    state.kas.forEach(t => { txt += `[${t.tanggal}] ${t.jenis.toUpperCase()}: ${t.ket} (${rupiah(t.jumlah)})\n`; });
+    state.kas.forEach(t => { txt += `[${t.tanggal}] ${t.jenis.toUpperCase()}: ${t.ket} (${rupiah(t.jumlah)})${t.file ? ' [File: '+t.file+']' : ''}\n`; });
     document.getElementById('export-text').value = txt;
     openModal('export');
 }
 function copyExportText() {
     const el = document.getElementById('export-text');
     el.select(); document.execCommand('copy');
-    alert('Rekap kas telah disalin!');
+    showNotification('Rekap kas telah disalin ke clipboard.', 'success');
 }
 
-// ===== JADWAL PELAJARAN (FIXED) =====
+// ===== JADWAL PELAJARAN =====
 let editingJadwalId = null;
 
 function openJadwalModal(id) {
-    // Reset semua field terlebih dahulu
     document.getElementById('jadwal-mulai').value = '';
     document.getElementById('jadwal-selesai').value = '';
     document.getElementById('jadwal-mapel').value = '';
@@ -1556,7 +1807,7 @@ function submitJadwal() {
     const mapel = document.getElementById('jadwal-mapel').value.trim();
     const guru = document.getElementById('jadwal-guru').value.trim();
     if (!mapel || !mulai || !selesai) {
-        alert('Isi semua field!');
+        showNotification('Isi semua field!', 'warning');
         return;
     }
     const editId = document.getElementById('jadwal-edit-id').value;
@@ -1568,9 +1819,11 @@ function submitJadwal() {
                 break;
             }
         }
+        showNotification('Jadwal berhasil diperbarui.', 'success');
     } else {
         if (!state.jadwal[hari]) state.jadwal[hari] = [];
         state.jadwal[hari].push({ id: Date.now(), jam: mulai+'-'+selesai, mapel, guru });
+        showNotification('Jadwal berhasil ditambahkan.', 'success');
     }
     saveState();
     renderJadwalList();
@@ -1590,6 +1843,7 @@ function deleteJadwalCurrent() {
     renderJadwalList();
     renderBeranda();
     closeModal('jadwal');
+    showNotification('Jadwal dihapus.', 'info');
 }
 
 // ===== JADWAL & TUGAS =====
@@ -1622,6 +1876,8 @@ function renderTugas() {
             <div style="flex:1;">
                 <div class="task-title">${t.nama}</div>
                 <div class="task-meta"><span class="pill pill-due">📅 ${t.tenggat || 'Tanpa tenggat'}</span></div>
+                ${t.deskripsi ? `<div class="task-desc">${t.deskripsi}</div>` : ''}
+                ${t.file ? `<div class="task-file" onclick="window.open('${t.file}','_blank')">📎 ${t.file}</div>` : ''}
             </div>
             <button class="s-remove admin-only" onclick="deleteTugas(${t.id})">×</button>
         </div>
@@ -1629,7 +1885,11 @@ function renderTugas() {
     document.getElementById('tugas-done-list').innerHTML = done.length ? done.map(t => `
         <div class="task-item">
             <div class="checkbox checked" onclick="toggleTugas(${t.id})">✓</div>
-            <div style="flex:1;"><div class="task-title checked">${t.nama}</div></div>
+            <div style="flex:1;">
+                <div class="task-title checked">${t.nama}</div>
+                ${t.deskripsi ? `<div class="task-desc" style="text-decoration:line-through; color:var(--text-muted);">${t.deskripsi}</div>` : ''}
+                ${t.file ? `<div class="task-file" onclick="window.open('${t.file}','_blank')">📎 ${t.file}</div>` : ''}
+            </div>
         </div>
     `).join('') : `<div class="empty">Belum ada tugas selesai.</div>`;
 }
@@ -1638,9 +1898,29 @@ function submitTugas() {
     const nama = document.getElementById('tugas-nama').value.trim();
     const mapel = document.getElementById('tugas-mapel').value.trim();
     const tenggat = document.getElementById('tugas-tenggat').value;
-    if (!nama) return;
-    state.tugas.push({ id: Date.now(), nama, mapel, tenggat, selesai: false });
+    const deskripsi = document.getElementById('tugas-deskripsi').value.trim();
+    const fileInput = document.getElementById('tugas-file');
+    let fileName = '';
+    if (fileInput.files.length > 0) {
+        fileName = fileInput.files[0].name;
+    }
+    if (!nama) {
+        showNotification('Nama tugas wajib diisi.', 'warning');
+        return;
+    }
+    state.tugas.push({
+        id: Date.now(),
+        nama,
+        mapel,
+        tenggat,
+        deskripsi,
+        file: fileName,
+        selesai: false
+    });
+    fileInput.value = '';
+    document.getElementById('tugas-deskripsi').value = '';
     saveState(); renderTugas(); renderBeranda(); closeModal('tugas');
+    showNotification('Tugas berhasil ditambahkan.', 'success');
 }
 function toggleTugas(id) {
     if (guardReadOnly()) return;
@@ -1652,6 +1932,7 @@ function deleteTugas(id) {
     if (guardReadOnly()) return;
     state.tugas = state.tugas.filter(t => t.id !== id);
     saveState(); renderTugas(); renderBeranda();
+    showNotification('Tugas dihapus.', 'info');
 }
 
 // ===== LAPORAN =====
@@ -1667,6 +1948,7 @@ function renderReports() {
                 <div class="report-title">${r.judul}</div>
                 <div class="report-meta">
                     <span>${r.kategori}</span> • <span>${r.anonim ? 'Anonim' : (r.pelapor || 'Siswa')}</span>
+                    ${r.file ? `<span class="report-file" onclick="event.stopPropagation();window.open('${r.file}','_blank')">📎 ${r.file}</span>` : ''}
                     <span class="report-status ${r.status}">${r.status}</span>
                 </div>
             </div>
@@ -1690,15 +1972,25 @@ function openReportModal(id) {
         document.getElementById('report-deskripsi').value = '';
         document.getElementById('report-status-field').style.display = 'none';
         delBtn.style.setProperty('display', 'none', 'important');
+        document.getElementById('report-file').value = '';
     }
     openModal('report');
 }
 function submitReport() {
     const editId = document.getElementById('report-edit-id').value;
+    const fileInput = document.getElementById('report-file');
+    let fileName = '';
+    if (fileInput.files.length > 0) {
+        fileName = fileInput.files[0].name;
+    }
     if (editId && currentUser && (currentUser.role === 'superadmin' || currentUser.role === 'admin')) {
         const r = state.reports.find(x => x.id === Number(editId));
-        if (r) r.status = document.getElementById('report-status').value;
+        if (r) {
+            r.status = document.getElementById('report-status').value;
+            if (fileName) r.file = fileName;
+        }
         saveState(); renderReports(); closeModal('report');
+        showNotification('Laporan berhasil diperbarui.', 'success');
         return;
     }
     const judul = document.getElementById('report-judul').value.trim();
@@ -1706,14 +1998,25 @@ function submitReport() {
     const kategori = document.getElementById('report-kategori').value;
     const urgensi = document.getElementById('report-urgensi').value;
     const anonim = document.getElementById('report-anonim').checked;
-    if (!judul || !deskripsi) return;
+    if (!judul || !deskripsi) {
+        showNotification('Judul dan deskripsi wajib diisi.', 'warning');
+        return;
+    }
     state.reports.push({
-        id: Date.now(), judul, deskripsi, kategori, urgensi, anonim,
+        id: Date.now(),
+        judul,
+        deskripsi,
+        kategori,
+        urgensi,
+        anonim,
         pelapor: anonim ? 'Anonim' : (currentUser ? currentUser.username : 'Siswa'),
-        status: 'pending', date: new Date().toLocaleDateString('id-ID')
+        status: 'pending',
+        date: new Date().toLocaleDateString('id-ID'),
+        file: fileName
     });
+    fileInput.value = '';
     saveState(); renderReports(); closeModal('report');
-    alert('Laporan berhasil dikirim!');
+    showNotification('Laporan berhasil dikirim!', 'success');
 }
 function deleteReport() {
     if (guardReadOnly()) return;
@@ -1721,6 +2024,7 @@ function deleteReport() {
     if (!confirm('Hapus laporan ini?')) return;
     state.reports = state.reports.filter(r => r.id !== editId);
     saveState(); renderReports(); closeModal('report');
+    showNotification('Laporan dihapus.', 'info');
 }
 
 // ===== BERANDA =====
