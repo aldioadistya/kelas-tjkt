@@ -495,163 +495,18 @@
         .is-superadmin .superadmin-only { display:flex !important; }
         .is-superadmin button.superadmin-only { display:inline-flex !important; }
         .is-superadmin div.superadmin-only { display:block !important; }
-
-        /* ===== ACCOUNT MANAGEMENT - STYLING BARU ===== */
-        .account-filter-tabs {
-            display: flex;
-            gap: 4px;
-            margin-bottom: 8px;
-            flex-wrap: wrap;
-            background: var(--glass-card);
-            border: 1px solid var(--glass-border);
-            border-radius: 14px;
-            padding: 4px;
-        }
-        .account-filter-tab {
-            flex: 1;
-            text-align: center;
-            padding: 6px 8px;
-            border-radius: 10px;
-            font-size: 10px;
-            font-weight: 800;
-            cursor: pointer;
-            color: var(--text-soft);
-            background: none;
-            border: none;
-            transition: all 0.15s;
-            white-space: nowrap;
-            min-width: 0;
-        }
-        .account-filter-tab.active {
-            background: var(--primary-gradient);
-            color: #fff;
-            box-shadow: 0 3px 10px -2px rgba(79,70,229,0.35);
-        }
-        .account-filter-tab .count {
-            display: inline-block;
-            background: rgba(255,255,255,0.2);
-            border-radius: 99px;
-            padding: 0 6px;
-            font-size: 9px;
-            margin-left: 4px;
-            font-weight: 700;
-        }
-        .account-filter-tab.active .count {
-            background: rgba(255,255,255,0.3);
-        }
-
-        .account-stats {
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--text-soft);
-            margin-bottom: 6px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 4px;
-        }
-        #account-search {
-            padding: 4px 10px;
-            border-radius: 99px;
-            border: 1px solid var(--glass-border);
-            background: var(--input-bg);
-            color: var(--text-main);
-            font-size: 11px;
-            width: 140px;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-        #account-search:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
-            outline: none;
-        }
-
-        #account-list-wrap {
-            margin-top: 6px;
-        }
-        #account-list {
-            max-height: 220px;
-            overflow-y: auto;
-            padding-right: 3px;
-            scrollbar-width: thin;
-        }
-        #account-list::-webkit-scrollbar {
-            width: 4px;
-        }
-        #account-list::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 99px;
-        }
-        #account-list::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
         .acc-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 6px 6px 6px 10px;
-            margin-bottom: 2px;
-            border-radius: 10px;
-            background: var(--glass-card);
-            border: 1px solid var(--glass-border);
-            transition: background 0.15s, border-color 0.15s;
+            display:flex; align-items:center; justify-content:space-between;
+            padding:8px 0; border-bottom:1px solid var(--glass-border);
         }
-        .acc-row:hover {
-            background: var(--glass-card-hover);
-            border-color: var(--primary);
-        }
-        .acc-row .acc-info {
-            flex: 1;
-            min-width: 0;
-            overflow: hidden;
-        }
-        .acc-row .acc-info b {
-            font-size: 12px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            color: var(--text-main);
-        }
-        .acc-row .acc-info .acc-email {
-            font-size: 9px;
-            color: var(--text-soft);
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        .acc-badge {
-            font-size: 8px;
-            font-weight: 800;
-            padding: 2px 8px;
-            border-radius: 99px;
-            flex-shrink: 0;
-            margin: 0 6px;
-        }
-        .acc-badge.superadmin { background: var(--violet-glass); color: var(--violet); }
-        .acc-badge.admin { background: var(--violet-glass); color: var(--violet); }
-        .acc-badge.siswa { background: var(--teal-glass); color: var(--teal); }
-
-        .acc-delete-btn {
-            background: none;
-            border: none;
-            color: var(--rose);
-            font-size: 12px;
-            cursor: pointer;
-            padding: 2px 6px;
-            border-radius: 4px;
-            transition: background 0.15s, transform 0.15s;
-            flex-shrink: 0;
-            line-height: 1;
-        }
-        .acc-delete-btn:hover {
-            background: var(--rose-glass);
-        }
-        .acc-delete-btn:active {
-            transform: scale(0.85);
-        }
-
+        .acc-row .acc-info { flex:1; min-width:0; overflow:hidden; }
+        .acc-row .acc-info b { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--text-main); }
+        .acc-row .acc-info .acc-email { font-size:9px; color:var(--text-soft); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+        .acc-badge { font-size:9px; font-weight:800; padding:2px 8px; border-radius:99px; }
+        .acc-badge.superadmin { background:var(--violet-glass); color:var(--violet); }
+        .acc-badge.admin { background:var(--violet-glass); color:var(--violet); }
+        .acc-badge.siswa { background:var(--teal-glass); color:var(--teal); }
+        .acc-delete-btn { background:none; border:none; color:var(--rose); font-size:14px; cursor:pointer; padding:2px 6px; border-radius:4px; }
         .announce-item { display:flex; gap:10px; align-items:flex-start; padding:10px 0; border-bottom:1px solid var(--glass-border); }
         .announce-item:last-child { border-bottom:none; }
         .announce-dot { width:6px; height:6px; border-radius:50%; background:var(--amber); margin-top:5px; flex-shrink:0; }
@@ -700,8 +555,6 @@
             .balance-value { font-size:24px; }
             .login-hero { padding:24px 16px 32px; }
             .login-card { padding:16px 14px; }
-            #account-search { width:100px; font-size:10px; }
-            .account-filter-tab { font-size:9px; padding:4px 6px; }
         }
         @media (max-width:340px) {
             .statusbar span:not(#clock) { display:none; }
@@ -879,39 +732,17 @@
             <div class="pagehead"><h1>⚙️ Pengaturan</h1><p>Atur preferensi &amp; akses sistem</p></div>
             <div class="section">
                 <div class="card">
-                    <div class="acc-row" style="margin-bottom:10px; border:none; padding:8px 0;">
+                    <div class="acc-row" style="margin-bottom:10px;">
                         <div><div style="font-size:14px; font-weight:800; color:var(--text-main);" id="account-whoami">-</div><div style="font-size:11px; color:var(--text-soft);" id="account-role-label">-</div></div>
                         <button class="btn btn-danger" style="padding:4px 10px; font-size:10px;" onclick="logout()">Keluar</button>
                     </div>
-                    <div class="acc-row" style="border-bottom:1px solid var(--glass-border); padding-bottom:10px; margin-bottom:10px; border:none;">
+                    <div class="acc-row" style="border-bottom:1px solid var(--glass-border); padding-bottom:10px; margin-bottom:10px;">
                         <span style="font-weight:700; color:var(--text-main);">Mode Tampilan</span>
                         <button class="btn btn-ghost" style="padding:4px 10px; font-size:10px;" onclick="toggleTheme()"><span id="theme-label-setting">☀️ Terang</span></button>
                     </div>
-                    
-                    <!-- ===== MANAJEMEN PENGGUNA DENGAN KATEGORI ===== -->
                     <div id="account-manage-wrap" class="superadmin-only" style="margin-top:12px; border-top:1px solid var(--glass-border); padding-top:10px;">
                         <div class="category-header">👥 Manajemen Pengguna</div>
-                        
-                        <!-- Filter Tabs -->
-                        <div class="account-filter-tabs" id="account-filter-tabs">
-                            <button class="account-filter-tab active" data-role="all" onclick="setAccountFilter('all')">Semua <span class="count" id="count-all">0</span></button>
-                            <button class="account-filter-tab" data-role="superadmin" onclick="setAccountFilter('superadmin')">👑 Super <span class="count" id="count-superadmin">0</span></button>
-                            <button class="account-filter-tab" data-role="admin" onclick="setAccountFilter('admin')">🛡️ Admin <span class="count" id="count-admin">0</span></button>
-                            <button class="account-filter-tab" data-role="siswa" onclick="setAccountFilter('siswa')">🧑‍🎓 Siswa <span class="count" id="count-siswa">0</span></button>
-                        </div>
-
-                        <!-- Stats & Search -->
-                        <div class="account-stats">
-                            <span>👥 Total: <span id="account-total">0</span></span>
-                            <input type="text" id="account-search" placeholder="Cari akun..." oninput="renderAccountList()">
-                        </div>
-
-                        <!-- Daftar Akun (scroll) -->
-                        <div id="account-list-wrap">
-                            <div id="account-list"></div>
-                        </div>
-
-                        <!-- Tambah Akun -->
+                        <div id="account-list"></div>
                         <div style="margin-top:12px; border-top:1px solid var(--glass-border); padding-top:10px;">
                             <div style="font-size:10px; font-weight:700; color:var(--text-soft); text-transform:uppercase; letter-spacing:0.3px; margin-bottom:8px;">Tambah Akun Baru</div>
                             <div class="field" style="margin-top:0;"><label>Nama Lengkap</label><input type="text" id="acc-nama" placeholder="Nama siswa/guru"></div>
@@ -921,7 +752,6 @@
                             <button class="fab-add" style="margin-top:6px; padding:10px; font-size:12px;" onclick="addAccount()">＋ Tambah Akun</button>
                         </div>
                     </div>
-
                     <div style="margin-top:16px; border-top:1px solid var(--glass-border); padding-top:10px;">
                         <div style="font-size:11px; font-weight:800; color:var(--text-soft); text-transform:uppercase; margin-bottom:8px;">Backup &amp; Pemulihan</div>
                         <div style="display:flex; gap:8px;">
@@ -1016,8 +846,6 @@ secondaryAuth.setPersistence(firebase.auth.Auth.Persistence.NONE).catch(()=>{});
 let currentUser = null;
 let authReady = false;
 let pendingRegisterName = '';
-let accountFilter = 'all'; // all, superadmin, admin, siswa
-
 let state = {
     kas: [], students: ["Aldio Adistya","Bagas Saputra","Citra Ramadhani","Dwi Lestari","Eka Prasetyo","Fajar Nugraha","Gita Anggraini","Hendra Wijaya"],
     hp: {}, piket: {}, piketJadwal: {},
@@ -1127,7 +955,7 @@ const storage = {
         if (!shared) { localStorage.setItem(key, value); return; }
         try {
             await db.collection(FS_COLLECTION).doc(key).set({ value, updatedAt: Date.now() });
-            localStorage.setItem(key, value);
+            localStorage.setItem(key, value); // cache lokal juga
         } catch (e) {
             console.warn('Firestore set error, hanya ke localStorage', e);
             localStorage.setItem(key, value);
@@ -1142,6 +970,7 @@ async function saveState() {
     if (_savePending) return;
     _savePending = true;
     try {
+        // Pastikan data selalu tersimpan ke Firestore dan localStorage
         await storage.set('kelasku-state', JSON.stringify(state), true);
         console.log('State saved successfully');
     } catch (e) {
@@ -1156,10 +985,13 @@ async function loadState() {
         const r = await storage.get('kelasku-state', true);
         if (r && r.value) {
             const loaded = JSON.parse(r.value);
+            // Merge dengan state default, jangan timpa yang sudah ada
             state = Object.assign(state, loaded);
+            // Pastikan properti penting tetap ada
             if (!state.reports) state.reports = [];
             if (!state.piketJadwal) state.piketJadwal = {};
             if (!state.calMinimized) state.calMinimized = { hp: false, piket: false };
+            // pastikan jadwal untuk setiap hari ada
             DAY_NAMES.forEach(day => {
                 if (!state.jadwal[day]) state.jadwal[day] = [];
                 if (!state.piketJadwal[day]) state.piketJadwal[day] = [];
@@ -1328,7 +1160,7 @@ function clearLocalData() {
 }
 
 // ============================================================
-// WATCH LIVE SYNC
+// WATCH LIVE SYNC (DIPERBAIKI agar tidak timpa data lokal)
 // ============================================================
 let liveSyncStarted = false;
 function watchLiveSync() {
@@ -1339,6 +1171,7 @@ function watchLiveSync() {
         if (!snap.exists) return;
         try {
             const saved = JSON.parse(snap.data().value);
+            // Gabungkan dengan state yang ada, jangan timpa data yang baru diubah
             state = Object.assign(state, saved);
             if (document.getElementById('login-overlay').style.display === 'none') renderAll();
         } catch(e) {
@@ -1371,7 +1204,7 @@ function ensureRecord(dict, dateKey) {
 // RENDER FUNGSI LENGKAP
 // ============================================================
 let calYear = 2026;
-let calMonth = 8;
+let calMonth = 8; // September
 let piketCalYear = 2026;
 let piketCalMonth = 8;
 
@@ -1900,57 +1733,163 @@ function deletePengumuman(id) {
     showNotification('Pengumuman dihapus.', 'info');
 }
 
-// ============================================================
-// ACCOUNT MANAGEMENT — DENGAN FILTER KATEGORI & SEARCH
-// ============================================================
-function setAccountFilter(role) {
-    accountFilter = role;
-    document.querySelectorAll('.account-filter-tab').forEach(tab => {
-        tab.classList.toggle('active', tab.dataset.role === role);
-    });
-    renderAccountList();
-}
-
+// ===== ACCOUNT MANAGEMENT =====
 async function renderAccountList() {
     const wrap = document.getElementById('account-list');
-    if (!wrap || !isSuperAdmin()) {
-        if (wrap) wrap.innerHTML = '';
-        return;
-    }
-    wrap.innerHTML = '<div class="empty">⏳ Memuat akun...</div>';
+    if (!wrap || !isSuperAdmin()) return;
+    wrap.innerHTML = '<div class="empty">Memuat akun...</div>';
     try {
         const snap = await db.collection(FS_PROFILES).get();
         const users = [];
         snap.forEach(doc => users.push({ id: doc.id, ...doc.data() }));
         users.sort((a,b) => (a.email||'').localeCompare(b.email||''));
+        wrap.innerHTML = users.map(u => `
+            <div class="acc-row">
+                <div class="acc-info">
+                    <b>${u.username || u.email}</b>
+                    <div class="acc-email">${u.email || ''}</div>
+                </div>
+                <span class="acc-badge ${u.role}">${u.role}</span>
+                <button class="acc-delete-btn superadmin-only" onclick="toggleAccountActive('${u.id}', ${u.active===false})">${u.active===false ? '✓' : '✕'}</button>
+            </div>
+        `).join('');
+    } catch(e) {
+        wrap.innerHTML = '<div class="empty">Gagal memuat akun.</div>';
+    }
+}
+async function addAccount() {
+    if (guardAccountManagement()) return;
+    const nama = document.getElementById('acc-nama').value.trim();
+    const email = document.getElementById('acc-email').value.trim();
+    const password = document.getElementById('acc-password').value;
+    const role = document.getElementById('acc-role').value;
+    if (!nama || !email || !password) { showNotification('Semua kolom wajib diisi.', 'warning'); return; }
+    if (password.length < 6) { showNotification('Password minimal 6 karakter.', 'warning'); return; }
+    try {
+        const cred = await secondaryAuth.createUserWithEmailAndPassword(email, password);
+        try { await cred.user.updateProfile({ displayName: nama }); } catch(e) {}
+        await db.collection(FS_PROFILES).doc(cred.user.uid).set({ email, username: nama, role, active: true, createdAt: Date.now() });
+        await secondaryAuth.signOut();
+        document.getElementById('acc-nama').value = '';
+        document.getElementById('acc-email').value = '';
+        document.getElementById('acc-password').value = '';
+        renderAccountList();
+        showNotification('Akun berhasil dibuat!', 'success');
+    } catch(e) {
+        showNotification(authErrorMessage(e.code), 'error');
+    }
+}
+async function toggleAccountActive(uid, makeActive) {
+    if (guardAccountManagement()) return;
+    if (uid === currentUser.uid) { showNotification('Tidak dapat menonaktifkan akun sendiri.', 'warning'); return; }
+    if (!makeActive && !confirm('Nonaktifkan akun ini?')) return;
+    try {
+        await db.collection(FS_PROFILES).doc(uid).update({ active: makeActive });
+        showNotification(makeActive ? 'Akun diaktifkan.' : 'Akun dinonaktifkan.', 'success');
+        renderAccountList();
+    } catch(e) {
+        showNotification('Gagal memperbarui status akun.', 'error');
+    }
+}
 
-        // Hitung jumlah per role
-        const counts = { all: users.length, superadmin: 0, admin: 0, siswa: 0 };
-        users.forEach(u => {
-            if (u.role === 'superadmin') counts.superadmin++;
-            else if (u.role === 'admin') counts.admin++;
-            else counts.siswa++;
-        });
-        document.getElementById('count-all').textContent = counts.all;
-        document.getElementById('count-superadmin').textContent = counts.superadmin;
-        document.getElementById('count-admin').textContent = counts.admin;
-        document.getElementById('count-siswa').textContent = counts.siswa;
-        document.getElementById('account-total').textContent = counts.all;
+// ===== EXPORT / IMPORT =====
+function exportBackup() {
+    const payload = { exportedAt: new Date().toISOString(), state };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'kelasku-backup-' + todayKey() + '.json';
+    a.click(); URL.revokeObjectURL(url);
+    showNotification('Backup berhasil diunduh!', 'success');
+}
+function importBackup(file) {
+    if (!file || guardReadOnly()) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        try {
+            const parsed = JSON.parse(e.target.result);
+            state = Object.assign(state, parsed.state || parsed);
+            saveState(); renderAll();
+            showNotification('Data berhasil dipulihkan!', 'success');
+        } catch(err) { showNotification('File backup tidak valid.', 'error'); }
+    };
+    reader.readAsText(file);
+}
 
-        // Filter berdasarkan role
-        let filtered = users;
-        if (accountFilter !== 'all') {
-            filtered = filtered.filter(u => u.role === accountFilter);
-        }
+// ============================================================
+// NAVIGATION
+// ============================================================
+function goTo(name) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.getElementById('view-'+name).classList.add('active');
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    const t = document.querySelector(`.tab[data-tab="${name}"]`);
+    if (t) t.classList.add('active');
+    if (name === 'settings') renderAccountList();
+}
 
-        // Filter berdasarkan search
-        const query = document.getElementById('account-search')?.value?.toLowerCase() || '';
-        if (query) {
-            filtered = filtered.filter(u => 
-                (u.username||'').toLowerCase().includes(query) || 
-                (u.email||'').toLowerCase().includes(query)
-            );
-        }
+function openModal(name) { document.getElementById('modal-'+name).classList.add('open'); }
+function closeModal(name) { document.getElementById('modal-'+name).classList.remove('open'); }
 
-        if (filtered.length === 0) {
-            wrap
+// ============================================================
+// CLOCK
+// ============================================================
+function updateClock() {
+    const d = new Date();
+    document.getElementById('clock').textContent = String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+}
+updateClock();
+setInterval(updateClock, 10000);
+
+// ============================================================
+// EKSPOR FUNGSI KE GLOBAL
+// ============================================================
+window.doAuthSubmit = doAuthSubmit;
+window.toggleAuthMode = toggleAuthMode;
+window.doForgotPassword = doForgotPassword;
+window.toggleTheme = toggleTheme;
+window.goTo = goTo;
+window.openModal = openModal;
+window.closeModal = closeModal;
+window.logout = logout;
+window.resetData = resetData;
+window.clearLocalData = clearLocalData;
+window.addAccount = addAccount;
+window.exportBackup = exportBackup;
+window.importBackup = importBackup;
+window.toggleCalendar = toggleCalendar;
+window.calShift = calShift;
+window.piketCalShift = piketCalShift;
+window.setJadwalMode = setJadwalMode;
+window.openJadwalModal = openJadwalModal;
+window.submitJadwal = submitJadwal;
+window.deleteJadwalCurrent = deleteJadwalCurrent;
+window.openPiketJadwalModal = openPiketJadwalModal;
+window.resetRoster = resetRoster;
+window.openStudentModal = openStudentModal;
+window.submitStudent = submitStudent;
+window.openPengumumanModal = openPengumumanModal;
+window.submitPengumuman = submitPengumuman;
+window.submitTugas = submitTugas;
+window.toggleTugas = toggleTugas;
+window.deleteTugas = deleteTugas;
+window.openReportModal = openReportModal;
+window.submitReport = submitReport;
+window.deleteReport = deleteReport;
+window.submitKas = submitKas;
+window.hapusKas = hapusKas;
+window.openExportModal = openExportModal;
+window.copyExportText = copyExportText;
+window.openStatsModal = openStatsModal;
+window.selectHpDate = selectHpDate;
+window.selectPiketDate = selectPiketDate;
+window.selectDay = selectDay;
+window.toggleHp = toggleHp;
+window.togglePiket = togglePiket;
+window.removeStudent = removeStudent;
+window.togglePiketJadwalStudent = togglePiketJadwalStudent;
+window.selectPiketJadwalDay = selectPiketJadwalDay;
+window.todayKey = todayKey;
+</script>
+</body>
+</html>
