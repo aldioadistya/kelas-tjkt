@@ -1528,13 +1528,32 @@ function renderJadwalList() {
 }
 function openJadwalModal(id) {
     document.getElementById('jadwal-hari').innerHTML = DAY_NAMES.map(d => `<option value="${d}">${d}</option>`).join('');
-    document.getElementById('jadwal-mulai').value = '';
-    document.getElementById('jadwal-selesai').value = '';
-    document.getElementById('jadwal-mapel').value = '';
-    document.getElementById('jadwal-guru').value = '';
-    document.getElementById('jadwal-edit-id').value = '';
-    document.getElementById('jadwal-delete-btn').style.display = 'none';
-    document.getElementById('jadwal-modal-title').textContent = 'Atur Jam Pelajaran';
+    if (id) {
+        let found = null, foundDay = null;
+        for (let day in state.jadwal) {
+            const item = (state.jadwal[day] || []).find(j => j.id === Number(id));
+            if (item) { found = item; foundDay = day; break; }
+        }
+        if (!found) return;
+        const [mulai, selesai] = (found.jam || '').split('-');
+        document.getElementById('jadwal-hari').value = foundDay;
+        document.getElementById('jadwal-mulai').value = mulai || '';
+        document.getElementById('jadwal-selesai').value = selesai || '';
+        document.getElementById('jadwal-mapel').value = found.mapel || '';
+        document.getElementById('jadwal-guru').value = found.guru || '';
+        document.getElementById('jadwal-edit-id').value = found.id;
+        document.getElementById('jadwal-delete-btn').style.display = '';
+        document.getElementById('jadwal-modal-title').textContent = 'Edit Jam Pelajaran';
+    } else {
+        document.getElementById('jadwal-hari').value = state.selectedDay || DAY_NAMES[0];
+        document.getElementById('jadwal-mulai').value = '';
+        document.getElementById('jadwal-selesai').value = '';
+        document.getElementById('jadwal-mapel').value = '';
+        document.getElementById('jadwal-guru').value = '';
+        document.getElementById('jadwal-edit-id').value = '';
+        document.getElementById('jadwal-delete-btn').style.display = 'none';
+        document.getElementById('jadwal-modal-title').textContent = 'Atur Jam Pelajaran';
+    }
     openModal('jadwal');
 }
 function submitJadwal() {
@@ -1544,8 +1563,18 @@ function submitJadwal() {
     const selesai = document.getElementById('jadwal-selesai').value;
     const mapel = document.getElementById('jadwal-mapel').value.trim();
     const guru = document.getElementById('jadwal-guru').value.trim();
+    const editId = document.getElementById('jadwal-edit-id').value;
     if (!mapel || !mulai || !selesai) { showNotification('Isi semua field!', 'warning'); return; }
     if (!state.jadwal[hari]) state.jadwal[hari] = [];
+    if (editId) {
+        for (let day in state.jadwal) {
+            state.jadwal[day] = state.jadwal[day].filter(j => j.id !== Number(editId));
+        }
+        state.jadwal[hari].push({ id: Number(editId), jam: mulai+'-'+selesai, mapel, guru });
+        saveState(); renderJadwalList(); renderBeranda(); closeModal('jadwal');
+        showNotification('Jadwal berhasil diperbarui.', 'success');
+        return;
+    }
     state.jadwal[hari].push({ id: Date.now(), jam: mulai+'-'+selesai, mapel, guru });
     saveState(); renderJadwalList(); renderBeranda(); closeModal('jadwal');
     showNotification('Jadwal berhasil ditambahkan.', 'success');
