@@ -1186,7 +1186,7 @@ function applyTheme() {
 applyTheme();
 
 // ============================================================
-// AUTH FUNCTIONS
+// AUTH FUNCTIONS (DIPERBAIKI - SEMUA FUNGSI TERSEDIA)
 // ============================================================
 let authMode = 'login';
 
@@ -1953,14 +1953,4 @@ async function renderAccountList() {
         wrap.innerHTML = filtered.map(u => `
             <div class="acc-row">
                 <div class="acc-info">
-                    <b>${u.username || u.email}</b>
-                    <div class="acc-email">${u.email || ''}</div>
-                </div>
-                <span class="acc-badge ${u.role}">${u.role}</span>
-                <button class="acc-delete-btn superadmin-only" onclick="toggleAccountActive('${u.id}', ${u.active===false})" title="${u.active===false ? 'Aktifkan' : 'Nonaktifkan'}">
-                    ${u.active===false ? '✅' : '⛔'}
-                </button>
-            </div>
-        `).join('');
-    } catch(e) {
-        wrap.innerHTML = '<div class="
+                    <b>${u.username || u.email}</b
