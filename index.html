@@ -757,7 +757,7 @@
         <button class="tab" data-tab="settings" onclick="goTo('settings')"><span class="tab-dot"></span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06A1.65 1.65 0 0019.4 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>Setelan</button>
     </div>
 
-    <!-- Modals (semua lengkap) -->
+    <!-- Modals -->
     <div class="modal-bg" id="modal-kas"><div class="modal"><h3>Tambah Transaksi Kas</h3><div class="field"><label>Jenis</label><select id="kas-jenis"><option value="masuk">Pemasukan (+)</option><option value="keluar">Pengeluaran (-)</option></select></div><div class="field"><label>Keterangan</label><input id="kas-ket" type="text" placeholder="Contoh: Kas Mingguan"></div><div class="field"><label>Jumlah (Rp)</label><input id="kas-jumlah" type="number" placeholder="0"></div><div class="field"><label>Lampiran (opsional)</label><input type="file" id="kas-file" accept=".jpg,.png,.pdf,.doc,.docx,.xlsx"></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('kas')">Batal</button><button class="btn btn-primary" onclick="submitKas()">Simpan</button></div></div></div>
     <div class="modal-bg" id="modal-tugas"><div class="modal"><h3>Tambah Tugas</h3><div class="field"><label>Nama Tugas</label><input id="tugas-nama" type="text" placeholder="Contoh: Laporan Jaringan"></div><div class="field"><label>Mata Pelajaran</label><input id="tugas-mapel" type="text" placeholder="Contoh: Administrasi Jaringan"></div><div class="field"><label>Tenggat</label><input id="tugas-tenggat" type="date"></div><div class="field"><label>Deskripsi</label><textarea id="tugas-deskripsi" placeholder="Deskripsi tugas..."></textarea></div><div class="field"><label>Lampiran (opsional)</label><input type="file" id="tugas-file" accept=".pdf,.doc,.docx,.jpg,.png,.jpeg,.zip"></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('tugas')">Batal</button><button class="btn btn-primary" onclick="submitTugas()">Simpan</button></div></div></div>
     <div class="modal-bg" id="modal-student"><div class="modal"><h3>Tambah Siswa</h3><div class="field"><label>Nama Lengkap</label><input id="student-nama" type="text" placeholder="Contoh: Muhammad Rizky"></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('student')">Batal</button><button class="btn btn-primary" onclick="submitStudent()">Tambah</button></div></div></div>
@@ -835,13 +835,15 @@ let state = {
     pengumuman: [], reports: [],
     jadwalMode: 'pelajaran',
     selectedDay: 'Senin',
-    calMinimized: { hp: false, piket: false }
+    calMinimized: { hp: false, piket: false },
+    hpSelectedDate: null,
+    piketSelectedDate: null
 };
 let localSettings = { session: null };
 const DAY_NAMES = ["Senin","Selasa","Rabu","Kamis","Jumat"];
 const SCHOOL_DAYS = ["Senin","Selasa","Rabu","Kamis","Jumat"];
 const FULL_DAY_NAMES = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
-const MONTH_LABEL = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+const MONTH_LABEL = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
 const DOW_LABEL = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
 let darkMode = localStorage.getItem('kelasku-theme') === 'dark';
 
@@ -937,20 +939,28 @@ const storage = {
 async function loadState() {
     try {
         const r = await storage.get('kelasku-state', true);
-        if (r && r.value) state = Object.assign(state, JSON.parse(r.value));
-        if (!state.reports) state.reports = [];
-        if (!state.piketJadwal) state.piketJadwal = {};
-        if (!state.calMinimized) state.calMinimized = { hp: false, piket: false };
-        // pastikan jadwal default
-        if (!state.jadwal || Object.keys(state.jadwal).length === 0) {
-            state.jadwal = {
-                Senin:[{jam:"07:15-08:45", mapel:"Matematika", guru:"Bu Rina"}],
-                Selasa:[{jam:"07:15-08:45", mapel:"Administrasi Jaringan", guru:"Pak Budi"}],
-                Rabu:[{jam:"07:15-07:45", mapel:"Projek IPAS", guru:"Bu Hanadi"}],
-                Kamis:[{jam:"07:15-08:45", mapel:"Pemrograman Web", guru:"Pak Reza"}],
-                Jumat:[{jam:"07:15-08:45", mapel:"Pendidikan Agama", guru:"Pak Yusuf"}]
-            };
+        if (r && r.value) {
+            state = Object.assign(state, JSON.parse(r.value));
+            // Pastikan state memiliki semua properti
+            if (!state.reports) state.reports = [];
+            if (!state.piketJadwal) state.piketJadwal = {};
+            if (!state.calMinimized) state.calMinimized = { hp: false, piket: false };
+            if (!state.jadwal || Object.keys(state.jadwal).length === 0) {
+                state.jadwal = {
+                    Senin:[{jam:"07:15-08:45", mapel:"Matematika", guru:"Bu Rina"}],
+                    Selasa:[{jam:"07:15-08:45", mapel:"Administrasi Jaringan", guru:"Pak Budi"}],
+                    Rabu:[{jam:"07:15-07:45", mapel:"Projek IPAS", guru:"Bu Hanadi"}],
+                    Kamis:[{jam:"07:15-08:45", mapel:"Pemrograman Web", guru:"Pak Reza"}],
+                    Jumat:[{jam:"07:15-08:45", mapel:"Pendidikan Agama", guru:"Pak Yusuf"}]
+                };
+            }
         }
+        // Inisialisasi tanggal terpilih jika belum ada
+        if (!state.hpSelectedDate) state.hpSelectedDate = todayKey();
+        if (!state.piketSelectedDate) state.piketSelectedDate = todayKey();
+        // Pastikan record untuk tanggal hari ini ada
+        ensureRecord(state.hp, state.hpSelectedDate);
+        ensureRecord(state.piket, state.piketSelectedDate);
     } catch(e) {}
 }
 
@@ -1096,7 +1106,10 @@ async function resetData() {
     if (!confirm('Reset semua data ke default?')) return;
     localStorage.removeItem('kelasku-state');
     localStorage.removeItem('kelasku-local');
-    state = { kas: [], students: ["Aldio Adistya","Bagas Saputra","Citra Ramadhani","Dwi Lestari","Eka Prasetyo","Fajar Nugraha","Gita Anggraini","Hendra Wijaya"], hp: {}, piket: {}, piketJadwal: {}, tugas: [], jadwal: { Senin:[{jam:"07:15-08:45", mapel:"Matematika", guru:"Bu Rina"}], Selasa:[{jam:"07:15-08:45", mapel:"Administrasi Jaringan", guru:"Pak Budi"}], Rabu:[{jam:"07:15-07:45", mapel:"Projek IPAS", guru:"Bu Hanadi"}], Kamis:[{jam:"07:15-08:45", mapel:"Pemrograman Web", guru:"Pak Reza"}], Jumat:[{jam:"07:15-08:45", mapel:"Pendidikan Agama", guru:"Pak Yusuf"}] }, pengumuman: [], reports: [], jadwalMode: 'pelajaran', selectedDay: 'Senin', calMinimized: { hp: false, piket: false } };
+    const todayStr = todayKey();
+    state = { kas: [], students: ["Aldio Adistya","Bagas Saputra","Citra Ramadhani","Dwi Lestari","Eka Prasetyo","Fajar Nugraha","Gita Anggraini","Hendra Wijaya"], hp: {}, piket: {}, piketJadwal: {}, tugas: [], jadwal: { Senin:[{jam:"07:15-08:45", mapel:"Matematika", guru:"Bu Rina"}], Selasa:[{jam:"07:15-08:45", mapel:"Administrasi Jaringan", guru:"Pak Budi"}], Rabu:[{jam:"07:15-07:45", mapel:"Projek IPAS", guru:"Bu Hanadi"}], Kamis:[{jam:"07:15-08:45", mapel:"Pemrograman Web", guru:"Pak Reza"}], Jumat:[{jam:"07:15-08:45", mapel:"Pendidikan Agama", guru:"Pak Yusuf"}] }, pengumuman: [], reports: [], jadwalMode: 'pelajaran', selectedDay: 'Senin', calMinimized: { hp: false, piket: false }, hpSelectedDate: todayStr, piketSelectedDate: todayStr };
+    ensureRecord(state.hp, todayStr);
+    ensureRecord(state.piket, todayStr);
     saveState(); location.reload();
 }
 function clearLocalData() {
@@ -1136,10 +1149,23 @@ function dayNameOf(dateKey) {
     return FULL_DAY_NAMES[new Date(y, m-1, d).getDay()];
 }
 function rupiah(n) { return "Rp " + Math.round(n).toLocaleString('id-ID'); }
+function ensureRecord(dict, dateKey) {
+    if (!dict[dateKey]) dict[dateKey] = {};
+    const rec = dict[dateKey];
+    state.students.forEach(s => { if (!(s in rec)) rec[s] = false; });
+    return rec;
+}
 
 // ============================================================
 // RENDER FUNGSI LENGKAP
 // ============================================================
+let hpSelectedDate = todayKey();
+let calYear = 2026;
+let calMonth = 8; // September (0-based: 8 = September)
+let piketSelectedDate = todayKey();
+let piketCalYear = 2026;
+let piketCalMonth = 8;
+
 function renderAll() {
     renderBeranda();
     renderKas();
@@ -1155,6 +1181,8 @@ function renderAll() {
 }
 
 function renderBeranda() {
+    document.getElementById('greeting-user').textContent = 'Halo, ' + (currentUser ? currentUser.username : 'Pengurus Kelas') + ' 👋';
+    document.getElementById('tag-today').textContent = new Date().toLocaleDateString('id-ID', { weekday:'long', day:'2-digit', month:'short' });
     const saldo = state.kas.reduce((a,t) => a + (t.jenis === 'masuk' ? t.jumlah : -t.jumlah), 0);
     document.getElementById('home-saldo').textContent = rupiah(saldo);
     const hpToday = state.hp[todayKey()] || {};
@@ -1209,12 +1237,6 @@ function renderKas() {
 }
 
 // ===== ROSTER =====
-function ensureRecord(dict, dateKey) {
-    if (!dict[dateKey]) dict[dateKey] = {};
-    const rec = dict[dateKey];
-    state.students.forEach(s => { if (!(s in rec)) rec[s] = false; });
-    return rec;
-}
 function renderRosterView(cfg) {
     const rec = ensureRecord(cfg.dict, cfg.selectedDate);
     const names = cfg.names !== undefined && cfg.names !== null ? cfg.names : state.students;
@@ -1239,22 +1261,26 @@ function renderRosterView(cfg) {
     `).join('');
 }
 function renderHp() {
-    renderRosterView({ dict: state.hp, selectedDate: state.hpSelectedDate || todayKey(), collectedId:'hp-collected', remainingId:'hp-remaining', dateLabelId:'hp-date-label', listId:'hp-list', toggleFn:'toggleHp' });
+    const date = state.hpSelectedDate || todayKey();
+    renderRosterView({ dict: state.hp, selectedDate: date, collectedId:'hp-collected', remainingId:'hp-remaining', dateLabelId:'hp-date-label', listId:'hp-list', toggleFn:'toggleHp' });
 }
 function renderPiket() {
-    const day = dayNameOf(state.piketSelectedDate || todayKey());
+    const date = state.piketSelectedDate || todayKey();
+    const day = dayNameOf(date);
     const assigned = (state.piketJadwal && state.piketJadwal[day] !== undefined) ? state.piketJadwal[day] : null;
-    renderRosterView({ dict: state.piket, selectedDate: state.piketSelectedDate || todayKey(), names: assigned, collectedId:'piket-collected', remainingId:'piket-remaining', dateLabelId:'piket-date-label', listId:'piket-list', toggleFn:'togglePiket' });
+    renderRosterView({ dict: state.piket, selectedDate: date, names: assigned, collectedId:'piket-collected', remainingId:'piket-remaining', dateLabelId:'piket-date-label', listId:'piket-list', toggleFn:'togglePiket' });
 }
 function toggleHp(name) {
     if (guardReadOnly()) return;
-    const rec = ensureRecord(state.hp, state.hpSelectedDate || todayKey());
+    const date = state.hpSelectedDate || todayKey();
+    const rec = ensureRecord(state.hp, date);
     rec[name] = !rec[name];
     saveState(); renderHp(); renderHpCalendar(); renderBeranda();
 }
 function togglePiket(name) {
     if (guardReadOnly()) return;
-    const rec = ensureRecord(state.piket, state.piketSelectedDate || todayKey());
+    const date = state.piketSelectedDate || todayKey();
+    const rec = ensureRecord(state.piket, date);
     rec[name] = !rec[name];
     saveState(); renderPiket(); renderPiketCalendar(); renderBeranda();
 }
@@ -1282,15 +1308,6 @@ function resetRoster(type) {
 }
 
 // ===== CALENDAR =====
-let hpSelectedDate = todayKey();
-let calYear = new Date().getFullYear();
-let calMonth = new Date().getMonth();
-let piketSelectedDate = todayKey();
-let piketCalYear = new Date().getFullYear();
-let piketCalMonth = new Date().getMonth();
-state.hpSelectedDate = hpSelectedDate;
-state.piketSelectedDate = piketSelectedDate;
-
 function renderMiniCalendar(prefix, year, month, selectedDate, dict, selectFnName) {
     document.getElementById(prefix+'-month-label').textContent = MONTH_LABEL[month] + ' ' + year;
     document.getElementById(prefix+'-dow-row').innerHTML = DOW_LABEL.map(d => `<div class="cal-dow">${d}</div>`).join('');
@@ -1314,18 +1331,27 @@ function renderMiniCalendar(prefix, year, month, selectedDate, dict, selectFnNam
     document.getElementById(prefix+'-grid').innerHTML = cells;
 }
 function renderHpCalendar() {
-    renderMiniCalendar('cal', calYear, calMonth, hpSelectedDate, state.hp, 'selectHpDate');
+    renderMiniCalendar('cal', calYear, calMonth, state.hpSelectedDate || todayKey(), state.hp, 'selectHpDate');
     updateCalendarUI('hp');
 }
 function renderPiketCalendar() {
-    renderMiniCalendar('piket-cal', piketCalYear, piketCalMonth, piketSelectedDate, state.piket, 'selectPiketDate');
+    renderMiniCalendar('piket-cal', piketCalYear, piketCalMonth, state.piketSelectedDate || todayKey(), state.piket, 'selectPiketDate');
     updateCalendarUI('piket');
 }
 function calShift(delta) { calMonth += delta; if (calMonth<0){calMonth=11;calYear--;} if (calMonth>11){calMonth=0;calYear++;} renderHpCalendar(); }
 function piketCalShift(delta) { piketCalMonth += delta; if (piketCalMonth<0){piketCalMonth=11;piketCalYear--;} if (piketCalMonth>11){piketCalMonth=0;piketCalYear++;} renderPiketCalendar(); }
-function selectHpDate(key) { hpSelectedDate = key; renderHpCalendar(); renderHp(); }
-function selectPiketDate(key) { piketSelectedDate = key; renderPiketCalendar(); renderPiket(); }
-
+function selectHpDate(key) {
+    state.hpSelectedDate = key;
+    saveState();
+    renderHpCalendar();
+    renderHp();
+}
+function selectPiketDate(key) {
+    state.piketSelectedDate = key;
+    saveState();
+    renderPiketCalendar();
+    renderPiket();
+}
 function toggleCalendar(type) {
     const key = type === 'hp' ? 'hp' : 'piket';
     state.calMinimized[key] = !state.calMinimized[key];
@@ -1341,7 +1367,6 @@ function updateCalendarUI(type) {
     bodyEl.classList.toggle('collapsed', isMinimized);
     btnEl.textContent = isMinimized ? '+' : '−';
 }
-
 function openStatsModal(type) {
     const dict = type === 'hp' ? state.hp : state.piket;
     document.getElementById('stats-title').textContent = type === 'hp' ? '📊 Statistik Kumpul HP' : '📊 Statistik Piket';
@@ -1373,7 +1398,7 @@ let piketJadwalActiveDay = 'Senin';
 function openPiketJadwalModal() {
     if (guardReadOnly()) return;
     if (!state.piketJadwal) state.piketJadwal = {};
-    let active = dayNameOf(piketSelectedDate);
+    let active = dayNameOf(state.piketSelectedDate || todayKey());
     if (!SCHOOL_DAYS.includes(active)) active = 'Senin';
     piketJadwalActiveDay = active;
     renderPiketJadwalDayTabs();
