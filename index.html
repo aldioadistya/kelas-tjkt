@@ -485,6 +485,11 @@
         .report-status.resolved { background:var(--teal-glass); color:var(--teal); }
         .report-status.rejected { background:var(--rose-glass); color:var(--rose); }
 
+        .piket-jadwal-row { display:flex; align-items:center; gap:10px; padding:11px 10px; border-radius:12px; margin-bottom:6px; background:var(--glass-card); border:1px solid var(--glass-border); cursor:pointer; transition:background 0.15s; }
+        .piket-jadwal-row input[type="checkbox"] { width:20px; height:20px; accent-color:var(--primary); flex-shrink:0; }
+        .piket-jadwal-row span { font-size:13px; font-weight:700; color:var(--text-main); }
+        .piket-jadwal-summary { font-size:12px; font-weight:800; color:var(--primary); margin:12px 0 8px; padding:8px 10px; background:var(--violet-glass); border-radius:10px; }
+
         @media (max-width:380px) {
             .hero-name { font-size:16px; }
             .stat-value { font-size:14px; }
@@ -716,7 +721,8 @@
         <h3>Atur Jadwal Piket</h3>
         <div class="field-hint" style="margin:-6px 0 10px;">Pilih hari, lalu centang siswa yang bertugas piket pada hari itu. Kosongkan semua centang = tampilkan semua siswa (belum diatur).</div>
         <div class="day-tabs" id="piket-jadwal-day-tabs" style="flex-wrap:wrap;"></div>
-        <div id="piket-jadwal-checklist" style="max-height:280px; overflow-y:auto; margin-top:8px;"></div>
+        <div id="piket-jadwal-summary" class="piket-jadwal-summary"></div>
+        <div id="piket-jadwal-checklist" style="max-height:280px; overflow-y:auto; margin-top:4px;"></div>
         <div class="modal-actions"><button class="btn btn-primary" onclick="closeModal('piket-jadwal')">Selesai</button></div>
     </div></div>
     <div class="modal-bg" id="modal-pengumuman"><div class="modal"><h3>Tambah Pengumuman</h3><div class="field"><label>Isi</label><input id="pengumuman-teks" type="text" placeholder="Tulis informasi untuk kelas..."></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('pengumuman')">Batal</button><button class="btn btn-primary" onclick="submitPengumuman()">Publikasikan</button></div></div></div>
@@ -1335,10 +1341,16 @@ function renderPiketJadwalDayTabs() {
 function renderPiketJadwalChecklist() {
     if (!state.piketJadwal) state.piketJadwal = {};
     const assigned = state.piketJadwal[piketJadwalActiveDay] || [];
+    const summaryEl = document.getElementById('piket-jadwal-summary');
+    if (summaryEl) {
+        summaryEl.textContent = assigned.length
+            ? `📌 Hari ${piketJadwalActiveDay}: ${assigned.length} siswa ditugaskan`
+            : `📌 Hari ${piketJadwalActiveDay}: belum diatur — sementara semua siswa akan tampil di daftar piket`;
+    }
     const wrap = document.getElementById('piket-jadwal-checklist');
     wrap.innerHTML = state.students.length ? state.students.map(s => `
-        <label style="display:flex; align-items:center; gap:10px; padding:9px 2px; border-bottom:1px solid var(--glass-border); cursor:pointer;">
-            <input type="checkbox" style="width:18px;height:18px; accent-color:var(--primary);" ${assigned.includes(s) ? 'checked' : ''} onchange="togglePiketJadwalStudent('${s.replace(/'/g,"\\'")}', this.checked)">
+        <label class="piket-jadwal-row">
+            <input type="checkbox" ${assigned.includes(s) ? 'checked' : ''} onchange="togglePiketJadwalStudent('${s.replace(/'/g,"\\'")}', this.checked)">
             <span>${s}</span>
         </label>
     `).join('') : '<div class="empty">Belum ada data siswa. Tambahkan dulu di halaman Piket/HP.</div>';
@@ -1350,6 +1362,13 @@ function togglePiketJadwalStudent(name, checked) {
     const arr = state.piketJadwal[piketJadwalActiveDay];
     if (checked) { if (!arr.includes(name)) arr.push(name); }
     else { state.piketJadwal[piketJadwalActiveDay] = arr.filter(n => n !== name); }
+    const summaryEl = document.getElementById('piket-jadwal-summary');
+    if (summaryEl) {
+        const count = state.piketJadwal[piketJadwalActiveDay].length;
+        summaryEl.textContent = count
+            ? `📌 Hari ${piketJadwalActiveDay}: ${count} siswa ditugaskan`
+            : `📌 Hari ${piketJadwalActiveDay}: belum diatur — sementara semua siswa akan tampil di daftar piket`;
+    }
     saveState();
     renderPiket(); renderPiketCalendar(); renderBeranda();
 }
