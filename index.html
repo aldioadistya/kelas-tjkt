@@ -472,6 +472,18 @@
         .stat-bar-name { font-size:12px; font-weight:700; color:var(--text-main); margin-bottom:3px; }
         .stat-bar-track { height:6px; background:rgba(0,0,0,0.06); border-radius:99px; overflow:hidden; }
         .stat-bar-fill { height:100%; border-radius:99px; transition:width 0.3s; }
+        .stat-bar-value { font-size:10px; color:var(--text-soft); text-align:right; margin-top:2px; }
+
+        .report-item { display:flex; align-items:flex-start; gap:10px; padding:10px 0; border-bottom:1px solid var(--glass-border); cursor:pointer; }
+        .report-item:last-child { border-bottom:none; }
+        .report-icon { width:32px; height:32px; border-radius:10px; background:var(--amber-glass); display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
+        .report-title { font-size:13px; font-weight:700; color:var(--text-main); }
+        .report-meta { display:flex; align-items:center; gap:5px; flex-wrap:wrap; font-size:10px; color:var(--text-soft); margin-top:3px; }
+        .report-status { font-size:9px; font-weight:800; padding:2px 8px; border-radius:99px; text-transform:capitalize; margin-left:auto; }
+        .report-status.pending { background:var(--amber-glass); color:var(--amber); }
+        .report-status.reviewed { background:var(--violet-glass); color:var(--violet); }
+        .report-status.resolved { background:var(--teal-glass); color:var(--teal); }
+        .report-status.rejected { background:var(--rose-glass); color:var(--rose); }
 
         @media (max-width:380px) {
             .hero-name { font-size:16px; }
@@ -620,7 +632,7 @@
                     <div class="summary-box" style="background:var(--teal-glass);"><div class="n" style="color:var(--teal)" id="piket-collected">0</div><div class="l" style="color:var(--teal)">Sudah Piket</div></div>
                     <div class="summary-box" style="background:var(--rose-glass);"><div class="n" style="color:var(--rose)" id="piket-remaining">0</div><div class="l" style="color:var(--rose)">Belum Piket</div></div>
                 </div>
-                <div class="section"><div class="section-head"><div class="date-label" id="piket-date-label">Hari Ini</div><div style="display:flex;gap:8px;"><div class="section-link" onclick="openStatsModal('piket')">📊 Statistik</div><div class="section-link admin-only" onclick="resetRoster('piket')">Reset</div></div></div><div class="card" id="piket-list"></div><button class="fab-add admin-only" style="margin-top:10px;" onclick="openStudentModal()">＋ Tambah Siswa</button></div>
+                <div class="section"><div class="section-head"><div class="date-label" id="piket-date-label">Hari Ini</div><div style="display:flex;gap:8px;"><div class="section-link admin-only" onclick="openPiketJadwalModal()">⚙️ Atur Jadwal</div><div class="section-link" onclick="openStatsModal('piket')">📊 Statistik</div><div class="section-link admin-only" onclick="resetRoster('piket')">Reset</div></div></div><div class="card" id="piket-list"></div><button class="fab-add admin-only" style="margin-top:10px;" onclick="openStudentModal()">＋ Tambah Siswa</button></div>
             </div>
         </div>
 
@@ -699,11 +711,18 @@
     <div class="modal-bg" id="modal-kas"><div class="modal"><h3>Tambah Transaksi Kas</h3><div class="field"><label>Jenis</label><select id="kas-jenis"><option value="masuk">Pemasukan (+)</option><option value="keluar">Pengeluaran (-)</option></select></div><div class="field"><label>Keterangan</label><input id="kas-ket" type="text" placeholder="Contoh: Kas Mingguan"></div><div class="field"><label>Jumlah (Rp)</label><input id="kas-jumlah" type="number" placeholder="0"></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('kas')">Batal</button><button class="btn btn-primary" onclick="submitKas()">Simpan</button></div></div></div>
     <div class="modal-bg" id="modal-tugas"><div class="modal"><h3>Tambah Tugas</h3><div class="field"><label>Nama Tugas</label><input id="tugas-nama" type="text" placeholder="Contoh: Laporan Jaringan"></div><div class="field"><label>Mata Pelajaran</label><input id="tugas-mapel" type="text" placeholder="Contoh: Administrasi Jaringan"></div><div class="field"><label>Tenggat</label><input id="tugas-tenggat" type="date"></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('tugas')">Batal</button><button class="btn btn-primary" onclick="submitTugas()">Simpan</button></div></div></div>
     <div class="modal-bg" id="modal-student"><div class="modal"><h3>Tambah Siswa</h3><div class="field"><label>Nama Lengkap</label><input id="student-nama" type="text" placeholder="Contoh: Muhammad Rizky"></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('student')">Batal</button><button class="btn btn-primary" onclick="submitStudent()">Tambah</button></div></div></div>
+    <div class="modal-bg" id="modal-piket-jadwal"><div class="modal">
+        <h3>Atur Jadwal Piket</h3>
+        <div class="field-hint" style="margin:-6px 0 10px;">Pilih hari, lalu centang siswa yang bertugas piket pada hari itu. Kosongkan semua centang = tampilkan semua siswa (belum diatur).</div>
+        <div class="day-tabs" id="piket-jadwal-day-tabs" style="flex-wrap:wrap;"></div>
+        <div id="piket-jadwal-checklist" style="max-height:280px; overflow-y:auto; margin-top:8px;"></div>
+        <div class="modal-actions"><button class="btn btn-primary" onclick="closeModal('piket-jadwal')">Selesai</button></div>
+    </div></div>
     <div class="modal-bg" id="modal-pengumuman"><div class="modal"><h3>Tambah Pengumuman</h3><div class="field"><label>Isi</label><input id="pengumuman-teks" type="text" placeholder="Tulis informasi untuk kelas..."></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('pengumuman')">Batal</button><button class="btn btn-primary" onclick="submitPengumuman()">Publikasikan</button></div></div></div>
     <div class="modal-bg" id="modal-jadwal"><div class="modal"><h3>Atur Jam Pelajaran</h3><div class="field"><label>Hari</label><select id="jadwal-hari"></select></div><div class="field"><label>Jam Mulai</label><input id="jadwal-mulai" type="time"></div><div class="field"><label>Jam Selesai</label><input id="jadwal-selesai" type="time"></div><div class="field"><label>Mata Pelajaran</label><input id="jadwal-mapel" type="text" placeholder="Mata Pelajaran"></div><div class="field"><label>Guru</label><input id="jadwal-guru" type="text" placeholder="Nama Guru"></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('jadwal')">Batal</button><button class="btn btn-primary" onclick="submitJadwal()">Simpan</button></div></div></div>
     <div class="modal-bg" id="modal-stats"><div class="modal"><h3 id="stats-title">📊 Statistik</h3><div id="stats-content" style="max-height:300px; overflow-y:auto;"></div><div class="modal-actions"><button class="btn btn-primary btn-block" onclick="closeModal('stats')">Tutup</button></div></div></div>
     <div class="modal-bg" id="modal-export"><div class="modal"><h3>Rekap Kas</h3><div class="field"><textarea id="export-text" readonly style="height:160px; font-family:monospace; font-size:11px;"></textarea></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('export')">Tutup</button><button class="btn btn-primary" onclick="copyExportText()">📋 Salin</button></div></div></div>
-    <div class="modal-bg" id="modal-report"><div class="modal"><h3>Buat Laporan</h3><div class="field"><label>Kategori</label><select id="report-kategori"><option value="Kekerasan/Berantem">Kekerasan</option><option value="Bullying">Bullying</option><option value="Kerusakan Fasilitas">Kerusakan</option><option value="Pencurian">Pencurian</option><option value="Pelanggaran Tata Tertib">Pelanggaran</option><option value="Lainnya">Lainnya</option></select></div><div class="field"><label>Judul</label><input id="report-judul" type="text" placeholder="Ringkasan singkat"></div><div class="field"><label>Deskripsi</label><textarea id="report-deskripsi" placeholder="Jelaskan kronologi..."></textarea></div><div class="field"><label>Tanggal Kejadian</label><input id="report-tanggal" type="date"></div><div class="field"><label>Urgensi</label><select id="report-urgensi"><option value="rendah">Rendah</option><option value="sedang" selected>Sedang</option><option value="tinggi">Tinggi</option><option value="darurat">Darurat 🚨</option></select></div><div class="field" style="display:flex; align-items:center; gap:6px;"><input type="checkbox" id="report-anonim" style="width:16px;height:16px;"><label for="report-anonim" style="margin:0; text-transform:none; font-size:11px;">Anonim 🙈</label></div><input type="hidden" id="report-edit-id"><div id="report-status-field" style="display:none;" class="admin-only"><div class="field"><label>Status</label><select id="report-status"><option value="pending">Menunggu</option><option value="reviewed">Ditinjau</option><option value="resolved">Selesai</option><option value="rejected">Ditolak</option></select></div></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('report')">Batal</button><button class="btn btn-primary" onclick="submitReport()">Kirim</button></div></div></div>
+    <div class="modal-bg" id="modal-report"><div class="modal"><h3>Buat Laporan</h3><div class="field"><label>Kategori</label><select id="report-kategori"><option value="Kekerasan/Berantem">Kekerasan</option><option value="Bullying">Bullying</option><option value="Kerusakan Fasilitas">Kerusakan</option><option value="Pencurian">Pencurian</option><option value="Pelanggaran Tata Tertib">Pelanggaran</option><option value="Lainnya">Lainnya</option></select></div><div class="field"><label>Judul</label><input id="report-judul" type="text" placeholder="Ringkasan singkat"></div><div class="field"><label>Deskripsi</label><textarea id="report-deskripsi" placeholder="Jelaskan kronologi..."></textarea></div><div class="field"><label>Tanggal Kejadian</label><input id="report-tanggal" type="date"></div><div class="field"><label>Urgensi</label><select id="report-urgensi"><option value="rendah">Rendah</option><option value="sedang" selected>Sedang</option><option value="tinggi">Tinggi</option><option value="darurat">Darurat 🚨</option></select></div><div class="field" style="display:flex; align-items:center; gap:6px;"><input type="checkbox" id="report-anonim" style="width:16px;height:16px;"><label for="report-anonim" style="margin:0; text-transform:none; font-size:11px;">Anonim 🙈</label></div><input type="hidden" id="report-edit-id"><div id="report-status-field" style="display:none;" class="admin-only"><div class="field"><label>Status</label><select id="report-status"><option value="pending">Menunggu</option><option value="reviewed">Ditinjau</option><option value="resolved">Selesai</option><option value="rejected">Ditolak</option></select></div></div><div class="modal-actions"><button class="btn btn-danger admin-only" id="report-delete-btn" style="display:none;" onclick="deleteReport()">Hapus</button><button class="btn btn-ghost" onclick="closeModal('report')">Batal</button><button class="btn btn-primary" onclick="submitReport()">Kirim</button></div></div></div>
 </div>
 
 <script>
@@ -864,6 +883,7 @@ const JADWAL_DEFAULT = {
     "Jumat":[{ jam:"07:15-08:45", mapel:"Pendidikan Agama", guru:"Pak Yusuf" },{ jam:"08:45-10:15", mapel:"PJOK", guru:"Pak Doni" }]
 };
 const DAY_NAMES = ["Senin","Selasa","Rabu","Kamis","Jumat"];
+const FULL_DAY_NAMES = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
 const DOW_LABEL = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
 const MONTH_LABEL = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
 const TODAY_INDEX = new Date().getDay();
@@ -879,24 +899,32 @@ function todayKey() {
     return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 }
 function dateKeyOf(y,m,d){ return y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0'); }
+function dayNameOf(dateKey) {
+    const [y,m,d] = dateKey.split('-').map(Number);
+    return FULL_DAY_NAMES[new Date(y, m-1, d).getDay()];
+}
 
 let state = {
     kas: [], students: [...STUDENTS_DEFAULT],
-    hp: {}, piket: {},
+    hp: {}, piket: {}, piketJadwal: {},
     tugas: [], jadwal: buildDefaultJadwal(),
     pengumuman: [], reports: [],
     jadwalMode: 'pelajaran',
     selectedDay: TODAY_NAME,
-    hpSelectedDate: todayKey(),
-    calYear: 2026,
-    calMonth: 8,
-    piketSelectedDate: todayKey(),
-    piketCalYear: 2026,
-    piketCalMonth: 8,
     tugasFilter: 'Semua',
-    darkMode: true,
     calMinimized: { hp: false, piket: false }
 };
+// Tampilan kalender (tanggal/bulan yang sedang dilihat) sengaja TIDAK disimpan
+// ke Firestore bersama — ini murni tampilan lokal tiap perangkat, supaya
+// setiap dibuka selalu otomatis mengikuti hari ini, bukan ikut tersangkut
+// pada tanggal terakhir yang diklik pengguna lain.
+const _nowInit = new Date();
+let hpSelectedDate = todayKey();
+let calYear = _nowInit.getFullYear();
+let calMonth = _nowInit.getMonth();
+let piketSelectedDate = todayKey();
+let piketCalYear = _nowInit.getFullYear();
+let piketCalMonth = _nowInit.getMonth();
 let currentUser = null;
 
 // Data kelas (state) diambil sekali dari Firestore lalu dijaga tetap segar oleh watchLiveSync().
@@ -912,10 +940,11 @@ async function loadState() {
         const r = await storage.get('kelasku-state', true);
         if (r && r.value) state = Object.assign(state, JSON.parse(r.value));
         if (!state.reports) state.reports = [];
+        if (!state.piketJadwal) state.piketJadwal = {};
         if (!state.calMinimized) state.calMinimized = { hp: false, piket: false };
     } catch(e) {}
-    ensureRecord(state.hp, state.hpSelectedDate);
-    ensureRecord(state.piket, state.piketSelectedDate);
+    ensureRecord(state.hp, hpSelectedDate);
+    ensureRecord(state.piket, piketSelectedDate);
 }
 
 async function saveState() {
@@ -927,18 +956,20 @@ async function saveState() {
     }, 300);
 }
 
-// ===== THEME =====
+// ===== THEME (preferensi lokal per-perangkat, TIDAK disinkron ke Firestore) =====
+let darkMode = (localStorage.getItem('kelasku-theme') !== 'light');
 function toggleTheme() {
-    state.darkMode = !state.darkMode;
+    darkMode = !darkMode;
+    localStorage.setItem('kelasku-theme', darkMode ? 'dark' : 'light');
     applyTheme();
-    saveState();
 }
 function applyTheme() {
-    document.body.classList.toggle('dark', state.darkMode);
-    document.getElementById('theme-btn-small').textContent = state.darkMode ? '☀️' : '🌙';
+    document.body.classList.toggle('dark', darkMode);
+    document.getElementById('theme-btn-small').textContent = darkMode ? '☀️' : '🌙';
     const label = document.getElementById('theme-label-setting');
-    if (label) label.textContent = state.darkMode ? '☀️ Terang' : '🌙 Gelap';
+    if (label) label.textContent = darkMode ? '☀️ Terang' : '🌙 Gelap';
 }
+applyTheme(); // terapkan segera saat halaman dibuka, bahkan sebelum login
 
 // ===== AUTH =====
 function showLogin() { document.getElementById('login-overlay').style.display = 'flex'; }
@@ -1052,28 +1083,28 @@ function guardAccountManagement() {
 }
 
 // ===== RESET =====
-function resetData() {
+async function resetData() {
     if (!confirm('Reset semua data ke default?')) return;
     localStorage.removeItem('kelasku-state');
     localStorage.removeItem('kelasku-local');
     state = {
         kas: [], students: [...STUDENTS_DEFAULT],
-        hp: {}, piket: {},
+        hp: {}, piket: {}, piketJadwal: {},
         tugas: [], jadwal: buildDefaultJadwal(),
         pengumuman: [], reports: [],
         jadwalMode: 'pelajaran',
         selectedDay: TODAY_NAME,
-        hpSelectedDate: todayKey(),
-        calYear: 2026,
-        calMonth: 8,
-        piketSelectedDate: todayKey(),
-        piketCalYear: 2026,
-        piketCalMonth: 8,
         tugasFilter: 'Semua',
-        darkMode: true,
         calMinimized: { hp: false, piket: false }
     };
-    saveState();
+    const _nowReset = new Date();
+    hpSelectedDate = todayKey(); calYear = _nowReset.getFullYear(); calMonth = _nowReset.getMonth();
+    piketSelectedDate = todayKey(); piketCalYear = _nowReset.getFullYear(); piketCalMonth = _nowReset.getMonth();
+    // Simpan langsung (tanpa jeda debounce saveState) supaya data ter-reset
+    // benar-benar tersimpan ke Firestore SEBELUM halaman di-reload.
+    if (saveTimeout) { clearTimeout(saveTimeout); saveTimeout = null; }
+    _skipNextSync = true;
+    try { await storage.set('kelasku-state', JSON.stringify(state), true); } catch(e) {}
     location.reload();
 }
 function clearLocalData() {
@@ -1204,7 +1235,7 @@ function ensureRecord(dict, dateKey) {
 }
 function renderRosterView(cfg) {
     const rec = ensureRecord(cfg.dict, cfg.selectedDate);
-    const names = state.students;
+    const names = cfg.names && cfg.names.length ? cfg.names : state.students;
     const collected = names.filter(n => rec[n]).length;
     document.getElementById(cfg.collectedId).textContent = collected;
     document.getElementById(cfg.remainingId).textContent = names.length - collected;
@@ -1221,10 +1252,14 @@ function renderRosterView(cfg) {
         </div>
     `).join('') : `<div class="empty">Belum ada data siswa.</div>`;
 }
-function renderHp() { renderRosterView({ dict: state.hp, selectedDate: state.hpSelectedDate, collectedId:'hp-collected', remainingId:'hp-remaining', dateLabelId:'hp-date-label', listId:'hp-list', toggleFn:'toggleHp' }); }
-function renderPiket() { renderRosterView({ dict: state.piket, selectedDate: state.piketSelectedDate, collectedId:'piket-collected', remainingId:'piket-remaining', dateLabelId:'piket-date-label', listId:'piket-list', toggleFn:'togglePiket' }); }
-function toggleHp(name) { if (guardReadOnly()) return; const rec = ensureRecord(state.hp, state.hpSelectedDate); rec[name] = !rec[name]; saveState(); renderHp(); renderHpCalendar(); renderBeranda(); }
-function togglePiket(name) { if (guardReadOnly()) return; const rec = ensureRecord(state.piket, state.piketSelectedDate); rec[name] = !rec[name]; saveState(); renderPiket(); renderPiketCalendar(); renderBeranda(); }
+function renderHp() { renderRosterView({ dict: state.hp, selectedDate: hpSelectedDate, collectedId:'hp-collected', remainingId:'hp-remaining', dateLabelId:'hp-date-label', listId:'hp-list', toggleFn:'toggleHp' }); }
+function renderPiket() {
+    const day = dayNameOf(piketSelectedDate);
+    const assigned = (state.piketJadwal && state.piketJadwal[day] && state.piketJadwal[day].length) ? state.piketJadwal[day] : null;
+    renderRosterView({ dict: state.piket, selectedDate: piketSelectedDate, names: assigned, collectedId:'piket-collected', remainingId:'piket-remaining', dateLabelId:'piket-date-label', listId:'piket-list', toggleFn:'togglePiket' });
+}
+function toggleHp(name) { if (guardReadOnly()) return; const rec = ensureRecord(state.hp, hpSelectedDate); rec[name] = !rec[name]; saveState(); renderHp(); renderHpCalendar(); renderBeranda(); }
+function togglePiket(name) { if (guardReadOnly()) return; const rec = ensureRecord(state.piket, piketSelectedDate); rec[name] = !rec[name]; saveState(); renderPiket(); renderPiketCalendar(); renderBeranda(); }
 function openStudentModal() { document.getElementById('student-nama').value = ''; openModal('student'); }
 function submitStudent() {
     if (guardReadOnly()) return;
@@ -1271,12 +1306,52 @@ function renderMiniCalendar(prefix, year, month, selectedDate, dict, selectFnNam
     }
     document.getElementById(prefix+'-grid').innerHTML = cells;
 }
-function renderHpCalendar() { renderMiniCalendar('cal', state.calYear, state.calMonth, state.hpSelectedDate, state.hp, 'selectHpDate'); updateCalendarUI('hp'); }
-function renderPiketCalendar() { renderMiniCalendar('piket-cal', state.piketCalYear, state.piketCalMonth, state.piketSelectedDate, state.piket, 'selectPiketDate'); updateCalendarUI('piket'); }
-function calShift(delta) { state.calMonth += delta; if (state.calMonth<0){state.calMonth=11;state.calYear--;} if (state.calMonth>11){state.calMonth=0;state.calYear++;} renderHpCalendar(); }
-function piketCalShift(delta) { state.piketCalMonth += delta; if (state.piketCalMonth<0){state.piketCalMonth=11;state.piketCalYear--;} if (state.piketCalMonth>11){state.piketCalMonth=0;state.piketCalYear++;} renderPiketCalendar(); }
-function selectHpDate(key) { state.hpSelectedDate = key; saveState(); renderHpCalendar(); renderHp(); }
-function selectPiketDate(key) { state.piketSelectedDate = key; saveState(); renderPiketCalendar(); renderPiket(); }
+function renderHpCalendar() { renderMiniCalendar('cal', calYear, calMonth, hpSelectedDate, state.hp, 'selectHpDate'); updateCalendarUI('hp'); }
+function renderPiketCalendar() { renderMiniCalendar('piket-cal', piketCalYear, piketCalMonth, piketSelectedDate, state.piket, 'selectPiketDate'); updateCalendarUI('piket'); }
+function calShift(delta) { calMonth += delta; if (calMonth<0){calMonth=11;calYear--;} if (calMonth>11){calMonth=0;calYear++;} renderHpCalendar(); }
+function piketCalShift(delta) { piketCalMonth += delta; if (piketCalMonth<0){piketCalMonth=11;piketCalYear--;} if (piketCalMonth>11){piketCalMonth=0;piketCalYear++;} renderPiketCalendar(); }
+function selectHpDate(key) { hpSelectedDate = key; renderHpCalendar(); renderHp(); }
+function selectPiketDate(key) { piketSelectedDate = key; renderPiketCalendar(); renderPiket(); }
+
+// ===== JADWAL PIKET PER HARI (admin) =====
+let piketJadwalActiveDay = 'Senin';
+function openPiketJadwalModal() {
+    if (guardReadOnly()) return;
+    if (!state.piketJadwal) state.piketJadwal = {};
+    piketJadwalActiveDay = dayNameOf(piketSelectedDate);
+    renderPiketJadwalDayTabs();
+    renderPiketJadwalChecklist();
+    openModal('piket-jadwal');
+}
+function selectPiketJadwalDay(day) {
+    piketJadwalActiveDay = day;
+    renderPiketJadwalDayTabs();
+    renderPiketJadwalChecklist();
+}
+function renderPiketJadwalDayTabs() {
+    document.getElementById('piket-jadwal-day-tabs').innerHTML = FULL_DAY_NAMES.map(d => `<div class="day-chip ${piketJadwalActiveDay===d?'active':''}" onclick="selectPiketJadwalDay('${d}')">${d}</div>`).join('');
+}
+function renderPiketJadwalChecklist() {
+    if (!state.piketJadwal) state.piketJadwal = {};
+    const assigned = state.piketJadwal[piketJadwalActiveDay] || [];
+    const wrap = document.getElementById('piket-jadwal-checklist');
+    wrap.innerHTML = state.students.length ? state.students.map(s => `
+        <label style="display:flex; align-items:center; gap:10px; padding:9px 2px; border-bottom:1px solid var(--glass-border); cursor:pointer;">
+            <input type="checkbox" style="width:18px;height:18px; accent-color:var(--primary);" ${assigned.includes(s) ? 'checked' : ''} onchange="togglePiketJadwalStudent('${s.replace(/'/g,"\\'")}', this.checked)">
+            <span>${s}</span>
+        </label>
+    `).join('') : '<div class="empty">Belum ada data siswa. Tambahkan dulu di halaman Piket/HP.</div>';
+}
+function togglePiketJadwalStudent(name, checked) {
+    if (guardReadOnly()) return;
+    if (!state.piketJadwal) state.piketJadwal = {};
+    if (!state.piketJadwal[piketJadwalActiveDay]) state.piketJadwal[piketJadwalActiveDay] = [];
+    const arr = state.piketJadwal[piketJadwalActiveDay];
+    if (checked) { if (!arr.includes(name)) arr.push(name); }
+    else { state.piketJadwal[piketJadwalActiveDay] = arr.filter(n => n !== name); }
+    saveState();
+    renderPiket(); renderPiketCalendar(); renderBeranda();
+}
 function openStatsModal(type) {
     const dict = type === 'hp' ? state.hp : state.piket;
     document.getElementById('stats-title').textContent = type === 'hp' ? '📊 Statistik Kumpul HP' : '📊 Statistik Piket';
@@ -1285,7 +1360,12 @@ function openStatsModal(type) {
     state.students.forEach(s => { totals[s]=0; trues[s]=0; });
     dates.forEach(dk => {
         const rec = dict[dk];
-        state.students.forEach(s => { if (s in rec) { totals[s]++; if (rec[s]) trues[s]++; } });
+        let relevant = state.students;
+        if (type === 'piket') {
+            const day = dayNameOf(dk);
+            if (state.piketJadwal && state.piketJadwal[day] && state.piketJadwal[day].length) relevant = state.piketJadwal[day];
+        }
+        relevant.forEach(s => { if (s in rec) { totals[s]++; if (rec[s]) trues[s]++; } });
     });
     const data = state.students.map(s => ({ name:s, total: totals[s], done: trues[s], pct: totals[s] ? Math.round(trues[s]/totals[s]*100) : 0 }));
     document.getElementById('stats-content').innerHTML = data.map(d => `
@@ -1463,6 +1543,7 @@ function renderReports() {
     `).join('') : `<div class="empty">Belum ada laporan.</div>`;
 }
 function openReportModal(id) {
+    const delBtn = document.getElementById('report-delete-btn');
     if (id && currentUser && (currentUser.role === 'superadmin' || currentUser.role === 'admin')) {
         const r = state.reports.find(x => x.id === id);
         if (!r) return;
@@ -1471,11 +1552,13 @@ function openReportModal(id) {
         document.getElementById('report-deskripsi').value = r.deskripsi;
         document.getElementById('report-status-field').style.display = 'block';
         document.getElementById('report-status').value = r.status || 'pending';
+        delBtn.style.removeProperty('display');
     } else {
         document.getElementById('report-edit-id').value = '';
         document.getElementById('report-judul').value = '';
         document.getElementById('report-deskripsi').value = '';
         document.getElementById('report-status-field').style.display = 'none';
+        delBtn.style.setProperty('display', 'none', 'important');
     }
     openModal('report');
 }
@@ -1504,29 +1587,33 @@ function submitReport() {
 function deleteReport() {
     if (guardReadOnly()) return;
     const editId = Number(document.getElementById('report-edit-id').value);
+    if (!confirm('Hapus laporan ini? Tindakan ini tidak dapat dibatalkan.')) return;
     state.reports = state.reports.filter(r => r.id !== editId);
     saveState(); renderReports(); closeModal('report');
 }
 
 // ===== BERANDA =====
 function renderBeranda() {
+    document.getElementById('greeting-user').textContent = 'Halo, ' + (currentUser ? currentUser.username : 'Pengurus Kelas') + ' 👋';
+    document.getElementById('tag-today').textContent = new Date().toLocaleDateString('id-ID', { weekday:'long', day:'2-digit', month:'short' });
     const saldo = state.kas.reduce((a,t) => a + (t.jenis === 'masuk' ? t.jumlah : -t.jumlah), 0);
     document.getElementById('home-saldo').textContent = rupiah(saldo);
     const hpToday = state.hp[todayKey()] || {};
     document.getElementById('home-hp').textContent = Object.values(hpToday).filter(v=>v).length + "/" + state.students.length;
     const piketToday = state.piket[todayKey()] || {};
-    document.getElementById('home-piket-count').textContent = Object.values(piketToday).filter(v=>v).length + "/" + state.students.length;
+    const todayPiketDay = dayNameOf(todayKey());
+    const piketTodayAssigned = (state.piketJadwal && state.piketJadwal[todayPiketDay] && state.piketJadwal[todayPiketDay].length) ? state.piketJadwal[todayPiketDay] : state.students;
+    document.getElementById('home-piket-count').textContent = piketTodayAssigned.filter(s => piketToday[s]).length + "/" + piketTodayAssigned.length;
     document.getElementById('home-tugas').textContent = state.tugas.filter(t => !t.selesai).length;
     const todayJadwal = state.jadwal[TODAY_NAME] || [];
     document.getElementById('home-jadwal-list').innerHTML = todayJadwal.length ? todayJadwal.map(j => `
         <div class="row-item"><div class="row-time">${j.jam}</div><div><div class="row-title">${j.mapel}</div><div class="row-sub">${j.guru}</div></div></div>
     `).join('') : `<div class="empty">Tidak ada pelajaran hari ini 🎉</div>`;
-    const piketSiswa = state.students.filter(s => piketToday[s]);
-    document.getElementById('home-piket-list').innerHTML = piketSiswa.length ? `
+    document.getElementById('home-piket-list').innerHTML = piketTodayAssigned.length ? `
         <div style="display:flex; flex-wrap:wrap; gap:4px;">
-            ${piketSiswa.map(s => `<span class="htag" style="background:var(--teal-glass); color:var(--teal); font-size:10px;">${s}</span>`).join('')}
+            ${piketTodayAssigned.map(s => `<span class="htag" style="background:${piketToday[s] ? 'var(--teal-glass)' : 'var(--rose-glass)'}; color:${piketToday[s] ? 'var(--teal)' : 'var(--rose)'}; font-size:10px;">${s}${piketToday[s] ? ' ✓' : ''}</span>`).join('')}
         </div>
-    ` : `<div class="empty">Belum ada siswa piket terdata.</div>`;
+    ` : `<div class="empty">Belum ada jadwal piket untuk hari ini.</div>`;
     renderPengumuman();
 }
 
@@ -1554,6 +1641,8 @@ function updateClock() {
     const d = new Date();
     document.getElementById('clock').textContent = String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
 }
+updateClock();
+setInterval(updateClock, 15000);
 
 // ===== INIT =====
 // Alur render pertama kali dipicu oleh auth.onAuthStateChanged() di atas:
