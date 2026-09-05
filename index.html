@@ -18,7 +18,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
     
     <style>
-        /* ===== DESIGN TOKENS ===== */
         :root {
             --bg-gradient: linear-gradient(135deg, #e0e7ff 0%, #f1f5f9 50%, #fae8ff 100%);
             --glass-bg: rgba(255,255,255,0.5);
@@ -117,21 +116,14 @@
             margin:0 -16px 0 -16px;
         }
         .login-logo {
-            width:64px; height:64px; border-radius:18px;
-            background:rgba(255,255,255,0.18);
-            border:1px solid rgba(255,255,255,0.28);
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            font-family:'Sora',sans-serif;
-            font-size:28px;
-            font-weight:800;
-            color:#fff;
-            margin:0 auto 10px;
-            box-shadow:0 8px 20px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.4);
+            width:72px; height:72px; margin:0 auto 10px;
+            border-radius:20px; overflow:hidden;
+            box-shadow:0 8px 24px rgba(0,0,0,0.2);
+            border:2px solid rgba(255,255,255,0.3);
             transform:rotate(-4deg);
             animation:logoWiggle 3.5s ease-in-out infinite;
         }
+        .login-logo img { width:100%; height:100%; display:block; }
         @keyframes logoWiggle {
             0%, 100% { transform:rotate(-4deg) translateY(0); }
             50% { transform:rotate(4deg) translateY(-3px); }
@@ -386,13 +378,18 @@
         .s-name {
             font-size:13px; font-weight:700; color:var(--text-main);
             cursor:pointer;
-            display:flex;
-            align-items:center;
-            gap:6px;
             flex:1;
         }
-        .s-name:hover {
-            color:var(--primary);
+        .s-name:hover { color:var(--primary); }
+        .s-reason-badge {
+            font-size:9px;
+            background:var(--rose-glass);
+            color:var(--rose);
+            padding:0 6px;
+            border-radius:99px;
+            margin-left:6px;
+            font-weight:600;
+            cursor:pointer;
         }
         .toggle-btn {
             border:1px solid var(--glass-border); background:var(--glass-card);
@@ -401,6 +398,7 @@
             color:var(--text-soft); transition:all 0.15s;
         }
         .toggle-btn.done { background:var(--teal); border-color:transparent; color:#fff; }
+        .toggle-btn.has-reason { border-color:var(--amber); color:var(--amber); }
         .s-remove {
             width:22px; height:22px; border-radius:50%;
             border:none; background:var(--rose-glass); color:var(--rose);
@@ -538,7 +536,6 @@
         .piket-jadwal-row input[type="checkbox"] { width:20px; height:20px; accent-color:var(--primary); flex-shrink:0; }
         .piket-jadwal-row span { font-size:13px; font-weight:700; color:var(--text-main); }
         .piket-jadwal-summary { font-size:12px; font-weight:800; color:var(--primary); margin:12px 0 8px; padding:8px 10px; background:var(--violet-glass); border-radius:10px; }
-        /* Student Edit Modal */
         #student-edit-old {
             background:var(--input-bg) !important;
             cursor:not-allowed !important;
@@ -553,6 +550,16 @@
             display:none;
             font-size:11px;
             margin-top:4px;
+        }
+        .s-reason-badge {
+            font-size:9px;
+            background:var(--rose-glass);
+            color:var(--rose);
+            padding:0 6px;
+            border-radius:99px;
+            margin-left:6px;
+            font-weight:600;
+            cursor:pointer;
         }
         body.dark .modal .field label { color:#cbd5e1 !important; }
         body.dark .modal .field input, body.dark .modal .field select, body.dark .modal .field textarea { color:#f1f5f9 !important; background:rgba(255,255,255,0.08) !important; border-color:rgba(255,255,255,0.15) !important; }
@@ -637,7 +644,18 @@
     <!-- Login Overlay -->
     <div class="login-overlay" id="login-overlay">
         <div class="login-hero">
-            <div class="login-logo">TJ</div>
+            <div class="login-logo">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#6366f1"/>
+                            <stop offset="100%" stop-color="#4f46e5"/>
+                        </linearGradient>
+                    </defs>
+                    <rect width="100" height="100" rx="20" fill="url(#logoGrad)"/>
+                    <text x="50" y="68" font-family="Sora, sans-serif" font-size="46" font-weight="800" fill="white" text-anchor="middle">TJ</text>
+                </svg>
+            </div>
             <div class="login-hero-title">Kelasku</div>
             <div class="login-hero-sub">TJKT 1 — SMKN 1 SUNGAILIAT</div>
         </div>
@@ -865,7 +883,30 @@
     <div class="modal-bg" id="modal-report"><div class="modal"><h3>Buat Laporan</h3><div class="field"><label>Kategori</label><select id="report-kategori"><option value="Kekerasan/Berantem">Kekerasan</option><option value="Bullying">Bullying</option><option value="Kerusakan Fasilitas">Kerusakan</option><option value="Pencurian">Pencurian</option><option value="Pelanggaran Tata Tertib">Pelanggaran</option><option value="Lainnya">Lainnya</option></select></div><div class="field"><label>Judul</label><input id="report-judul" type="text" placeholder="Ringkasan singkat"></div><div class="field"><label>Deskripsi</label><textarea id="report-deskripsi" placeholder="Jelaskan kronologi..."></textarea></div><div class="field"><label>Tanggal Kejadian</label><input id="report-tanggal" type="date"></div><div class="field"><label>Urgensi</label><select id="report-urgensi"><option value="rendah">Rendah</option><option value="sedang" selected>Sedang</option><option value="tinggi">Tinggi</option><option value="darurat">Darurat 🚨</option></select></div><div class="field" style="display:flex; align-items:center; gap:6px;"><input type="checkbox" id="report-anonim" style="width:16px;height:16px;"><label for="report-anonim" style="margin:0; text-transform:none; font-size:11px;">Anonim 🙈</label></div><div class="field"><label>Lampiran (opsional)</label><input type="file" id="report-file" accept=".pdf,.doc,.docx,.jpg,.png,.jpeg,.zip"></div><input type="hidden" id="report-edit-id"><div id="report-status-field" style="display:none;" class="admin-only"><div class="field"><label>Status</label><select id="report-status"><option value="pending">Menunggu</option><option value="reviewed">Ditinjau</option><option value="resolved">Selesai</option><option value="rejected">Ditolak</option></select></div></div><div class="modal-actions"><button class="btn btn-danger admin-only" id="report-delete-btn" style="display:none;" onclick="deleteReport()">Hapus</button><button class="btn btn-ghost" onclick="closeModal('report')">Batal</button><button class="btn btn-primary" onclick="submitReport()">Kirim</button></div></div></div>
     <div class="modal-bg" id="modal-account-edit"><div class="modal"><h3>Edit Akun</h3><div class="field"><label>Nama Lengkap</label><input id="acc-edit-nama" type="text" placeholder="Nama lengkap"></div><div class="field"><label>Email</label><input id="acc-edit-email" type="text" disabled style="opacity:0.6;"></div><div class="field"><label>Peran</label><select id="acc-edit-role"><option value="siswa">Siswa</option><option value="admin">Admin</option><option value="superadmin">Super Admin</option></select></div><input type="hidden" id="acc-edit-id" value=""><input type="hidden" id="acc-edit-active" value="true"><div class="modal-actions"><button class="btn btn-danger" id="acc-edit-toggle-btn" onclick="toggleAccountActiveFromModal()">✕ Nonaktifkan Akun</button><button class="btn btn-ghost" onclick="closeModal('account-edit')">Batal</button><button class="btn btn-primary" onclick="submitAccountEdit()">Simpan</button></div></div></div>
 
-    <!-- ===== MODAL EDIT SISWA (BARU) ===== -->
+    <!-- MODAL REASON HP -->
+    <div class="modal-bg" id="modal-hp-reason">
+        <div class="modal">
+            <h3 id="hp-reason-title">📱 Alasan Tidak Mengumpulkan HP</h3>
+            <div class="field">
+                <label>Nama Siswa</label>
+                <input id="hp-reason-student" type="text" disabled style="opacity:0.7;">
+            </div>
+            <div class="field">
+                <label>Tanggal</label>
+                <input id="hp-reason-date" type="text" disabled style="opacity:0.7;">
+            </div>
+            <div class="field">
+                <label>Alasan</label>
+                <textarea id="hp-reason-text" placeholder="Tulis alasan mengapa siswa belum mengumpulkan HP..." style="min-height:80px;"></textarea>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-ghost" onclick="closeHpReason()">Batal</button>
+                <button class="btn btn-primary" onclick="saveHpReason()">💾 Simpan Alasan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Edit Siswa -->
     <div class="modal-bg" id="modal-student-edit">
         <div class="modal">
             <h3>✏️ Edit Nama Siswa</h3>
@@ -943,6 +984,8 @@ let currentUser = null;
 let authReady = false;
 let pendingRegisterName = '';
 let _editStudentOldName = '';
+let _hpReasonStudent = '';
+let _hpReasonDate = '';
 let state = {
     kas: [], students: ["Aldio Adistya","Bagas Saputra","Citra Ramadhani","Dwi Lestari","Eka Prasetyo","Fajar Nugraha","Gita Anggraini","Hendra Wijaya"],
     hp: {}, piket: {}, piketJadwal: {},
@@ -1291,7 +1334,15 @@ function rupiah(n) { return "Rp " + Math.round(n).toLocaleString('id-ID'); }
 function ensureRecord(dict, dateKey) {
     if (!dict[dateKey]) dict[dateKey] = {};
     const rec = dict[dateKey];
-    state.students.forEach(s => { if (!(s in rec)) rec[s] = false; });
+    state.students.forEach(s => {
+        if (!(s in rec)) {
+            rec[s] = { collected: false, reason: '' };
+        } else if (typeof rec[s] === 'boolean') {
+            rec[s] = { collected: rec[s], reason: '' };
+        } else if (typeof rec[s] === 'object' && rec[s] !== null && !('collected' in rec[s])) {
+            rec[s] = { collected: false, reason: rec[s].reason || '' };
+        }
+    });
     return rec;
 }
 
@@ -1322,8 +1373,9 @@ function renderBeranda() {
     document.getElementById('tag-today').textContent = new Date().toLocaleDateString('id-ID', { weekday:'long', day:'2-digit', month:'short' });
     const saldo = state.kas.reduce((a,t) => a + (t.jenis === 'masuk' ? t.jumlah : -t.jumlah), 0);
     document.getElementById('home-saldo').textContent = rupiah(saldo);
-    const hpToday = state.hp[todayKey()] || {};
-    document.getElementById('home-hp').textContent = Object.values(hpToday).filter(v=>v).length + "/" + state.students.length;
+    const hpToday = ensureRecord(state.hp, todayKey());
+    const collectedCount = Object.values(hpToday).filter(v => v.collected).length;
+    document.getElementById('home-hp').textContent = collectedCount + "/" + state.students.length;
     const piketToday = state.piket[todayKey()] || {};
     const todayPiketDay = dayNameOf(todayKey());
     const piketTodayAssigned = (state.piketJadwal && Array.isArray(state.piketJadwal[todayPiketDay])) ? state.piketJadwal[todayPiketDay] : [];
@@ -1374,7 +1426,7 @@ let rosterUI = { hp: { minimized:false, search:'' }, piket: { minimized:false, s
 function renderRosterView(cfg) {
     const rec = ensureRecord(cfg.dict, cfg.selectedDate);
     const names = cfg.names !== undefined && cfg.names !== null ? cfg.names : state.students;
-    const collected = names.length ? names.filter(n => rec[n]).length : 0;
+    const collected = names.length ? names.filter(n => rec[n].collected).length : 0;
     document.getElementById(cfg.collectedId).textContent = collected;
     document.getElementById(cfg.remainingId).textContent = names.length - collected;
     const [y,m,d] = cfg.selectedDate.split('-').map(Number);
@@ -1391,14 +1443,23 @@ function renderRosterView(cfg) {
         list.innerHTML = `<div class="empty">Tidak ada nama yang cocok dengan pencarian "${cfg.searchQuery}".</div>`;
         return;
     }
-    list.innerHTML = displayNames.map(n => `
+    list.innerHTML = displayNames.map(n => {
+        const data = rec[n] || { collected: false, reason: '' };
+        const isDone = data.collected;
+        const reason = data.reason || '';
+        let btnText = isDone ? '✓ Sudah' : 'Belum';
+        let btnClass = 'toggle-btn';
+        if (isDone) btnClass += ' done';
+        else if (reason) btnClass += ' has-reason';
+        const reasonBadge = (!isDone && reason) ? `<span class="s-reason-badge" onclick="event.stopPropagation(); openHpReason('${n.replace(/'/g,"\\'")}')" title="Klik untuk edit alasan">📝</span>` : '';
+        return `
         <div class="student-row">
             <div class="s-avatar">${n.slice(0,2).toUpperCase()}</div>
-            <div class="s-name" onclick="openEditStudentModal('${n.replace(/'/g,"\\'")}')">${n}</div>
-            <button class="toggle-btn ${rec[n]?'done':''}" onclick="window.${cfg.toggleFn}('${n.replace(/'/g,"\\'")}')">${rec[n] ? '✓ Sudah' : 'Belum'}</button>
+            <div class="s-name" onclick="openEditStudentModal('${n.replace(/'/g,"\\'")}')">${n}${reasonBadge}</div>
+            <button class="${btnClass}" onclick="window.${cfg.toggleFn}('${n.replace(/'/g,"\\'")}')">${btnText}</button>
             <button class="s-remove admin-only" onclick="window.removeStudent('${n.replace(/'/g,"\\'")}')">×</button>
         </div>
-    `).join('');
+    `}).join('');
 }
 function toggleRosterList(type) {
     rosterUI[type].minimized = !rosterUI[type].minimized;
@@ -1432,7 +1493,12 @@ function toggleHp(name) {
     if (guardReadOnly()) return;
     const date = state.hpSelectedDate || todayKey();
     const rec = ensureRecord(state.hp, date);
-    rec[name] = !rec[name];
+    if (rec[name]) {
+        rec[name].collected = !rec[name].collected;
+        if (!rec[name].collected) {
+            rec[name].reason = ''; // clear reason when collected
+        }
+    }
     saveState(); renderHp(); renderHpCalendar(); renderBeranda();
 }
 function togglePiket(name) {
@@ -1476,9 +1542,49 @@ function resetRoster(type) {
     const dict = type === 'hp' ? state.hp : state.piket;
     const keys = Object.keys(dict);
     keys.forEach(k => {
-        Object.keys(dict[k]).forEach(s => dict[k][s] = false);
+        const rec = dict[k];
+        Object.keys(rec).forEach(s => {
+            if (type === 'hp') {
+                rec[s] = { collected: false, reason: '' };
+            } else {
+                rec[s] = false;
+            }
+        });
     });
     saveState(); renderAll();
+}
+
+// ===== HP REASON MODAL =====
+function openHpReason(name) {
+    const date = state.hpSelectedDate || todayKey();
+    _hpReasonStudent = name;
+    _hpReasonDate = date;
+    document.getElementById('hp-reason-student').value = name;
+    document.getElementById('hp-reason-date').value = new Date(date + 'T00:00:00').toLocaleDateString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+    const rec = ensureRecord(state.hp, date);
+    const data = rec[name] || { collected: false, reason: '' };
+    document.getElementById('hp-reason-text').value = data.reason || '';
+    openModal('hp-reason');
+}
+function closeHpReason() {
+    closeModal('hp-reason');
+}
+function saveHpReason() {
+    const date = _hpReasonDate;
+    const name = _hpReasonStudent;
+    const reason = document.getElementById('hp-reason-text').value.trim();
+    const rec = ensureRecord(state.hp, date);
+    if (!rec[name]) rec[name] = { collected: false, reason: '' };
+    rec[name].reason = reason;
+    if (reason && rec[name].collected) {
+        rec[name].collected = false; // if reason added, automatically set as not collected
+    }
+    saveState();
+    renderHp();
+    renderHpCalendar();
+    renderBeranda();
+    closeHpReason();
+    showNotification('Alasan berhasil disimpan.', 'success');
 }
 
 // ===== EDIT STUDENT =====
@@ -1587,7 +1693,7 @@ function renderMiniCalendar(prefix, year, month, selectedDate, dict, selectFnNam
         const isToday = (key === todayStr);
         const isSelected = (key === selectedDate);
         const rec = dict[key] || {};
-        const hasData = Object.values(rec).some(v => v === true);
+        const hasData = Object.values(rec).some(v => v.collected === true);
         let cls = 'cal-day';
         if (isToday) cls += ' today';
         if (isSelected) cls += ' selected';
@@ -1648,7 +1754,16 @@ function openStatsModal(type) {
             const day = dayNameOf(dk);
             relevant = (state.piketJadwal && Array.isArray(state.piketJadwal[day])) ? state.piketJadwal[day] : [];
         }
-        relevant.forEach(s => { if (s in rec) { totals[s]++; if (rec[s]) trues[s]++; } });
+        relevant.forEach(s => {
+            if (s in rec) {
+                totals[s]++;
+                if (type === 'hp') {
+                    if (rec[s].collected) trues[s]++;
+                } else {
+                    if (rec[s]) trues[s]++;
+                }
+            }
+        });
     });
     const data = state.students.map(s => ({ name:s, total: totals[s], done: trues[s], pct: totals[s] ? Math.round(trues[s]/totals[s]*100) : 0 }));
     document.getElementById('stats-content').innerHTML = data.map(d => `
@@ -2269,6 +2384,9 @@ window.todayKey = todayKey;
 window.openEditStudentModal = openEditStudentModal;
 window.submitEditStudent = submitEditStudent;
 window.deleteStudentFromEdit = deleteStudentFromEdit;
+window.openHpReason = openHpReason;
+window.closeHpReason = closeHpReason;
+window.saveHpReason = saveHpReason;
 </script>
 </body>
 </html>
