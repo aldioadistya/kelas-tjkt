@@ -1186,17 +1186,6 @@ body {
     opacity: 0.9;
 }
 
-.s-edit-icon {
-    font-size: 11px;
-    opacity: 0.45;
-    cursor: pointer;
-}
-
-.s-edit-icon:hover {
-    opacity: 0.9;
-    color: var(--primary);
-}
-
 .roster-status-choices {
     display: flex;
     gap: 8px;
@@ -1805,25 +1794,6 @@ body {
     padding: 8px 10px;
     background: var(--violet-glass);
     border-radius: 10px;
-}
-
-/* Student Edit Modal */
-#student-edit-old {
-    background: var(--input-bg) !important;
-    cursor: not-allowed !important;
-    opacity: 0.7;
-}
-
-#student-edit-reason {
-    resize: vertical;
-    font-size: 12px;
-}
-
-.student-edit-warning {
-    color: var(--rose);
-    display: none;
-    font-size: 11px;
-    margin-top: 4px;
 }
 
 body.dark .modal .field label {
@@ -2600,31 +2570,6 @@ body.dark .s-name {
                 <div class="modal-actions"><button class="btn btn-danger" id="acc-edit-toggle-btn" onclick="toggleAccountActiveFromModal()">✕ Nonaktifkan Akun</button><button class="btn btn-ghost" onclick="closeModal('account-edit')">Batal</button><button class="btn btn-primary" onclick="submitAccountEdit()">Simpan</button></div>
             </div>
         </div>
-
-        <!-- ===== MODAL EDIT SISWA (BARU) ===== -->
-        <div class="modal-bg" id="modal-student-edit">
-            <div class="modal">
-                <h3>✏️ Edit Nama Siswa</h3>
-                <div class="field">
-                    <label>Nama Lama</label>
-                    <input id="student-edit-old" type="text" disabled>
-                </div>
-                <div class="field">
-                    <label>Nama Baru <span style="color:var(--rose);">*</span></label>
-                    <input id="student-edit-new" type="text" placeholder="Masukkan nama baru..." autofocus>
-                </div>
-                <div class="field">
-                    <label>Alasan Perubahan (opsional)</label>
-                    <textarea id="student-edit-reason" placeholder="Contoh: Perbaikan penulisan nama, perubahan nama panggilan, dll." style="min-height:60px;"></textarea>
-                </div>
-                <div class="student-edit-warning" id="student-edit-warning">⚠️ Nama ini sudah digunakan oleh siswa lain.</div>
-                <div class="modal-actions">
-                    <button class="btn btn-ghost" onclick="closeModal('student-edit')">Batal</button>
-                    <button class="btn btn-danger" id="student-edit-delete-btn" onclick="deleteStudentFromEdit()">🗑️ Hapus</button>
-                    <button class="btn btn-primary" onclick="submitEditStudent()">💾 Simpan</button>
-                </div>
-            </div>
-        </div>
     </div>
 
     <script>
@@ -2683,7 +2628,6 @@ secondaryAuth.setPersistence(firebase.auth.Auth.Persistence.NONE).catch(() => {}
 let currentUser = null;
 let authReady = false;
 let pendingRegisterName = '';
-let _editStudentOldName = '';
 let state = {
     kas: [],
     students: ["Aldio Adistya", "Bagas Saputra", "Citra Ramadhani", "Dwi Lestari", "Eka Prasetyo", "Fajar Nugraha", "Gita Anggraini", "Hendra Wijaya"],
@@ -3305,7 +3249,7 @@ function renderRosterView(cfg) {
         <div class="student-row">
             <div class="s-avatar" onclick="openRosterStatusModal('${cfg.type}','${nameEsc}')" style="cursor:pointer;">${n.slice(0,2).toUpperCase()}</div>
             <div style="flex:1; min-width:0; cursor:pointer;" onclick="openRosterStatusModal('${cfg.type}','${nameEsc}')">
-                <div class="s-name">${n} <span class="s-edit-icon" onclick="event.stopPropagation(); openEditStudentModal('${nameEsc}')" title="Edit nama siswa">✎</span></div>
+                <div class="s-name">${n}</div>
                 ${st && st.status==='belum' && st.alasan ? `<div class="s-reason">💬 ${st.alasan}</div>` : ''}
             </div>
             <div class="toggle-btn ${badgeClass}" onclick="openRosterStatusModal('${cfg.type}','${nameEsc}')" style="cursor:pointer;">${badgeLabel}</div>
@@ -3495,88 +3439,6 @@ function resetRoster(type) {
     saveState();
     renderAll();
     showNotification('Status berhasil direset ke netral.', 'info');
-}
-// ===== EDIT STUDENT =====
-function openEditStudentModal(oldName) {
-    if (guardReadOnly()) return;
-    _editStudentOldName = oldName;
-    document.getElementById('student-edit-old').value = oldName;
-    document.getElementById('student-edit-new').value = oldName;
-    document.getElementById('student-edit-reason').value = '';
-    document.getElementById('student-edit-warning').style.display = 'none';
-    document.getElementById('student-edit-delete-btn').style.display = '';
-    openModal('student-edit');
-    setTimeout(() => document.getElementById('student-edit-new').focus(), 300);
-}
-
-function submitEditStudent() {
-    const oldName = _editStudentOldName;
-    const newName = document.getElementById('student-edit-new').value.trim();
-    const reason = document.getElementById('student-edit-reason').value.trim();
-    const warningEl = document.getElementById('student-edit-warning');
-    if (!newName) {
-        showNotification('Nama baru tidak boleh kosong.', 'warning');
-        return;
-    }
-    if (oldName === newName) {
-        closeModal('student-edit');
-        showNotification('Tidak ada perubahan nama.', 'info');
-        return;
-    }
-    if (state.students.includes(newName) && newName !== oldName) {
-        warningEl.style.display = 'block';
-        showNotification('Nama "' + newName + '" sudah digunakan oleh siswa lain.', 'error');
-        return;
-    }
-    warningEl.style.display = 'none';
-    if (!confirm('Ubah nama "' + oldName + '" menjadi "' + newName + '"?' + (reason ? '\n\nAlasan: ' + reason : ''))) return;
-    renameStudent(oldName, newName);
-    saveState();
-    renderAll();
-    closeModal('student-edit');
-    showNotification('✅ Nama berhasil diubah dari "' + oldName + '" menjadi "' + newName + '".', 'success');
-}
-
-function renameStudent(oldName, newName) {
-    const idx = state.students.indexOf(oldName);
-    if (idx !== -1) state.students[idx] = newName;
-    for (let date in state.hp) {
-        const rec = state.hp[date];
-        if (oldName in rec) {
-            rec[newName] = rec[oldName];
-            delete rec[oldName];
-        }
-    }
-    for (let date in state.piket) {
-        const rec = state.piket[date];
-        if (oldName in rec) {
-            rec[newName] = rec[oldName];
-            delete rec[oldName];
-        }
-    }
-    for (let day in state.piketJadwal) {
-        const arr = state.piketJadwal[day] || [];
-        const idx2 = arr.indexOf(oldName);
-        if (idx2 !== -1) {
-            arr[idx2] = newName;
-        }
-    }
-    if (!state.nameChangeLog) state.nameChangeLog = [];
-    state.nameChangeLog.push({
-        oldName: oldName,
-        newName: newName,
-        reason: document.getElementById('student-edit-reason').value.trim() || 'Tanpa alasan',
-        date: new Date().toLocaleDateString('id-ID'),
-        time: new Date().toLocaleTimeString('id-ID')
-    });
-}
-
-function deleteStudentFromEdit() {
-    const oldName = _editStudentOldName;
-    if (!confirm('Hapus siswa "' + oldName + '" secara permanen? Data HP dan piket yang terkait juga akan dihapus.')) return;
-    removeStudent(oldName);
-    closeModal('student-edit');
-    showNotification('Siswa "' + oldName + '" telah dihapus.', 'info');
 }
 // ===== CALENDAR =====
 function renderMiniCalendar(prefix, year, month, selectedDate, dict, selectFnName) {
@@ -4509,9 +4371,7 @@ window.removeStudent = removeStudent;
 window.togglePiketJadwalStudent = togglePiketJadwalStudent;
 window.selectPiketJadwalDay = selectPiketJadwalDay;
 window.todayKey = todayKey;
-window.openEditStudentModal = openEditStudentModal;
-window.submitEditStudent = submitEditStudent;
-window.deleteStudentFromEdit = deleteStudentFromEdit;
+
 </script>
 </body>
 
