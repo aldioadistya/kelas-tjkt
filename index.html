@@ -831,6 +831,7 @@
     <div class="modal-bg" id="modal-stats"><div class="modal"><h3 id="stats-title">📊 Statistik</h3><div id="stats-content" style="max-height:300px; overflow-y:auto;"></div><div class="modal-actions"><button class="btn btn-primary btn-block" onclick="closeModal('stats')">Tutup</button></div></div></div>
     <div class="modal-bg" id="modal-export"><div class="modal"><h3>Rekap Kas</h3><div class="field"><textarea id="export-text" readonly style="height:160px; font-family:monospace; font-size:11px;"></textarea></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('export')">Tutup</button><button class="btn btn-primary" onclick="copyExportText()">📋 Salin</button></div></div></div>
     <div class="modal-bg" id="modal-report"><div class="modal"><h3>Buat Laporan</h3><div class="field"><label>Kategori</label><select id="report-kategori"><option value="Kekerasan/Berantem">Kekerasan</option><option value="Bullying">Bullying</option><option value="Kerusakan Fasilitas">Kerusakan</option><option value="Pencurian">Pencurian</option><option value="Pelanggaran Tata Tertib">Pelanggaran</option><option value="Lainnya">Lainnya</option></select></div><div class="field"><label>Judul</label><input id="report-judul" type="text" placeholder="Ringkasan singkat"></div><div class="field"><label>Deskripsi</label><textarea id="report-deskripsi" placeholder="Jelaskan kronologi..."></textarea></div><div class="field"><label>Tanggal Kejadian</label><input id="report-tanggal" type="date"></div><div class="field"><label>Urgensi</label><select id="report-urgensi"><option value="rendah">Rendah</option><option value="sedang" selected>Sedang</option><option value="tinggi">Tinggi</option><option value="darurat">Darurat 🚨</option></select></div><div class="field" style="display:flex; align-items:center; gap:6px;"><input type="checkbox" id="report-anonim" style="width:16px;height:16px;"><label for="report-anonim" style="margin:0; text-transform:none; font-size:11px;">Anonim 🙈</label></div><div class="field"><label>Lampiran (opsional)</label><input type="file" id="report-file" accept=".pdf,.doc,.docx,.jpg,.png,.jpeg,.zip"></div><input type="hidden" id="report-edit-id"><div id="report-status-field" style="display:none;" class="admin-only"><div class="field"><label>Status</label><select id="report-status"><option value="pending">Menunggu</option><option value="reviewed">Ditinjau</option><option value="resolved">Selesai</option><option value="rejected">Ditolak</option></select></div></div><div class="modal-actions"><button class="btn btn-danger admin-only" id="report-delete-btn" style="display:none;" onclick="deleteReport()">Hapus</button><button class="btn btn-ghost" onclick="closeModal('report')">Batal</button><button class="btn btn-primary" onclick="submitReport()">Kirim</button></div></div></div>
+    <div class="modal-bg" id="modal-account-edit"><div class="modal"><h3>Edit Akun</h3><div class="field"><label>Nama Lengkap</label><input id="acc-edit-nama" type="text" placeholder="Nama lengkap"></div><div class="field"><label>Email</label><input id="acc-edit-email" type="text" disabled style="opacity:0.6;"></div><div class="field"><label>Peran</label><select id="acc-edit-role"><option value="siswa">Siswa</option><option value="admin">Admin</option><option value="superadmin">Super Admin</option></select></div><input type="hidden" id="acc-edit-id" value=""><input type="hidden" id="acc-edit-active" value="true"><div class="modal-actions"><button class="btn btn-danger" id="acc-edit-toggle-btn" onclick="toggleAccountActiveFromModal()">✕ Nonaktifkan Akun</button><button class="btn btn-ghost" onclick="closeModal('account-edit')">Batal</button><button class="btn btn-primary" onclick="submitAccountEdit()">Simpan</button></div></div></div>
 </div>
 
 <script>
@@ -1901,11 +1902,10 @@ function renderAccountGroups(users) {
         if (!members.length) return '';
         const rowsHtml = members.map(u => `
             <div class="acc-row">
-                <div class="acc-info">
-                    <b>${u.username || u.email}</b>
+                <div class="acc-info" style="cursor:pointer; width:100%;" onclick="openAccountEditModal('${u.id}')">
+                    <b>${u.username || u.email} <span style="font-weight:400; opacity:0.5; font-size:11px;">✎</span></b>
                     <div class="acc-email">${u.email || ''}${u.active===false ? ' · <span style="color:var(--rose);font-weight:700;">nonaktif</span>' : ''}</div>
                 </div>
-                <button class="acc-delete-btn superadmin-only" onclick="toggleAccountActive('${u.id}', ${u.active===false})" title="${u.active===false ? 'Aktifkan' : 'Nonaktifkan'}">${u.active===false ? '✓' : '✕'}</button>
             </div>
         `).join('');
         return `
@@ -1951,16 +1951,54 @@ async function addAccount() {
         showNotification(authErrorMessage(e.code), 'error');
     }
 }
-async function toggleAccountActive(uid, makeActive) {
+async function toggleAccountActiveFromModal() {
     if (guardAccountManagement()) return;
+    const uid = document.getElementById('acc-edit-id').value;
     if (uid === currentUser.uid) { showNotification('Tidak dapat menonaktifkan akun sendiri.', 'warning'); return; }
-    if (!makeActive && !confirm('Nonaktifkan akun ini?')) return;
+    const isActive = document.getElementById('acc-edit-active').value !== 'false';
+    const makeActive = !isActive;
+    if (!makeActive && !confirm('Nonaktifkan akun ini? Akun tidak akan bisa login sampai diaktifkan kembali.')) return;
     try {
         await db.collection(FS_PROFILES).doc(uid).update({ active: makeActive });
         showNotification(makeActive ? 'Akun diaktifkan.' : 'Akun dinonaktifkan.', 'success');
+        closeModal('account-edit');
         renderAccountList();
     } catch(e) {
         showNotification('Gagal memperbarui status akun.', 'error');
+    }
+}
+function openAccountEditModal(uid) {
+    if (guardAccountManagement()) return;
+    const u = _allAccounts.find(x => x.id === uid);
+    if (!u) return;
+    document.getElementById('acc-edit-nama').value = u.username || '';
+    document.getElementById('acc-edit-email').value = u.email || '';
+    document.getElementById('acc-edit-role').value = u.role || 'siswa';
+    document.getElementById('acc-edit-id').value = uid;
+    const isActive = u.active !== false;
+    document.getElementById('acc-edit-active').value = isActive ? 'true' : 'false';
+    const toggleBtn = document.getElementById('acc-edit-toggle-btn');
+    toggleBtn.textContent = isActive ? '✕ Nonaktifkan Akun' : '✓ Aktifkan Akun';
+    toggleBtn.style.display = (uid === currentUser.uid) ? 'none' : '';
+    openModal('account-edit');
+}
+async function submitAccountEdit() {
+    if (guardAccountManagement()) return;
+    const uid = document.getElementById('acc-edit-id').value;
+    const nama = document.getElementById('acc-edit-nama').value.trim();
+    const role = document.getElementById('acc-edit-role').value;
+    if (!nama) { showNotification('Nama tidak boleh kosong.', 'warning'); return; }
+    if (uid === currentUser.uid && role !== 'superadmin') {
+        showNotification('Tidak dapat mengubah peran akun sendiri.', 'warning');
+        return;
+    }
+    try {
+        await db.collection(FS_PROFILES).doc(uid).update({ username: nama, role });
+        showNotification('Akun berhasil diperbarui.', 'success');
+        closeModal('account-edit');
+        renderAccountList();
+    } catch(e) {
+        showNotification('Gagal memperbarui akun.', 'error');
     }
 }
 
@@ -2027,6 +2065,9 @@ window.logout = logout;
 window.resetData = resetData;
 window.clearLocalData = clearLocalData;
 window.addAccount = addAccount;
+window.openAccountEditModal = openAccountEditModal;
+window.submitAccountEdit = submitAccountEdit;
+window.toggleAccountActiveFromModal = toggleAccountActiveFromModal;
 window.exportBackup = exportBackup;
 window.importBackup = importBackup;
 window.toggleCalendar = toggleCalendar;
