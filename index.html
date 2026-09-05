@@ -2362,7 +2362,9 @@ body.dark .s-name {
                 <div class="section">
                     <div class="section-head">
                         <div class="section-title">Sudah Selesai</div>
+                        <div class="section-link admin-only" onclick="clearDoneTugas()">🗑️ Bersihkan</div>
                     </div>
+                    <div class="field-hint" style="margin:-4px 0 8px;">Otomatis terhapus 7 hari setelah dicentang selesai.</div>
                     <div class="card" id="tugas-done-list"></div>
                 </div>
             </div>
@@ -3836,7 +3838,31 @@ function renderTaskFiles(t) {
         files.map((f, idx) => `<div class="task-file" onclick="event.stopPropagation(); openTaskFileAt(${t.id},${idx})">📎 ${f.name}</div>`).join('') +
         `</div>`;
 }
+const AUTO_CLEAN_DONE_TUGAS_MS = 7 * 24 * 60 * 60 * 1000;
+function autoCleanDoneTugas() {
+    const now = Date.now();
+    let changed = false;
+    let cleanedCount = 0;
+    state.tugas.forEach(t => {
+        if (t.selesai && !t.selesaiAt) {
+            t.selesaiAt = now;
+            changed = true;
+        }
+    });
+    const before = state.tugas.length;
+    state.tugas = state.tugas.filter(t => {
+        if (t.selesai && t.selesaiAt && (now - t.selesaiAt) > AUTO_CLEAN_DONE_TUGAS_MS) {
+            cleanedCount++;
+            return false;
+        }
+        return true;
+    });
+    if (state.tugas.length !== before) changed = true;
+    if (changed) saveState();
+    return cleanedCount;
+}
 function renderTugas() {
+    autoCleanDoneTugas();
     const open = state.tugas.filter(t => !t.selesai);
     const done = state.tugas.filter(t => t.selesai);
     document.getElementById('tugas-open-list').innerHTML = open.length ? open.map(t => `
@@ -3859,8 +3885,23 @@ function renderTugas() {
                 ${t.deskripsi ? `<div class="task-desc" style="text-decoration:line-through; color:var(--text-muted);">${t.deskripsi}</div>` : ''}
                 ${renderTaskFiles(t)}
             </div>
+            <button class="s-remove admin-only" onclick="event.stopPropagation(); deleteTugas(${t.id})">×</button>
         </div>
     `).join('') : `<div class="empty">Belum ada tugas selesai.</div>`;
+}
+function clearDoneTugas() {
+    if (guardReadOnly()) return;
+    const doneCount = state.tugas.filter(t => t.selesai).length;
+    if (!doneCount) {
+        showNotification('Tidak ada tugas selesai untuk dibersihkan.', 'info');
+        return;
+    }
+    if (!confirm('Hapus semua (' + doneCount + ') tugas yang sudah selesai? Tindakan ini tidak bisa dibatalkan.')) return;
+    state.tugas = state.tugas.filter(t => !t.selesai);
+    saveState();
+    renderTugas();
+    renderBeranda();
+    showNotification('Tugas yang sudah selesai berhasil dibersihkan.', 'success');
 }
 function getItemFiles(item) {
     if (Array.isArray(item.files) && item.files.length) return item.files;
@@ -4043,7 +4084,14 @@ function deleteTugasCurrent() {
 function toggleTugas(id) {
     if (guardReadOnly()) return;
     const t = state.tugas.find(x => x.id === id);
-    if (t) t.selesai = !t.selesai;
+    if (t) {
+        t.selesai = !t.selesai;
+        if (t.selesai) {
+            t.selesaiAt = Date.now();
+        } else {
+            delete t.selesaiAt;
+        }
+    }
     saveState();
     renderTugas();
     renderBeranda();
@@ -4562,6 +4610,7 @@ window.submitStudent = submitStudent;
 window.openPengumumanModal = openPengumumanModal;
 window.submitPengumuman = submitPengumuman;
 window.submitTugas = submitTugas;
+window.clearDoneTugas = clearDoneTugas;
 window.openTaskFileAt = openTaskFileAt;
 window.onTugasFileSelected = onTugasFileSelected;
 window.removeTugasEditFile = removeTugasEditFile;
