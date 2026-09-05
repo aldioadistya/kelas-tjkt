@@ -434,6 +434,19 @@
         .pill-due { background:var(--rose-glass); color:var(--rose); }
         .task-desc { font-size:11px; color:var(--text-soft); margin-top:3px; line-height:1.4; }
         .task-file { font-size:10px; color:var(--primary); cursor:pointer; display:inline-block; margin-top:3px; }
+        .search-box {
+            display:flex; align-items:center; gap:8px;
+            background:var(--glass-card); border:1px solid var(--glass-border);
+            border-radius:var(--radius-md); padding:9px 12px; margin:10px 0;
+        }
+        .search-box .search-icon { font-size:13px; opacity:0.7; flex-shrink:0; }
+        .search-box input {
+            flex:1; border:none; background:transparent; outline:none;
+            font-size:13px; color:var(--text-main);
+        }
+        .search-box input::placeholder { color:var(--text-muted); }
+        .roster-list-wrap { overflow:hidden; transition:max-height 0.3s ease, opacity 0.2s ease; max-height:2000px; opacity:1; }
+        .roster-list-wrap.collapsed { max-height:0 !important; opacity:0; margin-top:-6px; }
         .modal-bg {
             position:absolute; inset:0; background:rgba(0,0,0,0.35);
             backdrop-filter:blur(4px); display:none; align-items:flex-end;
@@ -680,7 +693,10 @@
                 <div class="summary-box" style="background:var(--teal-glass);"><div class="n" style="color:var(--teal)" id="hp-collected">0</div><div class="l" style="color:var(--teal)">Sudah Titip</div></div>
                 <div class="summary-box" style="background:var(--rose-glass);"><div class="n" style="color:var(--rose)" id="hp-remaining">0</div><div class="l" style="color:var(--rose)">Belum Titip</div></div>
             </div>
-            <div class="section"><div class="section-head"><div class="date-label" id="hp-date-label">Hari Ini</div><div style="display:flex;gap:8px;"><div class="section-link" onclick="openStatsModal('hp')">📊 Statistik</div><div class="section-link admin-only" onclick="resetRoster('hp')">Reset</div></div></div><div class="card" id="hp-list"></div><button class="fab-add admin-only" style="margin-top:10px;" onclick="openStudentModal()">＋ Tambah Siswa</button></div>
+            <div class="section"><div class="section-head"><div class="date-label" id="hp-date-label">Hari Ini</div><div style="display:flex;gap:8px;align-items:center;"><div class="section-link" onclick="openStatsModal('hp')">📊 Statistik</div><div class="section-link admin-only" onclick="resetRoster('hp')">Reset</div><button class="cal-nav-btn minimize-btn" id="hp-list-toggle" onclick="toggleRosterList('hp')" title="Sembunyikan/Tampilkan daftar">−</button></div></div>
+                <div class="search-box"><span class="search-icon">🔍</span><input type="text" id="hp-search" placeholder="Cari nama siswa..." oninput="onRosterSearch('hp')"></div>
+                <div class="roster-list-wrap" id="hp-list-wrap"><div class="card" id="hp-list"></div></div>
+                <button class="fab-add admin-only" style="margin-top:10px;" onclick="openStudentModal()">＋ Tambah Siswa</button></div>
         </div>
 
         <!-- JADWAL -->
@@ -712,7 +728,10 @@
                     <div class="summary-box" style="background:var(--rose-glass);"><div class="n" style="color:var(--rose)" id="piket-remaining">0</div><div class="l" style="color:var(--rose)">Belum Piket</div></div>
                 </div>
                 <button class="btn btn-ghost admin-only" style="width:100%; margin-top:10px; padding:11px;" onclick="openPiketJadwalModal()">⚙️ Atur Jadwal Piket per Hari</button>
-                <div class="section"><div class="section-head"><div class="date-label" id="piket-date-label">Hari Ini</div><div style="display:flex;gap:8px;"><div class="section-link" onclick="openStatsModal('piket')">📊 Statistik</div><div class="section-link admin-only" onclick="resetRoster('piket')">Reset</div></div></div><div class="card" id="piket-list"></div><button class="fab-add admin-only" style="margin-top:10px;" onclick="openStudentModal()">＋ Tambah Siswa</button></div>
+                <div class="section"><div class="section-head"><div class="date-label" id="piket-date-label">Hari Ini</div><div style="display:flex;gap:8px;align-items:center;"><div class="section-link" onclick="openStatsModal('piket')">📊 Statistik</div><div class="section-link admin-only" onclick="resetRoster('piket')">Reset</div><button class="cal-nav-btn minimize-btn" id="piket-list-toggle" onclick="toggleRosterList('piket')" title="Sembunyikan/Tampilkan daftar">−</button></div></div>
+                <div class="search-box"><span class="search-icon">🔍</span><input type="text" id="piket-search" placeholder="Cari nama siswa..." oninput="onRosterSearch('piket')"></div>
+                <div class="roster-list-wrap" id="piket-list-wrap"><div class="card" id="piket-list"></div></div>
+                <button class="fab-add admin-only" style="margin-top:10px;" onclick="openStudentModal()">＋ Tambah Siswa</button></div>
             </div>
         </div>
 
@@ -1295,6 +1314,7 @@ function renderKas() {
 }
 
 // ===== ROSTER =====
+let rosterUI = { hp: { minimized:false, search:'' }, piket: { minimized:false, search:'' } };
 function renderRosterView(cfg) {
     const rec = ensureRecord(cfg.dict, cfg.selectedDate);
     const names = cfg.names !== undefined && cfg.names !== null ? cfg.names : state.students;
@@ -1309,7 +1329,13 @@ function renderRosterView(cfg) {
         list.innerHTML = `<div class="empty">Tidak ada siswa yang dijadwalkan piket pada hari ini.</div>`;
         return;
     }
-    list.innerHTML = names.map(n => `
+    const query = (cfg.searchQuery || '').trim().toLowerCase();
+    const displayNames = query ? names.filter(n => n.toLowerCase().includes(query)) : names;
+    if (!displayNames.length) {
+        list.innerHTML = `<div class="empty">Tidak ada nama yang cocok dengan pencarian "${cfg.searchQuery}".</div>`;
+        return;
+    }
+    list.innerHTML = displayNames.map(n => `
         <div class="student-row">
           <div class="s-avatar">${n.slice(0,2).toUpperCase()}</div>
           <div class="s-name">${n}</div>
@@ -1318,15 +1344,33 @@ function renderRosterView(cfg) {
         </div>
     `).join('');
 }
+function toggleRosterList(type) {
+    rosterUI[type].minimized = !rosterUI[type].minimized;
+    updateRosterListUI(type);
+}
+function updateRosterListUI(type) {
+    const wrap = document.getElementById(type+'-list-wrap');
+    const btn = document.getElementById(type+'-list-toggle');
+    if (!wrap || !btn) return;
+    wrap.classList.toggle('collapsed', rosterUI[type].minimized);
+    btn.textContent = rosterUI[type].minimized ? '+' : '−';
+}
+function onRosterSearch(type) {
+    const input = document.getElementById(type+'-search');
+    rosterUI[type].search = input ? input.value : '';
+    if (type === 'hp') renderHp(); else renderPiket();
+}
 function renderHp() {
     const date = state.hpSelectedDate || todayKey();
-    renderRosterView({ dict: state.hp, selectedDate: date, collectedId:'hp-collected', remainingId:'hp-remaining', dateLabelId:'hp-date-label', listId:'hp-list', toggleFn:'toggleHp' });
+    renderRosterView({ dict: state.hp, selectedDate: date, collectedId:'hp-collected', remainingId:'hp-remaining', dateLabelId:'hp-date-label', listId:'hp-list', toggleFn:'toggleHp', searchQuery: rosterUI.hp.search });
+    updateRosterListUI('hp');
 }
 function renderPiket() {
     const date = state.piketSelectedDate || todayKey();
     const day = dayNameOf(date);
     const assigned = (state.piketJadwal && Array.isArray(state.piketJadwal[day])) ? state.piketJadwal[day] : [];
-    renderRosterView({ dict: state.piket, selectedDate: date, names: assigned, collectedId:'piket-collected', remainingId:'piket-remaining', dateLabelId:'piket-date-label', listId:'piket-list', toggleFn:'togglePiket' });
+    renderRosterView({ dict: state.piket, selectedDate: date, names: assigned, collectedId:'piket-collected', remainingId:'piket-remaining', dateLabelId:'piket-date-label', listId:'piket-list', toggleFn:'togglePiket', searchQuery: rosterUI.piket.search });
+    updateRosterListUI('piket');
 }
 function toggleHp(name) {
     if (guardReadOnly()) return;
@@ -1986,6 +2030,8 @@ window.addAccount = addAccount;
 window.exportBackup = exportBackup;
 window.importBackup = importBackup;
 window.toggleCalendar = toggleCalendar;
+window.toggleRosterList = toggleRosterList;
+window.onRosterSearch = onRosterSearch;
 window.calShift = calShift;
 window.piketCalShift = piketCalShift;
 window.setJadwalMode = setJadwalMode;
