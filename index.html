@@ -204,6 +204,40 @@ body {
     display: none;
 }
 
+/* Scrollbar bertema untuk daftar internal (akun, checklist, statistik) */
+#account-list,
+#piket-jadwal-checklist,
+#stats-content {
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary) transparent;
+}
+
+#account-list::-webkit-scrollbar,
+#piket-jadwal-checklist::-webkit-scrollbar,
+#stats-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+#account-list::-webkit-scrollbar-track,
+#piket-jadwal-checklist::-webkit-scrollbar-track,
+#stats-content::-webkit-scrollbar-track {
+    background: transparent;
+    margin: 4px 0;
+}
+
+#account-list::-webkit-scrollbar-thumb,
+#piket-jadwal-checklist::-webkit-scrollbar-thumb,
+#stats-content::-webkit-scrollbar-thumb {
+    background: var(--primary-gradient);
+    border-radius: 10px;
+}
+
+#account-list::-webkit-scrollbar-thumb:hover,
+#piket-jadwal-checklist::-webkit-scrollbar-thumb:hover,
+#stats-content::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
+}
+
 /* ===== LOGIN OVERLAY ===== */
 .login-overlay {
     position: absolute;
@@ -4121,7 +4155,7 @@ function renderAccountGroups(users) {
         const rowsHtml = members.map(u => `
             <div class="acc-row">
                 <div class="acc-info" style="cursor:pointer; width:100%;" onclick="openAccountEditModal('${u.id}')">
-                    <b>${u.username || u.email} <span style="font-weight:400; opacity:0.5; font-size:11px;">✎</span></b>
+                    <b>${u.username || u.email}</b>
                     <div class="acc-email">${u.email || ''}${u.active===false ? ' · <span style="color:var(--rose);font-weight:700;">nonaktif</span>' : ''}</div>
                 </div>
             </div>
