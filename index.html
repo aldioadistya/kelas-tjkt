@@ -3824,7 +3824,7 @@ function openTaskFile(id) {
     const t = state.tugas.find(x => x.id === Number(id));
     if (!t) return;
     if (t.fileData) {
-        window.open(t.fileData, '_blank');
+        openFileData(t.fileData, t.file);
     } else {
         showNotification('File ini diunggah sebelum fitur penyimpanan file aktif. Silakan upload ulang lewat tombol Edit.', 'warning');
     }
@@ -3864,6 +3864,34 @@ function openTugasModal(id) {
 }
 
 const MAX_ATTACHMENT_BYTES = 400 * 1024;
+function dataUrlToBlob(dataUrl) {
+    const parts = dataUrl.split(',');
+    const mimeMatch = parts[0].match(/data:(.*?);base64/);
+    const mime = mimeMatch ? mimeMatch[1] : 'application/octet-stream';
+    const binary = atob(parts[1]);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    return new Blob([bytes], { type: mime });
+}
+function openFileData(dataUrl, filename) {
+    try {
+        const blob = dataUrlToBlob(dataUrl);
+        const blobUrl = URL.createObjectURL(blob);
+        const win = window.open(blobUrl, '_blank');
+        if (!win) {
+            const a = document.createElement('a');
+            a.href = blobUrl;
+            a.download = filename || 'file';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            showNotification('File sedang diunduh (pratinjau diblokir browser).', 'info');
+        }
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
+    } catch (e) {
+        showNotification('Gagal membuka file. Coba download manual lewat tombol lain.', 'error');
+    }
+}
 function readFileAsDataUrl(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -4076,7 +4104,7 @@ function openReportFile(id) {
     const r = state.reports.find(x => x.id === Number(id));
     if (!r) return;
     if (r.fileData) {
-        window.open(r.fileData, '_blank');
+        openFileData(r.fileData, r.file);
     } else {
         showNotification('File ini diunggah sebelum fitur penyimpanan file aktif.', 'warning');
     }
@@ -4138,7 +4166,7 @@ function openKasFile(id) {
     const t = state.kas.find(x => x.id === Number(id));
     if (!t) return;
     if (t.fileData) {
-        window.open(t.fileData, '_blank');
+        openFileData(t.fileData, t.file);
     } else {
         showNotification('File ini diunggah sebelum fitur penyimpanan file aktif.', 'warning');
     }
