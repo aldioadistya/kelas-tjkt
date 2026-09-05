@@ -2444,6 +2444,17 @@ body.dark .s-name {
                             <div class="field-hint">Isi 0 untuk mematikan (tidak pernah otomatis terhapus).</div>
                         </div>
                         <div style="margin-top:16px; border-top:1px solid var(--glass-border); padding-top:10px;">
+                            <div style="font-size:11px; font-weight:800; color:var(--text-soft); text-transform:uppercase; margin-bottom:8px;">Ruang Penyimpanan</div>
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                                <span id="storage-usage-label" style="font-size:12.5px; font-weight:700; color:var(--text-main);">- KB / 1024 KB</span>
+                                <span id="storage-usage-percent" style="font-size:11px; font-weight:700;">-%</span>
+                            </div>
+                            <div style="width:100%; height:8px; border-radius:99px; background:var(--glass-card); overflow:hidden;">
+                                <div id="storage-usage-bar" style="height:100%; width:0%; border-radius:99px; transition:width 0.3s, background 0.3s;"></div>
+                            </div>
+                            <div class="field-hint" id="storage-usage-hint">Semua data kelas (kas, tugas, jadwal, lampiran file, dll) disimpan dalam 1 dokumen dengan batas 1MB.</div>
+                        </div>
+                        <div style="margin-top:16px; border-top:1px solid var(--glass-border); padding-top:10px;">
                             <div style="font-size:11px; font-weight:800; color:var(--text-soft); text-transform:uppercase; margin-bottom:8px;">Backup &amp; Pemulihan</div>
                             <div style="display:flex; gap:8px;">
                                 <button class="btn btn-ghost" style="flex:1; padding:8px; font-size:10px;" onclick="exportBackup()">⬇️ Backup</button>
@@ -3227,6 +3238,39 @@ function renderAll() {
 function renderSettingsInfo() {
     const input = document.getElementById('autoclean-days-input');
     if (input) input.value = (state.autoCleanTugasDays !== undefined && state.autoCleanTugasDays !== null) ? state.autoCleanTugasDays : 7;
+    renderStorageUsage();
+}
+const FIRESTORE_DOC_LIMIT_BYTES = 1024 * 1024;
+function renderStorageUsage() {
+    const labelEl = document.getElementById('storage-usage-label');
+    const percentEl = document.getElementById('storage-usage-percent');
+    const barEl = document.getElementById('storage-usage-bar');
+    const hintEl = document.getElementById('storage-usage-hint');
+    if (!labelEl || !barEl) return;
+    let usedBytes = 0;
+    try {
+        usedBytes = new Blob([JSON.stringify(state)]).size;
+    } catch (e) {
+        usedBytes = JSON.stringify(state).length;
+    }
+    const usedKB = Math.round(usedBytes / 1024);
+    const limitKB = Math.round(FIRESTORE_DOC_LIMIT_BYTES / 1024);
+    const percent = Math.min(100, Math.round((usedBytes / FIRESTORE_DOC_LIMIT_BYTES) * 100));
+    labelEl.textContent = usedKB + ' KB / ' + limitKB + ' KB';
+    percentEl.textContent = percent + '%';
+    barEl.style.width = percent + '%';
+    let color = 'var(--teal)';
+    let hint = 'Masih aman. Semua data kelas (kas, tugas, jadwal, lampiran file, dll) disimpan dalam 1 dokumen dengan batas 1MB.';
+    if (percent >= 90) {
+        color = 'var(--rose)';
+        hint = '⚠️ Hampir penuh! Segera backup, lalu bersihkan tugas/laporan lama atau kurangi lampiran file sebelum penyimpanan gagal.';
+    } else if (percent >= 70) {
+        color = 'var(--amber)';
+        hint = '⚠️ Mulai mendekati batas. Pertimbangkan bersihkan tugas selesai lama atau kurangi lampiran file.';
+    }
+    barEl.style.background = color;
+    percentEl.style.color = color;
+    if (hintEl) hintEl.textContent = hint;
 }
 function setAutoCleanDays(value) {
     if (guardReadOnly()) return;
