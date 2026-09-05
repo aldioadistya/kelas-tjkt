@@ -1413,6 +1413,26 @@ body {
     transition: background 0.15s, transform 0.15s;
 }
 
+.file-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-main);
+    background: var(--glass-card);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 5px 8px 5px 12px;
+}
+
+.file-chip .file-chip-remove {
+    cursor: pointer;
+    color: var(--rose);
+    font-weight: 800;
+    padding: 0 3px;
+}
+
 .task-file:active {
     background: var(--primary-gradient);
     color: #fff;
@@ -2491,9 +2511,10 @@ body.dark .s-name {
                 <div class="field"><label>Mata Pelajaran</label><input id="tugas-mapel" type="text" placeholder="Contoh: Administrasi Jaringan"></div>
                 <div class="field"><label>Tenggat</label><input id="tugas-tenggat" type="date"></div>
                 <div class="field"><label>Deskripsi</label><textarea id="tugas-deskripsi" placeholder="Deskripsi tugas..."></textarea></div>
-                <div class="field"><label>Lampiran (opsional)</label><input type="file" id="tugas-file" accept=".pdf,.doc,.docx,.jpg,.png,.jpeg,.zip">
-                    <div class="field-hint">Maks 400KB</div>
-                    <div class="field-hint" id="tugas-file-current" style="display:none;"></div>
+                <div class="field"><label>Lampiran (opsional, bisa lebih dari 1)</label>
+                    <div id="tugas-file-chips" style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px;"></div>
+                    <input type="file" id="tugas-file" accept=".pdf,.doc,.docx,.jpg,.png,.jpeg,.zip" multiple onchange="onTugasFileSelected(this)">
+                    <div class="field-hint">Maks 3 file, masing-masing 400KB. File baru akan ditambahkan, bukan menggantikan.</div>
                 </div><input type="hidden" id="tugas-edit-id" value="">
                 <div class="modal-actions"><button class="btn btn-danger admin-only" id="tugas-delete-btn" style="display:none;" onclick="deleteTugasCurrent()">Hapus</button><button class="btn btn-ghost" onclick="closeModal('tugas')">Batal</button><button class="btn btn-primary" onclick="submitTugas()">Simpan</button></div>
             </div>
@@ -3808,6 +3829,13 @@ function setJadwalMode(mode) {
     document.getElementById('jadwal-mode-piket').style.display = mode === 'piket' ? 'block' : 'none';
 }
 // ===== TUGAS =====
+function renderTaskFiles(t) {
+    const files = getItemFiles(t);
+    if (!files.length) return '';
+    return `<div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:6px;">` +
+        files.map((f, idx) => `<div class="task-file" onclick="event.stopPropagation(); openTaskFileAt(${t.id},${idx})">📎 ${f.name}</div>`).join('') +
+        `</div>`;
+}
 function renderTugas() {
     const open = state.tugas.filter(t => !t.selesai);
     const done = state.tugas.filter(t => t.selesai);
@@ -3818,7 +3846,7 @@ function renderTugas() {
                 <div class="task-title">${t.nama}</div>
                 <div class="task-meta"><span class="pill pill-due">📅 ${t.tenggat || 'Tanpa tenggat'}</span></div>
                 ${t.deskripsi ? `<div class="task-desc">${t.deskripsi}</div>` : ''}
-                ${t.file ? `<div class="task-file" onclick="event.stopPropagation(); openTaskFile(${t.id})">📎 ${t.file}</div>` : ''}
+                ${renderTaskFiles(t)}
             </div>
             <button class="s-remove admin-only" onclick="event.stopPropagation(); deleteTugas(${t.id})">×</button>
         </div>
@@ -3829,24 +3857,65 @@ function renderTugas() {
             <div style="flex:1; cursor:pointer;" onclick="openTugasModal(${t.id})">
                 <div class="task-title checked">${t.nama}</div>
                 ${t.deskripsi ? `<div class="task-desc" style="text-decoration:line-through; color:var(--text-muted);">${t.deskripsi}</div>` : ''}
-                ${t.file ? `<div class="task-file" onclick="event.stopPropagation(); openTaskFile(${t.id})">📎 ${t.file}</div>` : ''}
+                ${renderTaskFiles(t)}
             </div>
         </div>
     `).join('') : `<div class="empty">Belum ada tugas selesai.</div>`;
 }
-function openTaskFile(id) {
+function getItemFiles(item) {
+    if (Array.isArray(item.files) && item.files.length) return item.files;
+    if (item.file) return [{ name: item.file, data: item.fileData || '' }];
+    return [];
+}
+function openTaskFileAt(id, idx) {
     const t = state.tugas.find(x => x.id === Number(id));
     if (!t) return;
-    if (t.fileData) {
-        openFileData(t.fileData, t.file);
+    const files = getItemFiles(t);
+    const f = files[idx];
+    if (!f) return;
+    if (f.data) {
+        openFileData(f.data, f.name);
     } else {
         showNotification('File ini diunggah sebelum fitur penyimpanan file aktif. Silakan upload ulang lewat tombol Edit.', 'warning');
     }
 }
 
+let _tugasEditFiles = [];
+function renderTugasFileChips() {
+    const wrap = document.getElementById('tugas-file-chips');
+    wrap.innerHTML = _tugasEditFiles.map((f, idx) => `
+        <div class="file-chip">📎 ${f.name}<span class="file-chip-remove" onclick="removeTugasEditFile(${idx})">×</span></div>
+    `).join('');
+}
+function removeTugasEditFile(idx) {
+    _tugasEditFiles.splice(idx, 1);
+    renderTugasFileChips();
+}
+async function onTugasFileSelected(input) {
+    const remainingSlots = MAX_FILES_PER_ITEM - _tugasEditFiles.length;
+    const picked = Array.from(input.files || []);
+    if (picked.length > remainingSlots) {
+        showNotification('Maksimal ' + MAX_FILES_PER_ITEM + ' file per tugas. Sisa slot: ' + remainingSlots + '.', 'error');
+        input.value = '';
+        return;
+    }
+    for (const file of picked) {
+        if (file.size > MAX_ATTACHMENT_BYTES) {
+            showNotification('File "' + file.name + '" (' + Math.round(file.size / 1024) + 'KB) melebihi batas ' + Math.round(MAX_ATTACHMENT_BYTES / 1024) + 'KB.', 'error');
+            continue;
+        }
+        try {
+            const data = await readFileAsDataUrl(file);
+            _tugasEditFiles.push({ name: file.name, data });
+        } catch (e) {
+            showNotification('Gagal membaca file "' + file.name + '".', 'error');
+        }
+    }
+    input.value = '';
+    renderTugasFileChips();
+}
 function openTugasModal(id) {
     const fileInput = document.getElementById('tugas-file');
-    const fileHint = document.getElementById('tugas-file-current');
     fileInput.value = '';
     if (id) {
         const t = state.tugas.find(x => x.id === Number(id));
@@ -3858,12 +3927,7 @@ function openTugasModal(id) {
         document.getElementById('tugas-edit-id').value = t.id;
         document.getElementById('tugas-modal-title').textContent = 'Edit Tugas';
         document.getElementById('tugas-delete-btn').style.display = '';
-        if (t.file) {
-            fileHint.textContent = `📎 File saat ini: ${t.file} (pilih file baru untuk mengganti)`;
-            fileHint.style.display = 'block';
-        } else {
-            fileHint.style.display = 'none';
-        }
+        _tugasEditFiles = getItemFiles(t).map(f => ({ name: f.name, data: f.data }));
     } else {
         document.getElementById('tugas-nama').value = '';
         document.getElementById('tugas-mapel').value = '';
@@ -3872,12 +3936,14 @@ function openTugasModal(id) {
         document.getElementById('tugas-edit-id').value = '';
         document.getElementById('tugas-modal-title').textContent = 'Tambah Tugas';
         document.getElementById('tugas-delete-btn').style.display = 'none';
-        fileHint.style.display = 'none';
+        _tugasEditFiles = [];
     }
+    renderTugasFileChips();
     openModal('tugas');
 }
 
 const MAX_ATTACHMENT_BYTES = 400 * 1024;
+const MAX_FILES_PER_ITEM = 3;
 function dataUrlToBlob(dataUrl) {
     const parts = dataUrl.split(',');
     const mimeMatch = parts[0].match(/data:(.*?);base64/);
@@ -3921,26 +3987,11 @@ async function submitTugas() {
     const tenggat = document.getElementById('tugas-tenggat').value;
     const deskripsi = document.getElementById('tugas-deskripsi').value.trim();
     const editId = document.getElementById('tugas-edit-id').value;
-    const fileInput = document.getElementById('tugas-file');
     if (!nama) {
         showNotification('Nama tugas wajib diisi.', 'warning');
         return;
     }
-    let fileName = '', fileData = '';
-    if (fileInput.files.length > 0) {
-        const file = fileInput.files[0];
-        if (file.size > MAX_ATTACHMENT_BYTES) {
-            showNotification('Ukuran file maksimal ' + Math.round(MAX_ATTACHMENT_BYTES / 1024) + 'KB (file kamu ' + Math.round(file.size / 1024) + 'KB). Kompres dulu ya.', 'error');
-            return;
-        }
-        try {
-            fileData = await readFileAsDataUrl(file);
-            fileName = file.name;
-        } catch (e) {
-            showNotification('Gagal membaca file.', 'error');
-            return;
-        }
-    }
+    const files = _tugasEditFiles.slice();
     if (editId) {
         const t = state.tugas.find(x => x.id === Number(editId));
         if (t) {
@@ -3948,12 +3999,10 @@ async function submitTugas() {
             t.mapel = mapel;
             t.tenggat = tenggat;
             t.deskripsi = deskripsi;
-            if (fileName) {
-                t.file = fileName;
-                t.fileData = fileData;
-            }
+            t.files = files;
+            delete t.file;
+            delete t.fileData;
         }
-        fileInput.value = '';
         saveState();
         renderTugas();
         renderBeranda();
@@ -3967,11 +4016,9 @@ async function submitTugas() {
         mapel,
         tenggat,
         deskripsi,
-        file: fileName,
-        fileData,
+        files,
         selesai: false
     });
-    fileInput.value = '';
     document.getElementById('tugas-deskripsi').value = '';
     saveState();
     renderTugas();
@@ -4515,7 +4562,9 @@ window.submitStudent = submitStudent;
 window.openPengumumanModal = openPengumumanModal;
 window.submitPengumuman = submitPengumuman;
 window.submitTugas = submitTugas;
-window.openTaskFile = openTaskFile;
+window.openTaskFileAt = openTaskFileAt;
+window.onTugasFileSelected = onTugasFileSelected;
+window.removeTugasEditFile = removeTugasEditFile;
 window.openKasFile = openKasFile;
 window.openReportFile = openReportFile;
 window.toggleTugas = toggleTugas;
