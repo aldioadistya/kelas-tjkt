@@ -958,6 +958,13 @@ body {
 .tx-amt.minus {
     color: var(--rose);
 }
+ .tx-item {
+    cursor: pointer;
+}
+.tx-item:active {
+    transform: scale(0.995);
+}
+
 
 .tx-delete {
     background: none;
@@ -2556,15 +2563,20 @@ body.dark .s-name {
         <!-- Modals -->
         <div class="modal-bg" id="modal-kas">
             <div class="modal">
-                <h3>Tambah Transaksi Kas</h3>
+                <h3 id="kas-modal-title">Tambah Transaksi Kas</h3>
+                <input type="hidden" id="kas-edit-id" value="">
                 <div class="field"><label>Jenis</label><select id="kas-jenis">
                         <option value="masuk">Pemasukan (+)</option>
                         <option value="keluar">Pengeluaran (-)</option>
                     </select></div>
                 <div class="field"><label>Keterangan</label><input id="kas-ket" type="text" placeholder="Contoh: Kas Mingguan"></div>
                 <div class="field"><label>Jumlah (Rp)</label><input id="kas-jumlah" type="number" placeholder="0"></div>
-                <div class="field"><label>Lampiran (opsional)</label><input type="file" id="kas-file" accept=".jpg,.png,.pdf,.doc,.docx,.xlsx"><div class="field-hint">Maks 400KB</div></div>
-                <div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('kas')">Batal</button><button class="btn btn-primary" onclick="submitKas()">Simpan</button></div>
+                <div class="field"><label>Lampiran (opsional)</label><input type="file" id="kas-file" accept=".jpg,.png,.pdf,.doc,.docx,.xlsx"><div class="field-hint">Maks 400KB. Saat edit, kosongkan jika ingin mempertahankan lampiran lama.</div></div>
+                <div class="modal-actions">
+                    <button class="btn btn-danger admin-only" id="kas-delete-btn" style="display:none;" onclick="hapusKasCurrent()">Hapus</button>
+                    <button class="btn btn-ghost" onclick="closeModal('kas')">Batal</button>
+                    <button class="btn btn-primary" onclick="submitKas()">Simpan</button>
+                </div>
             </div>
         </div>
         <div class="modal-bg" id="modal-tugas">
@@ -3369,11 +3381,13 @@ function renderKas() {
     document.getElementById('kas-out').textContent = rupiah(keluar);
     const list = document.getElementById('kas-list');
     list.innerHTML = state.kas.length ? state.kas.slice().reverse().map(t => `
-        <div class="tx-item">
+        <div class="tx-item" role="button" tabindex="0" title="Klik untuk mengedit transaksi" onclick="openKasEditModal(${t.id})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openKasEditModal(${t.id})}">
             <div class="tx-icon" style="background:${t.jenis==='masuk'?'var(--teal-glass)':'var(--rose-glass)'}">${t.jenis==='masuk'?'⬇️':'⬆️'}</div>
-            <div><div class="tx-title">${t.ket}</div><div class="tx-sub">${t.tanggal}${t.file ? ` · <span style="cursor:pointer; text-decoration:underline;" onclick="event.stopPropagation(); openKasFile(${t.id})">📎 ${t.file}</span>` : ''}</div></div>
+            <div style="flex:1; min-width:0;">
+                <div class="tx-title">${t.ket}</div>
+                <div class="tx-sub">${t.tanggal}${t.file ? ` · <span style="cursor:pointer; text-decoration:underline;" onclick="event.stopPropagation(); openKasFile(${t.id})">📎 ${t.file}</span>` : ''}</div>
+            </div>
             <div class="tx-amt ${t.jenis==='masuk'?'plus':'minus'}">${t.jenis==='masuk'?'+':'-'}${rupiah(t.jumlah)}</div>
-            <button class="tx-delete admin-only" onclick="hapusKas(${t.id})">✕</button>
         </div>
     `).join('') : `<div class="empty">Belum ada riwayat kas.</div>`;
 }
@@ -4340,16 +4354,67 @@ function deleteReport() {
     showNotification('Laporan dihapus.', 'info');
 }
 // ===== KAS ACTION =====
-async function submitKas() {
+async async function submitKas() {
     if (guardReadOnly()) return;
+
     const jenis = document.getElementById('kas-jenis').value;
     const ket = document.getElementById('kas-ket').value.trim();
     const jumlah = parseFloat(document.getElementById('kas-jumlah').value);
     const fileInput = document.getElementById('kas-file');
-    if (!ket || !jumlah) {
-        showNotification('Isi semua field transaksi.', 'warning');
+    const editId = Number(document.getElementById('kas-edit-id').value || 0);
+
+    if (!ket || !jumlah || jumlah <= 0) {
+        showNotification('Isi semua field transaksi dengan benar.', 'warning');
         return;
     }
+
+    // EDIT TRANSAKSI LAMA
+    if (editId) {
+        const t = state.kas.find(x => x.id === editId);
+        if (!t) {
+            showNotification('Transaksi tidak ditemukan.', 'error');
+            return;
+        }
+
+        let fileName = t.file || '';
+        let fileData = t.fileData || '';
+
+        // Lampiran hanya diganti jika user memilih file baru.
+        if (fileInput.files.length > 0) {
+            const file = fileInput.files[0];
+            if (file.size > MAX_ATTACHMENT_BYTES) {
+                showNotification('Ukuran file maksimal ' + Math.round(MAX_ATTACHMENT_BYTES / 1024) + 'KB (file kamu ' + Math.round(file.size / 1024) + 'KB).', 'error');
+                return;
+            }
+            try {
+                fileData = await readFileAsDataUrl(file);
+                fileName = file.name;
+            } catch (e) {
+                showNotification('Gagal membaca file.', 'error');
+                return;
+            }
+        }
+
+        t.jenis = jenis;
+        t.ket = ket;
+        t.jumlah = jumlah;
+        t.file = fileName;
+        t.fileData = fileData;
+
+        fileInput.value = '';
+        document.getElementById('kas-edit-id').value = '';
+        document.getElementById('kas-modal-title').textContent = 'Tambah Transaksi Kas';
+        document.getElementById('kas-delete-btn').style.display = 'none';
+
+        saveState();
+        renderKas();
+        renderBeranda();
+        closeModal('kas');
+        showNotification('Transaksi kas berhasil diperbarui.', 'success');
+        return;
+    }
+
+    // TAMBAH TRANSAKSI BARU
     let fileName = '', fileData = '';
     if (fileInput.files.length > 0) {
         const file = fileInput.files[0];
@@ -4365,6 +4430,7 @@ async function submitKas() {
             return;
         }
     }
+
     state.kas.push({
         id: Date.now(),
         jenis,
@@ -4374,13 +4440,53 @@ async function submitKas() {
         file: fileName,
         fileData
     });
+
     fileInput.value = '';
+    document.getElementById('kas-edit-id').value = '';
     saveState();
     renderKas();
     renderBeranda();
     closeModal('kas');
     showNotification('Transaksi kas berhasil ditambahkan.', 'success');
 }
+
+function openKasEditModal(id) {
+    if (guardReadOnly()) return;
+
+    const t = state.kas.find(x => x.id === Number(id));
+    if (!t) {
+        showNotification('Transaksi tidak ditemukan.', 'error');
+        return;
+    }
+
+    document.getElementById('kas-modal-title').textContent = 'Edit Transaksi Kas';
+    document.getElementById('kas-edit-id').value = t.id;
+    document.getElementById('kas-jenis').value = t.jenis || 'keluar';
+    document.getElementById('kas-ket').value = t.ket || '';
+    document.getElementById('kas-jumlah').value = t.jumlah || '';
+    document.getElementById('kas-file').value = '';
+    document.getElementById('kas-delete-btn').style.display = '';
+    openModal('kas');
+}
+
+function hapusKasCurrent() {
+    if (guardReadOnly()) return;
+
+    const editId = Number(document.getElementById('kas-edit-id').value || 0);
+    if (!editId) return;
+
+    if (!confirm('Hapus transaksi kas ini?')) return;
+
+    state.kas = state.kas.filter(t => t.id !== editId);
+    saveState();
+    renderKas();
+    renderBeranda();
+    document.getElementById('kas-edit-id').value = '';
+    document.getElementById('kas-delete-btn').style.display = 'none';
+    closeModal('kas');
+    showNotification('Transaksi kas dihapus.', 'info');
+}
+
 function openKasFile(id) {
     const t = state.kas.find(x => x.id === Number(id));
     if (!t) return;
@@ -4393,6 +4499,7 @@ function openKasFile(id) {
 
 function hapusKas(id) {
     if (guardReadOnly()) return;
+    if (!confirm('Hapus transaksi kas ini?')) return;
     state.kas = state.kas.filter(t => t.id !== id);
     saveState();
     renderKas();
@@ -4735,7 +4842,9 @@ window.openReportModal = openReportModal;
 window.submitReport = submitReport;
 window.deleteReport = deleteReport;
 window.submitKas = submitKas;
+window.openKasEditModal = openKasEditModal;
 window.hapusKas = hapusKas;
+window.hapusKasCurrent = hapusKasCurrent;
 window.openExportModal = openExportModal;
 window.copyExportText = copyExportText;
 window.openStatsModal = openStatsModal;
