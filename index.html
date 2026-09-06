@@ -2536,34 +2536,70 @@ body:not(.dark) .content {
 </style>
 
 
-<style id="minimal-scrollbar">
-html {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(124,116,255,.82) transparent;
+<style id="report-readonly-visibility-fix">
+#modal-report.staff-readonly .staff-readonly-field,
+#modal-report.staff-readonly .staff-readonly-value,
+#modal-report.staff-readonly .staff-file-view {
+    color: var(--text, #f1f5f9) !important;
+    -webkit-text-fill-color: var(--text, #f1f5f9) !important;
+    opacity: 1 !important;
 }
-* {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(124,116,255,.82) transparent;
+#modal-report.staff-readonly .staff-readonly-value {
+    display: block;
+    line-height: 1.5;
+    font-size: 14px;
+    padding: 2px 0 6px;
 }
-*::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+#modal-report.staff-readonly .staff-readonly-file {
+    display: none !important;
 }
-*::-webkit-scrollbar-track {
-  background: transparent;
+#modal-report.staff-readonly .staff-file-view {
+    background: rgba(255,255,255,.035) !important;
+    border: 1px solid rgba(255,255,255,.08) !important;
 }
-*::-webkit-scrollbar-thumb {
-  background: rgba(124,116,255,.72);
-  border-radius: 999px;
-  border: 1px solid transparent;
-  background-clip: padding-box;
+</style>
+
+
+<style id="modal-scrollbar-fix">
+/* Scrollbar khusus modal: tipis, tanpa tombol panah, dan thumb mengikuti tinggi isi modal. */
+.modal {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(129,140,248,.78) transparent;
+    scrollbar-gutter: stable;
 }
-*::-webkit-scrollbar-thumb:hover {
-  background: rgba(124,116,255,.95);
-  background-clip: padding-box;
+.modal::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
 }
-*::-webkit-scrollbar-corner {
-  background: transparent;
+.modal::-webkit-scrollbar-track {
+    background: transparent;
+    margin: 10px 0 10px;
+}
+.modal::-webkit-scrollbar-thumb {
+    background: rgba(129,140,248,.78);
+    border-radius: 999px;
+    border: 0;
+    background-clip: padding-box;
+}
+.modal::-webkit-scrollbar-thumb:hover {
+    background: rgba(129,140,248,1);
+}
+.modal::-webkit-scrollbar-button,
+.modal::-webkit-scrollbar-button:single-button {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+.modal::-webkit-scrollbar-corner {
+    background: transparent;
+}
+
+/* Jangan tampilkan scrollbar halaman utama; yang bergerak adalah area yang memang scrollable. */
+.screen {
+    scrollbar-width: none;
+}
+.screen::-webkit-scrollbar {
+    display: none;
 }
 </style>
 
