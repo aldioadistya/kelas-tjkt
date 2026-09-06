@@ -737,6 +737,10 @@ body {
 
 
 
+.view {
+    display: none;
+}
+
 .view.active {
     display: block;
     animation: fadeInUp 0.2s ease;
@@ -4515,12 +4519,16 @@ function importBackup(file) {
 // NAVIGATION
 // ============================================================
 function goTo(name) {
+    const target = document.getElementById('view-' + name);
+    if (!target) return;
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-    document.getElementById('view-' + name).classList.add('active');
+    target.classList.add('active');
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    const t = document.querySelector(`.tab[data-tab="${name}"]`);
-    if (t) t.classList.add('active');
-    if (name === 'settings') renderAccountList();
+    const tab = document.querySelector('.tab[data-tab="' + name + '"]');
+    if (tab) tab.classList.add('active');
+    const content = document.querySelector('.content');
+    if (content) content.scrollTop = 0;
+    if (name === 'settings' && typeof renderAccountList === 'function') renderAccountList();
 }
 
 function openModal(name) {
