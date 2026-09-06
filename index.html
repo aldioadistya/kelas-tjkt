@@ -2721,8 +2721,7 @@ async function loadState() {
         if (r && r.value) {
             const loaded = JSON.parse(r.value);
             state = Object.assign(state, loaded);
-            if (!state.reports) state.reports = [];
-            if (state.autoCleanReportDays === undefined || state.autoCleanReportDays === null) state.autoCleanReportDays = 7;
+            if (!Array.isArray(state.reports)) state.reports = [];
             if (!state.piketJadwal) state.piketJadwal = {};
             if (!state.calMinimized) state.calMinimized = {
                 hp: false,
@@ -3102,6 +3101,7 @@ function setAutoCleanDays(value) {
     saveState();
     showNotification(days === 0 ? 'Auto-hapus tugas selesai dimatikan.' : 'Tugas selesai akan otomatis terhapus setelah ' + days + ' hari.', 'success');
 }
+
 function setAutoCleanReportDays(value) {
     if (guardReadOnly()) return;
     let days = parseInt(value, 10);
@@ -4011,19 +4011,22 @@ function deleteTugas(id) {
 }
 // ===== LAPORAN =====
 function autoCleanDoneReports() {
-    const days = (state.autoCleanReportDays !== undefined && state.autoCleanReportDays !== null) ? state.autoCleanReportDays : 7;
+    if (!Array.isArray(state.reports)) {
+        state.reports = [];
+        return;
+    }
+
+    const days = (state.autoCleanReportDays !== undefined && state.autoCleanReportDays !== null) ? Number(state.autoCleanReportDays) : 7;
     const now = Date.now();
     let changed = false;
 
+    // Tandai waktu ketika laporan pertama kali diketahui berstatus selesai.
     state.reports.forEach(r => {
-        // Laporan yang sudah lama berstatus selesai akan mulai dihitung dari
-        // saat pertama kali fitur ini melihatnya, jika belum punya resolvedAt.
+        if (!r || typeof r !== 'object') return;
         if (r.status === 'resolved' && !r.resolvedAt) {
             r.resolvedAt = now;
             changed = true;
-        }
-        // Jika status dikembalikan dari selesai, hapus penanda waktunya.
-        if (r.status !== 'resolved' && r.resolvedAt) {
+        } else if (r.status !== 'resolved' && r.resolvedAt) {
             delete r.resolvedAt;
             changed = true;
         }
@@ -4032,14 +4035,15 @@ function autoCleanDoneReports() {
     if (days > 0) {
         const thresholdMs = days * 24 * 60 * 60 * 1000;
         const before = state.reports.length;
-        state.reports = state.reports.filter(r => {
-            return !(r.status === 'resolved' && r.resolvedAt && (now - r.resolvedAt) > thresholdMs);
-        });
+        state.reports = state.reports.filter(r => !(
+            r && r.status === 'resolved' && r.resolvedAt && (now - Number(r.resolvedAt)) >= thresholdMs
+        ));
         if (state.reports.length !== before) changed = true;
     }
 
     if (changed) saveState();
 }
+
 function renderReports() {
     autoCleanDoneReports();
     const filter = document.getElementById('report-filter').value;
@@ -4113,7 +4117,7 @@ async function submitReport() {
             r.status = newStatus;
             if (newStatus === 'resolved') {
                 if (oldStatus !== 'resolved' || !r.resolvedAt) r.resolvedAt = Date.now();
-            } else if (r.resolvedAt) {
+            } else {
                 delete r.resolvedAt;
             }
             if (fileName) {
