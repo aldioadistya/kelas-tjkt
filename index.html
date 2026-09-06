@@ -2690,29 +2690,47 @@ const storage = {
     }
 };
 let _savePending = false;
+let _saveAgain = false;
+let _savePromise = null;
 let _skipNextSync = false;
 let _lastSaveSyncFailedNotified = false;
 async function saveState() {
-    if (_savePending) return;
-    _savePending = true;
-    try {
-        const result = await storage.set('kelasku-state', JSON.stringify(state), true);
-        if (result && result.sharedMode && !result.synced) {
-            console.error('Save state error: gagal sync ke Firestore', result.error);
-            if (!_lastSaveSyncFailedNotified) {
-                _lastSaveSyncFailedNotified = true;
-                const isFull = result.error && /longer than|exceeds|too large|invalid-argument/i.test(String(result.error.message || result.error));
-                showNotification(isFull ? '⚠️ Gagal sinkron: penyimpanan bersama penuh (maks 1MB). Perubahan HANYA tersimpan di HP ini, belum kebagikan ke pengguna lain! Segera bersihkan data.' : '⚠️ Gagal sinkron ke server. Perubahan hanya tersimpan lokal di HP ini. Cek koneksi internet.', 'error');
+    // Pastikan setiap perubahan benar-benar ikut tersimpan. Sebelumnya,
+    // panggilan save kedua saat save pertama masih berjalan bisa terbuang.
+    _saveAgain = true;
+    if (_savePromise) return _savePromise;
+
+    _savePromise = (async () => {
+        _savePending = true;
+        try {
+            while (_saveAgain) {
+                _saveAgain = false;
+                const snapshot = JSON.stringify(state);
+                const result = await storage.set('kelasku-state', snapshot, true);
+                if (result && result.sharedMode && !result.synced) {
+                    console.error('Save state error: gagal sync ke Firestore', result.error);
+                    if (!_lastSaveSyncFailedNotified) {
+                        _lastSaveSyncFailedNotified = true;
+                        const isFull = result.error && /longer than|exceeds|too large|invalid-argument/i.test(String(result.error.message || result.error));
+                        showNotification(isFull ? '⚠️ Gagal sinkron: database penuh (maks 1MB). Laporan belum tersimpan ke server.' : '⚠️ Gagal sinkron ke server. Laporan belum terbagi ke pengguna lain.', 'error');
+                    }
+                } else {
+                    _lastSaveSyncFailedNotified = false;
+                    console.log('State saved successfully');
+                }
             }
-        } else {
-            _lastSaveSyncFailedNotified = false;
-            console.log('State saved successfully');
+        } catch (e) {
+            console.error('Save state error:', e);
+            showNotification('⚠️ Gagal menyimpan perubahan.', 'error');
+        } finally {
+            _savePending = false;
         }
-    } catch (e) {
-        console.error('Save state error:', e);
-        showNotification('⚠️ Gagal menyimpan perubahan.', 'error');
+    })();
+
+    try {
+        return await _savePromise;
     } finally {
-        _savePending = false;
+        _savePromise = null;
     }
 }
 async function loadState() {
@@ -2721,7 +2739,8 @@ async function loadState() {
         if (r && r.value) {
             const loaded = JSON.parse(r.value);
             state = Object.assign(state, loaded);
-            if (!Array.isArray(state.reports)) state.reports = [];
+            if (!state.reports) state.reports = [];
+            if (state.autoCleanReportDays === undefined || state.autoCleanReportDays === null) state.autoCleanReportDays = 7;
             if (!state.piketJadwal) state.piketJadwal = {};
             if (!state.calMinimized) state.calMinimized = {
                 hp: false,
@@ -3101,7 +3120,6 @@ function setAutoCleanDays(value) {
     saveState();
     showNotification(days === 0 ? 'Auto-hapus tugas selesai dimatikan.' : 'Tugas selesai akan otomatis terhapus setelah ' + days + ' hari.', 'success');
 }
-
 function setAutoCleanReportDays(value) {
     if (guardReadOnly()) return;
     let days = parseInt(value, 10);
@@ -4011,22 +4029,19 @@ function deleteTugas(id) {
 }
 // ===== LAPORAN =====
 function autoCleanDoneReports() {
-    if (!Array.isArray(state.reports)) {
-        state.reports = [];
-        return;
-    }
-
-    const days = (state.autoCleanReportDays !== undefined && state.autoCleanReportDays !== null) ? Number(state.autoCleanReportDays) : 7;
+    const days = (state.autoCleanReportDays !== undefined && state.autoCleanReportDays !== null) ? state.autoCleanReportDays : 7;
     const now = Date.now();
     let changed = false;
 
-    // Tandai waktu ketika laporan pertama kali diketahui berstatus selesai.
     state.reports.forEach(r => {
-        if (!r || typeof r !== 'object') return;
+        // Laporan yang sudah lama berstatus selesai akan mulai dihitung dari
+        // saat pertama kali fitur ini melihatnya, jika belum punya resolvedAt.
         if (r.status === 'resolved' && !r.resolvedAt) {
             r.resolvedAt = now;
             changed = true;
-        } else if (r.status !== 'resolved' && r.resolvedAt) {
+        }
+        // Jika status dikembalikan dari selesai, hapus penanda waktunya.
+        if (r.status !== 'resolved' && r.resolvedAt) {
             delete r.resolvedAt;
             changed = true;
         }
@@ -4035,15 +4050,14 @@ function autoCleanDoneReports() {
     if (days > 0) {
         const thresholdMs = days * 24 * 60 * 60 * 1000;
         const before = state.reports.length;
-        state.reports = state.reports.filter(r => !(
-            r && r.status === 'resolved' && r.resolvedAt && (now - Number(r.resolvedAt)) >= thresholdMs
-        ));
+        state.reports = state.reports.filter(r => {
+            return !(r.status === 'resolved' && r.resolvedAt && (now - r.resolvedAt) > thresholdMs);
+        });
         if (state.reports.length !== before) changed = true;
     }
 
     if (changed) saveState();
 }
-
 function renderReports() {
     autoCleanDoneReports();
     const filter = document.getElementById('report-filter').value;
@@ -4117,7 +4131,7 @@ async function submitReport() {
             r.status = newStatus;
             if (newStatus === 'resolved') {
                 if (oldStatus !== 'resolved' || !r.resolvedAt) r.resolvedAt = Date.now();
-            } else {
+            } else if (r.resolvedAt) {
                 delete r.resolvedAt;
             }
             if (fileName) {
@@ -4125,7 +4139,7 @@ async function submitReport() {
                 r.fileData = fileData;
             }
         }
-        saveState();
+        await saveState();
         renderReports();
         closeModal('report');
         showNotification('Laporan berhasil diperbarui.', 'success');
@@ -4155,7 +4169,7 @@ async function submitReport() {
         fileData
     });
     fileInput.value = '';
-    saveState();
+    await saveState();
     renderReports();
     closeModal('report');
     showNotification('Laporan berhasil dikirim!', 'success');
