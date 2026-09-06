@@ -2487,110 +2487,92 @@ body:not(.dark) .content {
 <style>
 .home-search-wrap{position:relative}.home-search-input{width:100%;box-sizing:border-box;border:1px solid var(--glass-border);border-radius:10px;padding:10px 12px;font-size:12px;background:var(--input-bg);color:var(--text-main);outline:none}.global-search-results{margin-top:7px;display:flex;flex-direction:column;gap:5px}.global-search-item{display:flex;align-items:center;gap:8px;padding:9px 10px;border:1px solid var(--glass-border);border-radius:9px;background:var(--glass-card);cursor:pointer}.global-search-item .gsi-main{flex:1;min-width:0}.global-search-item .gsi-title{font-size:11px;font-weight:800;color:var(--text-main);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.global-search-item .gsi-sub{font-size:9.5px;color:var(--text-soft);margin-top:2px}.notify-item{display:flex;gap:9px;padding:9px 2px;border-bottom:1px solid var(--glass-border);cursor:pointer}.notify-item:last-child{border-bottom:0}.notify-item.unread{background:var(--primary-glass);border-radius:8px;padding-left:7px;padding-right:7px}.notify-dot{width:7px;height:7px;border-radius:50%;background:var(--primary);margin-top:5px;flex:none}.notify-item.read .notify-dot{opacity:.25}.notify-title{font-size:11px;font-weight:800;color:var(--text-main)}.notify-text{font-size:10px;line-height:1.4;color:var(--text-soft);margin-top:2px}.notify-time{font-size:9px;color:var(--text-muted);margin-top:3px}.activity-row{padding:8px 0;border-bottom:1px solid var(--glass-border)}.activity-row:last-child{border-bottom:0}.activity-main{font-size:10.5px;color:var(--text-main);line-height:1.4}.activity-meta{font-size:9px;color:var(--text-muted);margin-top:2px}.report-home-card{cursor:pointer}@media(max-width:520px){.home-search-input{font-size:11px}}</style>
 
-<style id="report-readonly-polish">
-/* Staff report modal: information fields look like plain read-only values. */
-#modal-report.staff-readonly .staff-readonly-field {
-  background: rgba(255,255,255,.035) !important;
-  border: 1px solid rgba(255,255,255,.08) !important;
-  color: var(--text, #e8ecf5) !important;
-  cursor: default !important;
-  pointer-events: none !important;
-}
-#modal-report.staff-readonly .staff-readonly-field::-webkit-calendar-picker-indicator,
-#modal-report.staff-readonly .staff-readonly-field::-webkit-inner-spin-button,
-#modal-report.staff-readonly .staff-readonly-field::-webkit-clear-button {
-  display:none !important;
-}
-#modal-report.staff-readonly .staff-readonly-select-wrap {
-  position: relative;
-}
-#modal-report.staff-readonly .staff-readonly-select-wrap select {
-  appearance: none !important;
-  -webkit-appearance: none !important;
-  background-image: none !important;
-  padding-right: 14px !important;
-  pointer-events: none !important;
-}
-#modal-report.staff-readonly .staff-readonly-select-wrap::after {
-  display:none !important;
-}
-#modal-report.staff-readonly .staff-readonly-file {
-  display:none !important;
-}
-#modal-report.staff-readonly .staff-file-view {
-  display:flex !important;
-  align-items:center;
-  gap:8px;
-  min-height:42px;
-  padding:0 14px;
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:12px;
-  background:rgba(255,255,255,.035);
-  color:var(--muted,#aab2c2);
-}
-#modal-report.staff-readonly #report-status-field select {
-  pointer-events:auto !important;
-  appearance:auto !important;
-  -webkit-appearance:auto !important;
-}
-</style>
 
-<style id="activity-scrollbar-final">
-#activity-log-list{position:relative;overflow-y:auto!important;scrollbar-width:none!important;-ms-overflow-style:none!important;padding-right:10px!important;}
-#activity-log-list::-webkit-scrollbar{width:0!important;height:0!important;display:none!important;}
-#activity-log-list.activity-custom-scroll{padding-right:12px!important;}
-#activity-scrollbar{position:absolute;top:8px;right:5px;width:5px;height:calc(100% - 16px);border-radius:999px;background:transparent;z-index:5;pointer-events:auto;}
-#activity-scrollbar-thumb{position:absolute;top:0;right:0;width:5px;min-height:24px;border-radius:999px;background:var(--primary)!important;box-shadow:0 0 0 1px rgba(255,255,255,.06);cursor:grab;}
-#activity-scrollbar-thumb:active{cursor:grabbing;}
-</style>
+<style id="final-ui-fix">
+/* ---------- LAPORAN: READ-ONLY TEXT ---------- */
+#modal-report .report-readonly-value,
+#modal-report .staff-report-value {
+  color: var(--text, #f1f5f9) !important;
+  -webkit-text-fill-color: var(--text, #f1f5f9) !important;
+  opacity: 1 !important;
+  font-size: 13px !important;
+  line-height: 1.45 !important;
+  font-weight: 500 !important;
+  background: transparent !important;
+  border: 0 !important;
+  padding: 1px 0 8px !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+#modal-report .field > label {
+  color: var(--muted, #aab4c6) !important;
+  margin-bottom: 3px !important;
+}
+#modal-report .field {
+  margin-bottom: 7px !important;
+}
 
-<style id="report-modal-custom-scrollbar">
-/* Laporan: gunakan scrollbar custom agar Chrome/Edge tidak menampilkan tombol panah bawaan. */
+/* ---------- LAPORAN: ONE SCROLL AREA ---------- */
 #modal-report .modal {
-    position: relative;
-    overflow-y: auto !important;
-    scrollbar-width: none !important;
-    -ms-overflow-style: none !important;
-    padding-right: 24px !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(129,140,248,.78) transparent !important;
+  scrollbar-gutter: stable;
 }
-#modal-report .modal::-webkit-scrollbar,
-#modal-report .modal::-webkit-scrollbar-button,
-#modal-report .modal::-webkit-scrollbar-track,
+#modal-report .modal::-webkit-scrollbar {
+  width: 5px !important;
+  height: 5px !important;
+}
+#modal-report .modal::-webkit-scrollbar-track {
+  background: transparent !important;
+}
 #modal-report .modal::-webkit-scrollbar-thumb {
-    width: 0 !important;
-    height: 0 !important;
-    display: none !important;
-    background: transparent !important;
+  background: rgba(129,140,248,.78) !important;
+  border: 0 !important;
+  border-radius: 999px !important;
 }
-#report-modal-scrollbar {
-    position: absolute;
-    top: 14px;
-    right: 7px;
-    bottom: 14px;
-    width: 5px;
-    border-radius: 999px;
-    background: transparent;
-    z-index: 20;
-    pointer-events: none;
+#modal-report .modal::-webkit-scrollbar-thumb:hover {
+  background: rgba(129,140,248,.95) !important;
 }
-#report-modal-scrollbar-thumb {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 5px;
-    min-height: 28px;
-    border-radius: 999px;
-    background: var(--primary, #818cf8);
-    opacity: .78;
-    pointer-events: auto;
-    cursor: grab;
+#modal-report .modal::-webkit-scrollbar-button {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
-#report-modal-scrollbar-thumb:hover {
-    opacity: 1;
+#modal-report .modal::-webkit-scrollbar-corner {
+  background: transparent !important;
 }
-#report-modal-scrollbar-thumb.dragging {
-    cursor: grabbing;
-    opacity: 1;
+
+/* ---------- RIWAYAT AKTIVITAS: SCROLLBAR STAYS INSIDE CARD ---------- */
+#activity-log-list {
+  position: relative !important;
+  max-height: 240px !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(129,140,248,.70) transparent !important;
+}
+#activity-log-list::-webkit-scrollbar {
+  width: 5px !important;
+}
+#activity-log-list::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+#activity-log-list::-webkit-scrollbar-thumb {
+  background: rgba(129,140,248,.70) !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+}
+#activity-log-list::-webkit-scrollbar-button {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+#activity-log-list::-webkit-scrollbar-corner {
+  background: transparent !important;
 }
 </style>
 
@@ -3220,24 +3202,9 @@ function markAllNotificationsRead(){if(!currentUser)return;getMyNotifications().
 function renderActivityLog(){
  const list=document.getElementById('activity-log-list');
  if(!list)return;
- if(!isAdmin()){list.innerHTML='';const old=document.getElementById('activity-scrollbar');if(old)old.remove();return;}
+ if(!isAdmin()){list.innerHTML='';return;}
  const rows=(state.activityLog||[]).slice().sort((a,b)=>b.at-a.at).slice(0,30);
  list.innerHTML=rows.length?rows.map(a=>`<div class="activity-row"><div class="activity-main"><b>${escapeHtml(a.by)}</b> — ${escapeHtml(a.action)}</div><div class="activity-meta">${escapeHtml(a.detail||'')} · ${new Date(a.at).toLocaleString('id-ID')}</div></div>`).join(''):'<div class="empty">Belum ada aktivitas.</div>';
- list.classList.add('activity-custom-scroll');
- let bar=document.getElementById('activity-scrollbar');
- if(!bar){
-   bar=document.createElement('div');bar.id='activity-scrollbar';
-   const thumb=document.createElement('div');thumb.id='activity-scrollbar-thumb';bar.appendChild(thumb);
-   list.parentElement.style.position='relative';list.parentElement.appendChild(bar);
- }
- const thumb=bar.firstElementChild;
- const update=()=>{const max=list.scrollHeight-list.clientHeight;const track=bar.clientHeight;const h=max>0?Math.max(24,track*(list.clientHeight/list.scrollHeight)):track;thumb.style.height=h+'px';thumb.style.top=(max>0?(track-h)*(list.scrollTop/max):0)+'px';bar.style.display=max>0?'block':'none';};
- if(!list.__activityScrollBound){
-   list.addEventListener('scroll',update,{passive:true});
-   thumb.addEventListener('pointerdown',e=>{e.preventDefault();thumb.setPointerCapture(e.pointerId);const startY=e.clientY,startTop=parseFloat(thumb.style.top)||0,track=bar.clientHeight,h=thumb.offsetHeight,max=list.scrollHeight-list.clientHeight;const move=ev=>{const top=Math.max(0,Math.min(track-h,startTop+ev.clientY-startY));list.scrollTop=max*(top/(track-h||1));};const up=()=>{thumb.removeEventListener('pointermove',move);thumb.removeEventListener('pointerup',up);};thumb.addEventListener('pointermove',move);thumb.addEventListener('pointerup',up,{once:true});});
-   list.__activityScrollBound=true;
- }
- requestAnimationFrame(update);
 }
 function globalSearchTypeLabel(type){return({student:'Siswa',task:'Tugas',report:'Laporan',announcement:'Pengumuman',schedule:'Jadwal'})[type]||type;}
 function renderGlobalSearch(){
@@ -5124,97 +5091,30 @@ window.todayKey = todayKey;
 
 </script>
 
-<script id="report-modal-custom-scrollbar-js">
+<script id="final-ui-guard">
 (function(){
-    function initReportModalScrollbar(){
-        const modal = document.querySelector('#modal-report .modal');
-        if(!modal) return;
-
-        let bar = document.getElementById('report-modal-scrollbar');
-        if(!bar){
-            bar = document.createElement('div');
-            bar.id = 'report-modal-scrollbar';
-            bar.setAttribute('aria-hidden','true');
-            const thumb = document.createElement('div');
-            thumb.id = 'report-modal-scrollbar-thumb';
-            bar.appendChild(thumb);
-            modal.appendChild(bar);
-        }
-
-        const thumb = bar.firstElementChild;
-        let dragging = false;
-        let dragStartY = 0;
-        let dragStartScroll = 0;
-
-        function update(){
-            const visible = modal.clientHeight;
-            const total = modal.scrollHeight;
-            const maxScroll = Math.max(0, total - visible);
-            if(total <= visible + 1){
-                bar.style.display = 'none';
-                return;
-            }
-            bar.style.display = 'block';
-            const trackH = Math.max(1, bar.clientHeight);
-            const thumbH = Math.max(28, Math.round(trackH * visible / total));
-            const maxThumbTop = Math.max(0, trackH - thumbH);
-            const top = maxScroll ? Math.round((modal.scrollTop / maxScroll) * maxThumbTop) : 0;
-            thumb.style.height = thumbH + 'px';
-            thumb.style.top = top + 'px';
-        }
-
-        modal.addEventListener('scroll', update, {passive:true});
-        window.addEventListener('resize', update);
-        if(window.ResizeObserver){
-            const ro = new ResizeObserver(update);
-            ro.observe(modal);
-        }
-
-        thumb.addEventListener('pointerdown', function(e){
-            dragging = true;
-            dragStartY = e.clientY;
-            dragStartScroll = modal.scrollTop;
-            thumb.classList.add('dragging');
-            thumb.setPointerCapture?.(e.pointerId);
-            e.preventDefault();
-        });
-
-        thumb.addEventListener('pointermove', function(e){
-            if(!dragging) return;
-            const trackH = Math.max(1, bar.clientHeight);
-            const thumbH = thumb.offsetHeight;
-            const maxThumbTop = Math.max(1, trackH - thumbH);
-            const maxScroll = Math.max(0, modal.scrollHeight - modal.clientHeight);
-            const delta = e.clientY - dragStartY;
-            modal.scrollTop = dragStartScroll + (delta / maxThumbTop) * maxScroll;
-        });
-
-        function stopDrag(e){
-            if(!dragging) return;
-            dragging = false;
-            thumb.classList.remove('dragging');
-            try { thumb.releasePointerCapture?.(e.pointerId); } catch(_){}
-        }
-        thumb.addEventListener('pointerup', stopDrag);
-        thumb.addEventListener('pointercancel', stopDrag);
-
-        update();
-
-        // Modal content changes when opened/filled by openReportModal().
-        if(window.MutationObserver){
-            const mo = new MutationObserver(update);
-            mo.observe(modal, {childList:true, subtree:true, characterData:true, attributes:true});
-        }
-        setTimeout(update, 50);
-        setTimeout(update, 200);
+  function resetReportScroll(){
+    const modal = document.querySelector('#modal-report .modal');
+    if(modal){
+      modal.scrollTop = 0;
+      modal.scrollLeft = 0;
     }
-
-    if(document.readyState === 'loading'){
-        document.addEventListener('DOMContentLoaded', initReportModalScrollbar);
-    } else {
-        initReportModalScrollbar();
+  }
+  document.addEventListener('click', function(e){
+    if(e.target.closest('[onclick*="openReportModal"]')) setTimeout(resetReportScroll, 20);
+  });
+  const obs = new MutationObserver(function(){
+    const modal = document.querySelector('#modal-report .modal');
+    if(modal && getComputedStyle(modal).display !== 'none') {
+      if(!modal.dataset.scrollGuarded){
+        modal.dataset.scrollGuarded='1';
+        setTimeout(resetReportScroll, 0);
+      }
+    } else if(modal) {
+      delete modal.dataset.scrollGuarded;
     }
-    window.initReportModalScrollbar = initReportModalScrollbar;
+  });
+  obs.observe(document.body,{subtree:true,attributes:true,attributeFilter:['style','class']});
 })();
 </script>
 
