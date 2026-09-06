@@ -3998,6 +3998,10 @@ function deleteTugas(id) {
 function renderReports() {
     const filter = document.getElementById('report-filter').value;
     let list = [...state.reports];
+    const isStaff = currentUser && (currentUser.role === 'superadmin' || currentUser.role === 'admin');
+    if (!isStaff) {
+        list = list.filter(r => currentUser && r.authorUid === currentUser.uid);
+    }
     if (filter !== 'all') list = list.filter(r => r.status === filter);
     const wrap = document.getElementById('report-list');
     wrap.innerHTML = list.length ? list.reverse().map(r => `
@@ -4012,7 +4016,7 @@ function renderReports() {
                 </div>
             </div>
         </div>
-    `).join('') : `<div class="empty">Belum ada laporan.</div>`;
+    `).join('') : `<div class="empty">${isStaff ? 'Belum ada laporan.' : 'Kamu belum pernah membuat laporan.'}</div>`;
 }
 
 function openReportModal(id) {
@@ -4087,6 +4091,7 @@ async function submitReport() {
         urgensi,
         anonim,
         pelapor: anonim ? 'Anonim' : (currentUser ? currentUser.username : 'Siswa'),
+        authorUid: currentUser ? currentUser.uid : null,
         status: 'pending',
         date: new Date().toLocaleDateString('id-ID'),
         file: fileName,
