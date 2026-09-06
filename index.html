@@ -2536,70 +2536,73 @@ body:not(.dark) .content {
 </style>
 
 
-<style id="report-readonly-visibility-fix">
-#modal-report.staff-readonly .staff-readonly-field,
-#modal-report.staff-readonly .staff-readonly-value,
-#modal-report.staff-readonly .staff-file-view {
-    color: var(--text, #f1f5f9) !important;
-    -webkit-text-fill-color: var(--text, #f1f5f9) !important;
-    opacity: 1 !important;
-}
-#modal-report.staff-readonly .staff-readonly-value {
+<style id="report-modal-final-polish">
+/* ===== Laporan Admin/Super Admin: read-only information ===== */
+#modal-report.staff-readonly .staff-report-value {
     display: block;
-    line-height: 1.5;
-    font-size: 14px;
-    padding: 2px 0 6px;
+    color: var(--text-main, #e5e7eb) !important;
+    -webkit-text-fill-color: var(--text-main, #e5e7eb) !important;
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+    font-weight: 500;
+    padding: 0 0 8px !important;
+    margin: 0 !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    opacity: 1 !important;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
 }
-#modal-report.staff-readonly .staff-readonly-file {
-    display: none !important;
+#modal-report.staff-readonly .field {
+    margin-bottom: 8px !important;
 }
-#modal-report.staff-readonly .staff-file-view {
-    background: rgba(255,255,255,.035) !important;
-    border: 1px solid rgba(255,255,255,.08) !important;
+#modal-report.staff-readonly .field > label {
+    display: block;
+    color: var(--text-muted, #aeb7c8) !important;
+    margin-bottom: 3px !important;
 }
-</style>
+#modal-report.staff-readonly .field:has(#report-anonim) {
+    gap: 0 !important;
+    align-items: flex-start !important;
+}
+#modal-report.staff-readonly .staff-report-value[data-for="report-anonim"] {
+    display: inline-block;
+    padding-bottom: 4px !important;
+}
 
-
-<style id="modal-scrollbar-fix">
-/* Scrollbar khusus modal: tipis, tanpa tombol panah, dan thumb mengikuti tinggi isi modal. */
-.modal {
+/* ===== Scrollbar modal: benar-benar tipis dan tanpa tombol panah ===== */
+#modal-report .modal {
     scrollbar-width: thin;
-    scrollbar-color: rgba(129,140,248,.78) transparent;
+    scrollbar-color: rgba(129,140,248,.72) transparent;
     scrollbar-gutter: stable;
 }
-.modal::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+#modal-report .modal::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
 }
-.modal::-webkit-scrollbar-track {
-    background: transparent;
-    margin: 10px 0 10px;
+#modal-report .modal::-webkit-scrollbar-track {
+    background: transparent !important;
 }
-.modal::-webkit-scrollbar-thumb {
-    background: rgba(129,140,248,.78);
-    border-radius: 999px;
-    border: 0;
-    background-clip: padding-box;
+#modal-report .modal::-webkit-scrollbar-thumb {
+    background: rgba(129,140,248,.72) !important;
+    border-radius: 999px !important;
+    border: 0 !important;
+    min-height: 24px;
 }
-.modal::-webkit-scrollbar-thumb:hover {
-    background: rgba(129,140,248,1);
+#modal-report .modal::-webkit-scrollbar-thumb:hover {
+    background: rgba(129,140,248,.95) !important;
 }
-.modal::-webkit-scrollbar-button,
-.modal::-webkit-scrollbar-button:single-button {
+#modal-report .modal::-webkit-scrollbar-button,
+#modal-report .modal::-webkit-scrollbar-button:single-button,
+#modal-report .modal::-webkit-scrollbar-button:vertical:start,
+#modal-report .modal::-webkit-scrollbar-button:vertical:end {
     display: none !important;
     width: 0 !important;
     height: 0 !important;
 }
-.modal::-webkit-scrollbar-corner {
-    background: transparent;
-}
-
-/* Jangan tampilkan scrollbar halaman utama; yang bergerak adalah area yang memang scrollable. */
-.screen {
-    scrollbar-width: none;
-}
-.screen::-webkit-scrollbar {
-    display: none;
+#modal-report .modal::-webkit-scrollbar-corner {
+    background: transparent !important;
 }
 </style>
 
@@ -4362,6 +4365,7 @@ function setReportStaffView(isStaff) {
 
             const display = document.createElement('div');
             display.className = 'staff-report-value';
+            display.dataset.for = id;
             display.textContent = value;
             display.setAttribute('aria-readonly', 'true');
             field.appendChild(display);
