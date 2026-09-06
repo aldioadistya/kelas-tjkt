@@ -2586,6 +2586,221 @@ body:not(.dark) .content {
 }
 </style>
 
+<style id="laporan-aktivitas-no-scrollbar">
+/* ==========================================================
+   PERBAIKAN LAPORAN & RIWAYAT AKTIVITAS
+   Scroll tetap aktif dengan mouse/touch, tetapi scrollbar tidak
+   ditampilkan agar tampilan lebih bersih.
+   ========================================================== */
+
+/* Modal Kelola/Buat Laporan */
+#modal-report .modal {
+  max-height: 82vh !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+  overscroll-behavior: contain;
+}
+
+#modal-report .modal::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Riwayat Aktivitas di Setelan */
+#activity-log-list {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+  overscroll-behavior: contain;
+}
+
+#activity-log-list::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* ===== TATA LETAK LAPORAN ===== */
+#view-laporan .pagehead {
+  padding-bottom: 10px;
+}
+
+#view-laporan .section {
+  margin-top: 12px;
+}
+
+#view-laporan .section-head {
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 9px;
+}
+
+#view-laporan .section-head > div:last-child {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-left: auto;
+}
+
+#view-laporan #report-search {
+  width: 130px !important;
+  min-width: 105px;
+  height: 32px;
+  padding: 6px 9px !important;
+  border-radius: 9px !important;
+  font-size: 10.5px !important;
+}
+
+#view-laporan #report-filter {
+  min-height: 32px;
+  padding: 5px 9px !important;
+  border-radius: 9px !important;
+  font-size: 10px !important;
+}
+
+#view-laporan #report-stats {
+  gap: 6px !important;
+  margin: 0 0 8px !important;
+}
+
+#view-laporan #report-stats span {
+  padding: 5px 8px !important;
+  border-radius: 9px !important;
+  line-height: 1.2;
+}
+
+#view-laporan #report-list {
+  padding: 8px 12px !important;
+  overflow: visible !important;
+}
+
+#view-laporan .report-item {
+  gap: 10px;
+  padding: 11px 2px;
+}
+
+#view-laporan .report-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+}
+
+#view-laporan .report-title {
+  line-height: 1.35;
+}
+
+#view-laporan .report-meta {
+  line-height: 1.35;
+}
+
+#view-laporan .report-status {
+  flex-shrink: 0;
+}
+
+/* ===== TATA LETAK MODAL LAPORAN ===== */
+#modal-report .modal {
+  padding: 18px 18px 20px !important;
+}
+
+#modal-report .modal h3 {
+  margin-bottom: 6px !important;
+}
+
+#modal-report #report-code-label {
+  margin: 0 0 10px !important;
+  line-height: 1.3;
+}
+
+#modal-report .field {
+  margin-bottom: 10px !important;
+}
+
+#modal-report .field > label {
+  margin-bottom: 5px !important;
+  line-height: 1.25;
+}
+
+#modal-report .field input,
+#modal-report .field select,
+#modal-report .field textarea {
+  border-radius: 10px !important;
+}
+
+#modal-report .field textarea {
+  min-height: 74px;
+}
+
+#modal-report #report-status-field {
+  margin-top: 4px;
+  padding-top: 10px;
+  border-top: 1px solid var(--glass-border);
+}
+
+#modal-report .staff-report-value {
+  padding: 5px 0 7px !important;
+  line-height: 1.4 !important;
+  overflow-wrap: anywhere !important;
+}
+
+#modal-report #report-history {
+  margin-top: 4px;
+  padding: 8px 10px;
+  border-radius: 9px;
+  background: var(--glass-card);
+  border: 1px solid var(--glass-border);
+  line-height: 1.45;
+}
+
+#modal-report #report-student-response-text {
+  border-radius: 10px !important;
+  line-height: 1.45;
+}
+
+#modal-report .modal-actions {
+  gap: 8px;
+  margin-top: 12px;
+}
+
+@media (max-width: 520px) {
+  #view-laporan .section-head {
+    align-items: flex-start;
+  }
+
+  #view-laporan .section-head > div:last-child {
+    width: 100%;
+    margin-left: 0;
+    justify-content: stretch;
+  }
+
+  #view-laporan #report-search {
+    flex: 1 1 auto;
+    width: auto !important;
+    min-width: 0;
+  }
+
+  #view-laporan #report-filter {
+    flex: 0 0 auto;
+  }
+
+  #view-laporan #report-list {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  #modal-report .modal {
+    max-height: 84vh !important;
+    padding: 18px 16px 20px !important;
+  }
+}
+</style>
+
 
 <style id="safe-bottom-layout-fix">
 /* .screen already fills the space between the fixed top and bottom UI.
