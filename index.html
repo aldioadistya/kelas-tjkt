@@ -2488,36 +2488,72 @@ body:not(.dark) .content {
 .home-search-wrap{position:relative}.home-search-input{width:100%;box-sizing:border-box;border:1px solid var(--glass-border);border-radius:10px;padding:10px 12px;font-size:12px;background:var(--input-bg);color:var(--text-main);outline:none}.global-search-results{margin-top:7px;display:flex;flex-direction:column;gap:5px}.global-search-item{display:flex;align-items:center;gap:8px;padding:9px 10px;border:1px solid var(--glass-border);border-radius:9px;background:var(--glass-card);cursor:pointer}.global-search-item .gsi-main{flex:1;min-width:0}.global-search-item .gsi-title{font-size:11px;font-weight:800;color:var(--text-main);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.global-search-item .gsi-sub{font-size:9.5px;color:var(--text-soft);margin-top:2px}.notify-item{display:flex;gap:9px;padding:9px 2px;border-bottom:1px solid var(--glass-border);cursor:pointer}.notify-item:last-child{border-bottom:0}.notify-item.unread{background:var(--primary-glass);border-radius:8px;padding-left:7px;padding-right:7px}.notify-dot{width:7px;height:7px;border-radius:50%;background:var(--primary);margin-top:5px;flex:none}.notify-item.read .notify-dot{opacity:.25}.notify-title{font-size:11px;font-weight:800;color:var(--text-main)}.notify-text{font-size:10px;line-height:1.4;color:var(--text-soft);margin-top:2px}.notify-time{font-size:9px;color:var(--text-muted);margin-top:3px}.activity-row{padding:8px 0;border-bottom:1px solid var(--glass-border)}.activity-row:last-child{border-bottom:0}.activity-main{font-size:10.5px;color:var(--text-main);line-height:1.4}.activity-meta{font-size:9px;color:var(--text-muted);margin-top:2px}.report-home-card{cursor:pointer}@media(max-width:520px){.home-search-input{font-size:11px}}</style>
 
 
-<style id="report-activity-scroll-invisible">
-/* LAPORAN: tetap bisa scroll, tetapi garis/thumb scrollbar tidak terlihat */
-#modal-report,
+<style id="report-activity-scroll-final">
+/* LAPORAN — scrollbar tetap aktif, hanya track/garis dan panah yang dihilangkan */
 #modal-report .modal {
-  scrollbar-width: none !important;
-  -ms-overflow-style: none !important;
+  max-height: 85% !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(129,140,248,.82) transparent !important;
+  scrollbar-gutter: stable;
+  padding-right: 15px !important;
 }
-#modal-report::-webkit-scrollbar,
 #modal-report .modal::-webkit-scrollbar {
+  width: 5px !important;
+  height: 5px !important;
+}
+#modal-report .modal::-webkit-scrollbar-track {
+  background: transparent !important;
+  border: 0 !important;
+}
+#modal-report .modal::-webkit-scrollbar-thumb {
+  background: rgba(129,140,248,.82) !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+}
+#modal-report .modal::-webkit-scrollbar-button,
+#modal-report .modal::-webkit-scrollbar-button:single-button {
+  display: none !important;
   width: 0 !important;
   height: 0 !important;
-  display: none !important;
 }
-#modal-report::-webkit-scrollbar-button,
-#modal-report .modal::-webkit-scrollbar-button {
-  display: none !important;
+#modal-report .modal::-webkit-scrollbar-corner {
+  background: transparent !important;
 }
 
-/* RIWAYAT AKTIVITAS: tetap bisa scroll, tetapi garis/thumb scrollbar tidak terlihat */
+/* RIWAYAT AKTIVITAS — scrollbar tetap aktif, hanya track/garis dan panah yang dihilangkan */
 #activity-log-list {
-  scrollbar-width: none !important;
-  -ms-overflow-style: none !important;
+  max-height: 240px !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(129,140,248,.82) transparent !important;
+  scrollbar-gutter: stable;
+  padding-right: 6px !important;
+  box-sizing: border-box !important;
 }
 #activity-log-list::-webkit-scrollbar {
+  width: 5px !important;
+  height: 5px !important;
+}
+#activity-log-list::-webkit-scrollbar-track {
+  background: transparent !important;
+  border: 0 !important;
+}
+#activity-log-list::-webkit-scrollbar-thumb {
+  background: rgba(129,140,248,.82) !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+}
+#activity-log-list::-webkit-scrollbar-button,
+#activity-log-list::-webkit-scrollbar-button:single-button {
+  display: none !important;
   width: 0 !important;
   height: 0 !important;
-  display: none !important;
 }
-#activity-log-list::-webkit-scrollbar-button {
-  display: none !important;
+#activity-log-list::-webkit-scrollbar-corner {
+  background: transparent !important;
 }
 </style>
 
