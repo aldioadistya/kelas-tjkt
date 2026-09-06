@@ -4288,21 +4288,55 @@ function renderReports() {
 }
 
 function setReportStaffView(isStaff) {
-    const editableIds = [
-        'report-kategori',
-        'report-judul',
-        'report-deskripsi',
-        'report-tanggal',
-        'report-urgensi',
-        'report-anonim',
-        'report-file'
-    ];
+    const modal = document.getElementById('modal-report');
+    const editableIds = ['report-kategori','report-judul','report-deskripsi','report-tanggal','report-urgensi','report-anonim','report-file'];
+
+    // Remove any previous staff-only display copies.
+    modal.querySelectorAll('.staff-report-value').forEach(el => el.remove());
+    modal.classList.toggle('staff-readonly', !!isStaff);
+
     editableIds.forEach(id => {
         const el = document.getElementById(id);
         if (!el) return;
-        el.disabled = !!isStaff;
-        el.readOnly = !!isStaff;
+        const field = el.closest('.field');
+        if (!field) return;
+
+        if (isStaff) {
+            let value = '';
+            if (id === 'report-kategori') {
+                value = el.options[el.selectedIndex]?.textContent?.trim() || '-';
+            } else if (id === 'report-urgensi') {
+                value = el.options[el.selectedIndex]?.textContent?.trim() || '-';
+            } else if (id === 'report-tanggal') {
+                const raw = el.value || '';
+                if (raw) {
+                    const parts = raw.split('-');
+                    value = parts.length === 3 ? `${parts[2]}/${parts[1]}/${parts[0]}` : raw;
+                } else value = '-';
+            } else if (id === 'report-anonim') {
+                value = el.checked ? 'Ya, anonim' : 'Tidak, identitas ditampilkan';
+            } else if (id === 'report-file') {
+                value = el.files?.length ? el.files[0].name : (window._currentReportFileName || 'Tidak ada lampiran');
+            } else {
+                value = el.value || '-';
+            }
+
+            el.style.display = 'none';
+            el.disabled = true;
+
+            const display = document.createElement('div');
+            display.className = 'staff-report-value';
+            display.textContent = value;
+            display.setAttribute('aria-readonly', 'true');
+            field.appendChild(display);
+        } else {
+            el.style.display = '';
+            el.disabled = false;
+            el.readOnly = false;
+        }
     });
+
+    // Status and admin response remain the only editable controls for staff.
     const statusField = document.getElementById('report-status-field');
     const responseEl = document.getElementById('report-tanggapan');
     const historyEl = document.getElementById('report-history');
@@ -4315,15 +4349,21 @@ function setReportStaffView(isStaff) {
         if (delBtn) delBtn.style.setProperty('display', 'none', 'important');
         if (submitBtn) submitBtn.textContent = 'Simpan Status';
         if (titleEl) titleEl.textContent = 'Kelola Laporan';
-        if (responseEl) responseEl.disabled = false;
+        if (responseEl) {
+            responseEl.disabled = false;
+            responseEl.readOnly = false;
+        }
     } else {
         if (statusField) statusField.style.display = 'none';
         if (delBtn) delBtn.style.setProperty('display', 'none', 'important');
         if (submitBtn) submitBtn.textContent = 'Kirim';
         if (titleEl) titleEl.textContent = 'Buat Laporan';
+        if (responseEl) {
+            responseEl.disabled = false;
+            responseEl.readOnly = false;
+        }
     }
 }
-
 function openReportModal(id) {
     const isStaff = currentUser && (currentUser.role === 'superadmin' || currentUser.role === 'admin');
     const r = id ? state.reports.find(x => x.id === Number(id)) : null;
@@ -5034,53 +5074,4 @@ window.selectPiketJadwalDay = selectPiketJadwalDay;
 window.todayKey = todayKey;
 
 </script>
-<script id="report-readonly-hook">
-(function(){
-  function reportStaffReadonly(){
-    const modal = document.getElementById('modal-report');
-    const staff = window.currentUser && (window.currentUser.role === 'admin' || window.currentUser.role === 'superadmin');
-    if(!modal) return;
-    modal.classList.toggle('staff-readonly', !!staff);
-    ['report-kategori','report-judul','report-deskripsi','report-tanggal','report-urgensi','report-anonim','report-file'].forEach(id=>{
-      const el=document.getElementById(id);
-      if(!el) return;
-      if(staff && id!=='report-file'){
-        el.classList.add('staff-readonly-field');
-        if(el.tagName==='SELECT') {
-          let wrap=el.parentElement;
-          if(wrap && !wrap.classList.contains('staff-readonly-select-wrap')){
-            wrap.classList.add('staff-readonly-select-wrap');
-          }
-        }
-      } else {
-        el.classList.remove('staff-readonly-field');
-      }
-    });
-    const file=document.getElementById('report-file');
-    if(file){
-      file.classList.toggle('staff-readonly-file', !!staff);
-      let view=file.parentElement && file.parentElement.querySelector('.staff-file-view');
-      if(staff && !view){
-        view=document.createElement('div');
-        view.className='staff-file-view';
-        view.innerHTML='<span>📎</span><span>Lampiran laporan — hanya dapat dilihat</span>';
-        file.parentElement.appendChild(view);
-      }
-      if(view) view.style.display=staff?'flex':'none';
-    }
-  }
-  const originalOpen=window.openReportModal;
-  if(typeof originalOpen==='function'){
-    window.openReportModal=function(){
-      const r=originalOpen.apply(this,arguments);
-      setTimeout(reportStaffReadonly,0);
-      return r;
-    };
-  }
-  document.addEventListener('click', e=>{
-    if(e.target.closest('[onclick*="openReportModal"]')) setTimeout(reportStaffReadonly,0);
-  });
-})();
-</script>
-
 </body></html>
