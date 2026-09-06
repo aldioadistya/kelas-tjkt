@@ -1397,6 +1397,45 @@ body {
     line-height: 1.45;
 }
 
+.settings-section {
+    margin-top: 16px;
+    border-top: 1px solid var(--glass-border);
+    padding-top: 12px;
+}
+
+.settings-label {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--text-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-bottom: 10px;
+}
+
+.settings-label.danger {
+    color: var(--rose);
+}
+
+.number-input-clean {
+    width: 60px;
+    text-align: center;
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    padding: 7px 4px;
+    background: var(--input-bg);
+    color: var(--text-main);
+    outline: none;
+    font-weight: 700;
+    font-size: 13px;
+    -moz-appearance: textfield;
+}
+
+.number-input-clean::-webkit-outer-spin-button,
+.number-input-clean::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
 .task-file {
     font-size: 10.5px;
     font-weight: 700;
@@ -2409,7 +2448,7 @@ body.dark .s-name {
                             <span style="font-weight:700; color:var(--text-main);">Mode Tampilan</span>
                             <button class="btn btn-ghost" style="padding:4px 10px; font-size:10px;" onclick="toggleTheme()"><span id="theme-label-setting">☀️ Terang</span></button>
                         </div>
-                        <div id="account-manage-wrap" class="superadmin-only" style="margin-top:12px; border-top:1px solid var(--glass-border); padding-top:10px;">
+                        <div id="account-manage-wrap" class="superadmin-only settings-section" style="margin-top:12px;">
                             <details class="manage-details">
                                 <summary class="manage-toggle">👥 Manajemen Pengguna<span class="role-count" id="account-total-badge">0</span></summary>
                                 <div style="padding-top:10px;">
@@ -2432,19 +2471,19 @@ body.dark .s-name {
                                 </div>
                             </details>
                         </div>
-                        <div style="margin-top:16px; border-top:1px solid var(--glass-border); padding-top:10px;">
-                            <div style="font-size:11px; font-weight:800; color:var(--text-soft); text-transform:uppercase; margin-bottom:8px;">Tugas</div>
+                        <div class="settings-section">
+                            <div class="settings-label">Tugas</div>
                             <div class="acc-row">
                                 <span style="font-weight:700; color:var(--text-main); font-size:12.5px;">Auto-hapus tugas selesai setelah</span>
                                 <div style="display:flex; align-items:center; gap:6px;">
-                                    <input type="number" id="autoclean-days-input" min="0" max="90" style="width:56px; text-align:center; border:1px solid var(--glass-border); border-radius:var(--radius-sm); padding:5px; background:var(--input-bg); color:var(--text-main); outline:none;" onchange="setAutoCleanDays(this.value)">
+                                    <input type="number" id="autoclean-days-input" class="number-input-clean" min="0" max="90" onchange="setAutoCleanDays(this.value)">
                                     <span style="font-size:12px; color:var(--text-soft);">hari</span>
                                 </div>
                             </div>
                             <div class="field-hint">Isi 0 untuk mematikan (tidak pernah otomatis terhapus).</div>
                         </div>
-                        <div style="margin-top:16px; border-top:1px solid var(--glass-border); padding-top:10px;">
-                            <div style="font-size:11px; font-weight:800; color:var(--text-soft); text-transform:uppercase; margin-bottom:8px;">Ruang Penyimpanan</div>
+                        <div class="settings-section">
+                            <div class="settings-label">Ruang Penyimpanan</div>
                             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
                                 <span id="storage-usage-label" style="font-size:12.5px; font-weight:700; color:var(--text-main);">- KB / 1024 KB</span>
                                 <span id="storage-usage-percent" style="font-size:11px; font-weight:700;">-%</span>
@@ -2454,21 +2493,21 @@ body.dark .s-name {
                             </div>
                             <div class="field-hint" id="storage-usage-hint">Semua data kelas (kas, tugas, jadwal, lampiran file, dll) disimpan dalam 1 dokumen dengan batas 1MB.</div>
                         </div>
-                        <div style="margin-top:16px; border-top:1px solid var(--glass-border); padding-top:10px;">
-                            <div style="font-size:11px; font-weight:800; color:var(--text-soft); text-transform:uppercase; margin-bottom:8px;">Backup &amp; Pemulihan</div>
+                        <div class="settings-section">
+                            <div class="settings-label">Backup &amp; Pemulihan</div>
                             <div style="display:flex; gap:8px;">
                                 <button class="btn btn-ghost" style="flex:1; padding:8px; font-size:10px;" onclick="exportBackup()">⬇️ Backup</button>
                                 <button class="btn btn-ghost" style="flex:1; padding:8px; font-size:10px;" onclick="document.getElementById('import-file-input').click()">⬆️ Import</button>
                             </div>
                             <input type="file" id="import-file-input" accept="application/json" style="display:none;" onchange="importBackup(this.files[0])">
                         </div>
-                        <div class="superadmin-only" style="margin-top:12px; border-top:1px solid var(--glass-border); padding-top:10px;">
-                            <div style="font-size:11px; font-weight:800; color:var(--rose); text-transform:uppercase; margin-bottom:8px;">⚠️ Zona Berbahaya</div>
+                        <div class="superadmin-only settings-section">
+                            <div class="settings-label danger">⚠️ Zona Berbahaya</div>
                             <button class="btn btn-danger btn-block" style="padding:9px; font-size:11px;" onclick="resetData()">🔄 Reset Semua Data Kelas</button>
                             <div class="field-hint">Menghapus semua data (kas, siswa, tugas, piket, dll) dan mengembalikan ke pengaturan awal. Tidak bisa dibatalkan.</div>
                         </div>
-                        <div style="margin-top:12px; border-top:1px solid var(--glass-border); padding-top:10px;">
-                            <div style="font-size:11px; font-weight:800; color:var(--text-soft); text-transform:uppercase; margin-bottom:8px;">Keamanan Firebase</div>
+                        <div class="settings-section">
+                            <div class="settings-label">Keamanan Firebase</div>
                             <div style="display:flex; align-items:center; gap:8px;">
                                 <span style="font-size:12px; color:var(--text-main);">Status Auth:</span>
                                 <span id="auth-status" style="font-size:11px; font-weight:700; color:var(--amber);">⏳ Memuat...</span>
