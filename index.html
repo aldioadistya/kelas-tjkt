@@ -4154,32 +4154,8 @@ function getCurrentStudentName(){
 }
 function progressStatus(done,positive,negative){return done?positive:negative;}
 function renderMyProgressAndAchievements(){
- const notifyList=document.getElementById('home-notifications');
- if(!notifyList)return;
- const notifySection=notifyList.closest('.section');
- if(!notifySection)return;
- let section=document.getElementById('my-progress-achievements');
- if(!section){section=document.createElement('div');section.id='my-progress-achievements';section.className='section';notifySection.insertAdjacentElement('afterend',section);}
- const today=todayKey(), hpToday=state.hp[today]||{}, piketToday=state.piket[today]||{};
- const assigned=(state.piketJadwal&&Array.isArray(state.piketJadwal[dayNameOf(today)]))?state.piketJadwal[dayNameOf(today)]:[];
- const active=(state.tugas||[]).filter(t=>!t.selesai);
- const studentName=getCurrentStudentName();
- const personal=!!studentName;
- const hpDone=personal?rosterIsSudah(hpToday[studentName]):(state.students||[]).filter(name=>rosterIsSudah(hpToday[name])).length;
- const piketDone=personal?(assigned.includes(studentName)&&rosterIsSudah(piketToday[studentName])):assigned.filter(name=>rosterIsSudah(piketToday[name])).length;
- const hpValue=personal?progressStatus(hpDone,'Sudah','Belum'):hpDone+'/'+(state.students||[]).length;
- const piketValue=personal?(assigned.includes(studentName)?progressStatus(piketDone,'Selesai','Belum'):'Tidak ada'):(piketDone+'/'+assigned.length);
- const hpLabel=personal?'Kumpul HP hari ini':'HP terkumpul hari ini';
- const piketLabel=personal?'Status piket hari ini':'Piket selesai hari ini';
- const tugasEarned=active.length===0;
- const hpEarned=personal?!!hpDone:((state.students||[]).length>0&&hpDone===(state.students||[]).length);
- const piketEarned=personal?(assigned.includes(studentName)&&!!piketDone):(assigned.length>0&&piketDone===assigned.length);
- const cards=[
-  ['📚','Tugas Lengkap',tugasEarned,tugasEarned?'Semua tugas selesai':'Masih '+active.length+' tugas aktif'],
-  ['📱','Tertib HP',hpEarned,hpEarned?'HP sudah dititipkan':personal?'Belum titip HP':'Belum lengkap'],
-  ['🧹','Piket Selesai',piketEarned,piketEarned?'Piket hari ini selesai':personal?(assigned.includes(studentName)?'Belum selesai':'Tidak ada jadwal'):'Belum lengkap']
- ];
- section.innerHTML=`<div class="section-head"><div class="section-title">📊 Progress Saya</div><div class="section-link" onclick="goTo('tugas')">Lihat tugas</div></div><div class="card"><div class="my-progress-grid"><div class="my-progress-item"><div class="my-progress-value">${active.length}</div><div class="my-progress-label">Tugas aktif</div></div><div class="my-progress-item"><div class="my-progress-value">${hpValue}</div><div class="my-progress-label">${hpLabel}</div></div><div class="my-progress-item"><div class="my-progress-value">${piketValue}</div><div class="my-progress-label">${piketLabel}</div></div></div><div class="my-progress-note">${personal?'Status untuk '+escapeHtml(studentName)+'.':'Ringkasan kelas untuk akun pengurus. Gunakan nama akun yang sama dengan daftar siswa untuk melihat progres pribadi.'}</div></div><div class="section-head" style="margin-top:14px;"><div class="section-title">🏆 Badge / Pencapaian</div></div><div class="card"><div class="achievement-grid">${cards.map(card=>`<div class="achievement-badge ${card[2]?'earned':''}"><div class="achievement-icon">${card[0]}</div><div class="achievement-name">${card[1]}</div><div class="achievement-status">${card[3]}</div></div>`).join('')}</div></div>`;
+  const section=document.getElementById('my-progress-achievements');
+  if(section) section.remove();
 }
 function renderActivityLog(){
  const list=document.getElementById('activity-log-list');
@@ -4223,7 +4199,6 @@ function renderAll() {
     // Notifikasi kelas memakai pusat notifikasi yang sama agar pesan tugas,
     // jadwal, dan pengumuman tetap muncul di satu tempat.
     renderNotifications();
-    renderMyProgressAndAchievements();
     renderActivityLog();
     renderAccountList();
     renderSettingsInfo();
