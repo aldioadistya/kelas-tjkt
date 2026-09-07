@@ -3663,75 +3663,111 @@ body.dark .desktop-nav-btn:not(.active) {
 </style>
 
 
-<style id="real-desktop-only-final">
-/* ===== DESKTOP WEB ONLY =====
-   Desktop layout activates only on a real desktop-style pointer.
-   Touch devices stay on the normal mobile layout even if their CSS viewport
-   is reported wider than 900px.
-*/
+<style id="final-device-layout-fix">
+/* =========================
+   FINAL DEVICE SEPARATION
+   ========================= */
+
+/* Mobile/tablet: never show desktop sidebar or desktop canvas layout.
+   This rule wins even if the device reports a large CSS viewport. */
+html.mobile-device body,
+body.mobile-device {
+  align-items: stretch !important;
+  justify-content: stretch !important;
+}
+
+body.mobile-device .desktop-sidebar {
+  display: none !important;
+}
+
+body.mobile-device .phone {
+  width: 100vw !important;
+  max-width: none !important;
+  height: 100dvh !important;
+  max-height: none !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  border-left: 0 !important;
+  border-right: 0 !important;
+}
+
+body.mobile-device .phone > .statusbar,
+body.mobile-device .phone > .screen {
+  margin-left: 0 !important;
+  width: 100% !important;
+  max-width: none !important;
+}
+
+body.mobile-device .phone > .tabbar {
+  display: flex !important;
+}
+
+/* Desktop: sidebar + content area, with no mobile bottom bar. */
 @media screen and (min-width: 901px) and (hover: hover) and (pointer: fine) {
-  .desktop-sidebar {
-    display: flex !important;
+  body:not(.mobile-device) {
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: hidden !important;
   }
 
-  .phone {
+  body:not(.mobile-device) .phone {
     width: min(1180px, calc(100vw - 32px)) !important;
     max-width: 1180px !important;
     height: min(900px, calc(100vh - 32px)) !important;
     max-height: none !important;
     margin: 0 auto !important;
+    position: relative !important;
+    overflow: hidden !important;
   }
 
-  .phone > .statusbar {
-    margin-left: 248px !important;
-    width: calc(100% - 248px) !important;
-  }
-
-  .phone > .screen {
-    margin-left: 248px !important;
-    width: calc(100% - 248px) !important;
-    max-width: none !important;
-  }
-
-  .phone > .tabbar {
-    display: none !important;
-  }
-
-  #login-overlay {
-    align-items: center !important;
-    justify-content: center !important;
-  }
-}
-
-/* ===== TOUCH / MOBILE =====
-   Explicitly undo desktop sidebar/canvas positioning on touch devices.
-*/
-@media screen and (max-width: 900px), (hover: none) and (pointer: coarse) {
-  .desktop-sidebar {
-    display: none !important;
-    position: static !important;
-  }
-
-  .phone {
-    width: 100% !important;
-    max-width: 430px !important;
-    height: 100vh !important;
-    max-height: 900px !important;
-    margin: 0 auto !important;
-  }
-
-  .phone > .statusbar,
-  .phone > .screen {
-    margin-left: 0 !important;
-    width: 100% !important;
-    max-width: none !important;
-  }
-
-  .phone > .tabbar {
+  body:not(.mobile-device) .desktop-sidebar {
     display: flex !important;
+    left: 0 !important;
+    right: auto !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    width: 248px !important;
+    position: absolute !important;
+  }
+
+  body:not(.mobile-device) .phone > .statusbar {
+    margin-left: 248px !important;
+    width: calc(100% - 248px) !important;
+    box-sizing: border-box !important;
+  }
+
+  body:not(.mobile-device) .phone > .screen {
+    margin-left: 248px !important;
+    width: calc(100% - 248px) !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  body:not(.mobile-device) .phone > .tabbar {
+    display: none !important;
+  }
+
+  body:not(.mobile-device) .screen > .view {
+    width: 100% !important;
+    max-width: none !important;
+    box-sizing: border-box !important;
   }
 }
 </style>
+<script id="final-device-detection">
+(function () {
+  var ua = navigator.userAgent || '';
+  var mobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile/i.test(ua);
+  var touch = ('ontouchstart' in window) || (navigator.maxTouchPoints || 0) > 0;
+  var narrow = Math.min(window.innerWidth || 9999, window.outerWidth || 9999) <= 900;
+
+  /* A phone/tablet is treated as mobile; normal PC browsers remain desktop. */
+  if (mobileUA || (touch && narrow)) {
+    document.body.classList.add('mobile-device');
+  }
+})();
+</script>
 
 </head><body><div class="ambient-mesh"><div class="blob blob-1"></div><div class="blob blob-2"></div><div class="blob blob-3"></div></div><div class="phone"><div class="desktop-sidebar" aria-label="Menu utama">
     <div class="desktop-brand">
