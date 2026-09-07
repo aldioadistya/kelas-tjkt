@@ -3499,7 +3499,7 @@ body.dark .desktop-nav-btn:not(.active) {
         </button>
     </nav>
 
-    <div class="desktop-user">
+    <div class="desktop-user" role="button" tabindex="0" onclick="goTo('settings')" onkeydown="if(event.key==='Enter'||event.key===' ') { event.preventDefault(); goTo('settings'); }" title="Buka Setelan">
         <div class="desktop-user-avatar">👤</div>
         <div>
             <strong>Akun Saya</strong>
