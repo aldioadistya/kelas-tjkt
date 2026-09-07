@@ -1243,10 +1243,11 @@ body {
     display: flex;
     gap: 4px;
     background: var(--glass-card);
-    border: 1px solid var(--glass-border);
+    border: 2px solid rgba(99, 102, 241, 0.42);
     border-radius: 14px;
     padding: 4px;
     margin-top: 10px;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.38);
 }
 
 .mode-btn {
@@ -1258,14 +1259,15 @@ body {
     font-weight: 800;
     cursor: pointer;
     color: var(--text-soft);
-    background: none;
-    border: none;
+    background: var(--surface-2);
+    border: 1px solid rgba(100, 116, 139, 0.34);
     transition: all 0.15s;
 }
 
 .mode-btn.active {
     background: var(--primary-gradient);
     color: #fff;
+    border-color: transparent;
 }
 
 .day-tabs {
@@ -5207,15 +5209,12 @@ async function onTugasFileSelected(input) {
         return;
     }
     for (const file of picked) {
-        if (file.size > MAX_ATTACHMENT_BYTES) {
-            showNotification('File "' + file.name + '" (' + Math.round(file.size / 1024) + 'KB) melebihi batas ' + Math.round(MAX_ATTACHMENT_BYTES / 1024) + 'KB.', 'error');
-            continue;
-        }
         try {
-            const data = await readFileAsDataUrl(file);
-            _tugasEditFiles.push({ name: file.name, data });
+            const attachment = await prepareAttachment(file);
+            _tugasEditFiles.push({ name: attachment.name, data: attachment.data });
+            if (attachment.compressed) showNotification('Gambar "' + file.name + '" dikompres otomatis menjadi ' + Math.round((attachment.data.length * 3 / 4) / 1024) + 'KB.', 'success');
         } catch (e) {
-            showNotification('Gagal membaca file "' + file.name + '".', 'error');
+            showNotification('File "' + file.name + '": ' + (e.message || 'gagal diproses') + '.', 'error');
         }
     }
     input.value = '';
@@ -5249,7 +5248,10 @@ function openTugasModal(id) {
     openModal('tugas');
 }
 
-const MAX_ATTACHMENT_BYTES = 400 * 1024;
+// Lampiran disimpan sebagai Base64 di Firestore. Gambar dikompres lebih dulu
+// supaya ukuran data yang tersimpan tidak cepat memenuhi batas dokumen.
+const MAX_ATTACHMENT_BYTES = 250 * 1024;
+const IMAGE_TARGET_BYTES = 180 * 1024;
 const MAX_FILES_PER_ITEM = 3;
 function dataUrlToBlob(dataUrl) {
     const parts = dataUrl.split(',');
@@ -5286,6 +5288,44 @@ function readFileAsDataUrl(file) {
         reader.onerror = reject;
         reader.readAsDataURL(file);
     });
+}
+function attachmentNameForWebp(name) {
+    return String(name || 'gambar').replace(/\.[^.]+$/, '') + '.webp';
+}
+async function compressImageAttachment(file) {
+    const sourceUrl = URL.createObjectURL(file);
+    try {
+        const image = new Image();
+        await new Promise((resolve, reject) => { image.onload = resolve; image.onerror = reject; image.src = sourceUrl; });
+        const largest = Math.max(image.naturalWidth, image.naturalHeight);
+        const scale = largest > 1600 ? 1600 / largest : 1;
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
+        canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
+        canvas.getContext('2d').drawImage(image, 0, 0, canvas.width, canvas.height);
+        let quality = 0.86;
+        let compressed;
+        do {
+            compressed = await new Promise(resolve => canvas.toBlob(resolve, 'image/webp', quality));
+            quality -= 0.08;
+        } while (compressed && compressed.size > IMAGE_TARGET_BYTES && quality >= 0.30);
+        if (!compressed) throw new Error('Browser tidak mendukung kompresi gambar');
+        return new File([compressed], attachmentNameForWebp(file.name), { type: 'image/webp' });
+    } finally {
+        URL.revokeObjectURL(sourceUrl);
+    }
+}
+async function prepareAttachment(file) {
+    let prepared = file;
+    let compressed = false;
+    if ((file.type || '').startsWith('image/')) {
+        prepared = await compressImageAttachment(file);
+        compressed = prepared.size < file.size;
+    }
+    if (prepared.size > MAX_ATTACHMENT_BYTES) {
+        throw new Error('Ukuran akhir ' + Math.round(prepared.size / 1024) + 'KB masih melebihi batas ' + Math.round(MAX_ATTACHMENT_BYTES / 1024) + 'KB. Untuk PDF/dokumen, kecilkan file sebelum upload.');
+    }
+    return { name: prepared.name, data: await readFileAsDataUrl(prepared), compressed };
 }
 async function submitTugas() {
     if (guardReadOnly()) return;
@@ -5632,15 +5672,13 @@ async function submitReport() {
 
     if (fileInput.files.length > 0) {
         const file = fileInput.files[0];
-        if (file.size > MAX_ATTACHMENT_BYTES) {
-            showNotification('Ukuran file maksimal ' + Math.round(MAX_ATTACHMENT_BYTES / 1024) + 'KB (file kamu ' + Math.round(file.size / 1024) + 'KB).', 'error');
-            return;
-        }
         try {
-            fileData = await readFileAsDataUrl(file);
-            fileName = file.name;
+            const attachment = await prepareAttachment(file);
+            fileData = attachment.data;
+            fileName = attachment.name;
+            if (attachment.compressed) showNotification('Gambar dikompres otomatis sebelum disimpan.', 'success');
         } catch (e) {
-            showNotification('Gagal membaca file.', 'error');
+            showNotification(e.message || 'Gagal memproses file.', 'error');
             return;
         }
     }
@@ -5733,15 +5771,13 @@ async function submitKas() {
         // Lampiran hanya diganti jika user memilih file baru.
         if (fileInput.files.length > 0) {
             const file = fileInput.files[0];
-            if (file.size > MAX_ATTACHMENT_BYTES) {
-                showNotification('Ukuran file maksimal ' + Math.round(MAX_ATTACHMENT_BYTES / 1024) + 'KB (file kamu ' + Math.round(file.size / 1024) + 'KB).', 'error');
-                return;
-            }
             try {
-                fileData = await readFileAsDataUrl(file);
-                fileName = file.name;
+                const attachment = await prepareAttachment(file);
+                fileData = attachment.data;
+                fileName = attachment.name;
+                if (attachment.compressed) showNotification('Gambar dikompres otomatis sebelum disimpan.', 'success');
             } catch (e) {
-                showNotification('Gagal membaca file.', 'error');
+                showNotification(e.message || 'Gagal memproses file.', 'error');
                 return;
             }
         }
@@ -5770,15 +5806,13 @@ async function submitKas() {
     let fileName = '', fileData = '';
     if (fileInput.files.length > 0) {
         const file = fileInput.files[0];
-        if (file.size > MAX_ATTACHMENT_BYTES) {
-            showNotification('Ukuran file maksimal ' + Math.round(MAX_ATTACHMENT_BYTES / 1024) + 'KB (file kamu ' + Math.round(file.size / 1024) + 'KB).', 'error');
-            return;
-        }
         try {
-            fileData = await readFileAsDataUrl(file);
-            fileName = file.name;
+            const attachment = await prepareAttachment(file);
+            fileData = attachment.data;
+            fileName = attachment.name;
+            if (attachment.compressed) showNotification('Gambar dikompres otomatis sebelum disimpan.', 'success');
         } catch (e) {
-            showNotification('Gagal membaca file.', 'error');
+            showNotification(e.message || 'Gagal memproses file.', 'error');
             return;
         }
     }
