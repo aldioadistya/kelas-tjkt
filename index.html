@@ -1654,22 +1654,28 @@ body.dark .s-name { color: #f1f5f9 !important; }
     display: flex !important;
 }
 
-/* Pada layar lebar, ubah phone menjadi full layar tanpa sidebar */
+/* Pada layar PC, aplikasi tetap berbentuk panel dan ditempatkan tepat di tengah */
 @media screen and (min-width: 901px) {
+    html, body {
+        width: 100%;
+        height: 100%;
+    }
     body {
-        align-items: stretch;
-        justify-content: stretch;
+        align-items: center;
+        justify-content: center;
         background: var(--bg-gradient);
+        overflow: hidden;
     }
     .phone {
-        width: 100vw;
-        max-width: none;
-        height: 100dvh;
-        max-height: none;
-        border-radius: 0;
-        border: none;
-        box-shadow: none;
+        width: min(430px, 100vw);
+        max-width: 430px;
+        height: min(900px, 100dvh);
+        max-height: 900px;
+        border-radius: 36px;
+        border: 1px solid var(--glass-border);
+        box-shadow: 0 18px 60px rgba(0,0,0,0.18);
         background: var(--glass-bg) !important;
+        margin: 0 auto;
     }
     .phone > .statusbar {
         margin-left: 0 !important;
@@ -1687,7 +1693,6 @@ body.dark .s-name { color: #f1f5f9 !important; }
         background: var(--glass-card) !important;
         border: 1px solid var(--glass-border) !important;
     }
-    /* Desktop sidebar disembunyikan */
     .desktop-sidebar {
         display: none !important;
     }
@@ -2421,7 +2426,7 @@ html, body {
 .kas-folder-content-wrap{overflow:hidden;max-height:2000px;opacity:1;transition:max-height .3s ease,opacity .2s ease,margin-top .3s ease;}
 .kas-folder-content-wrap.collapsed{max-height:0!important;opacity:0;margin-top:-8px;}
 .kas-folder-summary{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
-.kas-folder-summary span{font-size:9px;font-weight:800;padding:4px 7px;border-radius:999px;border:1px solid var(--glass-border);}
+.kas-folder-summary span{font-size:9px;font-weight:800;padding:4px 7px;border-radius:999px;border:1px solid var(--glass-border);color:var(--text-main);}
 .kas-summary-paid{background:var(--teal-glass);color:var(--teal);}
 .kas-summary-unpaid{background:var(--rose-glass);color:var(--rose);}
 .kas-student-list{margin-top:8px;border-top:1px solid var(--glass-border);}
@@ -3653,7 +3658,7 @@ function renderKasSiswa(){
                 <div class="kas-folder-summary">
                     <span class="kas-summary-paid">✓ ${paid} Sudah Bayar</span>
                     <span class="kas-summary-unpaid">! ${unpaid} Belum Bayar</span>
-                    ${folder.nominal ? `<span>Rp${Number(folder.nominal).toLocaleString('id-ID')} / anak</span>` : ''}
+                    ${folder.nominal ? `<span class="kas-summary-nominal">Rp${Number(folder.nominal).toLocaleString('id-ID')} / anak</span>` : ''}
                 </div>
                 <div class="kas-student-list">
                     ${students.length ? students.map(st => `<div class="kas-student-row" ${isAdmin() ? `onclick="openKasStudentModal('${String(folder.id)}', '${String(st.name).replace(/'/g,"\'")}')" style="cursor:pointer;"` : ''}>
@@ -4871,3 +4876,9 @@ window.todayKey = todayKey;
 </script>
 </body>
 </html>
+<style id="desktop-center-final-fix">
+@media screen and (min-width: 901px) {
+  body { display:flex; align-items:center !important; justify-content:center !important; }
+  .phone { flex:0 0 auto; width:430px !important; max-width:calc(100vw - 32px) !important; height:min(900px, calc(100dvh - 32px)) !important; max-height:calc(100dvh - 32px) !important; margin:0 !important; }
+}
+</style>
