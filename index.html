@@ -2429,7 +2429,6 @@ a{
         <div class="hero-tags">
           <span class="htag">🏫 X TJKT 1</span>
           <span class="htag" id="tag-today">Jumat, 04 Sep</span>
-          <span class="htag" id="tag-role" style="display:none; background:rgba(244,63,94,0.3);">👁️ Lihat Saja</span>
         </div>
       </div>
       <div class="stat-grid">
@@ -3104,7 +3103,6 @@ function isReadOnly() { return !currentUser || currentUser.role === 'siswa'; }
 function applyRole(role) {
     document.body.classList.toggle('is-admin', role === 'superadmin' || role === 'admin');
     document.body.classList.toggle('is-superadmin', role === 'superadmin');
-    document.getElementById('tag-role').style.display = (role === 'siswa') ? 'inline-block' : 'none';
     document.getElementById('account-whoami').textContent = currentUser ? currentUser.username : '';
     let roleLabel = '';
     if (role === 'superadmin') roleLabel = 'Super Admin (Akses Penuh + Kelola Akun)';
