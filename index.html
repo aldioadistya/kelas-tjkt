@@ -1243,11 +1243,10 @@ body {
     display: flex;
     gap: 4px;
     background: var(--glass-card);
-    border: 2px solid rgba(99, 102, 241, 0.42);
+    border: 1px solid var(--glass-border);
     border-radius: 14px;
     padding: 4px;
     margin-top: 10px;
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.38);
 }
 
 .mode-btn {
@@ -1259,15 +1258,14 @@ body {
     font-weight: 800;
     cursor: pointer;
     color: var(--text-soft);
-    background: var(--surface-2);
-    border: 1px solid rgba(100, 116, 139, 0.34);
+    background: none;
+    border: none;
     transition: all 0.15s;
 }
 
 .mode-btn.active {
     background: var(--primary-gradient);
     color: #fff;
-    border-color: transparent;
 }
 
 .day-tabs {
@@ -3454,7 +3452,157 @@ body:not(.dark) .desktop-nav-btn:not(.active) {
 body.dark .desktop-nav-btn:not(.active) {
     border-color: transparent;
 }
-</style><style id="calendar-roster-final-fix">.cal-month-click,.cal-year-click{cursor:pointer;border-radius:6px;padding:2px 4px}.cal-month-click:hover,.cal-year-click:hover{background:var(--glass-card-hover)}.cal-month-picker{display:none;margin:-2px 0 10px;padding:10px;border:1px solid var(--glass-border);border-radius:12px;background:var(--glass-card);box-shadow:0 8px 24px rgba(0,0,0,.18)}.cal-month-picker.open{display:block}.cal-picker-year{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}.cal-picker-year button,.cal-picker-months button{border:1px solid var(--glass-border);background:var(--surface-2);color:var(--text-main);border-radius:8px;cursor:pointer;font-weight:700}.cal-picker-year button{width:30px;height:28px}.cal-picker-months{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.cal-picker-months button{padding:7px 4px;font-size:10px}.cal-picker-months button.active{background:var(--primary);color:#fff;border-color:var(--primary)}.bulk-all-btn{border:1px solid var(--glass-border);background:var(--glass-card);color:var(--text-main);border-radius:8px;padding:6px 9px;font-size:10px;font-weight:800;cursor:pointer}.student-check{width:22px;height:22px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:0 0 auto}.student-check input{position:absolute;opacity:0;pointer-events:none}.student-check span{width:16px;height:16px;border:1px solid var(--glass-border);border-radius:5px;background:var(--surface-2);position:relative}.student-check input:checked+span{background:var(--primary);border-color:var(--primary)}.student-check input:checked+span:after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:900}</style></head><body><div class="ambient-mesh"><div class="blob blob-1"></div><div class="blob blob-2"></div><div class="blob blob-3"></div></div><div class="phone"><div class="desktop-sidebar" aria-label="Menu utama">
+</style><style id="calendar-roster-final-fix">.cal-month-click,.cal-year-click{cursor:pointer;border-radius:6px;padding:2px 4px}.cal-month-click:hover,.cal-year-click:hover{background:var(--glass-card-hover)}.cal-month-picker{display:none;margin:-2px 0 10px;padding:10px;border:1px solid var(--glass-border);border-radius:12px;background:var(--glass-card);box-shadow:0 8px 24px rgba(0,0,0,.18)}.cal-month-picker.open{display:block}.cal-picker-year{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}.cal-picker-year button,.cal-picker-months button{border:1px solid var(--glass-border);background:var(--surface-2);color:var(--text-main);border-radius:8px;cursor:pointer;font-weight:700}.cal-picker-year button{width:30px;height:28px}.cal-picker-months{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.cal-picker-months button{padding:7px 4px;font-size:10px}.cal-picker-months button.active{background:var(--primary);color:#fff;border-color:var(--primary)}.bulk-all-btn{border:1px solid var(--glass-border);background:var(--glass-card);color:var(--text-main);border-radius:8px;padding:6px 9px;font-size:10px;font-weight:800;cursor:pointer}.student-check{width:22px;height:22px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:0 0 auto}.student-check input{position:absolute;opacity:0;pointer-events:none}.student-check span{width:16px;height:16px;border:1px solid var(--glass-border);border-radius:5px;background:var(--surface-2);position:relative}.student-check input:checked+span{background:var(--primary);border-color:var(--primary)}.student-check input:checked+span:after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:900}</style>
+<style id="login-desktop-size-fix">
+@media screen and (min-width: 901px) {
+  /* Desktop: login dibuat lebih ringkas, tanpa mengubah fungsi/logic login. */
+  .login-overlay {
+    align-items: center;
+    padding: 0 20px 20px;
+  }
+  .login-hero {
+    width: min(100%, 760px);
+    box-sizing: border-box;
+    margin: 0 auto;
+    padding: 24px 20px 30px;
+    border-radius: 0 0 26px 26px;
+  }
+  .login-logo {
+    width: 56px;
+    height: 56px;
+    margin-bottom: 8px;
+  }
+  .login-hero-title {
+    font-size: 20px;
+  }
+  .login-hero-sub {
+    font-size: 10px;
+  }
+  .login-card {
+    width: min(100%, 760px);
+    box-sizing: border-box;
+    flex: 0 0 auto;
+    margin: -20px auto 0;
+    padding: 20px 20px 22px;
+    border-radius: 22px;
+  }
+  .login-welcome {
+    font-size: 17px;
+  }
+  .login-sub {
+    font-size: 12px;
+    margin-bottom: 13px;
+  }
+  .login-card .field {
+    margin-bottom: 11px;
+  }
+  .login-card .field label {
+    font-size: 10px;
+  }
+  .login-card .field input {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+  .login-card .btn {
+    padding: 12px;
+    font-size: 13px;
+  }
+  .login-card .login-actions {
+    margin-top: 10px;
+  }
+  .login-card .login-actions span {
+    font-size: 11px;
+  }
+}
+</style>
+
+<style id="login-desktop-smaller-final">
+@media (min-width: 769px){
+  #login-screen,
+  .login-screen{
+    padding: 18px 24px !important;
+  }
+
+  .login-wrap,
+  .login-container{
+    max-width: 820px !important;
+    width: min(820px, 88vw) !important;
+  }
+
+  .login-hero{
+    min-height: 120px !important;
+    padding: 20px 24px !important;
+  }
+
+  .login-hero-logo{
+    width: 48px !important;
+    height: 48px !important;
+  }
+
+  .login-hero-title{
+    font-size: 24px !important;
+    line-height: 1.1 !important;
+  }
+
+  .login-hero-sub{
+    font-size: 11px !important;
+  }
+
+  .login-card{
+    padding: 22px 28px !important;
+    min-height: 0 !important;
+  }
+
+  .login-welcome{
+    font-size: 19px !important;
+  }
+
+  .login-sub{
+    font-size: 12px !important;
+    margin-bottom: 12px !important;
+  }
+
+  .login-card .field{
+    margin-bottom: 10px !important;
+  }
+
+  .login-card .field label{
+    font-size: 10px !important;
+    margin-bottom: 5px !important;
+  }
+
+  .login-card input{
+    height: 42px !important;
+    min-height: 42px !important;
+    padding: 9px 12px !important;
+    font-size: 12px !important;
+  }
+
+  .login-card #auth-submit-btn{
+    height: 44px !important;
+    min-height: 44px !important;
+    font-size: 13px !important;
+    margin-top: 2px !important;
+  }
+
+  .login-card .cache-btn{
+    min-height: 34px !important;
+    height: 34px !important;
+    font-size: 9px !important;
+    padding: 5px 9px !important;
+  }
+
+  .login-actions{
+    margin-top: 7px !important;
+  }
+
+  .login-actions .section-link{
+    font-size: 10px !important;
+  }
+}
+</style>
+
+</head><body><div class="ambient-mesh"><div class="blob blob-1"></div><div class="blob blob-2"></div><div class="blob blob-3"></div></div><div class="phone"><div class="desktop-sidebar" aria-label="Menu utama">
     <div class="desktop-brand">
         <div class="desktop-brand-icon">📚</div>
         <div class="desktop-brand-text">Kelasku</div>
@@ -5209,12 +5357,15 @@ async function onTugasFileSelected(input) {
         return;
     }
     for (const file of picked) {
+        if (file.size > MAX_ATTACHMENT_BYTES) {
+            showNotification('File "' + file.name + '" (' + Math.round(file.size / 1024) + 'KB) melebihi batas ' + Math.round(MAX_ATTACHMENT_BYTES / 1024) + 'KB.', 'error');
+            continue;
+        }
         try {
-            const attachment = await prepareAttachment(file);
-            _tugasEditFiles.push({ name: attachment.name, data: attachment.data });
-            if (attachment.compressed) showNotification('Gambar "' + file.name + '" dikompres otomatis menjadi ' + Math.round((attachment.data.length * 3 / 4) / 1024) + 'KB.', 'success');
+            const data = await readFileAsDataUrl(file);
+            _tugasEditFiles.push({ name: file.name, data });
         } catch (e) {
-            showNotification('File "' + file.name + '": ' + (e.message || 'gagal diproses') + '.', 'error');
+            showNotification('Gagal membaca file "' + file.name + '".', 'error');
         }
     }
     input.value = '';
@@ -5248,10 +5399,7 @@ function openTugasModal(id) {
     openModal('tugas');
 }
 
-// Lampiran disimpan sebagai Base64 di Firestore. Gambar dikompres lebih dulu
-// supaya ukuran data yang tersimpan tidak cepat memenuhi batas dokumen.
-const MAX_ATTACHMENT_BYTES = 250 * 1024;
-const IMAGE_TARGET_BYTES = 180 * 1024;
+const MAX_ATTACHMENT_BYTES = 400 * 1024;
 const MAX_FILES_PER_ITEM = 3;
 function dataUrlToBlob(dataUrl) {
     const parts = dataUrl.split(',');
@@ -5288,44 +5436,6 @@ function readFileAsDataUrl(file) {
         reader.onerror = reject;
         reader.readAsDataURL(file);
     });
-}
-function attachmentNameForWebp(name) {
-    return String(name || 'gambar').replace(/\.[^.]+$/, '') + '.webp';
-}
-async function compressImageAttachment(file) {
-    const sourceUrl = URL.createObjectURL(file);
-    try {
-        const image = new Image();
-        await new Promise((resolve, reject) => { image.onload = resolve; image.onerror = reject; image.src = sourceUrl; });
-        const largest = Math.max(image.naturalWidth, image.naturalHeight);
-        const scale = largest > 1600 ? 1600 / largest : 1;
-        const canvas = document.createElement('canvas');
-        canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
-        canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
-        canvas.getContext('2d').drawImage(image, 0, 0, canvas.width, canvas.height);
-        let quality = 0.86;
-        let compressed;
-        do {
-            compressed = await new Promise(resolve => canvas.toBlob(resolve, 'image/webp', quality));
-            quality -= 0.08;
-        } while (compressed && compressed.size > IMAGE_TARGET_BYTES && quality >= 0.30);
-        if (!compressed) throw new Error('Browser tidak mendukung kompresi gambar');
-        return new File([compressed], attachmentNameForWebp(file.name), { type: 'image/webp' });
-    } finally {
-        URL.revokeObjectURL(sourceUrl);
-    }
-}
-async function prepareAttachment(file) {
-    let prepared = file;
-    let compressed = false;
-    if ((file.type || '').startsWith('image/')) {
-        prepared = await compressImageAttachment(file);
-        compressed = prepared.size < file.size;
-    }
-    if (prepared.size > MAX_ATTACHMENT_BYTES) {
-        throw new Error('Ukuran akhir ' + Math.round(prepared.size / 1024) + 'KB masih melebihi batas ' + Math.round(MAX_ATTACHMENT_BYTES / 1024) + 'KB. Untuk PDF/dokumen, kecilkan file sebelum upload.');
-    }
-    return { name: prepared.name, data: await readFileAsDataUrl(prepared), compressed };
 }
 async function submitTugas() {
     if (guardReadOnly()) return;
@@ -5672,13 +5782,15 @@ async function submitReport() {
 
     if (fileInput.files.length > 0) {
         const file = fileInput.files[0];
+        if (file.size > MAX_ATTACHMENT_BYTES) {
+            showNotification('Ukuran file maksimal ' + Math.round(MAX_ATTACHMENT_BYTES / 1024) + 'KB (file kamu ' + Math.round(file.size / 1024) + 'KB).', 'error');
+            return;
+        }
         try {
-            const attachment = await prepareAttachment(file);
-            fileData = attachment.data;
-            fileName = attachment.name;
-            if (attachment.compressed) showNotification('Gambar dikompres otomatis sebelum disimpan.', 'success');
+            fileData = await readFileAsDataUrl(file);
+            fileName = file.name;
         } catch (e) {
-            showNotification(e.message || 'Gagal memproses file.', 'error');
+            showNotification('Gagal membaca file.', 'error');
             return;
         }
     }
@@ -5771,13 +5883,15 @@ async function submitKas() {
         // Lampiran hanya diganti jika user memilih file baru.
         if (fileInput.files.length > 0) {
             const file = fileInput.files[0];
+            if (file.size > MAX_ATTACHMENT_BYTES) {
+                showNotification('Ukuran file maksimal ' + Math.round(MAX_ATTACHMENT_BYTES / 1024) + 'KB (file kamu ' + Math.round(file.size / 1024) + 'KB).', 'error');
+                return;
+            }
             try {
-                const attachment = await prepareAttachment(file);
-                fileData = attachment.data;
-                fileName = attachment.name;
-                if (attachment.compressed) showNotification('Gambar dikompres otomatis sebelum disimpan.', 'success');
+                fileData = await readFileAsDataUrl(file);
+                fileName = file.name;
             } catch (e) {
-                showNotification(e.message || 'Gagal memproses file.', 'error');
+                showNotification('Gagal membaca file.', 'error');
                 return;
             }
         }
@@ -5806,13 +5920,15 @@ async function submitKas() {
     let fileName = '', fileData = '';
     if (fileInput.files.length > 0) {
         const file = fileInput.files[0];
+        if (file.size > MAX_ATTACHMENT_BYTES) {
+            showNotification('Ukuran file maksimal ' + Math.round(MAX_ATTACHMENT_BYTES / 1024) + 'KB (file kamu ' + Math.round(file.size / 1024) + 'KB).', 'error');
+            return;
+        }
         try {
-            const attachment = await prepareAttachment(file);
-            fileData = attachment.data;
-            fileName = attachment.name;
-            if (attachment.compressed) showNotification('Gambar dikompres otomatis sebelum disimpan.', 'success');
+            fileData = await readFileAsDataUrl(file);
+            fileName = file.name;
         } catch (e) {
-            showNotification(e.message || 'Gagal memproses file.', 'error');
+            showNotification('Gagal membaca file.', 'error');
             return;
         }
     }
