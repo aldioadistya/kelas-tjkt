@@ -3534,6 +3534,68 @@ body.dark .desktop-nav-btn:not(.active) {
 }
 </style>
 
+
+<style id="desktop-layout-final-fix">
+@media screen and (min-width: 901px) {
+  /* Restore the actual desktop app canvas. The later mobile rule was
+     overriding .phone back to 430px, which squeezed the sidebar/content. */
+  body {
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: hidden !important;
+  }
+
+  .phone {
+    width: min(1180px, calc(100vw - 32px)) !important;
+    max-width: 1180px !important;
+    height: min(900px, calc(100vh - 32px)) !important;
+    max-height: none !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .phone > .statusbar {
+    margin-left: 248px !important;
+    width: calc(100% - 248px) !important;
+    box-sizing: border-box !important;
+  }
+
+  .phone > .screen {
+    margin-left: 248px !important;
+    width: calc(100% - 248px) !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+  }
+
+  .phone > .tabbar {
+    display: none !important;
+  }
+
+  .desktop-sidebar {
+    left: 0 !important;
+    right: auto !important;
+    width: 248px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Remove the browser focus outline from the clickable account card. */
+  .desktop-user:focus,
+  .desktop-user:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Desktop content should use the available area, not a 430px mobile width. */
+  .screen > .view {
+    width: 100% !important;
+    max-width: none !important;
+    box-sizing: border-box !important;
+  }
+}
+</style>
+
 </head><body><div class="ambient-mesh"><div class="blob blob-1"></div><div class="blob blob-2"></div><div class="blob blob-3"></div></div><div class="phone"><div class="desktop-sidebar" aria-label="Menu utama">
     <div class="desktop-brand">
         <div class="desktop-brand-icon">📚</div>
