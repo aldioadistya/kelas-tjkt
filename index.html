@@ -3454,7 +3454,36 @@ body:not(.dark) .desktop-nav-btn:not(.active) {
 body.dark .desktop-nav-btn:not(.active) {
     border-color: transparent;
 }
-</style><style id="calendar-roster-final-fix">.cal-month-click,.cal-year-click{cursor:pointer;border-radius:6px;padding:2px 4px}.cal-month-click:hover,.cal-year-click:hover{background:var(--glass-card-hover)}.cal-month-picker{display:none;margin:-2px 0 10px;padding:10px;border:1px solid var(--glass-border);border-radius:12px;background:var(--glass-card);box-shadow:0 8px 24px rgba(0,0,0,.18)}.cal-month-picker.open{display:block}.cal-picker-year{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}.cal-picker-year button,.cal-picker-months button{border:1px solid var(--glass-border);background:var(--surface-2);color:var(--text-main);border-radius:8px;cursor:pointer;font-weight:700}.cal-picker-year button{width:30px;height:28px}.cal-picker-months{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.cal-picker-months button{padding:7px 4px;font-size:10px}.cal-picker-months button.active{background:var(--primary);color:#fff;border-color:var(--primary)}.bulk-all-btn{border:1px solid var(--glass-border);background:var(--glass-card);color:var(--text-main);border-radius:8px;padding:6px 9px;font-size:10px;font-weight:800;cursor:pointer}.student-check{width:22px;height:22px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:0 0 auto}.student-check input{position:absolute;opacity:0;pointer-events:none}.student-check span{width:16px;height:16px;border:1px solid var(--glass-border);border-radius:5px;background:var(--surface-2);position:relative}.student-check input:checked+span{background:var(--primary);border-color:var(--primary)}.student-check input:checked+span:after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:900}</style></head><body><div class="ambient-mesh"><div class="blob blob-1"></div><div class="blob blob-2"></div><div class="blob blob-3"></div></div><div class="phone"><div class="desktop-sidebar" aria-label="Menu utama">
+</style><style id="calendar-roster-final-fix">.cal-month-click,.cal-year-click{cursor:pointer;border-radius:6px;padding:2px 4px}.cal-month-click:hover,.cal-year-click:hover{background:var(--glass-card-hover)}.cal-month-picker{display:none;margin:-2px 0 10px;padding:10px;border:1px solid var(--glass-border);border-radius:12px;background:var(--glass-card);box-shadow:0 8px 24px rgba(0,0,0,.18)}.cal-month-picker.open{display:block}.cal-picker-year{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}.cal-picker-year button,.cal-picker-months button{border:1px solid var(--glass-border);background:var(--surface-2);color:var(--text-main);border-radius:8px;cursor:pointer;font-weight:700}.cal-picker-year button{width:30px;height:28px}.cal-picker-months{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.cal-picker-months button{padding:7px 4px;font-size:10px}.cal-picker-months button.active{background:var(--primary);color:#fff;border-color:var(--primary)}.bulk-all-btn{border:1px solid var(--glass-border);background:var(--glass-card);color:var(--text-main);border-radius:8px;padding:6px 9px;font-size:10px;font-weight:800;cursor:pointer}.student-check{width:22px;height:22px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:0 0 auto}.student-check input{position:absolute;opacity:0;pointer-events:none}.student-check span{width:16px;height:16px;border:1px solid var(--glass-border);border-radius:5px;background:var(--surface-2);position:relative}.student-check input:checked+span{background:var(--primary);border-color:var(--primary)}.student-check input:checked+span:after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:900}</style>
+<style id="jadwal-mode-switch-border-fix">
+/* Hanya merapikan border switch Pelajaran/Piket.
+   Border luar mengikuti pola card/container, bukan garis ganda. */
+.mode-switch{
+  box-sizing:border-box !important;
+  border:1px solid rgba(255,255,255,.14) !important;
+  outline:none !important;
+  box-shadow:none !important;
+  border-radius:14px !important;
+  padding:4px !important;
+  background:rgba(15,23,42,.72) !important;
+  gap:4px !important;
+}
+
+.mode-switch .mode-btn{
+  box-sizing:border-box !important;
+  border:1px solid transparent !important;
+  outline:none !important;
+  box-shadow:none !important;
+  border-radius:10px !important;
+}
+
+.mode-switch .mode-btn.active{
+  border-color:transparent !important;
+  box-shadow:none !important;
+}
+</style>
+
+</head><body><div class="ambient-mesh"><div class="blob blob-1"></div><div class="blob blob-2"></div><div class="blob blob-3"></div></div><div class="phone"><div class="desktop-sidebar" aria-label="Menu utama">
     <div class="desktop-brand">
         <div class="desktop-brand-icon">📚</div>
         <div class="desktop-brand-text">Kelasku</div>
