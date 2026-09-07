@@ -3619,6 +3619,60 @@ html:not(.is-mobile-device) .desktop-sidebar {
 })();
 </script>
 
+
+<style id="app-ui-only-final">
+/* =========================================================
+   APP UI ONLY
+   Satu layout seperti aplikasi di semua ukuran layar.
+   ========================================================= */
+html, body {
+  overflow: hidden !important;
+}
+
+body {
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.phone {
+  width: min(100%, 430px) !important;
+  max-width: 430px !important;
+  height: 100vh !important;
+  max-height: 900px !important;
+  margin: 0 auto !important;
+  border-radius: 36px !important;
+  overflow: hidden !important;
+  position: relative !important;
+}
+
+.desktop-sidebar {
+  display: none !important;
+}
+
+.phone > .statusbar {
+  margin-left: 0 !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.phone > .screen {
+  margin-left: 0 !important;
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+}
+
+.phone > .tabbar {
+  display: flex !important;
+}
+
+.desktop-user:focus,
+.desktop-user:focus-visible {
+  outline: none !important;
+}
+</style>
+
 </head><body><div class="ambient-mesh"><div class="blob blob-1"></div><div class="blob blob-2"></div><div class="blob blob-3"></div></div><div class="phone"><div class="desktop-sidebar" aria-label="Menu utama">
     <div class="desktop-brand">
         <div class="desktop-brand-icon">📚</div>
