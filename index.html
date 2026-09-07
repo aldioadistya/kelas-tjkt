@@ -3492,6 +3492,48 @@ body.dark .desktop-nav-btn:not(.active) {
   }
 }
 </style>
+
+<style id="desktop-login-small-centered">
+/* Login desktop: compact card centered, while mobile remains unchanged. */
+@media screen and (min-width: 901px) {
+    #login-overlay {
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        overflow-y: auto;
+        background: var(--bg-gradient);
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+    }
+
+    #login-overlay .login-hero {
+        width: min(430px, calc(100vw - 48px));
+        flex: 0 0 auto;
+        margin: 0;
+        padding: 28px 20px 34px;
+        border-radius: 28px 28px 0 0;
+    }
+
+    #login-overlay .login-logo {
+        width: 58px;
+        height: 58px;
+        margin-bottom: 9px;
+    }
+
+    #login-overlay .login-hero-title {
+        font-size: 21px;
+    }
+
+    #login-overlay .login-card {
+        width: min(430px, calc(100vw - 48px));
+        flex: 0 0 auto;
+        margin: -20px 0 0;
+        padding: 22px 20px;
+        border-radius: 22px;
+    }
+}
+</style>
+
 </head><body><div class="ambient-mesh"><div class="blob blob-1"></div><div class="blob blob-2"></div><div class="blob blob-3"></div></div><div class="phone"><div class="desktop-sidebar" aria-label="Menu utama">
     <div class="desktop-brand">
         <div class="desktop-brand-icon">📚</div>
