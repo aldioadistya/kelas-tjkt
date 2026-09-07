@@ -4446,14 +4446,11 @@ function renderKasSiswa(){
         const minimized = !!state.kasFolderMinimized[String(folder.id)];
         return `<div class="kas-folder">
             <div class="kas-folder-head">
-                <div style="min-width:0;flex:1;">
+                <div style="min-width:0;flex:1;cursor:pointer;" onclick="toggleKasFolder('${String(folder.id)}')" title="${minimized ? 'Buka folder' : 'Minimalkan folder'}">
                     <div class="kas-folder-name">📁 ${escapeHtml(folder.name)}</div>
                     ${folder.note ? `<div class="kas-folder-note">${escapeHtml(folder.note)}</div>` : ''}
                 </div>
-                <div class="kas-folder-head-actions">
-                    <button class="kas-folder-toggle" onclick="toggleKasFolder('${String(folder.id)}')" title="${minimized ? 'Tampilkan isi folder' : 'Minimalkan folder'}" aria-label="${minimized ? 'Tampilkan isi folder' : 'Minimalkan folder'}">${minimized ? '+' : '−'}</button>
-                    <button class="btn btn-danger admin-only" style="padding:6px 8px;font-size:10px;" onclick="deleteKasFolder('${String(folder.id)}')">Hapus</button>
-                </div>
+                <button class="btn btn-danger admin-only" style="padding:6px 8px;font-size:10px;" onclick="event.stopPropagation();deleteKasFolder('${String(folder.id)}')">Hapus</button>
             </div>
             <div class="kas-folder-content-wrap${minimized ? ' collapsed' : ''}">
                 <div class="kas-folder-summary">
