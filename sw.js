@@ -1,10 +1,3 @@
-// ===== SERVICE WORKER UNTUK KELASKU =====
-// Security-oriented PWA caching:
-// - Tidak pernah melakukan cache untuk Firebase/Auth/Firestore/Storage.
-// - index.html menggunakan network-first agar patch keamanan cepat masuk.
-// - Asset statis menggunakan cache-first.
-// - Hanya GET request yang diproses.
-
 const CACHE_NAME = 'kelasku-static-v2';
 
 const STATIC_ASSETS = [
@@ -39,11 +32,9 @@ self.addEventListener('fetch', event => {
   const request = event.request;
   const url = new URL(request.url);
 
-  // Jangan intercept request selain GET.
   if (request.method !== 'GET') return;
 
-  // Jangan cache Firebase, Google APIs, Auth, Firestore,
-  // Realtime Database, Cloud Storage, atau Cloud Functions.
+  // Jangan cache Firebase / API
   const isFirebaseRequest =
     url.hostname.includes('firebaseio.com') ||
     url.hostname.includes('googleapis.com') ||
@@ -56,8 +47,7 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // Navigasi / index.html => network-first.
-  // Tujuannya agar update keamanan segera diterima.
+  // Navigasi: ambil versi terbaru dari server
   if (
     request.mode === 'navigate' ||
     url.pathname === '/' ||
@@ -68,38 +58,51 @@ self.addEventListener('fetch', event => {
         .then(response => {
           if (response && response.ok) {
             const copy = response.clone();
+
             caches.open(CACHE_NAME).then(cache => {
               cache.put('/index.html', copy);
             });
           }
+
           return response;
         })
         .catch(() => caches.match('/index.html'))
     );
+
     return;
   }
 
-  // Asset statis => cache-first, fallback ke network.
+  // File statis: cache first
   event.respondWith(
     caches.match(request).then(cached => {
-      if (cached) return cached;
+      if (cached) {
+        return cached;
+      }
 
       return fetch(request).then(response => {
-        if (response && response.ok && response.type === 'basic') {
+        if (
+          response &&
+          response.ok &&
+          response.type === 'basic'
+        ) {
           const copy = response.clone();
+
           caches.open(CACHE_NAME).then(cache => {
             cache.put(request, copy);
           });
         }
+
         return response;
       });
     })
   );
 });
 
-// Memungkinkan update service worker dipicu dari aplikasi.
 self.addEventListener('message', event => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
+  if (
+    event.data &&
+    event.data.type === 'SKIP_WAITING'
+  ) {
     self.skipWaiting();
   }
 });
