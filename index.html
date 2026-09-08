@@ -3157,13 +3157,33 @@ function hideLogin() { document.getElementById('login-overlay').style.display = 
 async function checkServerConnection() {
     if (!currentUser) return false;
     try {
-        const snap = await db.collection(FS_COLLECTION).doc('kelasku-state').get({ source: 'server' });
-        console.info('✅ Firestore server terhubung:', snap.exists ? 'kelasku-state tersedia' : 'dokumen belum ada');
+        const profileSnap = await db.collection(FS_PROFILES).doc(currentUser.uid).get({ source: 'server' });
+        const serverRole = profileSnap.exists ? (profileSnap.data().role || 'siswa') : null;
+        const stateSnap = await db.collection(FS_COLLECTION).doc('kelasku-state').get({ source: 'server' });
+        console.info('✅ Firestore server terhubung:', {
+            profileExists: profileSnap.exists,
+            serverRole,
+            stateExists: stateSnap.exists,
+            uid: currentUser.uid
+        });
         return true;
     } catch (e) {
         console.error('❌ Firestore server tidak dapat diakses:', e);
         return false;
     }
+}
+
+async function verifyServerWriteAccess() {
+    if (!currentUser || !isAdmin()) {
+        throw new Error('Akun aktif bukan Admin/Super Admin.');
+    }
+    const profileSnap = await db.collection(FS_PROFILES).doc(currentUser.uid).get({ source: 'server' });
+    if (!profileSnap.exists) throw new Error('Profil Admin tidak ditemukan di Firestore.');
+    const serverRole = profileSnap.data().role;
+    if (serverRole !== 'admin' && serverRole !== 'superadmin') {
+        throw new Error('Role di server adalah "' + String(serverRole || 'kosong') + '", bukan admin/superadmin.');
+    }
+    return serverRole;
 }
 // ============================================================
 // STORAGE
@@ -3208,7 +3228,11 @@ async function saveState() {
         return { synced: false, sharedMode: false, localOnly: true };
     }
     if (!isAdmin()) {
-        return { synced: false, sharedMode: true, localOnly: true };
+        return { synced: false, sharedMode: true, localOnly: true, error: new Error('Akun bukan Admin/Super Admin.') };
+    }
+    try { await verifyServerWriteAccess(); } catch (e) {
+        console.error('Server write access check gagal:', e);
+        return { synced: false, sharedMode: true, localOnly: true, error: e };
     }
     _saveAgain = true;
     if (_savePromise) return _savePromise;
@@ -5005,11 +5029,21 @@ function importBackup(file) {
             state.reports = [];
 
             // Simpan data utama ke SERVER dan verifikasi hasilnya.
-            const result = await saveState();
+            let result;
+            try {
+                await verifyServerWriteAccess();
+                result = await saveState();
+            } catch (accessErr) {
+                result = { synced: false, sharedMode: true, error: accessErr };
+            }
             if (!result || !result.synced) {
                 state = previousState;
                 renderAll();
-                showNotification('❌ Import dibatalkan: data tidak berhasil tersimpan ke server.', 'error');
+                const e = result && result.error;
+                const msg = e && (e.code === 'permission-denied' || /permission/i.test(String(e.message || '')))
+                    ? 'Firestore menolak write pada kelasku/kelasku-state. Pastikan Rules memakai role admin/superadmin untuk UID ini.'
+                    : ((e && e.message) || 'data tidak berhasil tersimpan ke server.');
+                showNotification('❌ Import gagal: ' + msg, 'error');
                 return;
             }
 
@@ -5154,6 +5188,7 @@ window.removeStudent = removeStudent;
 window.togglePiketJadwalStudent = togglePiketJadwalStudent;
 window.selectPiketJadwalDay = selectPiketJadwalDay;
 window.todayKey = todayKey;
+window.verifyServerWriteAccess = verifyServerWriteAccess;
 </script>
 <script id="final-ui-guard">
 (function(){
