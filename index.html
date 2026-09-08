@@ -3214,31 +3214,58 @@ async function saveState() {
     try { return await _savePromise; } finally { _savePromise = null; }
 }
 async function loadState() {
+    const defaults = {
+        kas: [], kasFolders: [], autoCleanTugasDays: 7, autoCleanReportDays: 7,
+        students: [], hp: {}, piket: {}, piketJadwal: {}, tugas: [],
+        jadwal: { Senin: [], Selasa: [], Rabu: [], Kamis: [], Jumat: [] },
+        pengumuman: [], notifications: [], activityLog: [], jadwalMode: 'pelajaran',
+        selectedDay: 'Senin', calMinimized: { hp:false, piket:false },
+        kasFolderMinimized: {}, hpSelectedDate: null, piketSelectedDate: null, nameChangeLog: []
+    };
     try {
         const r = await storage.get('kelasku-state', true);
+        let loaded = null;
         if (r && r.value) {
-            const loaded = JSON.parse(r.value);
-            state = Object.assign(state, loaded);
-            if (!state.reports) state.reports = [];
-            if (state.autoCleanReportDays === undefined || state.autoCleanReportDays === null) state.autoCleanReportDays = 7;
-            if (!state.piketJadwal) state.piketJadwal = {};
-            if (!state.calMinimized) state.calMinimized = { hp: false, piket: false };
-            if (!state.kasFolderMinimized || typeof state.kasFolderMinimized !== 'object') state.kasFolderMinimized = {};
-            if (!state.nameChangeLog) state.nameChangeLog = [];
-            if (!Array.isArray(state.notifications)) state.notifications = [];
-            if (!Array.isArray(state.activityLog)) state.activityLog = [];
-            ensureAppFeatures();
-            DAY_NAMES.forEach(day => {
-                if (!state.jadwal[day]) state.jadwal[day] = [];
-                if (!state.piketJadwal[day]) state.piketJadwal[day] = [];
+            try { loaded = JSON.parse(r.value); } catch (e) { loaded = null; }
+        }
+        // Merge by section so a missing/empty field in an older document cannot
+        // accidentally erase the usable defaults or previously loaded data.
+        if (loaded && typeof loaded === 'object') {
+            Object.keys(defaults).forEach(k => {
+                if (loaded[k] !== undefined && loaded[k] !== null) state[k] = loaded[k];
             });
         }
+        if (!Array.isArray(state.students)) state.students = [];
+        if (!state.jadwal || typeof state.jadwal !== 'object') state.jadwal = { ...defaults.jadwal };
+        if (!state.hp || typeof state.hp !== 'object') state.hp = {};
+        if (!state.piket || typeof state.piket !== 'object') state.piket = {};
+        if (!state.piketJadwal || typeof state.piketJadwal !== 'object') state.piketJadwal = {};
+        if (!Array.isArray(state.tugas)) state.tugas = [];
+        if (!Array.isArray(state.kas)) state.kas = [];
+        if (!Array.isArray(state.kasFolders)) state.kasFolders = [];
+        if (!Array.isArray(state.pengumuman)) state.pengumuman = [];
+        state.reports = [];
+        if (!Array.isArray(state.notifications)) state.notifications = [];
+        if (!Array.isArray(state.activityLog)) state.activityLog = [];
+        if (!Array.isArray(state.nameChangeLog)) state.nameChangeLog = [];
+        if (!state.calMinimized || typeof state.calMinimized !== 'object') state.calMinimized = { hp:false, piket:false };
+        if (!state.kasFolderMinimized || typeof state.kasFolderMinimized !== 'object') state.kasFolderMinimized = {};
+        if (state.autoCleanTugasDays == null) state.autoCleanTugasDays = 7;
+        if (state.autoCleanReportDays == null) state.autoCleanReportDays = 7;
+        if (!state.selectedDay || !DAY_NAMES.includes(state.selectedDay)) state.selectedDay = 'Senin';
+        DAY_NAMES.forEach(day => {
+            if (!Array.isArray(state.jadwal[day])) state.jadwal[day] = [];
+            if (!Array.isArray(state.piketJadwal[day])) state.piketJadwal[day] = [];
+        });
         if (!state.hpSelectedDate) state.hpSelectedDate = todayKey();
         if (!state.piketSelectedDate) state.piketSelectedDate = todayKey();
         ensureRecord(state.hp, state.hpSelectedDate);
         ensureRecord(state.piket, state.piketSelectedDate);
         ensureAppFeatures();
-    } catch (e) { console.warn('Load state error, using defaults', e); }
+    } catch (e) {
+        console.warn('Load state error, using current/default state', e);
+        ensureAppFeatures();
+    }
 }
 // ============================================================
 // SECURE REPORT STORAGE
@@ -3470,14 +3497,20 @@ function watchLiveSync() {
         if (_skipNextSync) { _skipNextSync = false; return; }
         if (!snap.exists) return;
         try {
-            const saved = JSON.parse(snap.data().value);
-            state = Object.assign(state, saved);
-            // Reports are no longer trusted from the shared document.
-            // They are loaded from kelasku_reports with server-side rules.
+            const saved = JSON.parse(snap.data().value || '{}');
+            if (saved && typeof saved === 'object') {
+                Object.keys(saved).forEach(k => {
+                    if (k !== 'reports' && saved[k] !== undefined && saved[k] !== null) state[k] = saved[k];
+                });
+            }
             state.reports = [];
+            if (!state.jadwal || typeof state.jadwal !== 'object') state.jadwal = {Senin:[],Selasa:[],Rabu:[],Kamis:[],Jumat:[]};
+            DAY_NAMES.forEach(day => { if (!Array.isArray(state.jadwal[day])) state.jadwal[day] = []; });
             ensureAppFeatures();
             if (document.getElementById('login-overlay').style.display === 'none') renderAll();
         } catch (e) { console.warn('Sync error', e); }
+    }, (e) => {
+        console.warn('Live sync read error:', e);
     });
 }
 // ============================================================
