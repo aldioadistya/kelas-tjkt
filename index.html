@@ -4806,9 +4806,32 @@ window.todayKey = todayKey;
 </script>
 </body>
 </html>
-<style id="desktop-center-final-fix">
+<style id="desktop-sidebar-final-fix">
 @media screen and (min-width: 901px) {
-  body { display:flex; align-items:center !important; justify-content:center !important; }
-  .phone { flex:0 0 auto; width:430px !important; max-width:calc(100vw - 32px) !important; height:min(900px, calc(100dvh - 32px)) !important; max-height:calc(100dvh - 32px) !important; margin:0 !important; }
+  html, body { width:100%; height:100%; overflow:hidden; }
+  body { display:block !important; align-items:initial !important; justify-content:initial !important; }
+  .phone {
+    position:relative !important;
+    display:grid !important;
+    width:100vw !important;
+    max-width:none !important;
+    height:100vh !important;
+    max-height:none !important;
+    margin:0 !important;
+    border:0 !important;
+    border-radius:0 !important;
+    box-shadow:none !important;
+    grid-template-columns:255px minmax(0,1fr) !important;
+    grid-template-rows:100vh !important;
+    overflow:hidden !important;
+  }
+  .desktop-sidebar { display:flex !important; grid-column:1 !important; grid-row:1 !important; width:255px !important; }
+  .phone > .screen { grid-column:2 !important; grid-row:1 !important; width:100% !important; min-width:0 !important; height:100vh !important; overflow-y:auto !important; overflow-x:hidden !important; }
+  .phone > .tabbar, .phone > .statusbar { display:none !important; }
+}
+@media screen and (min-width:901px) and (max-width:1200px) {
+  .phone { grid-template-columns:225px minmax(0,1fr) !important; }
+  .desktop-sidebar { width:225px !important; }
+  .phone > .screen { padding:24px 26px 30px !important; }
 }
 </style>
