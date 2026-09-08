@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><link rel="icon" href="data:,"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Kelasku — X TJKT 1</title><link rel="manifest" href="manifest.json"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#0F172A"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="format-detection" content="telephone=no"><meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet"><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check-compat.js"></script><style>
+<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><link rel="icon" href="data:,"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Kelasku — X TJKT 1</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 rx=%2720%27 fill=%27%236366f1%27/%3E%3Ctext x=%2750%27 y=%2764%27 text-anchor=%27middle%27 font-size=%2752%27 fill=%27white%27%3ETJ%3C/text%3E%3C/svg%3E"><link rel="manifest" href="manifest.json"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#0F172A"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="format-detection" content="telephone=no"><meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet"><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check-compat.js"></script><style>
 :root {
     --bg-gradient: linear-gradient(135deg, #e0e7ff 0%, #f1f5f9 50%, #fae8ff 100%);
     --glass-bg: rgba(255, 255, 255, 0.5);
@@ -3159,20 +3159,15 @@ function hideLogin() { document.getElementById('login-overlay').style.display = 
 const storage = {
     async get(key, shared) {
         if (!shared) return localStorage.getItem(key) ? { value: localStorage.getItem(key) } : null;
-        try {
-            const snap = await db.collection(FS_COLLECTION).doc(key).get();
-            if (!snap.exists) return null;
-            return { value: snap.data().value };
-        } catch (e) {
-            console.warn('Firestore get error, fallback localStorage', e);
-            const v = localStorage.getItem(key);
-            return v ? { value: v } : null;
-        }
+        // Shared class data is ALWAYS read from Firestore. Never let an empty
+        // local cache hide the real class data on another device.
+        const snap = await db.collection(FS_COLLECTION).doc(key).get({source:'server'});
+        if (!snap.exists) return null;
+        return { value: snap.data().value, remote: true };
     },
     async set(key, value, shared) {
-        // Siswa adalah READ-ONLY untuk state kelas.
-        // Simpan perubahan lokal yang memang bersifat pribadi, tetapi
-        // jangan pernah mencoba menulis kelasku-state ke Firestore.
+        // Students are read-only for shared class state. Their UI-only changes
+        // may still be cached locally without touching Firestore.
         if (!shared || (currentUser && currentUser.role === 'siswa')) {
             localStorage.setItem(key, value);
             return { synced: false, sharedMode: !!shared, localOnly: true };
@@ -3190,6 +3185,11 @@ const storage = {
 };
 let _savePending = false, _saveAgain = false, _savePromise = null, _skipNextSync = false, _lastSaveSyncFailedNotified = false;
 async function saveState() {
+    // IMPORTANT: siswa never writes the shared class document.
+    if (currentUser && currentUser.role === 'siswa') {
+        try { localStorage.setItem('kelasku-local-state', JSON.stringify(state)); } catch (e) {}
+        return { synced:false, sharedMode:false, localOnly:true };
+    }
     _saveAgain = true;
     if (_savePromise) return _savePromise;
     _savePromise = (async () => {
@@ -3197,25 +3197,18 @@ async function saveState() {
         try {
             while (_saveAgain) {
                 _saveAgain = false;
-                // Reports are stored in their own secured collection so students
-                // never need write access to the shared class document.
                 const sharedSnapshot = Object.assign({}, state, { reports: [] });
                 const snapshot = JSON.stringify(sharedSnapshot);
                 const result = await storage.set('kelasku-state', snapshot, true);
-                if (result && result.localOnly) {
-                    _lastSaveSyncFailedNotified = false;
-                    continue;
-                }
                 if (result && result.sharedMode && !result.synced) {
                     console.error('Save state error: gagal sync ke Firestore', result.error);
                     if (!_lastSaveSyncFailedNotified) {
                         _lastSaveSyncFailedNotified = true;
                         const isFull = result.error && /longer than|exceeds|too large|invalid-argument/i.test(String(result.error.message || result.error));
-                        showNotification(isFull ? '⚠️ Gagal sinkron: database penuh (maks 1MB). Laporan belum tersimpan ke server.' : '⚠️ Gagal sinkron ke server. Laporan belum terbagi ke pengguna lain.', 'error');
+                        showNotification(isFull ? '⚠️ Gagal sinkron: database penuh (maks 1MB).' : '⚠️ Gagal sinkron ke server.', 'error');
                     }
                 } else {
                     _lastSaveSyncFailedNotified = false;
-                    console.log('State saved successfully');
                 }
             }
         } catch (e) {
@@ -3235,29 +3228,23 @@ async function loadState() {
         kasFolderMinimized: {}, hpSelectedDate: null, piketSelectedDate: null, nameChangeLog: []
     };
     try {
-        const r = await storage.get('kelasku-state', true);
-        let loaded = null;
-        if (!r && currentUser) {
-            try {
-                const snap = await db.collection(FS_COLLECTION).doc('kelasku-state').get();
-                if (snap.exists) loaded = JSON.parse(snap.data().value || '{}');
-            } catch (e) {
-                console.error('Gagal membaca data kelas dari Firestore:', e);
-                showNotification('Data kelas tidak dapat dibaca dari server. Cek Firestore Rules.', 'error');
+        // Force a SERVER read so student devices cannot be stuck on an old/empty cache.
+        const snap = await db.collection(FS_COLLECTION).doc('kelasku-state').get({source:'server'});
+        if (!snap.exists) {
+            console.warn('Dokumen kelasku-state tidak ditemukan di Firestore.');
+        } else {
+            const raw = snap.data() && snap.data().value;
+            const loaded = JSON.parse(raw || '{}');
+            if (loaded && typeof loaded === 'object') {
+                Object.keys(defaults).forEach(k => {
+                    if (loaded[k] !== undefined && loaded[k] !== null) state[k] = loaded[k];
+                });
             }
+            console.info('Shared class state loaded from Firestore server.');
         }
-        if (r && r.value) {
-            try { loaded = JSON.parse(r.value); } catch (e) { loaded = null; }
-        }
-        // Merge by section so a missing/empty field in an older document cannot
-        // accidentally erase the usable defaults or previously loaded data.
-        if (loaded && typeof loaded === 'object') {
-            Object.keys(defaults).forEach(k => {
-                if (loaded[k] !== undefined && loaded[k] !== null) state[k] = loaded[k];
-            });
-        }
+        // Keep only a local UI cache; never use it as the source of class data.
         if (!Array.isArray(state.students)) state.students = [];
-        if (!state.jadwal || typeof state.jadwal !== 'object') state.jadwal = { ...defaults.jadwal };
+        if (!state.jadwal || typeof state.jadwal !== 'object') state.jadwal = {...defaults.jadwal};
         if (!state.hp || typeof state.hp !== 'object') state.hp = {};
         if (!state.piket || typeof state.piket !== 'object') state.piket = {};
         if (!state.piketJadwal || typeof state.piketJadwal !== 'object') state.piketJadwal = {};
@@ -3269,7 +3256,7 @@ async function loadState() {
         if (!Array.isArray(state.notifications)) state.notifications = [];
         if (!Array.isArray(state.activityLog)) state.activityLog = [];
         if (!Array.isArray(state.nameChangeLog)) state.nameChangeLog = [];
-        if (!state.calMinimized || typeof state.calMinimized !== 'object') state.calMinimized = { hp:false, piket:false };
+        if (!state.calMinimized || typeof state.calMinimized !== 'object') state.calMinimized = {hp:false,piket:false};
         if (!state.kasFolderMinimized || typeof state.kasFolderMinimized !== 'object') state.kasFolderMinimized = {};
         if (state.autoCleanTugasDays == null) state.autoCleanTugasDays = 7;
         if (state.autoCleanReportDays == null) state.autoCleanReportDays = 7;
@@ -3284,7 +3271,8 @@ async function loadState() {
         ensureRecord(state.piket, state.piketSelectedDate);
         ensureAppFeatures();
     } catch (e) {
-        console.warn('Load state error, using current/default state', e);
+        console.error('Gagal membaca kelasku-state dari Firestore server:', e);
+        showNotification('⚠️ Data kelas gagal dimuat dari server. Cek Firestore Rules.', 'error');
         ensureAppFeatures();
     }
 }
@@ -3518,18 +3506,17 @@ function watchLiveSync() {
         if (_skipNextSync) { _skipNextSync = false; return; }
         if (!snap.exists) return;
         try {
-            const saved = JSON.parse(snap.data().value || '{}');
-            if (saved && typeof saved === 'object') {
-                Object.keys(saved).forEach(k => {
-                    if (k !== 'reports' && saved[k] !== undefined && saved[k] !== null) state[k] = saved[k];
-                });
-            }
+            const saved = JSON.parse((snap.data() && snap.data().value) || '{}');
+            if (!saved || typeof saved !== 'object') return;
+            Object.keys(saved).forEach(k => {
+                if (k !== 'reports' && saved[k] !== undefined && saved[k] !== null) state[k] = saved[k];
+            });
             state.reports = [];
             if (!state.jadwal || typeof state.jadwal !== 'object') state.jadwal = {Senin:[],Selasa:[],Rabu:[],Kamis:[],Jumat:[]};
             DAY_NAMES.forEach(day => { if (!Array.isArray(state.jadwal[day])) state.jadwal[day] = []; });
             ensureAppFeatures();
             if (document.getElementById('login-overlay').style.display === 'none') renderAll();
-        } catch (e) { console.warn('Sync error', e); }
+        } catch (e) { console.warn('Sync error:', e); }
     }, (e) => {
         console.warn('Live sync read error:', e);
     });
