@@ -2419,6 +2419,37 @@ a{
   }
 }
 </style>
+
+<style id="desktop-login-click-fix">
+@media screen and (min-width: 901px) {
+  .phone > .login-overlay {
+    z-index: 9999 !important;
+    pointer-events: auto !important;
+    isolation: isolate !important;
+  }
+  .phone > .login-overlay .login-hero,
+  .phone > .login-overlay .login-card,
+  .phone > .login-overlay input,
+  .phone > .login-overlay button,
+  .phone > .login-overlay span {
+    pointer-events: auto !important;
+  }
+  .phone > .login-overlay .login-card {
+    position: relative !important;
+    z-index: 2 !important;
+  }
+  .phone > .login-overlay .login-hero {
+    position: relative !important;
+    z-index: 1 !important;
+  }
+  .phone > .login-overlay #auth-submit-btn {
+    position: relative !important;
+    z-index: 3 !important;
+    cursor: pointer !important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="ambient-mesh">
