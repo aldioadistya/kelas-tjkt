@@ -1,79 +1,77 @@
-/**
- * migrate-claims.js
- *
- * Jalankan SEKALI setelah Firebase Admin SDK siap.
- * Tujuan:
- *   kelasku_profiles/{uid}.role
- *        ↓
- *   Firebase Authentication Custom Claims
- *
- * Jalankan dari lingkungan server/trusted environment.
- */
+const { initializeApp } = require("firebase-admin/app");
+const { getAuth } = require("firebase-admin/auth");
+const { getFirestore } = require("firebase-admin/firestore");
 
-const admin = require('firebase-admin');
+initializeApp();
 
-admin.initializeApp();
+const auth = getAuth();
+const db = getFirestore();
 
-const db = admin.firestore();
-const auth = admin.auth();
-
-const PROFILE_COLLECTION = 'kelasku_profiles';
+const ALLOWED_ROLES = ["siswa", "admin", "superadmin"];
 
 async function migrateClaims() {
-  const snapshot = await db.collection(PROFILE_COLLECTION).get();
+  console.log("=== MIGRASI ROLE KE CUSTOM CLAIMS ===");
 
-  let total = 0;
+  const snapshot = await db
+    .collection("kelasku_profiles")
+    .get();
+
+  if (snapshot.empty) {
+    console.log("Tidak ada profile.");
+    return;
+  }
+
   let success = 0;
-  let skipped = 0;
   let failed = 0;
 
   for (const doc of snapshot.docs) {
-    total++;
-
     const uid = doc.id;
     const data = doc.data() || {};
-    const role = data.role;
 
-    // Hanya role yang valid.
-    if (!['siswa', 'admin', 'superadmin'].includes(role)) {
-      console.log(`[SKIP] ${uid}: role tidak valid ->`, role);
-      skipped++;
+    const role = data.role || "siswa";
+
+    if (!ALLOWED_ROLES.includes(role)) {
+      console.log(
+        `SKIP ${uid}: role "${role}" tidak valid`
+      );
+      failed++;
       continue;
     }
 
     try {
-      // Pastikan user Firebase memang ada.
       const user = await auth.getUser(uid);
 
       await auth.setCustomUserClaims(uid, {
+        ...(user.customClaims || {}),
         role
       });
 
       console.log(
-        `[OK] ${user.email || uid}: Custom Claim role=${role}`
+        `OK ${uid} -> ${role}`
       );
 
       success++;
     } catch (error) {
       console.error(
-        `[ERROR] ${uid}:`,
-        error.message || error
+        `GAGAL ${uid}:`,
+        error.message
       );
 
       failed++;
     }
   }
 
-  console.log('\n===== MIGRASI SELESAI =====');
-  console.log('Total   :', total);
-  console.log('Berhasil:', success);
-  console.log('Skip    :', skipped);
-  console.log('Gagal   :', failed);
+  console.log("");
+  console.log("=== SELESAI ===");
+  console.log(`Berhasil : ${success}`);
+  console.log(`Gagal    : ${failed}`);
 }
 
 migrateClaims()
-  .then(() => process.exit(0))
+  .then(() => {
+    process.exit(0);
+  })
   .catch(error => {
-    console.error('Migrasi gagal:', error);
+    console.error("ERROR:", error);
     process.exit(1);
   });
