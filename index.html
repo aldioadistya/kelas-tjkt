@@ -3136,6 +3136,8 @@ async function loadUserProfile(user) {
         };
         applyRole(currentUser.role);
         await loadState();
+        // Always prefer the shared class state for authenticated users.
+        // This prevents an old/empty local cache from masking the Firestore data on student devices.
         if (isAdmin()) await migrateLegacyReports();
         await loadSecureReports();
         applyTheme();
@@ -3225,6 +3227,12 @@ async function loadState() {
     try {
         const r = await storage.get('kelasku-state', true);
         let loaded = null;
+        if (!r && currentUser) {
+            try {
+                const snap = await db.collection(FS_COLLECTION).doc('kelasku-state').get();
+                if (snap.exists) loaded = JSON.parse(snap.data().value || '{}');
+            } catch (e) { /* keep current state/defaults */ }
+        }
         if (r && r.value) {
             try { loaded = JSON.parse(r.value); } catch (e) { loaded = null; }
         }
