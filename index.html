@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Kelasku — X TJKT 1</title><link rel="manifest" href="manifest.json"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#0F172A"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="format-detection" content="telephone=no"><meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet"><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check-compat.js"></script><style>
+<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><link rel="icon" href="data:,"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Kelasku — X TJKT 1</title><link rel="manifest" href="manifest.json"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#0F172A"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="format-detection" content="telephone=no"><meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet"><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check-compat.js"></script><style>
 :root {
     --bg-gradient: linear-gradient(135deg, #e0e7ff 0%, #f1f5f9 50%, #fae8ff 100%);
     --glass-bg: rgba(255, 255, 255, 0.5);
@@ -3170,7 +3170,13 @@ const storage = {
         }
     },
     async set(key, value, shared) {
-        if (!shared) { localStorage.setItem(key, value); return { synced: false, sharedMode: false }; }
+        // Siswa adalah READ-ONLY untuk state kelas.
+        // Simpan perubahan lokal yang memang bersifat pribadi, tetapi
+        // jangan pernah mencoba menulis kelasku-state ke Firestore.
+        if (!shared || (currentUser && currentUser.role === 'siswa')) {
+            localStorage.setItem(key, value);
+            return { synced: false, sharedMode: !!shared, localOnly: true };
+        }
         try {
             await db.collection(FS_COLLECTION).doc(key).set({ value, updatedAt: Date.now() });
             localStorage.setItem(key, value);
@@ -3196,6 +3202,10 @@ async function saveState() {
                 const sharedSnapshot = Object.assign({}, state, { reports: [] });
                 const snapshot = JSON.stringify(sharedSnapshot);
                 const result = await storage.set('kelasku-state', snapshot, true);
+                if (result && result.localOnly) {
+                    _lastSaveSyncFailedNotified = false;
+                    continue;
+                }
                 if (result && result.sharedMode && !result.synced) {
                     console.error('Save state error: gagal sync ke Firestore', result.error);
                     if (!_lastSaveSyncFailedNotified) {
@@ -3231,7 +3241,10 @@ async function loadState() {
             try {
                 const snap = await db.collection(FS_COLLECTION).doc('kelasku-state').get();
                 if (snap.exists) loaded = JSON.parse(snap.data().value || '{}');
-            } catch (e) { /* keep current state/defaults */ }
+            } catch (e) {
+                console.error('Gagal membaca data kelas dari Firestore:', e);
+                showNotification('Data kelas tidak dapat dibaca dari server. Cek Firestore Rules.', 'error');
+            }
         }
         if (r && r.value) {
             try { loaded = JSON.parse(r.value); } catch (e) { loaded = null; }
