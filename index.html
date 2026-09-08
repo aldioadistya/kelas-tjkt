@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Kelasku — X TJKT 1</title><link rel="manifest" href="manifest.json"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#0F172A"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet"><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-functions-compat.js"></script><style>
+<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Kelasku — X TJKT 1</title><link rel="manifest" href="manifest.json"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#0F172A"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet"><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><style>
 :root {
     --bg-gradient: linear-gradient(135deg, #e0e7ff 0%, #f1f5f9 50%, #fae8ff 100%);
     --glass-bg: rgba(255, 255, 255, 0.5);
@@ -3016,8 +3016,6 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
-const functions = firebase.app().functions('us-central1');
-const BOOTSTRAP_SUPERADMIN_UID = 'cffzW5yM1Dh2IX4nrsNAFDaw1At2';
 const VALID_ROLES = ['siswa', 'admin', 'superadmin'];
 const FS_COLLECTION = 'kelasku';
 const FS_PROFILES = 'kelasku_profiles';
@@ -3087,7 +3085,9 @@ async function loadUserProfile(user) {
     try {
         const ref = db.collection(FS_PROFILES).doc(user.uid);
         let snap = await ref.get();
-        // Never self-promote from an empty/missing profile. New users are students.
+
+        // Pengguna baru selalu dibuat sebagai siswa.
+        // Hanya Super Admin yang boleh mengubah role setelah profile dibuat.
         if (!snap.exists) {
             const profile = {
                 email: user.email,
@@ -3100,45 +3100,25 @@ async function loadUserProfile(user) {
             await ref.set(profile);
             snap = await ref.get();
         }
+
         const profile = snap.data() || {};
+
         if (profile.active === false) {
             document.getElementById('login-error').textContent = 'Akun ini telah dinonaktifkan. Hubungi Super Admin.';
             document.getElementById('login-error').style.display = 'block';
             await auth.signOut();
             return;
         }
-        // The bootstrap UID is a fixed, server-side recovery identity.
-        // If its Custom Claim is not present yet, call the backend once to set it.
-        if (user.uid === BOOTSTRAP_SUPERADMIN_UID) {
-            try {
-                const tokenBefore = await user.getIdTokenResult(true);
-                if (tokenBefore.claims && tokenBefore.claims.role !== 'superadmin') {
-                    const bootstrapSuperAdmin = functions.httpsCallable('bootstrapSuperAdmin');
-                    await bootstrapSuperAdmin({});
-                    await user.getIdToken(true);
-                }
-            } catch (bootstrapError) {
-                // UI fallback keeps the known bootstrap account visible as Super Admin
-                // while the backend is being deployed. Database authorization still comes
-                // from Firestore Rules and the Custom Claim once deployed.
-                console.warn('Bootstrap Super Admin belum tersedia:', bootstrapError);
-            }
-        }
 
-        const tokenResult = await user.getIdTokenResult(true);
-        const claimRole = tokenResult.claims && tokenResult.claims.role;
-        const profileRole = profile.role;
-        const role = VALID_ROLES.includes(claimRole)
-            ? claimRole
-            : (user.uid === BOOTSTRAP_SUPERADMIN_UID
-                ? 'superadmin'
-                : (VALID_ROLES.includes(profileRole) ? profileRole : 'siswa'));
+        const role = VALID_ROLES.includes(profile.role) ? profile.role : 'siswa';
+
         currentUser = {
             uid: user.uid,
             email: profile.email || user.email,
             username: profile.username || (user.email ? user.email.split('@')[0] : 'Pengguna'),
             role
         };
+
         applyRole(currentUser.role);
         await loadState();
         applyTheme();
@@ -3146,10 +3126,12 @@ async function loadUserProfile(user) {
         renderAll();
         watchLiveSync();
     } catch (e) {
+        console.error('Load user profile error:', e);
         document.getElementById('login-error').textContent = 'Gagal memuat profil pengguna. Periksa koneksi internet.';
         document.getElementById('login-error').style.display = 'block';
     }
 }
+
 function showLogin() { document.getElementById('login-overlay').style.display = 'flex'; }
 function hideLogin() { document.getElementById('login-overlay').style.display = 'none'; }
 // ============================================================
@@ -3331,12 +3313,6 @@ async function doForgotPassword() {
     } catch (e) {
         showNotification(authErrorMessage(e.code), 'error');
     }
-}
-async function currentUserAuthRefresh() {
-    const user = auth.currentUser;
-    if (!user) return;
-    await user.getIdToken(true);
-    await loadUserProfile(user);
 }
 function logout() { auth.signOut(); }
 function isAdmin() { return currentUser && (currentUser.role === 'superadmin' || currentUser.role === 'admin'); }
@@ -4762,71 +4738,152 @@ function filterAccountList() {
 }
 async function addAccount() {
     if (guardAccountManagement()) return;
+
     const nama = document.getElementById('acc-nama').value.trim();
     const email = document.getElementById('acc-email').value.trim();
     const password = document.getElementById('acc-password').value;
     const role = document.getElementById('acc-role').value;
-    if (!nama || !email || !password) { showNotification('Semua kolom wajib diisi.', 'warning'); return; }
-    if (password.length < 6) { showNotification('Password minimal 6 karakter.', 'warning'); return; }
-    if (!['siswa','admin','superadmin'].includes(role)) { showNotification('Role tidak valid.', 'error'); return; }
+
+    if (!nama || !email || !password) {
+        showNotification('Semua kolom wajib diisi.', 'warning');
+        return;
+    }
+
+    if (password.length < 6) {
+        showNotification('Password minimal 6 karakter.', 'warning');
+        return;
+    }
+
+    if (!VALID_ROLES.includes(role)) {
+        showNotification('Role tidak valid.', 'error');
+        return;
+    }
+
+    let createdUser = null;
+
     try {
-        const createUserAccount = functions.httpsCallable('createUserAccount');
-        await createUserAccount({ email, password, username: nama, role });
+        // Akun Auth dibuat melalui secondaryAuth agar sesi Super Admin utama tidak berubah.
+        const cred = await secondaryAuth.createUserWithEmailAndPassword(email, password);
+        createdUser = cred.user;
+
+        try {
+            await createdUser.updateProfile({ displayName: nama });
+        } catch (e) {}
+
+        await db.collection(FS_PROFILES).doc(createdUser.uid).set({
+            email,
+            username: nama,
+            role,
+            active: true,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
         document.getElementById('acc-nama').value = '';
         document.getElementById('acc-email').value = '';
         document.getElementById('acc-password').value = '';
+
+        await secondaryAuth.signOut();
         renderAccountList();
         showNotification('Akun berhasil dibuat!', 'success');
-    } catch (e) { showNotification(authErrorMessage(e.code), 'error'); }
+    } catch (e) {
+        try { await secondaryAuth.signOut(); } catch (_) {}
+        showNotification(authErrorMessage(e.code), 'error');
+    }
 }
+
 async function toggleAccountActiveFromModal() {
     if (guardAccountManagement()) return;
+
     const uid = document.getElementById('acc-edit-id').value;
-    if (uid === currentUser.uid) { showNotification('Tidak dapat menonaktifkan akun sendiri.', 'warning'); return; }
+
+    if (!uid || uid === currentUser.uid) {
+        showNotification('Tidak dapat menonaktifkan akun sendiri.', 'warning');
+        return;
+    }
+
     const isActive = document.getElementById('acc-edit-active').value !== 'false';
     const makeActive = !isActive;
-    if (!makeActive && !confirm('Nonaktifkan akun ini? Akun tidak akan bisa login sampai diaktifkan kembali.')) return;
+
+    if (!makeActive && !confirm('Nonaktifkan akun ini? Akun tidak akan bisa menggunakan Kelasku sampai diaktifkan kembali.')) {
+        return;
+    }
+
     try {
-        const setUserActive = functions.httpsCallable('setUserActive');
-        await setUserActive({ uid, active: makeActive });
+        await db.collection(FS_PROFILES).doc(uid).update({
+            active: makeActive
+        });
+
         showNotification(makeActive ? 'Akun diaktifkan.' : 'Akun dinonaktifkan.', 'success');
         closeModal('account-edit');
         renderAccountList();
-    } catch (e) { showNotification('Gagal memperbarui status akun.', 'error'); }
+    } catch (e) {
+        showNotification('Gagal memperbarui status akun.', 'error');
+    }
 }
+
 function openAccountEditModal(uid) {
     if (guardAccountManagement()) return;
+
     const u = _allAccounts.find(x => x.id === uid);
     if (!u) return;
+
     document.getElementById('acc-edit-nama').value = u.username || '';
     document.getElementById('acc-edit-email').value = u.email || '';
     document.getElementById('acc-edit-role').value = u.role || 'siswa';
     document.getElementById('acc-edit-id').value = uid;
+
     const isActive = u.active !== false;
     document.getElementById('acc-edit-active').value = isActive ? 'true' : 'false';
+
     const toggleBtn = document.getElementById('acc-edit-toggle-btn');
     toggleBtn.textContent = isActive ? '✕ Nonaktifkan Akun' : '✓ Aktifkan Akun';
     toggleBtn.style.display = (uid === currentUser.uid) ? 'none' : '';
+
     openModal('account-edit');
 }
+
 async function submitAccountEdit() {
     if (guardAccountManagement()) return;
+
     const uid = document.getElementById('acc-edit-id').value;
     const nama = document.getElementById('acc-edit-nama').value.trim();
     const role = document.getElementById('acc-edit-role').value;
-    if (!nama) { showNotification('Nama tidak boleh kosong.', 'warning'); return; }
-    if (uid === currentUser.uid && role !== 'superadmin') { showNotification('Tidak dapat mengubah peran akun sendiri.', 'warning'); return; }
+
+    if (!nama) {
+        showNotification('Nama tidak boleh kosong.', 'warning');
+        return;
+    }
+
+    if (!VALID_ROLES.includes(role)) {
+        showNotification('Role tidak valid.', 'error');
+        return;
+    }
+
+    if (uid === currentUser.uid && role !== 'superadmin') {
+        showNotification('Tidak dapat mengubah peran akun sendiri.', 'warning');
+        return;
+    }
+
     try {
-        const profileUpdate = functions.httpsCallable('setUserRole');
-        await profileUpdate({ uid, role, username: nama });
+        await db.collection(FS_PROFILES).doc(uid).update({
+            username: nama,
+            role
+        });
+
         if (uid === currentUser.uid) {
-            await currentUserAuthRefresh();
+            currentUser.username = nama;
+            currentUser.role = role;
+            applyRole(role);
         }
+
         showNotification('Akun berhasil diperbarui.', 'success');
         closeModal('account-edit');
         renderAccountList();
-    } catch (e) { showNotification('Gagal memperbarui akun.', 'error'); }
+    } catch (e) {
+        showNotification('Gagal memperbarui akun.', 'error');
+    }
 }
+
 // ===== EXPORT / IMPORT =====
 function exportBackup() {
     const payload = { exportedAt: new Date().toISOString(), state };
