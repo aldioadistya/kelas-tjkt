@@ -4867,7 +4867,7 @@ window.todayKey = todayKey;
     width: 100% !important;
     height: 100% !important;
     padding: 24px !important;
-    display: flex !important;
+    display: flex;
     align-items: center !important;
     justify-content: center !important;
     flex-direction: column !important;
@@ -4902,6 +4902,16 @@ window.todayKey = todayKey;
   .phone > .login-overlay .login-card .field { margin-bottom: 10px !important; }
   .phone > .login-overlay .login-card .field input { padding: 10px 12px !important; font-size: 14px !important; }
   .phone > .login-overlay .login-card .btn { padding: 11px !important; font-size: 14px !important; }
+}
+</style>
+
+<style id="desktop-login-visibility-fix">
+@media screen and (min-width:901px) {
+  .phone > .login-overlay[style*="display: none"] { display: none !important; }
+  .phone > .login-overlay { z-index: 9999 !important; pointer-events: auto !important; }
+  .phone > .login-overlay .login-card,
+  .phone > .login-overlay .login-hero { pointer-events: auto !important; }
+  .phone > .login-overlay #auth-submit-btn { position: relative; z-index: 2; pointer-events: auto !important; }
 }
 </style>
 
