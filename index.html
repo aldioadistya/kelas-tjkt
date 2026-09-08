@@ -3135,6 +3135,7 @@ async function loadUserProfile(user) {
             role: profile.role || 'siswa'
         };
         applyRole(currentUser.role);
+        await checkServerConnection();
         await loadState();
         // Always prefer the shared class state for authenticated users.
         // This prevents an old/empty local cache from masking the Firestore data on student devices.
@@ -3153,31 +3154,47 @@ async function loadUserProfile(user) {
 }
 function showLogin() { document.getElementById('login-overlay').style.display = 'flex'; }
 function hideLogin() { document.getElementById('login-overlay').style.display = 'none'; }
+async function checkServerConnection() {
+    if (!currentUser) return false;
+    try {
+        const snap = await db.collection(FS_COLLECTION).doc('kelasku-state').get({ source: 'server' });
+        console.info('✅ Firestore server terhubung:', snap.exists ? 'kelasku-state tersedia' : 'dokumen belum ada');
+        return true;
+    } catch (e) {
+        console.error('❌ Firestore server tidak dapat diakses:', e);
+        return false;
+    }
+}
 // ============================================================
 // STORAGE
 // ============================================================
 const storage = {
     async get(key, shared) {
         if (!shared) return localStorage.getItem(key) ? { value: localStorage.getItem(key) } : null;
-        // Shared class data is ALWAYS read from Firestore. Never let an empty
-        // local cache hide the real class data on another device.
-        const snap = await db.collection(FS_COLLECTION).doc(key).get({source:'server'});
+        const snap = await db.collection(FS_COLLECTION).doc(key).get({ source: 'server' });
         if (!snap.exists) return null;
         return { value: snap.data().value, remote: true };
     },
     async set(key, value, shared) {
-        // Students are read-only for shared class state. Their UI-only changes
-        // may still be cached locally without touching Firestore.
-        if (!shared || (currentUser && currentUser.role === 'siswa')) {
+        if (!shared) {
             localStorage.setItem(key, value);
-            return { synced: false, sharedMode: !!shared, localOnly: true };
+            return { synced: false, sharedMode: false, localOnly: true };
+        }
+        if (!isAdmin()) {
+            localStorage.setItem(key, value);
+            return { synced: false, sharedMode: true, localOnly: true };
         }
         try {
-            await db.collection(FS_COLLECTION).doc(key).set({ value, updatedAt: Date.now() });
+            const ref = db.collection(FS_COLLECTION).doc(key);
+            await ref.set({ value, updatedAt: Date.now() });
+            const verify = await ref.get({ source: 'server' });
+            if (!verify.exists || verify.data().value !== value) {
+                throw new Error('Verifikasi server gagal setelah penyimpanan.');
+            }
             localStorage.setItem(key, value);
-            return { synced: true, sharedMode: true };
+            return { synced: true, sharedMode: true, remote: true };
         } catch (e) {
-            console.warn('Firestore set error, hanya ke localStorage', e);
+            console.error('Firestore set error:', e);
             localStorage.setItem(key, value);
             return { synced: false, sharedMode: true, error: e };
         }
@@ -3185,36 +3202,42 @@ const storage = {
 };
 let _savePending = false, _saveAgain = false, _savePromise = null, _skipNextSync = false, _lastSaveSyncFailedNotified = false;
 async function saveState() {
-    // IMPORTANT: siswa never writes the shared class document.
+    // Siswa tidak pernah menulis dokumen bersama.
     if (currentUser && currentUser.role === 'siswa') {
         try { localStorage.setItem('kelasku-local-state', JSON.stringify(state)); } catch (e) {}
-        return { synced:false, sharedMode:false, localOnly:true };
+        return { synced: false, sharedMode: false, localOnly: true };
+    }
+    if (!isAdmin()) {
+        return { synced: false, sharedMode: true, localOnly: true };
     }
     _saveAgain = true;
     if (_savePromise) return _savePromise;
     _savePromise = (async () => {
         _savePending = true;
+        let lastResult = { synced: false, sharedMode: true };
         try {
             while (_saveAgain) {
                 _saveAgain = false;
                 const sharedSnapshot = Object.assign({}, state, { reports: [] });
                 const snapshot = JSON.stringify(sharedSnapshot);
-                const result = await storage.set('kelasku-state', snapshot, true);
-                if (result && result.sharedMode && !result.synced) {
-                    console.error('Save state error: gagal sync ke Firestore', result.error);
+                lastResult = await storage.set('kelasku-state', snapshot, true);
+                if (!lastResult.synced) {
+                    console.error('Save state error: gagal sync ke Firestore', lastResult.error);
                     if (!_lastSaveSyncFailedNotified) {
                         _lastSaveSyncFailedNotified = true;
-                        const isFull = result.error && /longer than|exceeds|too large|invalid-argument/i.test(String(result.error.message || result.error));
-                        showNotification(isFull ? '⚠️ Gagal sinkron: database penuh (maks 1MB).' : '⚠️ Gagal sinkron ke server.', 'error');
+                        const isFull = lastResult.error && /longer than|exceeds|too large|invalid-argument/i.test(String(lastResult.error.message || lastResult.error));
+                        showNotification(isFull ? '⚠️ Database penuh (maks 1MB). Data belum tersimpan ke server.' : '⚠️ Data belum tersimpan ke server. Periksa Firestore Rules dan koneksi.', 'error');
                     }
-                } else {
-                    _lastSaveSyncFailedNotified = false;
+                    break;
                 }
+                _lastSaveSyncFailedNotified = false;
             }
         } catch (e) {
+            lastResult = { synced: false, sharedMode: true, error: e };
             console.error('Save state error:', e);
-            showNotification('⚠️ Gagal menyimpan perubahan.', 'error');
+            showNotification('⚠️ Gagal menyimpan perubahan ke server.', 'error');
         } finally { _savePending = false; }
+        return lastResult;
     })();
     try { return await _savePromise; } finally { _savePromise = null; }
 }
@@ -4970,15 +4993,52 @@ function importBackup(file) {
         return;
     }
     const reader = new FileReader();
-    reader.onload = (e) => {
+    reader.onload = async (e) => {
+        const previousState = JSON.parse(JSON.stringify(state));
         try {
             const parsed = JSON.parse(e.target.result);
-            state = Object.assign(state, parsed.state || parsed);
-            saveState();
+            const imported = parsed && typeof parsed === 'object' ? (parsed.state || parsed) : null;
+            if (!imported || typeof imported !== 'object') throw new Error('Format backup tidak valid.');
+
+            state = Object.assign(state, imported);
+            const importedReports = Array.isArray(state.reports) ? state.reports.slice() : [];
+            state.reports = [];
+
+            // Simpan data utama ke SERVER dan verifikasi hasilnya.
+            const result = await saveState();
+            if (!result || !result.synced) {
+                state = previousState;
+                renderAll();
+                showNotification('❌ Import dibatalkan: data tidak berhasil tersimpan ke server.', 'error');
+                return;
+            }
+
+            // Pindahkan laporan backup ke koleksi aman setelah state utama berhasil.
+            let reportCount = 0;
+            if (importedReports.length) {
+                const batch = db.batch();
+                importedReports.forEach(r => {
+                    if (!r || r.id == null) return;
+                    const docRef = db.collection(FS_REPORTS).doc(String(r.id));
+                    batch.set(docRef, Object.assign({}, r, { id: Number(r.id) || r.id }), { merge: true });
+                    reportCount++;
+                });
+                if (reportCount) await batch.commit();
+            }
+
+            await loadState();
+            await loadSecureReports();
             renderAll();
-            showNotification('Data berhasil dipulihkan!', 'success');
-        } catch (err) { showNotification('File backup tidak valid.', 'error'); }
-        if (inputEl) inputEl.value = '';
+            showNotification('✅ Import berhasil dan tersimpan di server' + (reportCount ? ' (' + reportCount + ' laporan).' : '.'), 'success');
+        } catch (err) {
+            state = previousState;
+            renderAll();
+            console.error('Import backup error:', err);
+            const msg = err && err.code === 'permission-denied' ? 'Firestore menolak penyimpanan. Pastikan akun ini Admin/Super Admin dan Rules sudah benar.' : (err.message || 'File backup tidak valid.');
+            showNotification('❌ Import gagal: ' + msg, 'error');
+        } finally {
+            if (inputEl) inputEl.value = '';
+        }
     };
     reader.readAsText(file);
 }
