@@ -4015,6 +4015,8 @@ function renderJadwalList() {
     `).join('') : `<div class="empty">Tidak ada jadwal pelajaran.</div>`;
 }
 function openJadwalModal(id) {
+    if (guardReadOnly()) return;
+
     document.getElementById('jadwal-hari').innerHTML = DAY_NAMES.map(d => `<option value="${d}">${d}</option>`).join('');
     if (id) {
         let found = null, foundDay = null;
@@ -4184,6 +4186,8 @@ async function onTugasFileSelected(input) {
     renderTugasFileChips();
 }
 function openTugasModal(id) {
+    if (guardReadOnly()) return;
+
     const fileInput = document.getElementById('tugas-file');
     fileInput.value = '';
     if (id) {
