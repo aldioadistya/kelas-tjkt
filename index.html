@@ -5021,6 +5021,25 @@ window.todayKey = todayKey;
 }
 </style>
 
+
+<style id="desktop-modal-layer-fix">
+@media screen and (min-width:901px){
+  /* Modal harus berada di atas sidebar + konten desktop agar overlay benar-benar menutup seluruh layar. */
+  .phone > .modal-bg{
+    position:absolute !important;
+    inset:0 !important;
+    z-index:1000 !important;
+    width:100% !important;
+    height:100% !important;
+  }
+  .phone > .modal-bg.open{display:flex !important;}
+  .phone > .desktop-sidebar{z-index:80 !important;}
+  .phone > .modal-bg .modal{
+    position:relative !important;
+    z-index:1001 !important;
+  }
+}
+</style>
 </body>
 </html>
 <style id="desktop-sidebar-final-fix">
