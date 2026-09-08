@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Kelasku — X TJKT 1</title><link rel="manifest" href="manifest.json"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#0F172A"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet"><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><style>
+<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Kelasku — X TJKT 1</title><link rel="manifest" href="manifest.json"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#0F172A"><meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin"><meta http-equiv="X-Content-Type-Options" content="nosniff"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet"><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><style>
 :root {
     --bg-gradient: linear-gradient(135deg, #e0e7ff 0%, #f1f5f9 50%, #fae8ff 100%);
     --glass-bg: rgba(255, 255, 255, 0.5);
@@ -3018,6 +3018,7 @@ const auth = firebase.auth();
 const db = firebase.firestore();
 const FS_COLLECTION = 'kelasku';
 const FS_PROFILES = 'kelasku_profiles';
+const FS_REPORTS = 'kelasku_reports';
 const secondaryApp = firebase.initializeApp(firebaseConfig, 'Secondary');
 const secondaryAuth = secondaryApp.auth();
 secondaryAuth.setPersistence(firebase.auth.Auth.Persistence.NONE).catch(() => {});
@@ -3080,44 +3081,101 @@ auth.onAuthStateChanged(async (user) => {
         showLogin();
     }
 });
+const BOOTSTRAP_SUPERADMIN_UID = 'cffzW5yM1Dh2IX4nrsNAFDaw1At2';
+
+async function loadReports() {
+    if (!currentUser) return;
+    try {
+        let query = db.collection(FS_REPORTS);
+        if (!isAdmin()) query = query.where('authorUid', '==', currentUser.uid);
+        const snap = await query.get();
+        state.reports = [];
+        snap.forEach(doc => state.reports.push({ id: doc.id, ...doc.data() }));
+        state.reports.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
+        renderReports();
+    } catch (e) {
+        console.error('Report load error:', e);
+        state.reports = [];
+        renderReports();
+        showNotification('Gagal memuat laporan dari server.', 'error');
+    }
+}
+
+async function migrateLegacyReports() {
+    if (!isAdmin() || !Array.isArray(state.reports) || !state.reports.length) return;
+    const legacy = [...state.reports];
+    try {
+        const batch = db.batch();
+        legacy.forEach(r => {
+            const id = String(r.id || Date.now() + Math.random());
+            const ref = db.collection(FS_REPORTS).doc(id);
+            const copy = Object.assign({}, r);
+            delete copy.id;
+            if (!copy.authorUid) copy.authorUid = currentUser.uid;
+            batch.set(ref, copy, { merge: true });
+        });
+        await batch.commit();
+        state.reports = [];
+    } catch (e) {
+        console.error('Legacy report migration failed:', e);
+    }
+}
+
 async function loadUserProfile(user) {
     try {
         const ref = db.collection(FS_PROFILES).doc(user.uid);
-        let snap = await ref.get();
+        const snap = await ref.get();
+
+        // Jangan pernah "menebak" Super Admin dari kondisi database kosong.
+        // Akun bootstrap hanya dikenali lewat UID yang juga dikunci di Firestore Rules.
         if (!snap.exists) {
-            const existing = await db.collection(FS_PROFILES).limit(1).get();
-            const role = existing.empty ? 'superadmin' : 'siswa';
-            const profile = {
-                email: user.email,
-                username: pendingRegisterName || user.displayName || (user.email ? user.email.split('@')[0] : 'Pengguna'),
-                role,
-                active: true,
-                createdAt: Date.now()
+            if (user.uid !== BOOTSTRAP_SUPERADMIN_UID) {
+                document.getElementById('login-error').textContent = 'Profil akun belum terdaftar. Hubungi Admin.';
+                document.getElementById('login-error').style.display = 'block';
+                await auth.signOut();
+                return;
+            }
+
+            currentUser = {
+                uid: user.uid,
+                email: user.email || '',
+                username: user.displayName || (user.email ? user.email.split('@')[0] : 'Super Admin'),
+                role: 'superadmin'
             };
-            pendingRegisterName = '';
-            await ref.set(profile);
-            snap = await ref.get();
+        } else {
+            const profile = snap.data() || {};
+            if (!['siswa', 'admin', 'superadmin'].includes(profile.role)) {
+                document.getElementById('login-error').textContent = 'Peran akun tidak valid. Hubungi Super Admin.';
+                document.getElementById('login-error').style.display = 'block';
+                await auth.signOut();
+                return;
+            }
+            if (profile.active === false) {
+                document.getElementById('login-error').textContent = 'Akun ini telah dinonaktifkan. Hubungi Super Admin.';
+                document.getElementById('login-error').style.display = 'block';
+                await auth.signOut();
+                return;
+            }
+
+            currentUser = {
+                uid: user.uid,
+                email: profile.email || user.email || '',
+                username: profile.username || (user.email ? user.email.split('@')[0] : 'Pengguna'),
+                role: profile.role
+            };
         }
-        const profile = snap.data();
-        if (profile.active === false) {
-            document.getElementById('login-error').textContent = 'Akun ini telah dinonaktifkan. Hubungi Super Admin.';
-            document.getElementById('login-error').style.display = 'block';
-            await auth.signOut();
-            return;
-        }
-        currentUser = {
-            uid: user.uid,
-            email: profile.email || user.email,
-            username: profile.username || (user.email ? user.email.split('@')[0] : 'Pengguna'),
-            role: profile.role || 'siswa'
-        };
+
         applyRole(currentUser.role);
         await loadState();
+        await migrateLegacyReports();
+        state.reports = [];
+        await loadReports();
         applyTheme();
         hideLogin();
         renderAll();
         watchLiveSync();
     } catch (e) {
+        console.error('Profile load error:', e);
         document.getElementById('login-error').textContent = 'Gagal memuat profil pengguna. Periksa koneksi internet.';
         document.getElementById('login-error').style.display = 'block';
     }
@@ -3133,28 +3191,43 @@ const storage = {
         try {
             const snap = await db.collection(FS_COLLECTION).doc(key).get();
             if (!snap.exists) return null;
-            return { value: snap.data().value };
+            const data = snap.data() || {};
+            if (typeof data.value !== 'string') throw new Error('Format state server tidak valid.');
+            return { value: data.value };
         } catch (e) {
-            console.warn('Firestore get error, fallback localStorage', e);
-            const v = localStorage.getItem(key);
-            return v ? { value: v } : null;
+            // State bersama TIDAK boleh fallback ke localStorage karena cache lokal
+            // dapat dimanipulasi pengguna dan bukan sumber kebenaran server.
+            console.error('Firestore get error:', e);
+            throw e;
         }
     },
     async set(key, value, shared) {
         if (!shared) { localStorage.setItem(key, value); return { synced: false, sharedMode: false }; }
+        if (!currentUser || !isAdmin()) {
+            return { synced: false, sharedMode: true, error: new Error('Tidak berwenang menyimpan data.') };
+        }
+        if (typeof value !== 'string' || value.length > 900000) {
+            return { synced: false, sharedMode: true, error: new Error('Ukuran state melebihi batas aman.') };
+        }
         try {
-            await db.collection(FS_COLLECTION).doc(key).set({ value, updatedAt: Date.now() });
-            localStorage.setItem(key, value);
+            await db.collection(FS_COLLECTION).doc(key).set({
+                value,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
             return { synced: true, sharedMode: true };
         } catch (e) {
-            console.warn('Firestore set error, hanya ke localStorage', e);
-            localStorage.setItem(key, value);
+            console.error('Firestore set error:', e);
             return { synced: false, sharedMode: true, error: e };
         }
     }
 };
 let _savePending = false, _saveAgain = false, _savePromise = null, _skipNextSync = false, _lastSaveSyncFailedNotified = false;
 async function saveState() {
+    if (!currentUser || !isAdmin()) {
+        console.warn('Blocked unauthorized state save.');
+        showNotification('Akses ditolak. Hanya Admin atau Super Admin yang dapat mengubah data.', 'error');
+        return { synced: false, sharedMode: true, unauthorized: true };
+    }
     _saveAgain = true;
     if (_savePromise) return _savePromise;
     _savePromise = (async () => {
@@ -3395,6 +3468,16 @@ function watchLiveSync() {
             if (document.getElementById('login-overlay').style.display === 'none') renderAll();
         } catch (e) { console.warn('Sync error', e); }
     });
+    if (currentUser) {
+        let reportQuery = db.collection(FS_REPORTS);
+        if (!isAdmin()) reportQuery = reportQuery.where('authorUid', '==', currentUser.uid);
+        reportQuery.onSnapshot((snap) => {
+            state.reports = [];
+            snap.forEach(doc => state.reports.push({ id: doc.id, ...doc.data() }));
+            state.reports.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
+            renderReports();
+        }, (err) => console.error('Report live sync error:', err));
+    }
 }
 // ============================================================
 // FUNGSI UTILITY
@@ -4080,7 +4163,7 @@ function renderTaskFiles(t) {
     const files = getItemFiles(t);
     if (!files.length) return '';
     return `<div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:6px;">` +
-        files.map((f, idx) => `<div class="task-file" onclick="event.stopPropagation(); openTaskFileAt(${t.id},${idx})">📎 ${f.name}</div>`).join('') +
+        files.map((f, idx) => `<div class="task-file" onclick="event.stopPropagation(); openTaskFileAt(${t.id},${idx})">📎 ${escapeHtml(f.name)}</div>`).join('') +
         `</div>`;
 }
 function autoCleanDoneTugas() {
@@ -4153,7 +4236,7 @@ let _tugasEditFiles = [];
 function renderTugasFileChips() {
     const wrap = document.getElementById('tugas-file-chips');
     wrap.innerHTML = _tugasEditFiles.map((f, idx) => `
-        <div class="file-chip">📎 ${f.name}<span class="file-chip-remove" onclick="removeTugasEditFile(${idx})">×</span></div>
+        <div class="file-chip">📎 ${escapeHtml(f.name)}<span class="file-chip-remove" onclick="removeTugasEditFile(${idx})">×</span></div>
     `).join('');
 }
 function removeTugasEditFile(idx) { _tugasEditFiles.splice(idx,1); renderTugasFileChips(); }
@@ -4201,6 +4284,11 @@ function openTugasModal(id) {
 const MAX_ATTACHMENT_BYTES = 250 * 1024;
 const IMAGE_TARGET_BYTES = 180 * 1024;
 const MAX_FILES_PER_ITEM = 3;
+const ALLOWED_ATTACHMENT_TYPES = new Set(['application/pdf']);
+function safeAttachmentName(name) {
+    const base = String(name || 'file').replace(/[\\/:*?"<>|\\x00-\\x1F]/g, '_').trim();
+    return (base || 'file').slice(0, 120);
+}
 function dataUrlToBlob(dataUrl) {
     const parts = dataUrl.split(',');
     const mimeMatch = parts[0].match(/data:(.*?);base64/);
@@ -4260,15 +4348,24 @@ async function compressImageAttachment(file) {
     } finally { URL.revokeObjectURL(sourceUrl); }
 }
 async function prepareAttachment(file) {
+    const type = String(file && file.type || '').toLowerCase();
     let prepared = file, compressed = false;
-    if ((file.type || '').startsWith('image/')) {
+
+    // Hanya image/* (dire-encode ke WebP) dan PDF yang diperbolehkan.
+    // HTML/SVG/XML/script-like files ditolak agar file lampiran tidak menjadi
+    // vektor XSS saat dibuka lewat blob URL.
+    if (type.startsWith('image/')) {
+        if (type === 'image/svg+xml') throw new Error('SVG tidak diizinkan. Gunakan PNG/JPG/WebP.');
         prepared = await compressImageAttachment(file);
         compressed = prepared.size < file.size;
+    } else if (!ALLOWED_ATTACHMENT_TYPES.has(type)) {
+        throw new Error('Jenis file tidak diizinkan. Gunakan gambar PNG/JPG/WebP atau PDF.');
     }
+
     if (prepared.size > MAX_ATTACHMENT_BYTES) {
-        throw new Error('Ukuran akhir ' + Math.round(prepared.size / 1024) + 'KB masih melebihi batas ' + Math.round(MAX_ATTACHMENT_BYTES / 1024) + 'KB. Untuk PDF/dokumen, kecilkan file sebelum upload.');
+        throw new Error('Ukuran akhir ' + Math.round(prepared.size / 1024) + 'KB masih melebihi batas ' + Math.round(MAX_ATTACHMENT_BYTES / 1024) + 'KB.');
     }
-    return { name: prepared.name, data: await readFileAsDataUrl(prepared), compressed };
+    return { name: safeAttachmentName(prepared.name), data: await readFileAsDataUrl(prepared), compressed };
 }
 async function submitTugas() {
     if (guardReadOnly()) return;
@@ -4340,40 +4437,39 @@ function reportUnreadCount() {
     return state.reports.filter(r => r.authorUid === currentUser.uid && r.statusHistory && r.statusHistory.length && (r.statusHistory[r.statusHistory.length-1].at > seen)).length;
 }
 function renderReports() {
-    autoCleanDoneReports();
     const filterEl = document.getElementById('report-filter');
     const searchEl = document.getElementById('report-search');
     const filter = filterEl ? filterEl.value : 'all';
     const q = (searchEl ? searchEl.value : '').trim().toLowerCase();
-    let list = [...state.reports];
     const isStaff = currentUser && (currentUser.role === 'superadmin' || currentUser.role === 'admin');
+    let list = [...(state.reports || [])];
     if (!isStaff) list = list.filter(r => currentUser && r.authorUid === currentUser.uid);
     if (filter !== 'all') list = list.filter(r => r.status === filter);
     if (q) list = list.filter(r => [reportCode(r), r.judul, r.deskripsi, r.kategori, r.pelapor, r.status].join(' ').toLowerCase().includes(q));
     const counts = {pending:0, reviewed:0, resolved:0, rejected:0};
-    state.reports.forEach(r => { if (counts[r.status] !== undefined) counts[r.status]++; });
+    (state.reports || []).forEach(r => { if (counts[r.status] !== undefined) counts[r.status]++; });
     const stats = document.getElementById('report-stats');
     if (stats) stats.innerHTML = ['pending','reviewed','resolved','rejected'].map(s => `<span style="font-size:9px; padding:4px 7px; border-radius:8px; background:var(--glass-card); color:var(--text-soft);">${reportStatusLabel(s)} <b>${counts[s]}</b></span>`).join('');
     const unread = reportUnreadCount();
     const badge = document.getElementById('report-unread-badge');
     if (badge) { badge.style.display = unread ? 'inline-block' : 'none'; badge.textContent = unread + ' pembaruan'; }
     const wrap = document.getElementById('report-list');
-    wrap.innerHTML = list.length ? list.reverse().map(r => {
+    wrap.innerHTML = list.length ? list.map(r => {
         const history = r.statusHistory || [];
         const latest = history.length ? history[history.length-1] : null;
-        const updated = latest ? `<span>🔄 ${reportStatusLabel(latest.status)}</span>` : '';
+        const updated = latest ? `<span>🔄 ${escapeHtml(reportStatusLabel(latest.status))}</span>` : '';
         const response = r.tanggapan ? `<span>💬 Ada tanggapan</span>` : '';
-        return `<div class="report-item" onclick="openReportModal(${r.id})">
+        return `<div class="report-item" onclick="openReportModal('${escapeHtml(String(r.id))}')">
             <div class="report-icon">${r.urgensi==='darurat'?'🚨':'📌'}</div>
             <div style="flex:1; min-width:0;">
-                <div class="report-title">${r.judul}</div>
-                <div class="report-meta"><span>${reportCode(r)}</span> • <span>${r.kategori}</span>${r.file ? ` <span class="report-file" onclick="event.stopPropagation();openReportFile(${r.id})">📎 ${r.file}</span>` : ''} <span class="report-status ${r.status}">${reportStatusLabel(r.status)}</span></div>
+                <div class="report-title">${escapeHtml(r.judul || '')}</div>
+                <div class="report-meta"><span>${escapeHtml(reportCode(r))}</span> • <span>${escapeHtml(r.kategori || '')}</span>${r.file ? ` <span class="report-file" onclick="event.stopPropagation();openReportFile('${escapeHtml(String(r.id))}')">📎 ${escapeHtml(r.file)}</span>` : ''} <span class="report-status ${escapeHtml(r.status || 'pending')}">${escapeHtml(reportStatusLabel(r.status))}</span></div>
                 ${updated || response ? `<div class="report-meta" style="margin-top:5px;">${updated} ${response}</div>` : ''}
             </div>
         </div>`;
     }).join('') : `<div class="empty">${isStaff ? 'Belum ada laporan.' : 'Kamu belum pernah membuat laporan.'}</div>`;
-    if (!isStaff && currentUser) localStorage.setItem('kelasku-report-seen-'+currentUser.uid, String(Date.now()));
 }
+
 function setReportStaffView(isStaff) {
     const modal = document.getElementById('modal-report');
     const editableIds = ['report-kategori','report-judul','report-deskripsi','report-tanggal','report-urgensi','report-file'];
@@ -4430,7 +4526,7 @@ function setReportStaffView(isStaff) {
 }
 function openReportModal(id) {
     const isStaff = currentUser && (currentUser.role === 'superadmin' || currentUser.role === 'admin');
-    const r = id ? state.reports.find(x => x.id === Number(id)) : null;
+    const r = id ? (state.reports || []).find(x => String(x.id) === String(id)) : null;
     if (id && !r) return;
     if (r) {
         document.getElementById('report-code-label').textContent = reportCode(r);
@@ -4472,8 +4568,9 @@ function openReportModal(id) {
 async function submitReport() {
     const editId = document.getElementById('report-edit-id').value;
     const isStaff = currentUser && (currentUser.role === 'superadmin' || currentUser.role === 'admin');
+
     if (editId && isStaff) {
-        const r = state.reports.find(x => x.id === Number(editId));
+        const r = (state.reports || []).find(x => String(x.id) === String(editId));
         if (!r) return;
         const newStatus = document.getElementById('report-status').value;
         const oldStatus = r.status || 'pending';
@@ -4481,26 +4578,43 @@ async function submitReport() {
         const previousResponse = r.tanggapan || '';
         const statusChanged = oldStatus !== newStatus;
         const responseChanged = previousResponse !== responseText;
-        r.status = newStatus;
-        if (responseText) r.tanggapan = responseText;
-        else if (!r.tanggapan) r.tanggapan = '';
-        if (!Array.isArray(r.statusHistory)) r.statusHistory = [];
-        if (statusChanged || !r.statusHistory.length) {
-            r.statusHistory.push({ status:newStatus, at:Date.now(), by:currentUser.username || currentUser.email || 'Admin' });
+        const history = Array.isArray(r.statusHistory) ? [...r.statusHistory] : [];
+        if (statusChanged || !history.length) history.push({ status:newStatus, at:Date.now(), byUid:currentUser.uid, by:currentUser.username || currentUser.email || 'Admin' });
+        const patch = {
+            status: newStatus,
+            tanggapan: responseText,
+            statusHistory: history,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        };
+        if (newStatus === 'resolved') {
+            patch.resolvedAt = r.resolvedAt || Date.now();
+        } else {
+            patch.resolvedAt = firebase.firestore.FieldValue.delete();
         }
-        if (statusChanged || responseChanged) {
-            addActivity('Memperbarui laporan ' + (r.reportCode || reportCode(r)), 'Status: ' + reportStatusLabel(newStatus) + (responseChanged ? ' · Tanggapan diperbarui' : ''));
-            if (r.authorUid) addNotification('Laporan diperbarui', (r.reportCode || reportCode(r)) + ' sekarang ' + reportStatusLabel(newStatus) + (responseChanged ? '. Ada tanggapan Admin.' : '.'), {uid:r.authorUid});
+        try {
+            await db.collection(FS_REPORTS).doc(String(r.id)).update(patch);
+            Object.assign(r, {status:newStatus, tanggapan:responseText, statusHistory:history});
+            if (newStatus === 'resolved') r.resolvedAt = patch.resolvedAt;
+            else delete r.resolvedAt;
+            if (statusChanged || responseChanged) addActivity('Memperbarui laporan ' + reportCode(r), 'Status: ' + reportStatusLabel(newStatus) + (responseChanged ? ' · Tanggapan diperbarui' : ''));
+            if (statusChanged || responseChanged) addNotification('Laporan diperbarui', reportCode(r) + ' sekarang ' + reportStatusLabel(newStatus) + (responseChanged ? '. Ada tanggapan Admin.' : '.'), {uid:r.authorUid});
+            await saveState();
+            renderReports();
+            closeModal('report');
+            showNotification('Status laporan berhasil diperbarui.', 'success');
+        } catch (e) {
+            console.error('Report update error:', e);
+            showNotification('Gagal memperbarui laporan.', 'error');
         }
-        if (newStatus === 'resolved') { if (oldStatus !== 'resolved' || !r.resolvedAt) { r.resolvedAt = Date.now(); } }
-        else { delete r.resolvedAt; }
-        await saveState();
-        renderReports();
-        closeModal('report');
-        showNotification('Status laporan berhasil diperbarui.', 'success');
         return;
     }
+
     if (editId) return;
+    if (!currentUser || !['siswa'].includes(currentUser.role)) {
+        showNotification('Hanya siswa yang dapat membuat laporan baru.', 'error');
+        return;
+    }
+
     const fileInput = document.getElementById('report-file');
     let fileName = '', fileData = '';
     if (fileInput.files.length > 0) {
@@ -4518,42 +4632,53 @@ async function submitReport() {
     const tanggal = document.getElementById('report-tanggal').value;
     const urgensi = document.getElementById('report-urgensi').value;
     if (!judul || !deskripsi) { showNotification('Judul dan deskripsi wajib diisi.', 'warning'); return; }
-    const reportId = Date.now();
-    state.reports.push({
-        id: reportId,
-        reportCode: 'LAP-'+String(reportId).slice(-6),
+
+    const reportId = String(Date.now()) + '-' + Math.random().toString(36).slice(2,8);
+    const report = {
+        reportCode: 'LAP-'+String(Date.now()).slice(-6),
         judul, deskripsi, kategori, urgensi,
-        pelapor: currentUser ? currentUser.username : 'Siswa',
-        authorUid: currentUser ? currentUser.uid : null,
+        pelapor: currentUser.username || currentUser.email || 'Siswa',
+        authorUid: currentUser.uid,
         status: 'pending',
-        statusHistory: [{ status:'pending', at:Date.now(), by: currentUser ? (currentUser.username || currentUser.email || 'Siswa') : 'Siswa' }],
+        statusHistory: [{ status:'pending', at:Date.now(), byUid: currentUser.uid, by: currentUser.username || currentUser.email || 'Siswa' }],
         tanggapan: '',
         createdAt: Date.now(),
-        date: new Date().toLocaleDateString('id-ID'),
         tanggal: tanggal || todayKey(),
         file: fileName,
         fileData
-    });
-    fileInput.value = '';
-    addActivity('Membuat laporan', reportCode(state.reports[state.reports.length-1]) + ' · ' + judul);
-    addNotification('Laporan baru', (currentUser ? currentUser.username : 'Siswa') + ' mengirim laporan ' + reportCode(state.reports[state.reports.length-1]) + '.', {role:'staff'});
-    await saveState();
-    renderReports();
-    closeModal('report');
-    showNotification('Laporan berhasil dikirim!', 'success');
+    };
+    try {
+        await db.collection(FS_REPORTS).doc(reportId).set(report);
+        state.reports.unshift({id:reportId, ...report});
+        fileInput.value = '';
+        renderReports();
+        closeModal('report');
+        showNotification('Laporan berhasil dikirim!', 'success');
+    } catch (e) {
+        console.error('Report create error:', e);
+        showNotification('Gagal mengirim laporan. Coba lagi.', 'error');
+    }
 }
-function openReportFile(id) {
-    const r = state.reports.find(x => x.id === Number(id));
+
+async function openReportFile(id) {
+    const r = (state.reports || []).find(x => String(x.id) === String(id));
     if (!r) return;
     if (r.fileData) { openFileData(r.fileData, r.file); }
-    else { showNotification('File ini diunggah sebelum fitur penyimpanan file aktif.', 'warning'); }
+    else { showNotification('File laporan tidak tersedia.', 'warning'); }
 }
-function deleteReport() {
-    if (guardReadOnly()) return;
-    const editId = Number(document.getElementById('report-edit-id').value);
+async function deleteReport() {
+    if (!isAdmin()) { showNotification('Hanya Admin atau Super Admin yang dapat menghapus laporan.', 'error'); return; }
+    const editId = String(document.getElementById('report-edit-id').value || '');
+    if (!editId) return;
     if (!confirm('Hapus laporan ini?')) return;
-    state.reports = state.reports.filter(r => r.id !== editId);
-    saveState(); renderReports(); closeModal('report'); showNotification('Laporan dihapus.', 'info');
+    try {
+        await db.collection(FS_REPORTS).doc(editId).delete();
+        state.reports = (state.reports || []).filter(r => String(r.id) !== editId);
+        renderReports(); closeModal('report'); showNotification('Laporan dihapus.', 'info');
+    } catch (e) {
+        console.error('Report delete error:', e);
+        showNotification('Gagal menghapus laporan.', 'error');
+    }
 }
 // ===== KAS ACTION =====
 async function submitKas() {
@@ -4702,9 +4827,9 @@ function renderAccountGroups(users) {
         if (!members.length) return '';
         const rowsHtml = members.map(u => `
             <div class="acc-row">
-                <div class="acc-info" style="cursor:pointer; width:100%;" onclick="openAccountEditModal('${u.id}')">
-                    <b>${u.username || u.email}</b>
-                    <div class="acc-email">${u.email || ''}${u.active===false ? ' · <span style="color:var(--rose);font-weight:700;">nonaktif</span>' : ''}</div>
+                <div class="acc-info" style="cursor:pointer; width:100%;" onclick="openAccountEditModal('${escapeHtml(u.id)}')">
+                    <b>${escapeHtml(u.username || u.email)}</b>
+                    <div class="acc-email">${escapeHtml(u.email || '')}${u.active===false ? ' · <span style="color:var(--rose);font-weight:700;">nonaktif</span>' : ''}</div>
                 </div>
             </div>
         `).join('');
@@ -4721,7 +4846,7 @@ function filterAccountList() {
     const q = document.getElementById('account-search').value.trim().toLowerCase();
     if (!q) { renderAccountGroups(_allAccounts); return; }
     const filtered = _allAccounts.filter(u => (u.username || '').toLowerCase().includes(q) || (u.email || '').toLowerCase().includes(q));
-    if (!filtered.length) { document.getElementById('account-list').innerHTML = `<div class="acc-empty-search">Tidak ada akun yang cocok dengan "${q}"</div>`; return; }
+    if (!filtered.length) { document.getElementById('account-list').innerHTML = `<div class="acc-empty-search">Tidak ada akun yang cocok dengan &quot;${escapeHtml(q)}&quot;</div>`; return; }
     renderAccountGroups(filtered);
 }
 async function addAccount() {
