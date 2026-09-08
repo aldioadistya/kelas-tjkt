@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Kelasku — X TJKT 1</title><link rel="manifest" href="manifest.json"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#0F172A"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet"><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><style>
+<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Kelasku — X TJKT 1</title><link rel="manifest" href="manifest.json"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#0F172A"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="format-detection" content="telephone=no"><meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet"><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check-compat.js"></script><style>
 :root {
     --bg-gradient: linear-gradient(135deg, #e0e7ff 0%, #f1f5f9 50%, #fae8ff 100%);
     --glass-bg: rgba(255, 255, 255, 0.5);
@@ -3016,6 +3016,20 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
+
+// Optional App Check hardening. Set this to your reCAPTCHA Enterprise
+// site key after registering the app in Firebase Console. Enforcement
+// must also be enabled in Firebase Console.
+const FIREBASE_APPCHECK_SITE_KEY = '';
+if (FIREBASE_APPCHECK_SITE_KEY && firebase.appCheck) {
+    try {
+        const appCheck = firebase.appCheck();
+        appCheck.activate(FIREBASE_APPCHECK_SITE_KEY, true);
+        console.info('Firebase App Check active.');
+    } catch (e) {
+        console.warn('App Check belum aktif:', e);
+    }
+}
 const FS_COLLECTION = 'kelasku';
 const FS_PROFILES = 'kelasku_profiles';
 const secondaryApp = firebase.initializeApp(firebaseConfig, 'Secondary');
@@ -3085,8 +3099,9 @@ async function loadUserProfile(user) {
         const ref = db.collection(FS_PROFILES).doc(user.uid);
         let snap = await ref.get();
         if (!snap.exists) {
-            const existing = await db.collection(FS_PROFILES).limit(1).get();
-            const role = existing.empty ? 'superadmin' : 'siswa';
+            // New profiles are NEVER promoted automatically.
+            // Admin/Super Admin role must be assigned explicitly in Firestore.
+            const role = 'siswa';
             const profile = {
                 email: user.email,
                 username: pendingRegisterName || user.displayName || (user.email ? user.email.split('@')[0] : 'Pengguna'),
@@ -3099,6 +3114,13 @@ async function loadUserProfile(user) {
             snap = await ref.get();
         }
         const profile = snap.data();
+        const allowedRoles = ['siswa','admin','superadmin'];
+        if (!allowedRoles.includes(profile.role)) {
+            document.getElementById('login-error').textContent = 'Profil akun tidak valid. Hubungi Super Admin.';
+            document.getElementById('login-error').style.display = 'block';
+            await auth.signOut();
+            return;
+        }
         if (profile.active === false) {
             document.getElementById('login-error').textContent = 'Akun ini telah dinonaktifkan. Hubungi Super Admin.';
             document.getElementById('login-error').style.display = 'block';
@@ -3115,6 +3137,7 @@ async function loadUserProfile(user) {
         await loadState();
         applyTheme();
         hideLogin();
+        armIdleLogout();
         renderAll();
         watchLiveSync();
     } catch (e) {
