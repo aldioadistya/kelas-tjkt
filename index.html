@@ -3016,7 +3016,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
-const functions = firebase.functions();
+const functions = firebase.app().functions('us-central1');
 const BOOTSTRAP_SUPERADMIN_UID = 'cffzW5yM1Dh2IX4nrsNAFDaw1At2';
 const VALID_ROLES = ['siswa', 'admin', 'superadmin'];
 const FS_COLLECTION = 'kelasku';
