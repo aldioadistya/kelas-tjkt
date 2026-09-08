@@ -3017,6 +3017,8 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 const functions = firebase.functions();
+const BOOTSTRAP_SUPERADMIN_UID = 'cffzW5yM1Dh2IX4nrsNAFDaw1At2';
+const VALID_ROLES = ['siswa', 'admin', 'superadmin'];
 const FS_COLLECTION = 'kelasku';
 const FS_PROFILES = 'kelasku_profiles';
 const secondaryApp = firebase.initializeApp(firebaseConfig, 'Secondary');
@@ -3105,9 +3107,32 @@ async function loadUserProfile(user) {
             await auth.signOut();
             return;
         }
-        const tokenResult = await user.getIdTokenResult();
+        // The bootstrap UID is a fixed, server-side recovery identity.
+        // If its Custom Claim is not present yet, call the backend once to set it.
+        if (user.uid === BOOTSTRAP_SUPERADMIN_UID) {
+            try {
+                const tokenBefore = await user.getIdTokenResult(true);
+                if (tokenBefore.claims && tokenBefore.claims.role !== 'superadmin') {
+                    const bootstrapSuperAdmin = functions.httpsCallable('bootstrapSuperAdmin');
+                    await bootstrapSuperAdmin({});
+                    await user.getIdToken(true);
+                }
+            } catch (bootstrapError) {
+                // UI fallback keeps the known bootstrap account visible as Super Admin
+                // while the backend is being deployed. Database authorization still comes
+                // from Firestore Rules and the Custom Claim once deployed.
+                console.warn('Bootstrap Super Admin belum tersedia:', bootstrapError);
+            }
+        }
+
+        const tokenResult = await user.getIdTokenResult(true);
         const claimRole = tokenResult.claims && tokenResult.claims.role;
-        const role = ['siswa','admin','superadmin'].includes(claimRole) ? claimRole : 'siswa';
+        const profileRole = profile.role;
+        const role = VALID_ROLES.includes(claimRole)
+            ? claimRole
+            : (user.uid === BOOTSTRAP_SUPERADMIN_UID
+                ? 'superadmin'
+                : (VALID_ROLES.includes(profileRole) ? profileRole : 'siswa'));
         currentUser = {
             uid: user.uid,
             email: profile.email || user.email,
@@ -4793,9 +4818,7 @@ async function submitAccountEdit() {
     if (uid === currentUser.uid && role !== 'superadmin') { showNotification('Tidak dapat mengubah peran akun sendiri.', 'warning'); return; }
     try {
         const profileUpdate = functions.httpsCallable('setUserRole');
-        await profileUpdate({ uid, role });
-        // Username is non-privileged profile metadata; keep the role change server-authoritative.
-        await db.collection(FS_PROFILES).doc(uid).update({ username: nama });
+        await profileUpdate({ uid, role, username: nama });
         if (uid === currentUser.uid) {
             await currentUserAuthRefresh();
         }
