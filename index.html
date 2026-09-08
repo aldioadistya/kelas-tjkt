@@ -247,6 +247,43 @@ body {
     margin-bottom: 10px;
     display: none;
 }
+.verification-box {
+    background: var(--amber-glass);
+    border: 1px solid rgba(245,158,11,0.28);
+    border-radius: var(--radius-md);
+    padding: 12px;
+    margin-bottom: 12px;
+}
+.verification-title {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--text-main);
+}
+.verification-email {
+    margin-top: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--amber);
+    word-break: break-word;
+}
+.verification-copy {
+    margin-top: 4px;
+    font-size: 10.5px;
+    color: var(--text-soft);
+    line-height: 1.45;
+}
+.verification-actions {
+    display: flex;
+    gap: 6px;
+    margin-top: 10px;
+}
+.verification-actions .btn {
+    flex: 1;
+    min-height: 36px;
+    padding: 8px 10px;
+    font-size: 10.5px;
+}
+
 .login-card .field { margin-bottom: 14px; }
 .login-card .field label {
     font-size: 11px;
@@ -2581,6 +2618,15 @@ a{
       <div class="login-welcome" id="auth-title">Selamat datang 👋</div>
       <div class="login-sub" id="auth-sub">Masuk dengan email untuk mengakses dasbor kelas</div>
       <div class="login-error" id="login-error"></div>
+      <div class="verification-box" id="email-verification-box" style="display:none;">
+        <div class="verification-title">✉️ Verifikasi email diperlukan</div>
+        <div class="verification-email" id="verification-email-text"></div>
+        <div class="verification-copy">Verifikasi email terlebih dahulu untuk masuk ke aplikasi.</div>
+        <div class="verification-actions">
+          <button class="btn btn-ghost" type="button" onclick="resendVerificationEmail()">Kirim ulang</button>
+          <button class="btn btn-primary" type="button" onclick="checkEmailVerification()">Saya sudah verifikasi</button>
+        </div>
+      </div>
       <div class="field" id="auth-nama-field" style="display:none;">
         <label>Nama Lengkap</label>
         <input type="text" id="auth-nama" placeholder="Nama lengkap kamu">
@@ -2591,7 +2637,8 @@ a{
       </div>
       <div class="field">
         <label>Password</label>
-        <input type="password" id="auth-password" placeholder="Minimal 6 karakter" autocomplete="current-password" onkeydown="if(event.key==='Enter') doAuthSubmit();">
+        <input type="password" id="auth-password" placeholder="Min. 8 karakter" minlength="8" autocomplete="current-password" onkeydown="if(event.key==='Enter') doAuthSubmit();">
+        <div class="field-hint" id="auth-password-hint" style="display:none;">Minimal 8 karakter + huruf kecil + huruf besar + angka + simbol.</div>
       </div>
       <button class="btn btn-primary btn-block" id="auth-submit-btn" onclick="doAuthSubmit()">Masuk ke Kelas →</button>
       <div style="display:flex; gap:6px; margin-top:8px;">
@@ -2854,7 +2901,7 @@ a{
                   <div class="role-body" style="padding-top:10px;">
                     <div class="field" style="margin-top:0;"><label>Nama Lengkap</label><input type="text" id="acc-nama" placeholder="Nama siswa/guru"></div>
                     <div class="field"><label>Email</label><input type="email" id="acc-email" placeholder="nama@email.com"></div>
-                    <div class="field"><label>Password</label><input type="password" id="acc-password" placeholder="Minimal 6 karakter"></div>
+                    <div class="field"><label>Password</label><input type="password" id="acc-password" placeholder="Min. 8 karakter" minlength="8" autocomplete="new-password"><div class="field-hint">Minimal 8 karakter + huruf kecil + huruf besar + angka + simbol.</div></div>
                     <div class="field"><label>Peran</label>
                       <select id="acc-role">
                         <option value="superadmin">Super Admin</option>
@@ -2960,16 +3007,29 @@ a{
   <div class="modal-bg" id="modal-kas"><div class="modal"><h3 id="kas-modal-title">Tambah Transaksi Kas</h3><input type="hidden" id="kas-edit-id"><div class="field"><label>Jenis</label><select id="kas-jenis"><option value="masuk">Pemasukan (+)</option><option value="keluar">Pengeluaran (-)</option></select></div><div class="field"><label>Keterangan</label><input id="kas-ket" type="text" placeholder="Contoh: Kas Mingguan"></div><div class="field"><label>Jumlah (Rp)</label><input id="kas-jumlah" type="number" placeholder="0"></div><div class="field"><label>Lampiran (opsional)</label><input type="file" id="kas-file" accept=".jpg,.png,.pdf,.doc,.docx,.xlsx"><div class="field-hint">Maks 400KB. Saat edit, kosongkan jika ingin mempertahankan lampiran lama.</div></div><div class="modal-actions"><button class="btn btn-danger admin-only" id="kas-delete-btn" style="display:none;" onclick="hapusKasCurrent()">Hapus</button><button class="btn btn-ghost" onclick="closeModal('kas')">Batal</button><button class="btn btn-primary" onclick="submitKas()">Simpan</button></div></div></div>
   <div class="modal-bg" id="modal-kas-folder"><div class="modal"><h3>Tambah Folder Kas Siswa</h3><div class="field"><label>Nama Folder</label><input id="kas-folder-name" type="text" placeholder="Contoh: Kas September 2026"></div><div class="field"><label>Nominal Kas per Anak (Rp)</label><input id="kas-folder-nominal" type="number" min="0" placeholder="Contoh: 10000"></div><div class="field"><label>Keterangan (opsional)</label><input id="kas-folder-note" type="text" placeholder="Contoh: Kas bulanan"></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('kas-folder')">Batal</button><button class="btn btn-primary" onclick="submitKasFolder()">Buat Folder</button></div></div></div>
   <div class="modal-bg" id="modal-kas-student"><div class="modal"><h3 id="kas-student-modal-title">Pembayaran Kas Siswa</h3><input type="hidden" id="kas-student-folder-id"><input type="hidden" id="kas-student-name"><div class="field"><label>Nama Siswa</label><input id="kas-student-display" type="text" readonly></div><div class="field"><label>Status Pembayaran</label><select id="kas-student-status"><option value="belum">Belum Bayar</option><option value="sudah">Sudah Bayar</option></select></div><div class="field"><label>Jumlah Dibayar (Rp)</label><input id="kas-student-jumlah" type="number" min="0" placeholder="0"></div><div class="field"><label>Tanggal Bayar</label><input id="kas-student-tanggal" type="date"></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('kas-student')">Batal</button><button class="btn btn-primary admin-only" onclick="submitKasStudent()">Simpan</button></div></div></div>
-  <div class="modal-bg" id="modal-tugas"><div class="modal"><h3 id="tugas-modal-title">Tambah Tugas</h3><div class="field"><label>Nama Tugas</label><input id="tugas-nama" type="text" placeholder="Contoh: Laporan Jaringan"></div><div class="field"><label>Mata Pelajaran</label><input id="tugas-mapel" type="text" placeholder="Contoh: Administrasi Jaringan"></div><div class="field"><label>Tenggat</label><input id="tugas-tenggat" type="date"></div><div class="field"><label>Deskripsi</label><textarea id="tugas-deskripsi" placeholder="Deskripsi tugas..."></textarea></div><div class="field"><label>Lampiran (opsional, bisa lebih dari 1)</label><div id="tugas-file-chips" style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px;"></div><input type="file" id="tugas-file" accept=".pdf,.doc,.docx,.jpg,.png,.jpeg,.zip" multiple onchange="onTugasFileSelected(this)"><div class="field-hint">Maks 3 file, masing-masing 400KB. File baru akan ditambahkan, bukan menggantikan.</div></div><input type="hidden" id="tugas-edit-id"><div class="modal-actions"><button class="btn btn-danger admin-only" id="tugas-delete-btn" style="display:none;" onclick="deleteTugasCurrent()">Hapus</button><button class="btn btn-ghost" onclick="closeModal('tugas')">Batal</button><button class="btn btn-primary" onclick="submitTugas()">Simpan</button></div></div></div>
+  <div class="modal-bg" id="modal-tugas"><div class="modal"><h3 id="tugas-modal-title">Tambah Tugas</h3><div class="field"><label>Nama Tugas</label><input id="tugas-nama" type="text" placeholder="Contoh: Laporan Jaringan"></div><div class="field"><label>Mata Pelajaran</label><input id="tugas-mapel" type="text" placeholder="Contoh: Administrasi Jaringan"></div><div class="field"><label>Tenggat</label><input id="tugas-tenggat" type="date"></div><div class="field"><label>Deskripsi</label><textarea id="tugas-deskripsi" placeholder="Deskripsi tugas..."></textarea></div><div class="field"><label>Lampiran (opsional, bisa lebih dari 1)</label><div id="tugas-file-chips" style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px;"></div><input type="file" id="tugas-file" accept=".pdf,.doc,.docx,.jpg,.png,.jpeg,.zip" multiple onchange="onTugasFileSelected(this)"><div class="field-hint">Maks 3 file, masing-masing 400KB. File baru akan ditambahkan, bukan menggantikan.</div></div><input type="hidden" id="tugas-edit-id"><div class="modal-actions"><button class="btn btn-danger admin-only" id="tugas-delete-btn" style="display:none;" onclick="deleteTugasCurrent()">Hapus</button><button class="btn btn-ghost" onclick="closeModal('tugas')">Batal</button><button class="btn btn-primary admin-only" onclick="submitTugas()">Simpan</button></div></div></div>
   <div class="modal-bg" id="modal-student"><div class="modal"><h3>Tambah Siswa</h3><div class="field"><label>Nama Lengkap</label><input id="student-nama" type="text" placeholder="Contoh: Muhammad Rizky"></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('student')">Batal</button><button class="btn btn-primary" onclick="submitStudent()">Tambah</button></div></div></div>
   <div class="modal-bg" id="modal-roster-status"><div class="modal"><h3 id="roster-status-title">Tandai Status</h3><div class="field-hint" style="margin:-6px 0 12px;">Tandai status <b id="roster-status-name" style="color:var(--text-main);"></b> untuk hari ini.</div><div class="roster-status-choices"><button class="roster-choice-btn done" id="roster-status-sudah-btn" onclick="setRosterStatusChoice('sudah')">✓ Sudah</button><button class="roster-choice-btn undone" id="roster-status-belum-btn" onclick="setRosterStatusChoice('belum')">✕ Belum</button></div><input type="hidden" id="roster-status-choice"><div class="field" id="roster-status-alasan-field" style="display:none;"><label>Keterangan</label><textarea id="roster-status-alasan" placeholder="Contoh: keterangan piket, catatan, dll." style="min-height:60px;"></textarea></div><div class="modal-actions"><button class="btn btn-ghost" id="roster-status-clear-btn" onclick="clearRosterStatus()" title="Kembalikan ke netral">↺ Reset</button><button class="btn btn-ghost" onclick="closeModal('roster-status')">Batal</button><button class="btn btn-primary" onclick="submitRosterStatus()">Simpan</button></div></div></div>
   <div class="modal-bg" id="modal-piket-jadwal"><div class="modal"><h3>Atur Jadwal Piket</h3><div class="field-hint" style="margin:-6px 0 10px;">Pilih hari, lalu centang siswa yang bertugas piket pada hari itu. Kosongkan semua centang = tidak ada piket hari itu.</div><div class="day-tabs" id="piket-jadwal-day-tabs" style="flex-wrap:wrap;"></div><div id="piket-jadwal-summary" class="piket-jadwal-summary"></div><div id="piket-jadwal-checklist" style="max-height:280px; overflow-y:auto; margin-top:4px;"></div><div class="modal-actions"><button class="btn btn-primary" onclick="closeModal('piket-jadwal')">Selesai</button></div></div></div>
   <div class="modal-bg" id="modal-pengumuman"><div class="modal"><h3>Tambah Pengumuman</h3><div class="field"><label>Isi</label><input id="pengumuman-teks" type="text" placeholder="Tulis informasi untuk kelas..."></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('pengumuman')">Batal</button><button class="btn btn-primary" onclick="submitPengumuman()">Publikasikan</button></div></div></div>
-  <div class="modal-bg" id="modal-jadwal"><div class="modal"><h3 id="jadwal-modal-title">Atur Jam Pelajaran</h3><div class="field"><label>Hari</label><select id="jadwal-hari"><option value="Senin">Senin</option><option value="Selasa">Selasa</option><option value="Rabu">Rabu</option><option value="Kamis">Kamis</option><option value="Jumat">Jumat</option></select></div><div class="field"><label>Jam Mulai</label><input id="jadwal-mulai" type="time"></div><div class="field"><label>Jam Selesai</label><input id="jadwal-selesai" type="time"></div><div class="field"><label>Mata Pelajaran</label><input id="jadwal-mapel" type="text" placeholder="Mata Pelajaran"></div><div class="field"><label>Guru</label><input id="jadwal-guru" type="text" placeholder="Nama Guru"></div><input type="hidden" id="jadwal-edit-id"><div class="modal-actions"><button class="btn btn-danger admin-only" id="jadwal-delete-btn" style="display:none;" onclick="deleteJadwalCurrent()">Hapus</button><button class="btn btn-ghost" onclick="closeModal('jadwal')">Batal</button><button class="btn btn-primary" onclick="submitJadwal()">Simpan</button></div></div></div>
+  <div class="modal-bg" id="modal-jadwal"><div class="modal"><h3 id="jadwal-modal-title">Atur Jam Pelajaran</h3><div class="field"><label>Hari</label><select id="jadwal-hari"><option value="Senin">Senin</option><option value="Selasa">Selasa</option><option value="Rabu">Rabu</option><option value="Kamis">Kamis</option><option value="Jumat">Jumat</option></select></div><div class="field"><label>Jam Mulai</label><input id="jadwal-mulai" type="time"></div><div class="field"><label>Jam Selesai</label><input id="jadwal-selesai" type="time"></div><div class="field"><label>Mata Pelajaran</label><input id="jadwal-mapel" type="text" placeholder="Mata Pelajaran"></div><div class="field"><label>Guru</label><input id="jadwal-guru" type="text" placeholder="Nama Guru"></div><input type="hidden" id="jadwal-edit-id"><div class="modal-actions"><button class="btn btn-danger admin-only" id="jadwal-delete-btn" style="display:none;" onclick="deleteJadwalCurrent()">Hapus</button><button class="btn btn-ghost" onclick="closeModal('jadwal')">Batal</button><button class="btn btn-primary admin-only" onclick="submitJadwal()">Simpan</button></div></div></div>
   <div class="modal-bg" id="modal-stats"><div class="modal"><h3 id="stats-title">📊 Statistik</h3><div id="stats-content" style="max-height:300px; overflow-y:auto;"></div><div class="modal-actions"><button class="btn btn-primary btn-block" onclick="closeModal('stats')">Tutup</button></div></div></div>
   <div class="modal-bg" id="modal-export"><div class="modal"><h3>Rekap Kas</h3><div class="field"><textarea id="export-text" readonly style="height:160px; font-family:monospace; font-size:11px;"></textarea></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('export')">Tutup</button><button class="btn btn-primary" onclick="copyExportText()">📋 Salin</button></div></div></div>
   <div class="modal-bg" id="modal-report"><div class="modal"><h3 id="report-modal-title">Buat Laporan</h3><div id="report-code-label" class="field-hint" style="margin:-4px 0 8px; font-weight:700;"></div><div class="field"><label>Kategori</label><select id="report-kategori"><option value="Kekerasan/Berantem">Kekerasan</option><option value="Bullying">Bullying</option><option value="Kerusakan Fasilitas">Kerusakan</option><option value="Pencurian">Pencurian</option><option value="Pelanggaran Tata Tertib">Pelanggaran</option><option value="Lainnya">Lainnya</option></select></div><div class="field"><label>Judul</label><input id="report-judul" type="text" placeholder="Ringkasan singkat"></div><div class="field"><label>Deskripsi</label><textarea id="report-deskripsi" placeholder="Jelaskan kronologi..."></textarea></div><div class="field"><label>Tanggal Kejadian</label><input id="report-tanggal" type="date"></div><div class="field"><label>Urgensi</label><select id="report-urgensi"><option value="rendah">Rendah</option><option value="sedang" selected>Sedang</option><option value="tinggi">Tinggi</option><option value="darurat">Darurat 🚨</option></select></div><div class="field"><label>Lampiran (opsional)</label><input type="file" id="report-file" accept=".pdf,.doc,.docx,.jpg,.png,.jpeg,.zip"><div class="field-hint">Maks 400KB</div></div><input type="hidden" id="report-edit-id"><div id="report-status-field" style="display:none;" class="admin-only"><div class="field"><label>Status</label><select id="report-status"><option value="pending">Menunggu</option><option value="reviewed">Ditinjau</option><option value="resolved">Selesai</option><option value="rejected">Ditolak</option></select></div><div class="field"><label>Tanggapan Admin (opsional)</label><textarea id="report-tanggapan" placeholder="Tulis tanggapan untuk siswa..."></textarea></div><div id="report-history" class="field-hint" style="max-height:120px; overflow:auto; white-space:normal;"></div></div><div id="report-student-response" style="display:none;" class="field"><label>Tanggapan Admin</label><div id="report-student-response-text" style="padding:9px 10px; border:1px solid var(--glass-border); border-radius:8px; background:var(--glass-card); font-size:11px; white-space:pre-wrap;"></div></div><div class="modal-actions"><button class="btn btn-danger admin-only" id="report-delete-btn" style="display:none!important;" onclick="deleteReport()">Hapus</button><button class="btn btn-ghost" onclick="closeModal('report')">Batal</button><button class="btn btn-primary" id="report-submit-btn" onclick="submitReport()">Kirim</button></div></div></div>
   <div class="modal-bg" id="modal-account-edit"><div class="modal"><h3>Edit Akun</h3><div class="field"><label>Nama Lengkap</label><input id="acc-edit-nama" type="text" placeholder="Nama lengkap"></div><div class="field"><label>Email</label><input id="acc-edit-email" type="text" disabled style="opacity:0.6;"></div><div class="field"><label>Peran</label><select id="acc-edit-role"><option value="siswa">Siswa</option><option value="admin">Admin</option><option value="superadmin">Super Admin</option></select></div><input type="hidden" id="acc-edit-id"><input type="hidden" id="acc-edit-active" value="true"><div class="modal-actions"><button class="btn btn-danger" id="acc-edit-toggle-btn" onclick="toggleAccountActiveFromModal()">✕ Nonaktifkan Akun</button><button class="btn btn-ghost" onclick="closeModal('account-edit')">Batal</button><button class="btn btn-primary" onclick="submitAccountEdit()">Simpan</button></div></div></div>
+  <div class="modal-bg" id="modal-reauth"><div class="modal">
+    <h3>🔐 Konfirmasi Keamanan</h3>
+    <div class="field-hint" id="reauth-action-text" style="margin:-6px 0 12px;">Masukkan password untuk melanjutkan tindakan sensitif.</div>
+    <div class="field">
+      <label>Password akun ini</label>
+      <input id="reauth-password" type="password" autocomplete="current-password" placeholder="Masukkan password">
+    </div>
+    <div class="login-error" id="reauth-error"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" type="button" onclick="cancelReauthentication()">Batal</button>
+      <button class="btn btn-primary" type="button" onclick="confirmReauthentication()">Verifikasi</button>
+    </div>
+  </div></div>
 </div>
 <script>
 // ============================================================
@@ -3064,25 +3124,137 @@ const FULL_DAY_NAMES = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "
 const MONTH_LABEL = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
 const DOW_LABEL = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
 let darkMode = localStorage.getItem('kelasku-theme') === 'dark';
+const KELASKU_PASSWORD_MIN_LENGTH = 8;
+const KELASKU_PASSWORD_REQUIRE_SPECIAL = true;
+let reauthResolver = null;
+
+function passwordPolicyMissing(password) {
+    const missing = [];
+    if (password.length < KELASKU_PASSWORD_MIN_LENGTH) missing.push('minimal 8 karakter');
+    if (!/[a-z]/.test(password)) missing.push('huruf kecil');
+    if (!/[A-Z]/.test(password)) missing.push('huruf besar');
+    if (!/[0-9]/.test(password)) missing.push('angka');
+    if (KELASKU_PASSWORD_REQUIRE_SPECIAL && !/[^A-Za-z0-9]/.test(password)) missing.push('simbol');
+    return missing;
+}
+
+async function validateKelaskuPassword(password) {
+    const localMissing = passwordPolicyMissing(password);
+    if (localMissing.length) {
+        return {
+            valid: false,
+            message: 'Password harus memenuhi: ' + localMissing.join(', ') + '.'
+        };
+    }
+
+    if (typeof auth.validatePassword === 'function') {
+        try {
+            const status = await auth.validatePassword(password);
+            if (status && status.isValid === false) {
+                return {
+                    valid: false,
+                    message: 'Password belum memenuhi kebijakan keamanan Firebase.'
+                };
+            }
+        } catch (e) {
+            // Local policy remains the minimum safety net.
+            console.warn('Firebase password policy validation unavailable:', e);
+        }
+    }
+
+    return { valid: true, message: '' };
+}
+
+function clearEmailVerificationBox() {
+    const box = document.getElementById('email-verification-box');
+    if (box) box.style.display = 'none';
+}
+
+function showEmailVerificationRequired(user) {
+    const box = document.getElementById('email-verification-box');
+    const emailEl = document.getElementById('verification-email-text');
+    if (emailEl) emailEl.textContent = user && user.email ? user.email : '';
+    if (box) box.style.display = 'block';
+    const errorEl = document.getElementById('login-error');
+    if (errorEl) {
+        errorEl.textContent = '';
+        errorEl.style.display = 'none';
+    }
+    const statusEl = document.getElementById('auth-status');
+    if (statusEl) {
+        statusEl.textContent = '⚠️ Email belum diverifikasi';
+        statusEl.style.color = 'var(--amber)';
+    }
+    showLogin();
+}
+
+async function resendVerificationEmail() {
+    const user = auth.currentUser;
+    if (!user) {
+        showNotification('Silakan masuk terlebih dahulu.', 'warning');
+        return;
+    }
+    if (user.emailVerified) {
+        showNotification('Email kamu sudah terverifikasi.', 'success');
+        await checkEmailVerification();
+        return;
+    }
+    try {
+        await user.sendEmailVerification();
+        showNotification('Email verifikasi sudah dikirim ulang.', 'success');
+    } catch (e) {
+        showNotification(authErrorMessage(e.code), 'error');
+    }
+}
+
+async function checkEmailVerification() {
+    const user = auth.currentUser;
+    if (!user) {
+        showNotification('Silakan masuk terlebih dahulu.', 'warning');
+        return;
+    }
+    try {
+        await user.reload();
+        if (!user.emailVerified) {
+            showNotification('Email belum terverifikasi. Buka email verifikasi lalu coba lagi.', 'warning');
+            showEmailVerificationRequired(user);
+            return;
+        }
+        clearEmailVerificationBox();
+        await loadUserProfile(user);
+    } catch (e) {
+        showNotification('Gagal memeriksa status verifikasi email.', 'error');
+    }
+}
 // ============================================================
 // AUTH STATE
 // ============================================================
 auth.onAuthStateChanged(async (user) => {
     if (user) {
         authReady = true;
-        document.getElementById('auth-status').textContent = '✅ Login (' + user.email + ')';
-        document.getElementById('auth-status').style.color = 'var(--teal)';
         await loadUserProfile(user);
     } else {
         authReady = false;
         currentUser = null;
+        clearEmailVerificationBox();
         document.getElementById('auth-status').textContent = '⏳ Belum login';
         document.getElementById('auth-status').style.color = 'var(--amber)';
         showLogin();
+        if (typeof liveSyncStarted !== 'undefined') liveSyncStarted = false;
     }
 });
+
 async function loadUserProfile(user) {
     try {
+        // Always reload the Auth user so emailVerified is fresh.
+        await user.reload();
+
+        if (!user.emailVerified) {
+            currentUser = null;
+            showEmailVerificationRequired(user);
+            return;
+        }
+
         const ref = db.collection(FS_PROFILES).doc(user.uid);
         let snap = await ref.get();
 
@@ -3106,6 +3278,7 @@ async function loadUserProfile(user) {
         if (profile.active === false) {
             document.getElementById('login-error').textContent = 'Akun ini telah dinonaktifkan. Hubungi Super Admin.';
             document.getElementById('login-error').style.display = 'block';
+            currentUser = null;
             await auth.signOut();
             return;
         }
@@ -3119,6 +3292,9 @@ async function loadUserProfile(user) {
             role
         };
 
+        clearEmailVerificationBox();
+        document.getElementById('auth-status').textContent = '✅ Login (' + user.email + ')';
+        document.getElementById('auth-status').style.color = 'var(--teal)';
         applyRole(currentUser.role);
         await loadState();
         applyTheme();
@@ -3129,6 +3305,7 @@ async function loadUserProfile(user) {
         console.error('Load user profile error:', e);
         document.getElementById('login-error').textContent = 'Gagal memuat profil pengguna. Periksa koneksi internet.';
         document.getElementById('login-error').style.display = 'block';
+        showLogin();
     }
 }
 
@@ -3249,6 +3426,11 @@ function toggleAuthMode() {
     const btn = document.getElementById('auth-submit-btn');
     const link = document.getElementById('auth-toggle-link');
     document.getElementById('login-error').style.display = 'none';
+    clearEmailVerificationBox();
+    const passwordHint = document.getElementById('auth-password-hint');
+    const passwordInput = document.getElementById('auth-password');
+    if (passwordHint) passwordHint.style.display = authMode === 'register' ? 'block' : 'none';
+    if (passwordInput) passwordInput.autocomplete = authMode === 'register' ? 'new-password' : 'current-password';
     if (authMode === 'register') {
         namaField.style.display = 'block';
         title.textContent = 'Buat Akun Baru 📝';
@@ -3271,7 +3453,10 @@ function authErrorMessage(code) {
         'auth/wrong-password': 'Password salah.',
         'auth/invalid-credential': 'Email atau password salah.',
         'auth/email-already-in-use': 'Email sudah terdaftar. Silakan masuk.',
-        'auth/weak-password': 'Password minimal 6 karakter.',
+        'auth/weak-password': 'Password terlalu lemah.',
+        'auth/password-does-not-meet-requirements': 'Password belum memenuhi kebijakan keamanan.',
+        'auth/requires-recent-login': 'Silakan lakukan verifikasi keamanan lagi.',
+        'auth/too-many-requests': 'Terlalu banyak percobaan. Coba lagi nanti.',
         'auth/network-request-failed': 'Koneksi internet bermasalah.'
     };
     return map[code] || 'Terjadi kesalahan. Coba lagi.';
@@ -3282,7 +3467,15 @@ async function doAuthSubmit() {
     const errorEl = document.getElementById('login-error');
     errorEl.style.color = 'var(--rose)';
     errorEl.style.display = 'none';
+    clearEmailVerificationBox();
     if (!email || !password) { showNotification('Email dan password wajib diisi.', 'error'); return; }
+    if (authMode === 'register') {
+        const policy = await validateKelaskuPassword(password);
+        if (!policy.valid) {
+            showNotification(policy.message, 'warning', 4500);
+            return;
+        }
+    }
     const btn = document.getElementById('auth-submit-btn');
     const originalText = btn.textContent;
     btn.disabled = true;
@@ -3294,6 +3487,12 @@ async function doAuthSubmit() {
             if (pendingRegisterName) {
                 try { await cred.user.updateProfile({ displayName: pendingRegisterName }); } catch (e) {}
             }
+            try {
+                await cred.user.sendEmailVerification();
+            } catch (verificationError) {
+                console.warn('Gagal mengirim email verifikasi:', verificationError);
+            }
+            showNotification('Akun berhasil dibuat. Cek email untuk verifikasi.', 'success', 4200);
         } else {
             await auth.signInWithEmailAndPassword(email, password);
         }
@@ -3342,12 +3541,107 @@ function guardAccountManagement() {
     }
     return false;
 }
+
+function requireRecentReauthentication(actionLabel) {
+    if (!currentUser || !isAdmin()) {
+        showNotification('Akses ditolak.', 'error');
+        return Promise.resolve(false);
+    }
+
+    const user = auth.currentUser;
+    if (!user || !user.email) {
+        showNotification('Sesi login tidak tersedia.', 'error');
+        return Promise.resolve(false);
+    }
+
+    const hasPasswordProvider = Array.isArray(user.providerData)
+        && user.providerData.some(p => p.providerId === 'password');
+
+    if (!hasPasswordProvider) {
+        showNotification('Verifikasi ulang dengan password hanya tersedia untuk akun Email/Password.', 'warning', 5000);
+        return Promise.resolve(false);
+    }
+
+    return new Promise(resolve => {
+        reauthResolver = resolve;
+        const actionText = document.getElementById('reauth-action-text');
+        const errorEl = document.getElementById('reauth-error');
+        const passwordEl = document.getElementById('reauth-password');
+        if (actionText) actionText.textContent = 'Untuk ' + actionLabel + ', masukkan password akun Super Admin/Admin kamu.';
+        if (errorEl) {
+            errorEl.textContent = '';
+            errorEl.style.display = 'none';
+        }
+        if (passwordEl) {
+            passwordEl.value = '';
+            passwordEl.onkeydown = event => {
+                if (event.key === 'Enter') confirmReauthentication();
+            };
+        }
+        openModal('reauth');
+        setTimeout(() => {
+            if (passwordEl) passwordEl.focus();
+        }, 50);
+    });
+}
+
+function finishReauthentication(result) {
+    const resolver = reauthResolver;
+    reauthResolver = null;
+    closeModal('reauth');
+    if (resolver) resolver(result);
+}
+
+function cancelReauthentication() {
+    finishReauthentication(false);
+}
+
+async function confirmReauthentication() {
+    const errorEl = document.getElementById('reauth-error');
+    const passwordEl = document.getElementById('reauth-password');
+    const password = passwordEl ? passwordEl.value : '';
+    const user = auth.currentUser;
+
+    if (!user || !user.email) {
+        if (errorEl) {
+            errorEl.textContent = 'Sesi login tidak tersedia.';
+            errorEl.style.display = 'block';
+        }
+        return;
+    }
+
+    if (!password) {
+        if (errorEl) {
+            errorEl.textContent = 'Masukkan password terlebih dahulu.';
+            errorEl.style.display = 'block';
+        }
+        return;
+    }
+
+    try {
+        const credential = firebase.auth.EmailAuthProvider.credential(
+            user.email,
+            password
+        );
+
+        await user.reauthenticateWithCredential(credential);
+        await user.getIdToken(true);
+        showNotification('Verifikasi keamanan berhasil.', 'success');
+        finishReauthentication(true);
+    } catch (e) {
+        if (errorEl) {
+            errorEl.textContent = authErrorMessage(e.code);
+            errorEl.style.display = 'block';
+        }
+    }
+}
 // ============================================================
 // RESET
 // ============================================================
 async function resetData() {
     if (guardAccountManagement()) return;
     if (!confirm('Reset semua data ke default? Semua kas, siswa, tugas, dan piket akan hilang. Tindakan ini tidak bisa dibatalkan.')) return;
+    if (!(await requireRecentReauthentication('mereset semua data kelas'))) return;
     localStorage.removeItem('kelasku-state');
     localStorage.removeItem('kelasku-local');
     const todayStr = todayKey();
@@ -3640,7 +3934,7 @@ function renderHomeTugas() {
             } else { dueText = t.tenggat; }
         }
         return `
-            <div class="task-item home-task-item" role="button" tabindex="0" title="Buka tugas ${t.nama || ''}" onclick="openTugasModal(${t.id})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openTugasModal(${t.id})}">
+            <div class="task-item home-task-item" ${isReadOnly() ? '' : `role="button" tabindex="0" title="Buka tugas ${t.nama || ''}" onclick="openTugasModal(${t.id})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openTugasModal(${t.id})}"`}>
                 <div class="checkbox" aria-hidden="true"></div>
                 <div style="flex:1; min-width:0;">
                     <div class="task-title">${t.nama || 'Tugas tanpa nama'}</div>
@@ -4007,8 +4301,9 @@ function renderDayTabs() { document.getElementById('day-tabs').innerHTML = DAY_N
 function selectDay(d) { state.selectedDay = d; renderDayTabs(); renderJadwalList(); }
 function renderJadwalList() {
     const items = state.jadwal[state.selectedDay] || [];
+    const readOnly = isReadOnly();
     document.getElementById('jadwal-list').innerHTML = items.length ? items.map(j => `
-        <div class="row-item" onclick="openJadwalModal(${j.id})">
+        <div class="row-item" ${readOnly ? '' : `onclick="openJadwalModal(${j.id})"`} style="${readOnly ? '' : 'cursor:pointer;'}">
             <div class="row-time">${j.jam}</div>
             <div><div class="row-title">${j.mapel}</div><div class="row-sub">${j.guru}</div></div>
         </div>
@@ -4117,10 +4412,12 @@ function renderTugas() {
     if (hintEl) hintEl.textContent = acDays > 0 ? `Otomatis terhapus ${acDays} hari setelah dicentang selesai. Atur di Setelan.` : 'Auto-hapus dimatikan (atur di Setelan).';
     const open = state.tugas.filter(t => !t.selesai);
     const done = state.tugas.filter(t => t.selesai);
+    const readOnly = isReadOnly();
+
     document.getElementById('tugas-open-list').innerHTML = open.length ? open.map(t => `
         <div class="task-item">
             <div class="checkbox admin-only" onclick="event.stopPropagation(); toggleTugas(${t.id})"></div>
-            <div style="flex:1; cursor:pointer;" onclick="openTugasModal(${t.id})">
+            <div style="flex:1; ${readOnly ? '' : 'cursor:pointer;'}" ${readOnly ? '' : `onclick="openTugasModal(${t.id})"`}>
                 <div class="task-title">${t.nama}</div>
                 <div class="task-meta"><span class="pill pill-due">📅 ${t.tenggat || 'Tanpa tenggat'}</span></div>
                 ${t.deskripsi ? `<div class="task-desc">${t.deskripsi}</div>` : ''}
@@ -4129,10 +4426,11 @@ function renderTugas() {
             <button class="s-remove admin-only" onclick="event.stopPropagation(); deleteTugas(${t.id})">×</button>
         </div>
     `).join('') : `<div class="empty">Tidak ada tugas aktif 🎉</div>`;
+
     document.getElementById('tugas-done-list').innerHTML = done.length ? done.map(t => `
         <div class="task-item">
             <div class="checkbox checked admin-only" onclick="event.stopPropagation(); toggleTugas(${t.id})">✓</div>
-            <div style="flex:1; cursor:pointer;" onclick="openTugasModal(${t.id})">
+            <div style="flex:1; ${readOnly ? '' : 'cursor:pointer;'}" ${readOnly ? '' : `onclick="openTugasModal(${t.id})"`}>
                 <div class="task-title checked">${t.nama}</div>
                 ${t.deskripsi ? `<div class="task-desc" style="text-decoration:line-through; color:var(--text-muted);">${t.deskripsi}</div>` : ''}
                 ${renderTaskFiles(t)}
@@ -4753,8 +5051,9 @@ async function addAccount() {
         return;
     }
 
-    if (password.length < 6) {
-        showNotification('Password minimal 6 karakter.', 'warning');
+    const passwordPolicy = await validateKelaskuPassword(password);
+    if (!passwordPolicy.valid) {
+        showNotification(passwordPolicy.message, 'warning', 4500);
         return;
     }
 
@@ -4762,6 +5061,8 @@ async function addAccount() {
         showNotification('Role tidak valid.', 'error');
         return;
     }
+
+    if (!(await requireRecentReauthentication('menambahkan akun baru'))) return;
 
     let createdUser = null;
 
@@ -4773,6 +5074,12 @@ async function addAccount() {
         try {
             await createdUser.updateProfile({ displayName: nama });
         } catch (e) {}
+
+        try {
+            await createdUser.sendEmailVerification();
+        } catch (verificationError) {
+            console.warn('Akun dibuat tetapi email verifikasi gagal dikirim:', verificationError);
+        }
 
         await db.collection(FS_PROFILES).doc(createdUser.uid).set({
             email,
@@ -4811,6 +5118,8 @@ async function toggleAccountActiveFromModal() {
     if (!makeActive && !confirm('Nonaktifkan akun ini? Akun tidak akan bisa menggunakan Kelasku sampai diaktifkan kembali.')) {
         return;
     }
+
+    if (!(await requireRecentReauthentication(makeActive ? 'mengaktifkan akun' : 'menonaktifkan akun'))) return;
 
     try {
         await db.collection(FS_PROFILES).doc(uid).update({
@@ -4868,6 +5177,8 @@ async function submitAccountEdit() {
         return;
     }
 
+    if (!(await requireRecentReauthentication('mengubah akun pengguna'))) return;
+
     try {
         await db.collection(FS_PROFILES).doc(uid).update({
             username: nama,
@@ -4900,10 +5211,14 @@ function exportBackup() {
     URL.revokeObjectURL(url);
     showNotification('Backup berhasil diunduh!', 'success');
 }
-function importBackup(file) {
+async function importBackup(file) {
     if (!file || guardReadOnly()) return;
     const inputEl = document.getElementById('import-file-input');
     if (!confirm('⚠️ Import akan MENIMPA data yang ada sekarang (siswa, tugas, kas, jadwal, HP, piket, dll) dengan isi file "' + file.name + '".\n\nData saat ini TIDAK BISA dikembalikan kecuali kamu punya backup lain.\n\nLanjutkan import?')) {
+        if (inputEl) inputEl.value = '';
+        return;
+    }
+    if (!(await requireRecentReauthentication('mengimpor backup dan menimpa data kelas'))) {
         if (inputEl) inputEl.value = '';
         return;
     }
@@ -4954,6 +5269,10 @@ updateClock(); setInterval(updateClock, 10000);
 window.doAuthSubmit = doAuthSubmit;
 window.toggleAuthMode = toggleAuthMode;
 window.doForgotPassword = doForgotPassword;
+window.resendVerificationEmail = resendVerificationEmail;
+window.checkEmailVerification = checkEmailVerification;
+window.confirmReauthentication = confirmReauthentication;
+window.cancelReauthentication = cancelReauthentication;
 window.toggleTheme = toggleTheme;
 window.goTo = goTo;
 window.openKasFolderModal = openKasFolderModal;
