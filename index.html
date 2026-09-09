@@ -3115,7 +3115,6 @@ let state = {
         Kamis: [{ jam: "07:15-08:45", mapel: "Pemrograman Web", guru: "Pak Reza" }],
         Jumat: [{ jam: "07:15-08:45", mapel: "Pendidikan Agama", guru: "Pak Yusuf" }]
     },
-    _jadwalInitialized: false,
     pengumuman: [],
     reports: [],
     notifications: [],
@@ -3130,50 +3129,6 @@ let state = {
 };
 let localSettings = { session: null };
 const DAY_NAMES = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat"];
-
-const DEFAULT_JADWAL = {
-    Senin: [{ jam: "07:15-08:45", mapel: "Matematika", guru: "Bu Rina" }],
-    Selasa: [{ jam: "07:15-08:45", mapel: "Administrasi Jaringan", guru: "Pak Budi" }],
-    Rabu: [{ jam: "07:15-07:45", mapel: "Projek IPAS", guru: "Bu Hanadi" }],
-    Kamis: [{ jam: "07:15-08:45", mapel: "Pemrograman Web", guru: "Pak Reza" }],
-    Jumat: [{ jam: "07:15-08:45", mapel: "Pendidikan Agama", guru: "Pak Yusuf" }]
-};
-
-function hasJadwalItems(jadwal) {
-    return !!jadwal && DAY_NAMES.some(day => Array.isArray(jadwal[day]) && jadwal[day].length > 0);
-}
-
-function normalizeJadwalObject(source) {
-    const input = source && typeof source === 'object' ? source : {};
-    const out = {};
-    DAY_NAMES.forEach(day => { out[day] = []; });
-    Object.keys(input).forEach(key => {
-        const wanted = DAY_NAMES.find(day => String(day).toLowerCase() === String(key).trim().toLowerCase());
-        if (!wanted || !Array.isArray(input[key])) return;
-        out[wanted] = input[key].filter(item => item && typeof item === 'object').map(item => ({
-            id: item.id != null ? item.id : Date.now() + Math.random(),
-            jam: String(item.jam || '').trim(),
-            mapel: String(item.mapel || '').trim(),
-            guru: String(item.guru || '').trim()
-        })).filter(item => item.jam || item.mapel || item.guru);
-    });
-    return out;
-}
-
-function ensureJadwalState(seedIfNeverInitialized = true) {
-    const normalized = normalizeJadwalObject(state.jadwal);
-    const hasItems = hasJadwalItems(normalized);
-    const wasInitialized = state._jadwalInitialized === true;
-    if (!hasItems && seedIfNeverInitialized && !wasInitialized) {
-        state.jadwal = JSON.parse(JSON.stringify(DEFAULT_JADWAL));
-        state._jadwalInitialized = true;
-        return true;
-    }
-    state.jadwal = normalized;
-    if (hasItems) state._jadwalInitialized = true;
-    return false;
-}
-
 const SCHOOL_DAYS = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat"];
 const FULL_DAY_NAMES = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
 const MONTH_LABEL = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
@@ -3316,7 +3271,6 @@ const PUBLIC_STATE_KEYS = [
     'piketJadwal',
     'tugas',
     'jadwal',
-    '_jadwalInitialized',
     'pengumuman',
     'notifications'
 ];
@@ -3371,9 +3325,8 @@ function hydrateLocalUiState() {
         // no-op; kept for compatibility with older saved state
     }
 
-    state.jadwal = normalizeJadwalObject(state.jadwal);
-    if (hasJadwalItems(state.jadwal)) state._jadwalInitialized = true;
     DAY_NAMES.forEach(day => {
+        if (!state.jadwal[day]) state.jadwal[day] = [];
         if (!state.piketJadwal[day]) state.piketJadwal[day] = [];
     });
 
@@ -3721,35 +3674,39 @@ async function saveState() {
             while (window.__kelaskuSaveAgain) {
                 window.__kelaskuSaveAgain = false;
 
-                // Student devices only retain a local copy of PUBLIC data.
-                // They never write shared class state or admin/private data.
                 if (!currentUser || !isAdmin()) {
                     const publicState = buildPublicState(state);
                     localStorage.setItem('kelasku-public-state', JSON.stringify(publicState));
-                    // Remove the old monolithic cache so previous versions do not
-                    // leave sensitive reports/logs behind on a student's device.
                     localStorage.removeItem('kelasku-state');
-                    continue;
+                    return { synced: true, localOnly: true };
                 }
 
                 const publicState = buildPublicState(state);
                 const adminState = buildAdminState(state);
 
+                // Every write is awaited. If any write fails, the caller receives
+                // synced:false and MUST NOT immediately reload stale Firebase data.
                 await writeStateDocument(FS_PUBLIC, PUBLIC_STATE_DOC, publicState, 'kelasku-public-state');
-                // Keep the original Firebase collection as a server-side
-                // compatibility mirror of the public class state. This does
-                // NOT contain Base64 attachments; file payloads live in Drive.
                 await writeStateDocument(FS_COLLECTION, PUBLIC_STATE_DOC, publicState, null);
                 await writeStateDocument(FS_ADMIN, ADMIN_STATE_DOC, adminState, null);
                 await saveReportsForAdmin();
                 await saveTargetedNotifications();
 
+                // Keep a small, non-sensitive last-known public snapshot locally.
+                // This is only a recovery aid when a later read unexpectedly returns
+                // an empty jadwal; the Firebase document remains authoritative.
+                try {
+                    localStorage.setItem('kelasku-last-good-public-state', JSON.stringify(publicState));
+                } catch (_) {}
+
                 window.__kelaskuLastSaveSyncFailedNotified = false;
                 console.log('Separated state saved successfully');
             }
+            return { synced: true, localOnly: false };
         } catch (e) {
             console.error('Save separated state error:', e);
-            showNotification('⚠️ Gagal menyimpan perubahan ke server.', 'error');
+            showNotification('⚠️ Gagal menyimpan perubahan ke server: ' + (e.message || 'error'), 'error', 6000);
+            return { synced: false, error: e && e.message ? e.message : 'Gagal menyimpan ke server.' };
         } finally {
             window.__kelaskuSavePending = false;
         }
@@ -3761,12 +3718,6 @@ async function saveState() {
 
 async function loadState() {
     try {
-        // Capture the schedule that is already present in the local code before
-        // Firebase data is merged. This prevents an empty remote schedule from
-        // erasing the working schedule during migration/sync.
-        ensureJadwalState(true);
-        const localJadwalBeforeLoad = JSON.parse(JSON.stringify(state.jadwal));
-
         if (isAdmin()) {
             await migrateLegacyStateOnce();
         }
@@ -3778,60 +3729,70 @@ async function loadState() {
         );
 
         if (publicState) {
-            const incoming = Object.assign({}, publicState);
-            const incomingJadwal = normalizeJadwalObject(incoming.jadwal);
-            const incomingHasJadwal = hasJadwalItems(incomingJadwal);
-            const localHasJadwal = hasJadwalItems(localJadwalBeforeLoad);
-
-            if (incomingHasJadwal) {
-                incoming.jadwal = incomingJadwal;
-                incoming._jadwalInitialized = true;
-            } else if (localHasJadwal && !incomingHasJadwal) {
-                incoming.jadwal = localJadwalBeforeLoad;
-                incoming._jadwalInitialized = true;
+            const loadedJadwal = normalizeJadwalObject(publicState.jadwal);
+            const currentJadwal = normalizeJadwalObject(state.jadwal);
+            let finalPublic = Object.assign({}, publicState);
+            if (hasNonEmptyJadwal(loadedJadwal) || !hasNonEmptyJadwal(currentJadwal)) {
+                finalPublic.jadwal = loadedJadwal;
             } else {
-                incoming.jadwal = incomingJadwal;
+                finalPublic.jadwal = currentJadwal;
             }
-
-            state = Object.assign(state, incoming);
+            state = Object.assign(state, finalPublic);
         }
 
-        // Try the legacy mirror only when the separated schedule is empty.
+        // Admin recovery safety: if the separated public document is empty or
+        // obviously the small default state, re-read the legacy source once.
+        // This prevents the dashboard from showing zeros until the user imports
+        // a backup manually.
         if (isAdmin()) {
-            const currentHasJadwal = hasJadwalItems(state.jadwal);
-            if (!currentHasJadwal) {
+            const publicLooksEmpty =
+                !publicState ||
+                ((Array.isArray(publicState.students) && publicState.students.length === 0) &&
+                 (Array.isArray(publicState.tugas) && publicState.tugas.length === 0) &&
+                 (Array.isArray(publicState.pengumuman) && publicState.pengumuman.length === 0) &&
+                 (Array.isArray(publicState.kas) && publicState.kas.length === 0));
+
+            if (publicLooksEmpty) {
                 try {
                     const legacySnap = await db.collection(FS_COLLECTION).doc(PUBLIC_STATE_DOC).get();
                     if (legacySnap.exists && typeof legacySnap.data().value === 'string' && legacySnap.data().value) {
                         const recovered = JSON.parse(legacySnap.data().value);
-                        const recoveredJadwal = normalizeJadwalObject(recovered && recovered.jadwal);
-                        if (hasJadwalItems(recoveredJadwal)) {
-                            state.jadwal = recoveredJadwal;
-                            state._jadwalInitialized = true;
+                        if (recovered && typeof recovered === 'object') {
+                            const recoveredPublic = buildPublicState(recovered);
+                            state = Object.assign(state, recoveredPublic);
+                            await writeStateDocument(FS_PUBLIC, PUBLIC_STATE_DOC, recoveredPublic, 'kelasku-public-state');
                         }
                     }
                 } catch (recoveryError) {
-                    console.warn('Legacy schedule recovery failed:', recoveryError);
+                    console.warn('Legacy recovery read failed:', recoveryError);
                 }
             }
+
+            const adminState = await readStateDocument(FS_ADMIN, ADMIN_STATE_DOC, null);
+            if (adminState) state = Object.assign(state, adminState);
+        } else {
+            // Never hydrate sensitive state from old browser caches.
+            state.reports = [];
+            state.activityLog = [];
+            state.nameChangeLog = [];
+            state.autoCleanReportDays = 7;
+            localStorage.removeItem('kelasku-state');
         }
 
-        // One-time seed only: if this app has never had a persisted schedule and
-        // every server source is empty, restore the original built-in schedule.
-        const seeded = ensureJadwalState(true);
-        if (seeded && isAdmin()) {
-            await saveState();
+        // Recovery aid: if Firebase unexpectedly returns an empty schedule, restore
+        // only the last known non-empty public schedule saved by this browser.
+        if (isAdmin() && !hasNonEmptyJadwal(state.jadwal)) {
+            try {
+                const cached = JSON.parse(localStorage.getItem('kelasku-last-good-public-state') || 'null');
+                if (cached && hasNonEmptyJadwal(cached.jadwal)) {
+                    state.jadwal = normalizeJadwalObject(cached.jadwal);
+                }
+            } catch (_) {}
         }
-
-        const adminState = isAdmin()
-            ? await readStateDocument(FS_ADMIN, ADMIN_STATE_DOC, null)
-            : null;
-        if (adminState) state = Object.assign(state, adminState);
 
         await loadReportsForCurrentUser();
         await loadTargetedNotifications();
         hydrateLocalUiState();
-        ensureJadwalState(false);
     } catch (e) {
         console.warn('Load separated state error, using safe defaults', e);
         if (!isAdmin()) {
@@ -3841,7 +3802,6 @@ async function loadState() {
             state.autoCleanReportDays = 7;
             try { localStorage.removeItem('kelasku-state'); } catch (_) {}
         }
-        ensureJadwalState(true);
         hydrateLocalUiState();
     }
 }
@@ -4106,7 +4066,6 @@ async function resetData() {
             Kamis: [{ jam: "07:15-08:45", mapel: "Pemrograman Web", guru: "Pak Reza" }],
             Jumat: [{ jam: "07:15-08:45", mapel: "Pendidikan Agama", guru: "Pak Yusuf" }]
         },
-        _jadwalInitialized: false,
         pengumuman: [],
         reports: [],
         notifications: [],
@@ -4142,6 +4101,23 @@ function stopSeparatedSync(){
     if (notificationSyncUnsub) { try{notificationSyncUnsub();}catch(_){} notificationSyncUnsub = null; }
     liveSyncStarted = false;
 }
+function hasNonEmptyJadwal(value) {
+    if (!value || typeof value !== 'object') return false;
+    return DAY_NAMES.some(day => Array.isArray(value[day]) && value[day].length > 0);
+}
+function normalizeJadwalObject(value) {
+    const out = {};
+    DAY_NAMES.forEach(day => {
+        const list = value && Array.isArray(value[day]) ? value[day] : [];
+        out[day] = list.filter(Boolean).map(j => ({
+            id: j.id == null ? Date.now() + Math.random() : j.id,
+            jam: String(j.jam || ''),
+            mapel: String(j.mapel || ''),
+            guru: String(j.guru || '')
+        })).filter(j => j.jam || j.mapel || j.guru);
+    });
+    return out;
+}
 function mergePublicAndCurrentState(saved){
     if (!saved || typeof saved !== 'object') return;
     const keepSensitive = {
@@ -4150,27 +4126,22 @@ function mergePublicAndCurrentState(saved){
         nameChangeLog: state.nameChangeLog,
         autoCleanReportDays: state.autoCleanReportDays
     };
-    const merged = Object.assign({}, saved);
+    const incoming = Object.assign({}, saved);
     const currentJadwal = normalizeJadwalObject(state.jadwal);
-    const incomingJadwal = normalizeJadwalObject(merged.jadwal);
-    const currentHasJadwal = hasJadwalItems(currentJadwal);
-    const incomingHasJadwal = hasJadwalItems(incomingJadwal);
+    const incomingJadwal = normalizeJadwalObject(saved.jadwal);
 
-    if (incomingHasJadwal) {
-        merged.jadwal = incomingJadwal;
-        merged._jadwalInitialized = true;
-    } else if (currentHasJadwal) {
-        merged.jadwal = currentJadwal;
-        merged._jadwalInitialized = true;
+    // Never let an empty realtime snapshot erase a non-empty schedule currently
+    // shown in the app. A real schedule update must contain at least one entry.
+    if (hasNonEmptyJadwal(incomingJadwal) || !hasNonEmptyJadwal(currentJadwal)) {
+        incoming.jadwal = incomingJadwal;
     } else {
-        merged.jadwal = incomingJadwal;
+        incoming.jadwal = currentJadwal;
     }
 
-    state = Object.assign(state, merged, keepSensitive);
+    state = Object.assign(state, incoming, keepSensitive);
+    state.jadwal = normalizeJadwalObject(state.jadwal);
     hydrateLocalUiState();
-    ensureJadwalState(false);
 }
-
 function mergeAdminState(saved){
     if (!saved || typeof saved !== 'object') return;
     state = Object.assign(state, saved);
@@ -5005,7 +4976,6 @@ function togglePiketJadwalStudent(name, checked) {
 function renderDayTabs() { document.getElementById('day-tabs').innerHTML = DAY_NAMES.map(d => `<div class="day-chip ${state.selectedDay===d?'active':''}" onclick="selectDay('${jsString(d)}')">${escapeHtml(d)}</div>`).join(''); }
 function selectDay(d) { state.selectedDay = d; renderDayTabs(); renderJadwalList(); }
 function renderJadwalList() {
-    ensureJadwalState(false);
     const items = state.jadwal[state.selectedDay] || [];
     const readOnly = isReadOnly();
     document.getElementById('jadwal-list').innerHTML = items.length ? items.map(j => `
@@ -6305,6 +6275,7 @@ async function importBackup(file) {
             if (!imported || typeof imported !== 'object') throw new Error('Format backup tidak valid.');
 
             state = Object.assign(state, imported);
+            state.jadwal = normalizeJadwalObject(imported.jadwal || state.jadwal);
             hydrateLocalUiState();
 
             // Backup lama dapat berisi Base64 yang membuat dokumen Firestore
@@ -6391,8 +6362,8 @@ async function importBackup(file) {
 
             // Tunggu sampai semua write Firebase benar-benar selesai.
             const result = await saveState();
-            if (result && result.synced === false) {
-                throw new Error('Firebase menolak penyimpanan data. Periksa Firestore Rules atau ukuran data.');
+            if (!result || result.synced !== true) {
+                throw new Error((result && result.error) || 'Data import gagal disimpan ke server. Data lama tidak akan dimuat ulang.');
             }
 
             // Baca ulang dari Firebase agar yang tampil adalah data server,
