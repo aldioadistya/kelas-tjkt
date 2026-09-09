@@ -3375,7 +3375,29 @@ async function migrateLegacyStateOnce() {
 
     const metaRef = db.collection(FS_META).doc('security-v2');
     const metaSnap = await metaRef.get();
-    if (metaSnap.exists && metaSnap.data().version >= SECURITY_DATA_VERSION && metaSnap.data().migrated === true) {
+    const meta = metaSnap.exists ? (metaSnap.data() || {}) : {};
+
+    // Always verify that the separated documents actually exist before
+    // trusting the migration marker. A previous failed migration could have
+    // written the marker while leaving empty/default data behind.
+    let separatedPublic = null;
+    let separatedAdmin = null;
+    try {
+        const [publicSnap, adminSnap] = await Promise.all([
+            db.collection(FS_PUBLIC).doc(PUBLIC_STATE_DOC).get(),
+            db.collection(FS_ADMIN).doc(ADMIN_STATE_DOC).get()
+        ]);
+        if (publicSnap.exists && typeof publicSnap.data().value === 'string') {
+            separatedPublic = JSON.parse(publicSnap.data().value);
+        }
+        if (adminSnap.exists && typeof adminSnap.data().value === 'string') {
+            separatedAdmin = JSON.parse(adminSnap.data().value);
+        }
+    } catch (e) {
+        console.warn('Separated state verification failed:', e);
+    }
+
+    if (meta.version >= SECURITY_DATA_VERSION && meta.migrated === true && separatedPublic) {
         _separatedMigrationDone = true;
         return;
     }
@@ -3383,15 +3405,25 @@ async function migrateLegacyStateOnce() {
     let legacy = null;
     try {
         const legacySnap = await db.collection(FS_COLLECTION).doc(PUBLIC_STATE_DOC).get();
-        if (legacySnap.exists && legacySnap.data().value) {
+        if (legacySnap.exists && typeof legacySnap.data().value === 'string' && legacySnap.data().value) {
             legacy = JSON.parse(legacySnap.data().value);
         }
     } catch (e) {
         console.warn('Legacy state migration read failed:', e);
+        // IMPORTANT: never replace the missing legacy source with the local
+        // default state and mark migration complete. That was the cause of
+        // the app appearing empty until an Import was performed.
+        if (!separatedPublic) return;
     }
 
+    // If legacy data is unavailable, keep whatever separated data already
+    // exists. Never overwrite server data with the small default state.
     if (!legacy || typeof legacy !== 'object') {
-        legacy = state;
+        if (separatedPublic) {
+            _separatedMigrationDone = true;
+            return;
+        }
+        return;
     }
 
     // Preserve all existing public class data.
@@ -3406,8 +3438,14 @@ async function migrateLegacyStateOnce() {
     if (!Array.isArray(adminState.activityLog)) adminState.activityLog = [];
     if (!Array.isArray(adminState.nameChangeLog)) adminState.nameChangeLog = [];
 
-    await writeStateDocument(FS_PUBLIC, PUBLIC_STATE_DOC, publicState, 'kelasku-public-state');
-    await writeStateDocument(FS_ADMIN, ADMIN_STATE_DOC, adminState, null);
+    // Do not destroy already-imported/separated data. When separated docs
+    // already contain richer data, keep those values and only fill missing
+    // keys from the legacy source.
+    const mergedPublicState = separatedPublic ? Object.assign({}, publicState, separatedPublic) : publicState;
+    const mergedAdminState = separatedAdmin ? Object.assign({}, adminState, separatedAdmin) : adminState;
+
+    await writeStateDocument(FS_PUBLIC, PUBLIC_STATE_DOC, mergedPublicState, 'kelasku-public-state');
+    await writeStateDocument(FS_ADMIN, ADMIN_STATE_DOC, mergedAdminState, null);
 
     // Migrate all legacy reports out of the shared state.
     const legacyReports = Array.isArray(legacy.reports) ? legacy.reports : [];
