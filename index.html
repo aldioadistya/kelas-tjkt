@@ -6548,4 +6548,303 @@ body.dark .task-meta .pill:not(.pill-due) {
     background: rgba(129,140,248,0.16) !important;
     border-color: rgba(129,140,248,0.28) !important;
 }
+
+/* ============================================================
+   KELASKU — HUMAN / PRACTICAL UI PASS
+   Tujuan: mengurangi efek "AI/glassmorphism" dan membuat UI
+   lebih mirip aplikasi sekolah yang dirancang secara manual.
+============================================================ */
+:root {
+    --bg-gradient: #f5f6f8;
+    --glass-bg: #f5f6f8;
+    --glass-card: #ffffff;
+    --glass-border: #d9dee7;
+    --glass-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+    --text-main: #1f2937;
+    --text-soft: #667085;
+    --text-muted: #98a2b3;
+    --primary: #4657c9;
+    --primary-gradient: #4657c9;
+    --accent-gold: #b7791f;
+    --teal: #168a68;
+    --teal-glass: #e8f6f1;
+    --rose: #c83b58;
+    --rose-glass: #faedf1;
+    --violet: #6857c7;
+    --violet-glass: #f1effb;
+    --amber: #b7791f;
+    --amber-glass: #fbf4e7;
+    --radius-xl: 14px;
+    --radius-lg: 10px;
+    --radius-md: 8px;
+    --radius-sm: 6px;
+    --input-bg: #ffffff;
+}
+
+body.dark {
+    --bg-gradient: #111827;
+    --glass-bg: #111827;
+    --glass-card: #182235;
+    --glass-border: #2a3649;
+    --glass-shadow: 0 1px 2px rgba(0, 0, 0, 0.24);
+    --text-main: #edf2f7;
+    --text-soft: #a8b2c1;
+    --text-muted: #768196;
+    --primary: #8290ee;
+    --primary-gradient: #5968d9;
+    --accent-gold: #b47a24;
+    --input-bg: #1a2639;
+    --teal-glass: #14392f;
+    --rose-glass: #3d1f2b;
+    --violet-glass: #292447;
+    --amber-glass: #3b2d18;
+}
+
+* {
+    font-family: Inter, "Segoe UI", Arial, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6,
+.hero-name,
+.pagehead h1,
+.balance-value,
+.cal-month {
+    font-family: Inter, "Segoe UI", Arial, sans-serif;
+    letter-spacing: -0.2px;
+}
+
+body {
+    background: var(--bg-gradient);
+}
+
+.ambient-mesh,
+.blob,
+.hero::before,
+.balance-card::after {
+    display: none !important;
+}
+
+.phone {
+    background: var(--glass-bg);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
+}
+
+.statusbar {
+    background: var(--glass-bg);
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.theme-btn,
+.cal-nav-btn {
+    background: var(--glass-card);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+}
+
+.hero {
+    background: var(--primary-gradient);
+    border: 0;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: none;
+}
+
+.hero-eyebrow { opacity: 0.82; }
+.hero-name { font-size: 17px; font-weight: 700; }
+.avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 9px;
+    transform: none;
+    background: rgba(255,255,255,0.14);
+    box-shadow: none;
+}
+.hero-tags { margin-top: 10px; }
+
+.card,
+.summary-box,
+.search-box,
+.mode-switch,
+.file-chip,
+.login-card,
+.modal {
+    background: var(--glass-card);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-color: var(--glass-border);
+    box-shadow: none;
+}
+
+.card { border-radius: 10px; padding: 12px 14px; }
+.summary-box { border-radius: 8px; }
+.search-box { border-radius: 8px; }
+
+.pagehead { padding: 2px 2px 10px; }
+.pagehead h1 { font-size: 19px; font-weight: 750; }
+.pagehead p { font-size: 12px; }
+
+.balance-card {
+    background: var(--accent-gold);
+    border-radius: 10px;
+    box-shadow: none;
+}
+
+.btn,
+.fab-add {
+    border-radius: 8px;
+    box-shadow: none;
+}
+
+.btn-primary,
+.mode-btn.active,
+.day-chip.active,
+.cal-day.selected {
+    background: var(--primary-gradient);
+    box-shadow: none;
+}
+
+.btn-ghost,
+.mode-btn,
+.day-chip {
+    background: var(--glass-card);
+    border-color: var(--glass-border);
+}
+
+.task-item,
+.tx-item,
+.student-row,
+.row-item {
+    padding: 11px 0;
+    border-bottom-color: var(--glass-border);
+}
+
+.task-title {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.task-meta { gap: 7px; margin-top: 6px; }
+
+.pill {
+    font-size: 11px;
+    padding: 4px 9px;
+    border-radius: 6px;
+    line-height: 1.15;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 22px;
+}
+
+/* Mata pelajaran: jelas, sedang, bukan label kecil dekoratif. */
+.task-meta .task-subject,
+.task-meta .subject,
+.task-meta [class*="subject"] {
+    font-size: 11.5px !important;
+    font-weight: 700 !important;
+    color: var(--text-main) !important;
+    background: var(--violet-glass) !important;
+    border: 1px solid var(--glass-border);
+    padding: 4px 9px !important;
+    border-radius: 6px !important;
+    line-height: 1.15;
+}
+
+body.dark .task-meta .task-subject,
+body.dark .task-meta .subject,
+body.dark .task-meta [class*="subject"] {
+    color: #eef2ff !important;
+    background: #2b3152 !important;
+    border-color: #465077 !important;
+}
+
+.pill-due {
+    border-radius: 6px;
+    line-height: 1.15;
+}
+
+.checkbox {
+    border-color: #b9c2cf;
+    border-radius: 5px;
+}
+body.dark .checkbox { border-color: #596579; }
+
+.toggle-btn { border-radius: 7px; }
+
+.modal {
+    border-radius: 12px 12px 0 0;
+    box-shadow: 0 -8px 24px rgba(15, 23, 42, 0.12);
+}
+
+.field input,
+.field select,
+.field textarea,
+.login-card .field input,
+.number-input-clean {
+    background: var(--input-bg);
+    border-radius: 8px;
+    border-color: var(--glass-border);
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus,
+.login-card .field input:focus,
+.number-input-clean:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(70, 87, 201, 0.10);
+}
+
+.toast {
+    background: var(--glass-card);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-radius: 9px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+}
+
+.toast.success { border-left-width: 3px; }
+.toast.error { border-left-width: 3px; }
+
+.cal-day { border-radius: 7px; }
+.cal-day.today { border-width: 1px; }
+.cal-dot { width: 4px; height: 4px; }
+
+.tabbar {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: var(--glass-card);
+}
+
+.mode-switch { border-radius: 8px; padding: 3px; }
+.mode-btn { border-radius: 6px; }
+.day-chip { border-radius: 7px; }
+
+/* Kurangi animasi "demo/marketing"; interaksi tetap terasa responsif. */
+.login-logo,
+.hero,
+.card,
+.btn,
+.fab-add,
+.toast,
+.modal {
+    animation-duration: 0.18s;
+}
+.login-logo {
+    transform: none !important;
+    animation: none !important;
+}
+
+@media (min-width: 481px) {
+    .phone {
+        max-width: 520px;
+        max-height: 94vh;
+        border-radius: 16px;
+    }
+}
+
 </style>
