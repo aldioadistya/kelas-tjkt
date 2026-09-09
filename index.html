@@ -3658,6 +3658,8 @@ async function loadTargetedNotifications() {
     }
 }
 
+let _savePending = false, _saveAgain = false, _savePromise = null, _lastSaveSyncFailedNotified = false;
+
 async function saveState() {
     _saveAgain = true;
     if (_savePromise) return _savePromise;
