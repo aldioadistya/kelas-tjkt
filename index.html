@@ -3670,6 +3670,10 @@ async function saveState() {
                 const adminState = buildAdminState(state);
 
                 await writeStateDocument(FS_PUBLIC, PUBLIC_STATE_DOC, publicState, 'kelasku-public-state');
+                // Keep the original Firebase collection as a server-side
+                // compatibility mirror of the public class state. This does
+                // NOT contain Base64 attachments; file payloads live in Drive.
+                await writeStateDocument(FS_COLLECTION, PUBLIC_STATE_DOC, publicState, null);
                 await writeStateDocument(FS_ADMIN, ADMIN_STATE_DOC, adminState, null);
                 await saveReportsForAdmin();
                 await saveTargetedNotifications();
