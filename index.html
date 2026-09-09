@@ -6522,14 +6522,26 @@ window.todayKey = todayKey;
 }
 
 /* Perjelas badge Mata Pelajaran pada daftar tugas */
+.task-meta .pill {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    vertical-align: middle !important;
+    line-height: 1.15 !important;
+    min-height: 24px !important;
+    box-sizing: border-box !important;
+}
 .task-meta .pill:not(.pill-due) {
     font-size: 12px !important;
-    line-height: 1.35 !important;
     padding: 4px 10px !important;
     font-weight: 800 !important;
     background: var(--violet-glass) !important;
     color: var(--text-main) !important;
     border: 1px solid rgba(139,92,246,0.22) !important;
+}
+.task-meta .pill-due {
+    font-size: 10.5px !important;
+    padding: 4px 10px !important;
 }
 body.dark .task-meta .pill:not(.pill-due) {
     color: #f8fafc !important;
