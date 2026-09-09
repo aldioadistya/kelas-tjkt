@@ -6520,4 +6520,20 @@ window.todayKey = todayKey;
   .desktop-sidebar { width:225px !important; }
   .phone > .screen { padding:24px 26px 30px !important; }
 }
+
+/* Perjelas badge Mata Pelajaran pada daftar tugas */
+.task-meta .pill:not(.pill-due) {
+    font-size: 12px !important;
+    line-height: 1.35 !important;
+    padding: 4px 10px !important;
+    font-weight: 800 !important;
+    background: var(--violet-glass) !important;
+    color: var(--text-main) !important;
+    border: 1px solid rgba(139,92,246,0.22) !important;
+}
+body.dark .task-meta .pill:not(.pill-due) {
+    color: #f8fafc !important;
+    background: rgba(129,140,248,0.16) !important;
+    border-color: rgba(129,140,248,0.28) !important;
+}
 </style>
