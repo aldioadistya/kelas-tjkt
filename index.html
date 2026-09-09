@@ -3382,6 +3382,14 @@ async function migrateLegacyStateOnce() {
     const metaSnap = await metaRef.get();
     const meta = metaSnap.exists ? (metaSnap.data() || {}) : {};
 
+    // Once the migration has been completed successfully, do not rerun it on
+    // every page load. Re-running against the legacy document is unnecessary
+    // and can fail when the old state still contains large Base64 attachments.
+    if (meta.migrated === true && Number(meta.version || 0) >= SECURITY_DATA_VERSION) {
+        _separatedMigrationDone = true;
+        return;
+    }
+
     // Always verify that the separated documents actually exist before
     // trusting the migration marker. A previous failed migration could have
     // written the marker while leaving empty/default data behind.
