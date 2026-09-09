@@ -2931,13 +2931,16 @@ a{
           <div class="settings-section admin-only">
             <div class="settings-label">Ruang Penyimpanan</div>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-              <span id="storage-usage-label" style="font-size:12.5px; font-weight:700; color:var(--text-main);">- KB / 1024 KB</span>
+              <span id="storage-usage-label" style="font-size:12.5px; font-weight:700; color:var(--text-main);">-</span>
               <span id="storage-usage-percent" style="font-size:11px; font-weight:700;">-%</span>
             </div>
             <div style="width:100%; height:8px; border-radius:99px; background:var(--glass-card); overflow:hidden;">
               <div id="storage-usage-bar" style="height:100%; width:0%; border-radius:99px; transition:width 0.3s, background 0.3s;"></div>
             </div>
-            <div class="field-hint" id="storage-usage-hint">Semua data kelas (kas, tugas, jadwal, lampiran file, dll) disimpan dalam 1 dokumen dengan batas 1MB.</div>
+            <div class="field-hint" id="storage-usage-hint">Google Drive belum dihubungkan. Lampiran masih memakai penyimpanan lama sampai URL Apps Script diisi.</div>
+            <div id="drive-connection-status" class="field-hint" style="margin-top:6px; font-weight:700;">📁 Status Drive: belum dikonfigurasi</div>
+            <button id="drive-migrate-btn" class="btn btn-ghost" style="width:100%; margin-top:8px; padding:8px; font-size:10px;" onclick="migrateAllAttachmentsToDrive()">☁️ Migrasikan lampiran lama ke Drive</button>
+            <div class="field-hint" style="margin-top:6px;">Setelah deployment Apps Script, isi konstanta <b>KELASKU_DRIVE_API_URL</b> di file <b>index.html</b>. Jangan taruh password atau credential Google di HTML.</div>
           </div>
           <div class="settings-section">
             <div class="settings-label">Backup &amp; Pemulihan</div>
@@ -2995,10 +2998,10 @@ a{
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06A1.65 1.65 0 0019.4 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" /></svg>Setelan
     </button>
   </div>
-  <div class="modal-bg" id="modal-kas"><div class="modal"><h3 id="kas-modal-title">Tambah Transaksi Kas</h3><input type="hidden" id="kas-edit-id"><div class="field"><label>Jenis</label><select id="kas-jenis"><option value="masuk">Pemasukan (+)</option><option value="keluar">Pengeluaran (-)</option></select></div><div class="field"><label>Keterangan</label><input id="kas-ket" type="text" placeholder="Contoh: Kas Mingguan"></div><div class="field"><label>Jumlah (Rp)</label><input id="kas-jumlah" type="number" placeholder="0"></div><div class="field"><label>Lampiran (opsional)</label><input type="file" id="kas-file" accept=".jpg,.png,.pdf,.doc,.docx,.xlsx"><div class="field-hint">Maks 400KB. Saat edit, kosongkan jika ingin mempertahankan lampiran lama.</div></div><div class="modal-actions"><button class="btn btn-danger admin-only" id="kas-delete-btn" style="display:none;" onclick="hapusKasCurrent()">Hapus</button><button class="btn btn-ghost" onclick="closeModal('kas')">Batal</button><button class="btn btn-primary" onclick="submitKas()">Simpan</button></div></div></div>
+  <div class="modal-bg" id="modal-kas"><div class="modal"><h3 id="kas-modal-title">Tambah Transaksi Kas</h3><input type="hidden" id="kas-edit-id"><div class="field"><label>Jenis</label><select id="kas-jenis"><option value="masuk">Pemasukan (+)</option><option value="keluar">Pengeluaran (-)</option></select></div><div class="field"><label>Keterangan</label><input id="kas-ket" type="text" placeholder="Contoh: Kas Mingguan"></div><div class="field"><label>Jumlah (Rp)</label><input id="kas-jumlah" type="number" placeholder="0"></div><div class="field"><label>Lampiran (opsional)</label><input type="file" id="kas-file" accept=".jpg,.png,.pdf,.doc,.docx,.xlsx"><div id="kas-file-hint" class="field-hint">Maks 10MB saat Google Drive aktif. Saat edit, kosongkan jika ingin mempertahankan lampiran lama.</div></div><div class="modal-actions"><button class="btn btn-danger admin-only" id="kas-delete-btn" style="display:none;" onclick="hapusKasCurrent()">Hapus</button><button class="btn btn-ghost" onclick="closeModal('kas')">Batal</button><button class="btn btn-primary" onclick="submitKas()">Simpan</button></div></div></div>
   <div class="modal-bg" id="modal-kas-folder"><div class="modal"><h3>Tambah Folder Kas Siswa</h3><div class="field"><label>Nama Folder</label><input id="kas-folder-name" type="text" placeholder="Contoh: Kas September 2026"></div><div class="field"><label>Nominal Kas per Anak (Rp)</label><input id="kas-folder-nominal" type="number" min="0" placeholder="Contoh: 10000"></div><div class="field"><label>Keterangan (opsional)</label><input id="kas-folder-note" type="text" placeholder="Contoh: Kas bulanan"></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('kas-folder')">Batal</button><button class="btn btn-primary" onclick="submitKasFolder()">Buat Folder</button></div></div></div>
   <div class="modal-bg" id="modal-kas-student"><div class="modal"><h3 id="kas-student-modal-title">Pembayaran Kas Siswa</h3><input type="hidden" id="kas-student-folder-id"><input type="hidden" id="kas-student-name"><div class="field"><label>Nama Siswa</label><input id="kas-student-display" type="text" readonly></div><div class="field"><label>Status Pembayaran</label><select id="kas-student-status"><option value="belum">Belum Bayar</option><option value="sudah">Sudah Bayar</option></select></div><div class="field"><label>Jumlah Dibayar (Rp)</label><input id="kas-student-jumlah" type="number" min="0" placeholder="0"></div><div class="field"><label>Tanggal Bayar</label><input id="kas-student-tanggal" type="date"></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('kas-student')">Batal</button><button class="btn btn-primary admin-only" onclick="submitKasStudent()">Simpan</button></div></div></div>
-  <div class="modal-bg" id="modal-tugas"><div class="modal"><h3 id="tugas-modal-title">Tambah Tugas</h3><div class="field"><label>Nama Tugas</label><input id="tugas-nama" type="text" placeholder="Contoh: Laporan Jaringan"></div><div class="field"><label>Mata Pelajaran</label><input id="tugas-mapel" type="text" placeholder="Contoh: Administrasi Jaringan"></div><div class="field"><label>Tenggat</label><input id="tugas-tenggat" type="date"></div><div class="field"><label>Deskripsi</label><textarea id="tugas-deskripsi" placeholder="Deskripsi tugas..."></textarea></div><div class="field"><label>Lampiran (opsional, bisa lebih dari 1)</label><div id="tugas-file-chips" style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px;"></div><input type="file" id="tugas-file" accept=".pdf,.doc,.docx,.jpg,.png,.jpeg,.zip" multiple onchange="onTugasFileSelected(this)"><div class="field-hint">Maks 3 file, masing-masing 400KB. File baru akan ditambahkan, bukan menggantikan.</div></div><input type="hidden" id="tugas-edit-id"><div class="modal-actions"><button class="btn btn-danger admin-only" id="tugas-delete-btn" style="display:none;" onclick="deleteTugasCurrent()">Hapus</button><button class="btn btn-ghost" onclick="closeModal('tugas')">Batal</button><button class="btn btn-primary admin-only" onclick="submitTugas()">Simpan</button></div></div></div>
+  <div class="modal-bg" id="modal-tugas"><div class="modal"><h3 id="tugas-modal-title">Tambah Tugas</h3><div class="field"><label>Nama Tugas</label><input id="tugas-nama" type="text" placeholder="Contoh: Laporan Jaringan"></div><div class="field"><label>Mata Pelajaran</label><input id="tugas-mapel" type="text" placeholder="Contoh: Administrasi Jaringan"></div><div class="field"><label>Tenggat</label><input id="tugas-tenggat" type="date"></div><div class="field"><label>Deskripsi</label><textarea id="tugas-deskripsi" placeholder="Deskripsi tugas..."></textarea></div><div class="field"><label>Lampiran (opsional, bisa lebih dari 1)</label><div id="tugas-file-chips" style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px;"></div><input type="file" id="tugas-file" accept=".pdf,.doc,.docx,.jpg,.png,.jpeg,.zip" multiple onchange="onTugasFileSelected(this)"><div id="tugas-file-hint" class="field-hint">Maks 3 file. Batas 10MB/file saat Google Drive aktif.</div></div><input type="hidden" id="tugas-edit-id"><div class="modal-actions"><button class="btn btn-danger admin-only" id="tugas-delete-btn" style="display:none;" onclick="deleteTugasCurrent()">Hapus</button><button class="btn btn-ghost" onclick="closeModal('tugas')">Batal</button><button class="btn btn-primary admin-only" onclick="submitTugas()">Simpan</button></div></div></div>
   <div class="modal-bg" id="modal-student"><div class="modal"><h3>Tambah Siswa</h3><div class="field"><label>Nama Lengkap</label><input id="student-nama" type="text" placeholder="Contoh: Muhammad Rizky"></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('student')">Batal</button><button class="btn btn-primary" onclick="submitStudent()">Tambah</button></div></div></div>
   <div class="modal-bg" id="modal-roster-status"><div class="modal"><h3 id="roster-status-title">Tandai Status</h3><div class="field-hint" style="margin:-6px 0 12px;">Tandai status <b id="roster-status-name" style="color:var(--text-main);"></b> untuk hari ini.</div><div class="roster-status-choices"><button class="roster-choice-btn done" id="roster-status-sudah-btn" onclick="setRosterStatusChoice('sudah')">✓ Sudah</button><button class="roster-choice-btn undone" id="roster-status-belum-btn" onclick="setRosterStatusChoice('belum')">✕ Belum</button></div><input type="hidden" id="roster-status-choice"><div class="field" id="roster-status-alasan-field" style="display:none;"><label>Keterangan</label><textarea id="roster-status-alasan" placeholder="Contoh: keterangan piket, catatan, dll." style="min-height:60px;"></textarea></div><div class="modal-actions"><button class="btn btn-ghost" id="roster-status-clear-btn" onclick="clearRosterStatus()" title="Kembalikan ke netral">↺ Reset</button><button class="btn btn-ghost" onclick="closeModal('roster-status')">Batal</button><button class="btn btn-primary" onclick="submitRosterStatus()">Simpan</button></div></div></div>
   <div class="modal-bg" id="modal-piket-jadwal"><div class="modal"><h3>Atur Jadwal Piket</h3><div class="field-hint" style="margin:-6px 0 10px;">Pilih hari, lalu centang siswa yang bertugas piket pada hari itu. Kosongkan semua centang = tidak ada piket hari itu.</div><div class="day-tabs" id="piket-jadwal-day-tabs" style="flex-wrap:wrap;"></div><div id="piket-jadwal-summary" class="piket-jadwal-summary"></div><div id="piket-jadwal-checklist" style="max-height:280px; overflow-y:auto; margin-top:4px;"></div><div class="modal-actions"><button class="btn btn-primary" onclick="closeModal('piket-jadwal')">Selesai</button></div></div></div>
@@ -3006,7 +3009,7 @@ a{
   <div class="modal-bg" id="modal-jadwal"><div class="modal"><h3 id="jadwal-modal-title">Atur Jam Pelajaran</h3><div class="field"><label>Hari</label><select id="jadwal-hari"><option value="Senin">Senin</option><option value="Selasa">Selasa</option><option value="Rabu">Rabu</option><option value="Kamis">Kamis</option><option value="Jumat">Jumat</option></select></div><div class="field"><label>Jam Mulai</label><input id="jadwal-mulai" type="time"></div><div class="field"><label>Jam Selesai</label><input id="jadwal-selesai" type="time"></div><div class="field"><label>Mata Pelajaran</label><input id="jadwal-mapel" type="text" placeholder="Mata Pelajaran"></div><div class="field"><label>Guru</label><input id="jadwal-guru" type="text" placeholder="Nama Guru"></div><input type="hidden" id="jadwal-edit-id"><div class="modal-actions"><button class="btn btn-danger admin-only" id="jadwal-delete-btn" style="display:none;" onclick="deleteJadwalCurrent()">Hapus</button><button class="btn btn-ghost" onclick="closeModal('jadwal')">Batal</button><button class="btn btn-primary admin-only" onclick="submitJadwal()">Simpan</button></div></div></div>
   <div class="modal-bg" id="modal-stats"><div class="modal"><h3 id="stats-title">📊 Statistik</h3><div id="stats-content" style="max-height:300px; overflow-y:auto;"></div><div class="modal-actions"><button class="btn btn-primary btn-block" onclick="closeModal('stats')">Tutup</button></div></div></div>
   <div class="modal-bg" id="modal-export"><div class="modal"><h3>Rekap Kas</h3><div class="field"><textarea id="export-text" readonly style="height:160px; font-family:monospace; font-size:11px;"></textarea></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('export')">Tutup</button><button class="btn btn-primary" onclick="copyExportText()">📋 Salin</button></div></div></div>
-  <div class="modal-bg" id="modal-report"><div class="modal"><h3 id="report-modal-title">Buat Laporan</h3><div id="report-code-label" class="field-hint" style="margin:-4px 0 8px; font-weight:700;"></div><div class="field"><label>Kategori</label><select id="report-kategori"><option value="Kekerasan/Berantem">Kekerasan</option><option value="Bullying">Bullying</option><option value="Kerusakan Fasilitas">Kerusakan</option><option value="Pencurian">Pencurian</option><option value="Pelanggaran Tata Tertib">Pelanggaran</option><option value="Lainnya">Lainnya</option></select></div><div class="field"><label>Judul</label><input id="report-judul" type="text" placeholder="Ringkasan singkat"></div><div class="field"><label>Deskripsi</label><textarea id="report-deskripsi" placeholder="Jelaskan kronologi..."></textarea></div><div class="field"><label>Tanggal Kejadian</label><input id="report-tanggal" type="date"></div><div class="field"><label>Urgensi</label><select id="report-urgensi"><option value="rendah">Rendah</option><option value="sedang" selected>Sedang</option><option value="tinggi">Tinggi</option><option value="darurat">Darurat 🚨</option></select></div><div class="field"><label>Lampiran (opsional)</label><input type="file" id="report-file" accept=".pdf,.doc,.docx,.jpg,.png,.jpeg,.zip"><div class="field-hint">Maks 400KB</div></div><input type="hidden" id="report-edit-id"><div id="report-status-field" style="display:none;" class="admin-only"><div class="field"><label>Status</label><select id="report-status"><option value="pending">Menunggu</option><option value="reviewed">Ditinjau</option><option value="resolved">Selesai</option><option value="rejected">Ditolak</option></select></div><div class="field"><label>Tanggapan Admin (opsional)</label><textarea id="report-tanggapan" placeholder="Tulis tanggapan untuk siswa..."></textarea></div><div id="report-history" class="field-hint" style="max-height:120px; overflow:auto; white-space:normal;"></div></div><div id="report-student-response" style="display:none;" class="field"><label>Tanggapan Admin</label><div id="report-student-response-text" style="padding:9px 10px; border:1px solid var(--glass-border); border-radius:8px; background:var(--glass-card); font-size:11px; white-space:pre-wrap;"></div></div><div class="modal-actions"><button class="btn btn-danger admin-only" id="report-delete-btn" style="display:none!important;" onclick="deleteReport()">Hapus</button><button class="btn btn-ghost" onclick="closeModal('report')">Batal</button><button class="btn btn-primary" id="report-submit-btn" onclick="submitReport()">Kirim</button></div></div></div>
+  <div class="modal-bg" id="modal-report"><div class="modal"><h3 id="report-modal-title">Buat Laporan</h3><div id="report-code-label" class="field-hint" style="margin:-4px 0 8px; font-weight:700;"></div><div class="field"><label>Kategori</label><select id="report-kategori"><option value="Kekerasan/Berantem">Kekerasan</option><option value="Bullying">Bullying</option><option value="Kerusakan Fasilitas">Kerusakan</option><option value="Pencurian">Pencurian</option><option value="Pelanggaran Tata Tertib">Pelanggaran</option><option value="Lainnya">Lainnya</option></select></div><div class="field"><label>Judul</label><input id="report-judul" type="text" placeholder="Ringkasan singkat"></div><div class="field"><label>Deskripsi</label><textarea id="report-deskripsi" placeholder="Jelaskan kronologi..."></textarea></div><div class="field"><label>Tanggal Kejadian</label><input id="report-tanggal" type="date"></div><div class="field"><label>Urgensi</label><select id="report-urgensi"><option value="rendah">Rendah</option><option value="sedang" selected>Sedang</option><option value="tinggi">Tinggi</option><option value="darurat">Darurat 🚨</option></select></div><div class="field"><label>Lampiran (opsional)</label><input type="file" id="report-file" accept=".pdf,.doc,.docx,.jpg,.png,.jpeg,.zip"><div id="report-file-hint" class="field-hint">Maks 10MB saat Google Drive aktif.</div></div><input type="hidden" id="report-edit-id"><div id="report-status-field" style="display:none;" class="admin-only"><div class="field"><label>Status</label><select id="report-status"><option value="pending">Menunggu</option><option value="reviewed">Ditinjau</option><option value="resolved">Selesai</option><option value="rejected">Ditolak</option></select></div><div class="field"><label>Tanggapan Admin (opsional)</label><textarea id="report-tanggapan" placeholder="Tulis tanggapan untuk siswa..."></textarea></div><div id="report-history" class="field-hint" style="max-height:120px; overflow:auto; white-space:normal;"></div></div><div id="report-student-response" style="display:none;" class="field"><label>Tanggapan Admin</label><div id="report-student-response-text" style="padding:9px 10px; border:1px solid var(--glass-border); border-radius:8px; background:var(--glass-card); font-size:11px; white-space:pre-wrap;"></div></div><div class="modal-actions"><button class="btn btn-danger admin-only" id="report-delete-btn" style="display:none!important;" onclick="deleteReport()">Hapus</button><button class="btn btn-ghost" onclick="closeModal('report')">Batal</button><button class="btn btn-primary" id="report-submit-btn" onclick="submitReport()">Kirim</button></div></div></div>
   <div class="modal-bg" id="modal-account-edit"><div class="modal"><h3>Edit Akun</h3><div class="field"><label>Nama Lengkap</label><input id="acc-edit-nama" type="text" placeholder="Nama lengkap"></div><div class="field"><label>Email</label><input id="acc-edit-email" type="text" disabled style="opacity:0.6;"></div><div class="field"><label>Peran</label><select id="acc-edit-role"><option value="siswa">Siswa</option><option value="admin">Admin</option><option value="superadmin">Super Admin</option></select></div><input type="hidden" id="acc-edit-id"><input type="hidden" id="acc-edit-active" value="true"><div class="modal-actions"><button class="btn btn-danger" id="acc-edit-toggle-btn" onclick="toggleAccountActiveFromModal()">✕ Nonaktifkan Akun</button><button class="btn btn-ghost" onclick="closeModal('account-edit')">Batal</button><button class="btn btn-primary" onclick="submitAccountEdit()">Simpan</button></div></div></div>
   <div class="modal-bg" id="modal-reauth"><div class="modal">
     <h3>🔐 Konfirmasi Keamanan</h3>
@@ -3075,6 +3078,9 @@ const FS_ADMIN = 'kelasku_admin';
 const FS_META = 'kelasku_meta';
 const FS_REPORTS = 'kelasku_reports';
 const FS_NOTIFICATIONS = 'kelasku_notifications';
+// Google Drive bridge. Paste the deployed Apps Script /exec URL here.
+// Leave blank to keep the safe legacy Base64 fallback until Drive is configured.
+const KELASKU_DRIVE_API_URL = 'https://script.google.com/macros/s/AKfycbyBCQNjQTvdYiJVGjzByj6Cp-lsMlm0h6IfYoMhVYNafpwMjkgLPDRWMFQT8OWxiMvdxw/exec';
 const SECURITY_DATA_VERSION = 2;
 const PUBLIC_STATE_DOC = 'kelasku-state';
 const ADMIN_STATE_DOC = 'admin-state';
@@ -3900,6 +3906,10 @@ async function resetData() {
     if (guardAccountManagement()) return;
     if (!confirm('Reset semua data ke default? Semua kas, siswa, tugas, dan piket akan hilang. Tindakan ini tidak bisa dibatalkan.')) return;
     if (!(await requireRecentReauthentication('mereset semua data kelas'))) return;
+    if (driveStorageEnabled()) {
+        try { await driveApiRequest({ action:'cleanup-all' }); }
+        catch (e) { console.warn('Drive cleanup before reset failed:', e); showNotification('⚠️ Data aplikasi akan direset, tetapi sebagian file Drive belum bisa dipindahkan ke Trash: ' + (e.message || 'error'), 'warning', 6000); }
+    }
     localStorage.removeItem('kelasku-state');
     localStorage.removeItem('kelasku-local');
     const todayStr = todayKey();
@@ -4230,30 +4240,113 @@ function renderSettingsInfo() {
     const reportInput = document.getElementById('autoclean-report-days-input');
     if (reportInput) reportInput.value = (state.autoCleanReportDays !== undefined && state.autoCleanReportDays !== null) ? state.autoCleanReportDays : 7;
     renderStorageUsage();
+    updateAttachmentHints();
+    if (isAdmin() && driveStorageEnabled()) void refreshDriveStorageUsage();
+    const migrateBtn = document.getElementById('drive-migrate-btn');
+    if (migrateBtn) {
+        migrateBtn.disabled = !driveStorageEnabled() || !isAdmin();
+        migrateBtn.title = driveStorageEnabled() ? 'Pindahkan lampiran Base64 lama ke Google Drive' : 'Isi KELASKU_DRIVE_API_URL di index.html terlebih dahulu';
+    }
     renderActivityLog();
 }
 const FIRESTORE_DOC_LIMIT_BYTES = 1024 * 1024;
+const LEGACY_ATTACHMENT_BYTES = 250 * 1024;
+const DRIVE_ATTACHMENT_BYTES = 10 * 1024 * 1024;
+function driveStorageEnabled() {
+    return typeof KELASKU_DRIVE_API_URL === 'string'
+        && /^https:\/\/script\.google\.com\/macros\/s\/[^\s]+\/exec(?:\?.*)?$/.test(KELASKU_DRIVE_API_URL.trim());
+}
+function formatStorageBytes(bytes) {
+    const n = Number(bytes || 0);
+    if (!Number.isFinite(n) || n < 0) return '-';
+    const units = ['B','KB','MB','GB','TB'];
+    let value = n, idx = 0;
+    while (value >= 1024 && idx < units.length - 1) { value /= 1024; idx++; }
+    const decimals = idx >= 3 ? 2 : (idx >= 1 ? 0 : 0);
+    return value.toFixed(decimals) + ' ' + units[idx];
+}
+function updateAttachmentHints() {
+    const max = driveStorageEnabled() ? DRIVE_ATTACHMENT_BYTES : LEGACY_ATTACHMENT_BYTES;
+    const maxText = formatStorageBytes(max);
+    const suffix = driveStorageEnabled() ? ' Google Drive aktif.' : ' Drive belum aktif, jadi mode lama lebih kecil.';
+    const taskHint = document.getElementById('tugas-file-hint');
+    const reportHint = document.getElementById('report-file-hint');
+    const kasHint = document.getElementById('kas-file-hint');
+    if (taskHint) taskHint.textContent = 'Maks 3 file, masing-masing ' + maxText + '.' + suffix;
+    if (reportHint) reportHint.textContent = 'Maks ' + maxText + ' per laporan.' + suffix;
+    if (kasHint) kasHint.textContent = 'Maks ' + maxText + '. Saat edit, kosongkan jika ingin mempertahankan lampiran lama.' + suffix;
+}
 function renderStorageUsage() {
     const labelEl = document.getElementById('storage-usage-label');
     const percentEl = document.getElementById('storage-usage-percent');
     const barEl = document.getElementById('storage-usage-bar');
     const hintEl = document.getElementById('storage-usage-hint');
+    const statusEl = document.getElementById('drive-connection-status');
     if (!labelEl || !barEl) return;
+    updateAttachmentHints();
+    if (driveStorageEnabled()) {
+        if (statusEl) { statusEl.textContent = '📁 Status Drive: terhubung (menunggu data kapasitas...)'; statusEl.style.color = 'var(--teal)'; }
+        return;
+    }
     let usedBytes = 0;
     try { usedBytes = new Blob([JSON.stringify(state)]).size; } catch (e) { usedBytes = JSON.stringify(state).length; }
-    const usedKB = Math.round(usedBytes / 1024);
-    const limitKB = Math.round(FIRESTORE_DOC_LIMIT_BYTES / 1024);
     const percent = Math.min(100, Math.round((usedBytes / FIRESTORE_DOC_LIMIT_BYTES) * 100));
-    labelEl.textContent = usedKB + ' KB / ' + limitKB + ' KB';
+    labelEl.textContent = formatStorageBytes(usedBytes) + ' / 1 MB';
     percentEl.textContent = percent + '%';
     barEl.style.width = percent + '%';
     let color = 'var(--teal)';
-    let hint = 'Masih aman. Semua data kelas (kas, tugas, jadwal, lampiran file, dll) disimpan dalam 1 dokumen dengan batas 1MB.';
-    if (percent >= 90) { color = 'var(--rose)'; hint = '⚠️ Hampir penuh! Segera backup, lalu bersihkan tugas/laporan lama atau kurangi lampiran file sebelum penyimpanan gagal.'; }
-    else if (percent >= 70) { color = 'var(--amber)'; hint = '⚠️ Mulai mendekati batas. Pertimbangkan bersihkan tugas selesai lama atau kurangi lampiran file.'; }
+    let hint = 'Mode lama: lampiran dapat tersimpan sebagai Base64 di Firestore dan lebih cepat memenuhi batas dokumen.';
+    if (percent >= 90) { color = 'var(--rose)'; hint = '⚠️ Firestore hampir penuh. Hubungkan Google Drive lalu migrasikan lampiran lama.'; }
+    else if (percent >= 70) { color = 'var(--amber)'; hint = '⚠️ Firestore mulai mendekati batas. Hubungkan Google Drive agar file besar tidak masuk ke dokumen.'; }
     barEl.style.background = color;
     percentEl.style.color = color;
     if (hintEl) hintEl.textContent = hint;
+    if (statusEl) { statusEl.textContent = '📁 Status Drive: belum dikonfigurasi'; statusEl.style.color = 'var(--amber)'; }
+}
+async function driveApiRequest(payload) {
+    if (!driveStorageEnabled()) throw new Error('Google Drive belum dikonfigurasi di index.html.');
+    const user = auth.currentUser;
+    if (!user) throw new Error('Sesi login tidak tersedia.');
+    const idToken = await user.getIdToken(false);
+    const response = await fetch(KELASKU_DRIVE_API_URL.trim(), {
+        method: 'POST',
+        redirect: 'follow',
+        credentials: 'omit',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(Object.assign({}, payload, { idToken }))
+    });
+    const text = await response.text();
+    let data;
+    try { data = JSON.parse(text); } catch (e) { throw new Error('Respons Google Drive tidak valid.'); }
+    if (!data || data.ok !== true) throw new Error((data && data.error) || 'Google Drive gagal memproses permintaan.');
+    return data;
+}
+async function refreshDriveStorageUsage() {
+    if (!isAdmin() || !driveStorageEnabled()) return;
+    const labelEl = document.getElementById('storage-usage-label');
+    const percentEl = document.getElementById('storage-usage-percent');
+    const barEl = document.getElementById('storage-usage-bar');
+    const hintEl = document.getElementById('storage-usage-hint');
+    const statusEl = document.getElementById('drive-connection-status');
+    if (!labelEl || !barEl) return;
+    try {
+        const result = await driveApiRequest({ action:'storage' });
+        const storage = result.storage || {};
+        const used = Number(storage.usedBytes || 0);
+        const limit = Number(storage.limitBytes || 0);
+        const percent = limit > 0 ? Math.min(100, Math.round((used / limit) * 100)) : 0;
+        labelEl.textContent = formatStorageBytes(used) + (limit > 0 ? ' / ' + formatStorageBytes(limit) : ' / tidak terbatas');
+        percentEl.textContent = limit > 0 ? percent + '%' : '—';
+        barEl.style.width = (limit > 0 ? percent : 4) + '%';
+        const color = percent >= 90 ? 'var(--rose)' : (percent >= 70 ? 'var(--amber)' : 'var(--teal)');
+        barEl.style.background = color;
+        percentEl.style.color = color;
+        if (hintEl) hintEl.textContent = 'Lampiran baru disimpan sebagai file Google Drive; Firestore hanya menyimpan metadata kecil. Kosongkan Trash Drive bila ingin benar-benar mengurangi pemakaian ruang.';
+        if (statusEl) { statusEl.textContent = '📁 Status Drive: terhubung ✓'; statusEl.style.color = 'var(--teal)'; }
+        updateAttachmentHints();
+    } catch (e) {
+        if (statusEl) { statusEl.textContent = '📁 Status Drive: error — ' + (e.message || 'tidak dapat terhubung'); statusEl.style.color = 'var(--rose)'; }
+    }
 }
 function setAutoCleanDays(value) {
     if (guardReadOnly()) return;
@@ -4796,9 +4889,12 @@ function autoCleanDoneTugas() {
     state.tugas.forEach(t => { if (t.selesai && !t.selesaiAt) { t.selesaiAt = now; changed = true; } });
     if (days > 0) {
         const thresholdMs = days * 24 * 60 * 60 * 1000;
-        const before = state.tugas.length;
-        state.tugas = state.tugas.filter(t => !(t.selesai && t.selesaiAt && (now - t.selesaiAt) > thresholdMs));
-        if (state.tugas.length !== before) changed = true;
+        const expiredTasks = state.tugas.filter(t => t.selesai && t.selesaiAt && (now - t.selesaiAt) > thresholdMs);
+        if (expiredTasks.length) {
+            expiredTasks.forEach(t => void deleteDriveAttachments(getItemFiles(t), 'task'));
+            state.tugas = state.tugas.filter(t => !(t.selesai && t.selesaiAt && (now - t.selesaiAt) > thresholdMs));
+            changed = true;
+        }
     }
     if (changed) saveState();
 }
@@ -4841,6 +4937,8 @@ function clearDoneTugas() {
     const doneCount = state.tugas.filter(t => t.selesai).length;
     if (!doneCount) { showNotification('Tidak ada tugas selesai untuk dibersihkan.', 'info'); return; }
     if (!confirm('Hapus semua (' + doneCount + ') tugas yang sudah selesai? Tindakan ini tidak bisa dibatalkan.')) return;
+    const deletedTasks = state.tugas.filter(t => t.selesai);
+    deletedTasks.forEach(t => void deleteDriveAttachments(getItemFiles(t), 'task'));
     state.tugas = state.tugas.filter(t => !t.selesai);
     saveState(); renderTugas(); renderBeranda(); showNotification('Tugas yang sudah selesai berhasil dibersihkan.', 'success');
 }
@@ -4855,8 +4953,7 @@ function openTaskFileAt(id, idx) {
     const files = getItemFiles(t);
     const f = files[idx];
     if (!f) return;
-    if (f.data) { openFileData(f.data, f.name); }
-    else { showNotification('File ini diunggah sebelum fitur penyimpanan file aktif. Silakan upload ulang lewat tombol Edit.', 'warning'); }
+    openStoredAttachment(f);
 }
 let _tugasEditFiles = [];
 function renderTugasFileChips() {
@@ -4873,7 +4970,7 @@ async function onTugasFileSelected(input) {
     for (const file of picked) {
         try {
             const attachment = await prepareAttachment(file);
-            _tugasEditFiles.push({ name: attachment.name, data: attachment.data });
+            _tugasEditFiles.push({ name: attachment.name, data: attachment.data, sizeBytes: attachment.sizeBytes, mimeType: attachment.mimeType, storage:'pending' });
             if (attachment.compressed) showNotification('Gambar "' + file.name + '" dikompres otomatis menjadi ' + Math.round((attachment.data.length * 3 / 4) / 1024) + 'KB.', 'success');
         } catch (e) { showNotification('File "' + file.name + '": ' + (e.message || 'gagal diproses') + '.', 'error'); }
     }
@@ -4909,9 +5006,77 @@ function openTugasModal(id) {
     renderTugasFileChips();
     openModal('tugas');
 }
-const MAX_ATTACHMENT_BYTES = 250 * 1024;
-const IMAGE_TARGET_BYTES = 180 * 1024;
+const IMAGE_TARGET_BYTES = 500 * 1024;
 const MAX_FILES_PER_ITEM = 3;
+function currentAttachmentLimit() {
+    return driveStorageEnabled() ? DRIVE_ATTACHMENT_BYTES : LEGACY_ATTACHMENT_BYTES;
+}
+function base64FromDataUrl(dataUrl) {
+    const str = String(dataUrl || '');
+    const comma = str.indexOf(',');
+    return comma >= 0 ? str.slice(comma + 1) : str;
+}
+function mimeTypeFromFilename(name) {
+    const ext = String(name || '').toLowerCase().split('.').pop();
+    return ({
+        pdf:'application/pdf',
+        doc:'application/msword',
+        docx:'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        xlsx:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        jpg:'image/jpeg',
+        jpeg:'image/jpeg',
+        png:'image/png',
+        webp:'image/webp',
+        zip:'application/zip'
+    })[ext] || 'application/octet-stream';
+}
+function attachmentUrl(file) {
+    if (!file) return '';
+    if (file.driveUrl) return file.driveUrl;
+    if (file.driveFileId) return 'https://drive.google.com/file/d/' + encodeURIComponent(file.driveFileId) + '/view';
+    return '';
+}
+function openStoredAttachment(file) {
+    if (!file) return;
+    const url = attachmentUrl(file);
+    if (url) {
+        const win = window.open(url, '_blank', 'noopener,noreferrer');
+        if (!win) showNotification('Browser memblokir pembukaan tab baru. Izinkan popup untuk membuka file.', 'warning');
+        return;
+    }
+    if (file.data) { openFileData(file.data, file.name); return; }
+    showNotification('File tidak memiliki lokasi penyimpanan yang valid.', 'error');
+}
+async function uploadPreparedAttachment(prepared, category) {
+    if (!driveStorageEnabled()) {
+        return { name: prepared.name, data: prepared.data, sizeBytes: prepared.sizeBytes, mimeType: prepared.mimeType };
+    }
+    const result = await driveApiRequest({
+        action: 'upload',
+        category,
+        filename: prepared.name,
+        mimeType: prepared.mimeType || 'application/octet-stream',
+        base64: base64FromDataUrl(prepared.data),
+        sizeBytes: prepared.sizeBytes || 0
+    });
+    return Object.assign({}, result.file, {
+        storage: 'google-drive'
+    });
+}
+async function deleteDriveAttachment(file, category) {
+    if (!driveStorageEnabled() || !file || !file.driveFileId) return;
+    try {
+        await driveApiRequest({ action:'delete', fileId:file.driveFileId, category });
+    } catch (e) {
+        console.warn('Drive file delete failed:', e);
+    }
+}
+async function deleteDriveAttachments(files, category) {
+    if (!driveStorageEnabled() || !Array.isArray(files)) return;
+    for (const file of files) {
+        await deleteDriveAttachment(file, category);
+    }
+}
 function dataUrlToBlob(dataUrl) {
     const parts = dataUrl.split(',');
     const mimeMatch = parts[0].match(/data:(.*?);base64/);
@@ -4976,10 +5141,17 @@ async function prepareAttachment(file) {
         prepared = await compressImageAttachment(file);
         compressed = prepared.size < file.size;
     }
-    if (prepared.size > MAX_ATTACHMENT_BYTES) {
-        throw new Error('Ukuran akhir ' + Math.round(prepared.size / 1024) + 'KB masih melebihi batas ' + Math.round(MAX_ATTACHMENT_BYTES / 1024) + 'KB. Untuk PDF/dokumen, kecilkan file sebelum upload.');
+    const limit = currentAttachmentLimit();
+    if (prepared.size > limit) {
+        throw new Error('Ukuran akhir ' + formatStorageBytes(prepared.size) + ' melebihi batas ' + formatStorageBytes(limit) + '. Untuk PDF/dokumen, kecilkan file sebelum upload.');
     }
-    return { name: prepared.name, data: await readFileAsDataUrl(prepared), compressed };
+    return {
+        name: prepared.name,
+        data: await readFileAsDataUrl(prepared),
+        sizeBytes: prepared.size,
+        mimeType: prepared.type || file.type || mimeTypeFromFilename(prepared.name) || 'application/octet-stream',
+        compressed
+    };
 }
 async function submitTugas() {
     if (guardReadOnly()) return;
@@ -4989,19 +5161,53 @@ async function submitTugas() {
     const deskripsi = document.getElementById('tugas-deskripsi').value.trim();
     const editId = document.getElementById('tugas-edit-id').value;
     if (!nama) { showNotification('Nama tugas wajib diisi.', 'warning'); return; }
-    const files = _tugasEditFiles.slice();
+
+    let files;
+    try {
+        files = [];
+        for (const file of _tugasEditFiles.slice()) {
+            if (driveStorageEnabled() && file.driveFileId) {
+                files.push({
+                    name:file.name,
+                    driveFileId:file.driveFileId,
+                    driveUrl:file.driveUrl || attachmentUrl(file),
+                    sizeBytes:Number(file.sizeBytes || file.size || 0),
+                    mimeType:file.mimeType || '',
+                    storage:'google-drive'
+                });
+            } else if (file.data) {
+                files.push(await uploadPreparedAttachment(file, 'task'));
+            } else {
+                files.push(file);
+            }
+        }
+    } catch (e) {
+        showNotification('Gagal menyimpan lampiran tugas: ' + (e.message || 'error'), 'error', 5000);
+        return;
+    }
+
     if (editId) {
         const t = state.tugas.find(x => x.id === Number(editId));
-        if (t) { t.nama = nama; t.mapel = mapel; t.tenggat = tenggat; t.deskripsi = deskripsi; t.files = files; delete t.file; delete t.fileData; }
+        if (t) {
+            const previousFiles = getItemFiles(t);
+            const keptDriveIds = new Set(files.map(f => f.driveFileId).filter(Boolean));
+            previousFiles.forEach(oldFile => {
+                if (oldFile.driveFileId && !keptDriveIds.has(oldFile.driveFileId)) {
+                    void deleteDriveAttachment(oldFile, 'task');
+                }
+            });
+            t.nama = nama; t.mapel = mapel; t.tenggat = tenggat; t.deskripsi = deskripsi; t.files = files;
+            delete t.file; delete t.fileData;
+        }
         addActivity('Mengubah tugas', t ? t.nama : 'Tugas');
         addNotification('Tugas diperbarui', 'Tugas ' + (t ? t.nama : '') + ' telah diperbarui.', {role:'siswa'});
-        saveState(); renderTugas(); renderBeranda(); closeModal('tugas'); showNotification('Tugas berhasil diperbarui.', 'success'); return;
+        await saveState(); renderTugas(); renderBeranda(); closeModal('tugas'); showNotification('Tugas berhasil diperbarui.', 'success'); return;
     }
     state.tugas.push({ id: Date.now(), nama, mapel, tenggat, deskripsi, files, selesai: false });
     document.getElementById('tugas-deskripsi').value = '';
     addActivity('Menambahkan tugas', nama);
     addNotification('Tugas baru', 'Tugas baru: ' + nama + (tenggat ? ' · Tenggat ' + tenggat : ''), {role:'siswa'});
-    saveState(); renderTugas(); renderBeranda(); closeModal('tugas'); showNotification('Tugas berhasil ditambahkan.', 'success');
+    await saveState(); renderTugas(); renderBeranda(); closeModal('tugas'); showNotification('Tugas berhasil ditambahkan.', 'success');
 }
 function deleteTugasCurrent() {
     if (guardReadOnly()) return;
@@ -5009,6 +5215,7 @@ function deleteTugasCurrent() {
     if (!editId) return;
     if (!confirm('Hapus tugas ini?')) return;
     const deletedTask = state.tugas.find(t => t.id === Number(editId));
+    if (deletedTask) void deleteDriveAttachments(getItemFiles(deletedTask), 'task');
     state.tugas = state.tugas.filter(t => t.id !== Number(editId));
     addActivity('Menghapus tugas', deletedTask ? deletedTask.nama : 'Tugas');
     saveState(); renderTugas(); renderBeranda(); closeModal('tugas'); showNotification('Tugas dihapus.', 'info');
@@ -5022,6 +5229,7 @@ function toggleTugas(id) {
 function deleteTugas(id) {
     if (guardReadOnly()) return;
     const deletedTask = state.tugas.find(t => t.id === id);
+    if (deletedTask) void deleteDriveAttachments(getItemFiles(deletedTask), 'task');
     state.tugas = state.tugas.filter(t => t.id !== id);
     addActivity('Menghapus tugas', deletedTask ? deletedTask.nama : 'Tugas');
     saveState(); renderTugas(); renderBeranda(); showNotification('Tugas dihapus.', 'info');
@@ -5037,9 +5245,14 @@ function autoCleanDoneReports() {
     });
     if (days > 0) {
         const thresholdMs = days * 24 * 60 * 60 * 1000;
-        const before = state.reports.length;
-        state.reports = state.reports.filter(r => !(r.status === 'resolved' && r.resolvedAt && (now - r.resolvedAt) > thresholdMs));
-        if (state.reports.length !== before) changed = true;
+        const expiredReports = state.reports.filter(r => r.status === 'resolved' && r.resolvedAt && (now - r.resolvedAt) > thresholdMs);
+        if (expiredReports.length) {
+            expiredReports.forEach(r => {
+                if (r.driveFileId) void deleteDriveAttachment({driveFileId:r.driveFileId}, 'report');
+            });
+            state.reports = state.reports.filter(r => !(r.status === 'resolved' && r.resolvedAt && (now - r.resolvedAt) > thresholdMs));
+            changed = true;
+        }
     }
     if (changed) saveState();
 }
@@ -5051,7 +5264,7 @@ function reportUnreadCount() {
     return state.reports.filter(r => r.authorUid === currentUser.uid && r.statusHistory && r.statusHistory.length && (r.statusHistory[r.statusHistory.length-1].at > seen)).length;
 }
 function renderReports() {
-    autoCleanDoneReports();
+    if (isAdmin()) autoCleanDoneReports();
     const filterEl = document.getElementById('report-filter');
     const searchEl = document.getElementById('report-search');
     const filter = filterEl ? filterEl.value : 'all';
@@ -5141,9 +5354,11 @@ function setReportStaffView(isStaff) {
 }
 function openReportModal(id) {
     const isStaff = currentUser && (currentUser.role === 'superadmin' || currentUser.role === 'admin');
+    window._currentReportFileName = '';
     const r = id ? state.reports.find(x => x.id === Number(id)) : null;
     if (id && !r) return;
     if (r) {
+        window._currentReportFileName = r.file || '';
         document.getElementById('report-code-label').textContent = reportCode(r);
         document.getElementById('report-edit-id').value = r.id;
         document.getElementById('report-kategori').value = r.kategori || 'Lainnya';
@@ -5181,6 +5396,7 @@ function openReportModal(id) {
     openModal('report');
 }
 async function submitReport() {
+    if (!currentUser) { showNotification('Sesi login tidak tersedia.', 'error'); return; }
     const editId = document.getElementById('report-edit-id').value;
     const isStaff = currentUser && (currentUser.role === 'superadmin' || currentUser.role === 'admin');
     if (editId && isStaff) {
@@ -5213,14 +5429,19 @@ async function submitReport() {
     }
     if (editId) return;
     const fileInput = document.getElementById('report-file');
-    let fileName = '', fileData = '';
+    let fileName = '', fileData = '', driveFileId = '', driveUrl = '', fileSize = 0, fileMimeType = '';
     if (fileInput.files.length > 0) {
         const file = fileInput.files[0];
         try {
             const attachment = await prepareAttachment(file);
-            fileData = attachment.data;
-            fileName = attachment.name;
             if (attachment.compressed) showNotification('Gambar dikompres otomatis sebelum disimpan.', 'success');
+            const stored = await uploadPreparedAttachment(attachment, 'report');
+            fileName = stored.name || attachment.name;
+            fileData = stored.data || '';
+            driveFileId = stored.driveFileId || '';
+            driveUrl = stored.driveUrl || stored.url || '';
+            fileSize = Number(stored.sizeBytes || attachment.sizeBytes || 0);
+            fileMimeType = stored.mimeType || attachment.mimeType || '';
         } catch (e) { showNotification(e.message || 'Gagal memproses file.', 'error'); return; }
     }
     const judul = document.getElementById('report-judul').value.trim();
@@ -5243,7 +5464,12 @@ async function submitReport() {
         date: new Date().toLocaleDateString('id-ID'),
         tanggal: tanggal || todayKey(),
         file: fileName,
-        fileData
+        fileData,
+        driveFileId,
+        driveUrl,
+        fileSize,
+        fileMimeType,
+        storage: driveFileId ? 'google-drive' : ''
     };
     state.reports.push(newReport);
     fileInput.value = '';
@@ -5276,6 +5502,7 @@ async function submitReport() {
         showNotification('Laporan berhasil dikirim!', 'success');
     } catch (e) {
         state.reports = state.reports.filter(r => String(r.id) !== String(reportId));
+        if (newReport.driveFileId) void deleteDriveAttachment({driveFileId:newReport.driveFileId}, 'report');
         showNotification('Gagal menyimpan laporan. Coba lagi.', 'error');
         console.error('Create report error:', e);
     }
@@ -5283,8 +5510,7 @@ async function submitReport() {
 function openReportFile(id) {
     const r = state.reports.find(x => x.id === Number(id));
     if (!r) return;
-    if (r.fileData) { openFileData(r.fileData, r.file); }
-    else { showNotification('File ini diunggah sebelum fitur penyimpanan file aktif.', 'warning'); }
+    openStoredAttachment({ name:r.file, data:r.fileData, driveFileId:r.driveFileId, driveUrl:r.driveUrl });
 }
 async function deleteReport() {
     if (guardReadOnly()) return;
@@ -5295,7 +5521,9 @@ async function deleteReport() {
     const editId = Number(document.getElementById('report-edit-id').value);
     if (!confirm('Hapus laporan ini?')) return;
     try {
+        const deletedReport = state.reports.find(r => r.id === editId);
         await db.collection(FS_REPORTS).doc(String(editId)).delete();
+        if (deletedReport && deletedReport.driveFileId) void deleteDriveAttachment({driveFileId:deletedReport.driveFileId}, 'report');
         state.reports = state.reports.filter(r => r.id !== editId);
         _loadedReportIds.delete(String(editId));
         renderReports();
@@ -5317,17 +5545,24 @@ async function submitKas() {
     if (editId) {
         const t = state.kas.find(x => x.id === editId);
         if (!t) { showNotification('Transaksi tidak ditemukan.', 'error'); return; }
-        let fileName = t.file || '', fileData = t.fileData || '';
+        let fileName = t.file || '', fileData = t.fileData || '', driveFileId = t.driveFileId || '', driveUrl = t.driveUrl || '', fileSize = Number(t.fileSize || 0), fileMimeType = t.fileMimeType || '';
         if (fileInput.files.length > 0) {
+            const oldDriveId = driveFileId;
             const file = fileInput.files[0];
             try {
                 const attachment = await prepareAttachment(file);
-                fileData = attachment.data;
-                fileName = attachment.name;
+                const stored = await uploadPreparedAttachment(attachment, 'kas');
+                fileData = stored.data || '';
+                fileName = stored.name || attachment.name;
+                driveFileId = stored.driveFileId || '';
+                driveUrl = stored.driveUrl || stored.url || '';
+                fileSize = Number(stored.sizeBytes || attachment.sizeBytes || 0);
+                fileMimeType = stored.mimeType || attachment.mimeType || '';
                 if (attachment.compressed) showNotification('Gambar dikompres otomatis sebelum disimpan.', 'success');
+                if (oldDriveId && oldDriveId !== driveFileId) void deleteDriveAttachment({driveFileId:oldDriveId}, 'kas');
             } catch (e) { showNotification(e.message || 'Gagal memproses file.', 'error'); return; }
         }
-        t.jenis = jenis; t.ket = ket; t.jumlah = jumlah; t.file = fileName; t.fileData = fileData;
+        t.jenis = jenis; t.ket = ket; t.jumlah = jumlah; t.file = fileName; t.fileData = fileData; t.driveFileId = driveFileId; t.driveUrl = driveUrl; t.fileSize = fileSize; t.fileMimeType = fileMimeType; t.storage = driveFileId ? 'google-drive' : '';
         fileInput.value = '';
         document.getElementById('kas-edit-id').value = '';
         document.getElementById('kas-modal-title').textContent = 'Tambah Transaksi Kas';
@@ -5335,17 +5570,22 @@ async function submitKas() {
         addActivity('Mengubah transaksi kas', ket + ' · ' + rupiah(jumlah));
         saveState(); renderKas(); renderBeranda(); closeModal('kas'); showNotification('Transaksi kas berhasil diperbarui.', 'success'); return;
     }
-    let fileName = '', fileData = '';
+    let fileName = '', fileData = '', driveFileId = '', driveUrl = '', fileSize = 0, fileMimeType = '';
     if (fileInput.files.length > 0) {
         const file = fileInput.files[0];
         try {
             const attachment = await prepareAttachment(file);
-            fileData = attachment.data;
-            fileName = attachment.name;
+            const stored = await uploadPreparedAttachment(attachment, 'kas');
+            fileData = stored.data || '';
+            fileName = stored.name || attachment.name;
+            driveFileId = stored.driveFileId || '';
+            driveUrl = stored.driveUrl || stored.url || '';
+            fileSize = Number(stored.sizeBytes || attachment.sizeBytes || 0);
+            fileMimeType = stored.mimeType || attachment.mimeType || '';
             if (attachment.compressed) showNotification('Gambar dikompres otomatis sebelum disimpan.', 'success');
         } catch (e) { showNotification(e.message || 'Gagal memproses file.', 'error'); return; }
     }
-    state.kas.push({ id: Date.now(), jenis, ket, jumlah, tanggal: new Date().toLocaleDateString('id-ID'), file: fileName, fileData });
+    state.kas.push({ id: Date.now(), jenis, ket, jumlah, tanggal: new Date().toLocaleDateString('id-ID'), file: fileName, fileData, driveFileId, driveUrl, fileSize, fileMimeType, storage: driveFileId ? 'google-drive' : '' });
     fileInput.value = '';
     document.getElementById('kas-edit-id').value = '';
     addActivity('Menambahkan transaksi kas', ket + ' · ' + rupiah(jumlah));
@@ -5381,6 +5621,7 @@ function hapusKasCurrent() {
     if (!editId) return;
     if (!confirm('Hapus transaksi kas ini?')) return;
     const deletedKas = state.kas.find(t => t.id === editId);
+    if (deletedKas && deletedKas.driveFileId) void deleteDriveAttachment({driveFileId:deletedKas.driveFileId}, 'kas');
     state.kas = state.kas.filter(t => t.id !== editId);
     addActivity('Menghapus transaksi kas', deletedKas ? deletedKas.ket + ' · ' + rupiah(deletedKas.jumlah) : 'Transaksi kas');
     saveState(); renderKas(); renderBeranda();
@@ -5391,13 +5632,13 @@ function hapusKasCurrent() {
 function openKasFile(id) {
     const t = state.kas.find(x => x.id === Number(id));
     if (!t) return;
-    if (t.fileData) { openFileData(t.fileData, t.file); }
-    else { showNotification('File ini diunggah sebelum fitur penyimpanan file aktif.', 'warning'); }
+    openStoredAttachment({ name:t.file, data:t.fileData, driveFileId:t.driveFileId, driveUrl:t.driveUrl });
 }
 function hapusKas(id) {
     if (guardReadOnly()) return;
     if (!confirm('Hapus transaksi kas ini?')) return;
     const deletedKas = state.kas.find(t => t.id === id);
+    if (deletedKas && deletedKas.driveFileId) void deleteDriveAttachment({driveFileId:deletedKas.driveFileId}, 'kas');
     state.kas = state.kas.filter(t => t.id !== id);
     addActivity('Menghapus transaksi kas', deletedKas ? deletedKas.ket + ' · ' + rupiah(deletedKas.jumlah) : 'Transaksi kas');
     saveState(); renderKas(); renderBeranda(); showNotification('Transaksi kas dihapus.', 'info');
@@ -5641,6 +5882,83 @@ function exportBackup() {
     URL.revokeObjectURL(url);
     showNotification('Backup berhasil diunduh!', 'success');
 }
+async function migrateAllAttachmentsToDrive() {
+    if (guardReadOnly()) return;
+    if (!driveStorageEnabled()) {
+        showNotification('Google Drive belum dikonfigurasi. Isi KELASKU_DRIVE_API_URL lalu upload ulang index.html.', 'warning', 5000);
+        return;
+    }
+    if (!(await requireRecentReauthentication('memigrasikan semua lampiran ke Google Drive'))) return;
+    if (!confirm('Migrasikan semua lampiran lama yang masih tersimpan sebagai Base64 ke Google Drive? File lama akan diganti menjadi metadata Drive setelah upload berhasil.')) return;
+
+    let migrated = 0;
+    let skipped = 0;
+    try {
+        for (const task of state.tugas || []) {
+            const oldFiles = getItemFiles(task);
+            if (!oldFiles.length) continue;
+            const newFiles = [];
+            for (const file of oldFiles) {
+                if (file.driveFileId) { newFiles.push(file); skipped++; continue; }
+                if (!file.data) { newFiles.push(file); skipped++; continue; }
+                const stored = await uploadPreparedAttachment({
+                    name:file.name || 'lampiran',
+                    data:file.data,
+                    sizeBytes:Number(file.sizeBytes || Math.floor(base64FromDataUrl(file.data).length * 0.75)),
+                    mimeType:file.mimeType || mimeTypeFromFilename(file.name)
+                }, 'task');
+                newFiles.push(stored);
+                migrated++;
+            }
+            task.files = newFiles;
+            delete task.file; delete task.fileData;
+        }
+
+        for (const kas of state.kas || []) {
+            if (kas.driveFileId || !kas.fileData) { if (kas.file) skipped++; continue; }
+            const stored = await uploadPreparedAttachment({
+                name:kas.file || 'lampiran',
+                data:kas.fileData,
+                sizeBytes:Number(kas.fileSize || Math.floor(base64FromDataUrl(kas.fileData).length * 0.75)),
+                mimeType:kas.fileMimeType || mimeTypeFromFilename(kas.file)
+            }, 'kas');
+            kas.driveFileId = stored.driveFileId || '';
+            kas.driveUrl = stored.driveUrl || stored.url || '';
+            kas.fileSize = Number(stored.sizeBytes || 0);
+            kas.fileMimeType = stored.mimeType || '';
+            kas.storage = 'google-drive';
+            kas.fileData = '';
+            migrated++;
+        }
+
+        for (const report of state.reports || []) {
+            if (!report.fileData || report.driveFileId) { if (report.file) skipped++; continue; }
+            const stored = await uploadPreparedAttachment({
+                name:report.file || 'lampiran',
+                data:report.fileData,
+                sizeBytes:Number(report.fileSize || Math.floor(base64FromDataUrl(report.fileData).length * 0.75)),
+                mimeType:report.fileMimeType || mimeTypeFromFilename(report.file)
+            }, 'report');
+            report.driveFileId = stored.driveFileId || '';
+            report.driveUrl = stored.driveUrl || stored.url || '';
+            report.fileSize = Number(stored.sizeBytes || 0);
+            report.fileMimeType = stored.mimeType || '';
+            report.storage = 'google-drive';
+            report.fileData = '';
+            await db.collection(FS_REPORTS).doc(String(report.id)).set(report, { merge:true });
+            migrated++;
+        }
+
+        await saveState();
+        renderAll();
+        await refreshDriveStorageUsage();
+        showNotification('Migrasi selesai. ' + migrated + ' lampiran dipindahkan; ' + skipped + ' dilewati.', 'success', 6000);
+    } catch (e) {
+        console.error('Drive migration error:', e);
+        showNotification('Migrasi berhenti: ' + (e.message || 'terjadi kesalahan').toString(), 'error', 6000);
+    }
+}
+
 async function importBackup(file) {
     if (!file || guardReadOnly()) return;
     const inputEl = document.getElementById('import-file-input');
