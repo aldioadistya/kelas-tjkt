@@ -2940,8 +2940,7 @@ a{
             <div class="field-hint" id="storage-usage-hint">Google Drive belum dihubungkan. Lampiran masih memakai penyimpanan lama sampai URL Apps Script diisi.</div>
             <div id="drive-connection-status" class="field-hint" style="margin-top:6px; font-weight:700;">📁 Status Drive: belum dikonfigurasi</div>
             <button id="drive-migrate-btn" class="btn btn-ghost" style="width:100%; margin-top:8px; padding:8px; font-size:10px;" onclick="migrateAllAttachmentsToDrive()">☁️ Migrasikan lampiran lama ke Drive</button>
-            <div id="drive-migration-status" class="field-hint" style="margin-top:6px;">Belum dicek.</div>
-            <div class="field-hint" style="margin-top:6px;">Migrasi hanya memindahkan lampiran lama yang masih berupa Base64. Lampiran yang sudah memiliki ID Google Drive akan dilewati dan tidak diupload ulang.</div>
+            <div class="field-hint" style="margin-top:6px;">Setelah deployment Apps Script, isi konstanta <b>KELASKU_DRIVE_API_URL</b> di file <b>index.html</b>. Jangan taruh password atau credential Google di HTML.</div>
           </div>
           <div class="settings-section">
             <div class="settings-label">Backup &amp; Pemulihan</div>
@@ -4359,26 +4358,9 @@ function renderSettingsInfo() {
     updateAttachmentHints();
     if (isAdmin() && driveStorageEnabled()) void refreshDriveStorageUsage();
     const migrateBtn = document.getElementById('drive-migrate-btn');
-    const migrationStatusEl = document.getElementById('drive-migration-status');
     if (migrateBtn) {
         migrateBtn.disabled = !driveStorageEnabled() || !isAdmin();
         migrateBtn.title = driveStorageEnabled() ? 'Pindahkan lampiran Base64 lama ke Google Drive' : 'Isi KELASKU_DRIVE_API_URL di index.html terlebih dahulu';
-        if (driveStorageEnabled() && isAdmin()) {
-            const counts = countLegacyDriveAttachments();
-            if (counts.total > 0) {
-                migrateBtn.style.display = '';
-                migrateBtn.textContent = '☁️ Migrasikan ' + counts.total + ' lampiran lama ke Drive';
-                migrateBtn.disabled = false;
-                if (migrationStatusEl) migrationStatusEl.textContent = '⚠️ ' + counts.total + ' lampiran masih tersimpan sebagai data lama/Base64 (' + counts.ready + ' siap dipindahkan). File yang sudah di Google Drive tidak akan diupload ulang.';
-            } else {
-                migrateBtn.style.display = '';
-                migrateBtn.textContent = '✅ Semua lampiran sudah di Google Drive';
-                migrateBtn.disabled = true;
-                if (migrationStatusEl) migrationStatusEl.textContent = '✅ Migrasi sudah selesai. Tidak ada lampiran Base64 lama yang tersisa pada data aplikasi.';
-            }
-        } else if (migrationStatusEl) {
-            migrationStatusEl.textContent = driveStorageEnabled() ? 'Login sebagai Admin untuk memeriksa migrasi.' : 'Hubungkan Google Drive terlebih dahulu.';
-        }
     }
     renderActivityLog();
 }
@@ -6015,47 +5997,14 @@ function exportBackup() {
     URL.revokeObjectURL(url);
     showNotification('Backup berhasil diunduh!', 'success');
 }
-function countLegacyDriveAttachments() {
-    let total = 0;
-    let ready = 0;
-    const tasks = Array.isArray(state.tugas) ? state.tugas : [];
-    tasks.forEach(task => {
-        const files = getItemFiles(task);
-        files.forEach(file => {
-            if (!file) return;
-            if (file.driveFileId) return;
-            if (file.data) { total++; ready++; }
-        });
-    });
-    const kasList = Array.isArray(state.kas) ? state.kas : [];
-    kasList.forEach(kas => {
-        if (!kas || kas.driveFileId) return;
-        if (kas.fileData) { total++; ready++; }
-    });
-    const reports = Array.isArray(state.reports) ? state.reports : [];
-    reports.forEach(report => {
-        if (!report || report.driveFileId) return;
-        if (report.fileData) { total++; ready++; }
-    });
-    return { total, ready };
-}
-
 async function migrateAllAttachmentsToDrive() {
     if (guardReadOnly()) return;
     if (!driveStorageEnabled()) {
         showNotification('Google Drive belum dikonfigurasi. Isi KELASKU_DRIVE_API_URL lalu upload ulang index.html.', 'warning', 5000);
         return;
     }
-    const before = countLegacyDriveAttachments();
-    if (before.total === 0) {
-        showNotification('✅ Semua lampiran sudah berada di Google Drive. Tidak ada yang perlu dimigrasikan lagi.', 'success', 5000);
-        renderSettingsInfo();
-        return;
-    }
     if (!(await requireRecentReauthentication('memigrasikan semua lampiran ke Google Drive'))) return;
-    if (!confirm('Migrasikan ' + before.total + ' lampiran lama yang masih tersimpan sebagai Base64 ke Google Drive?
-
-File yang sudah memiliki ID Google Drive tidak akan diupload ulang.')) return;
+    if (!confirm('Migrasikan semua lampiran lama yang masih tersimpan sebagai Base64 ke Google Drive? File lama akan diganti menjadi metadata Drive setelah upload berhasil.')) return;
 
     let migrated = 0;
     let skipped = 0;
@@ -6118,15 +6067,6 @@ File yang sudah memiliki ID Google Drive tidak akan diupload ulang.')) return;
         await saveState();
         renderAll();
         await refreshDriveStorageUsage();
-        const after = countLegacyDriveAttachments();
-        const statusEl = document.getElementById('drive-migration-status');
-        const btn = document.getElementById('drive-migrate-btn');
-        if (after.total === 0) {
-            if (btn) { btn.textContent = '✅ Semua lampiran sudah di Google Drive'; btn.disabled = true; }
-            if (statusEl) statusEl.textContent = '✅ Migrasi selesai. Tidak ada lampiran Base64 lama yang tersisa.';
-        } else if (statusEl) {
-            statusEl.textContent = '⚠️ Masih ada ' + after.total + ' lampiran lama yang belum berhasil dipindahkan. Kamu bisa melanjutkan migrasi tanpa mengupload ulang file yang sudah berhasil.';
-        }
         showNotification('Migrasi selesai. ' + migrated + ' lampiran dipindahkan; ' + skipped + ' dilewati.', 'success', 6000);
     } catch (e) {
         console.error('Drive migration error:', e);
