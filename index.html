@@ -5044,7 +5044,7 @@ function renderTugas() {
             <div class="checkbox admin-only" onclick="event.stopPropagation(); toggleTugas(${t.id})"></div>
             <div style="flex:1; ${readOnly ? '' : 'cursor:pointer;'}" ${readOnly ? '' : `onclick="openTugasModal(${t.id})"`}>
                 <div class="task-title">${t.nama}</div>
-                <div class="task-meta"><span class="pill pill-due">📅 ${t.tenggat || 'Tanpa tenggat'}</span></div>
+                <div class="task-meta"><span class="pill">📚 ${t.mapel || 'Tanpa mata pelajaran'}</span><span class="pill pill-due">📅 ${t.tenggat || 'Tanpa tenggat'}</span></div>
                 ${t.deskripsi ? `<div class="task-desc">${t.deskripsi}</div>` : ''}
                 ${renderTaskFiles(t)}
             </div>
@@ -5057,6 +5057,7 @@ function renderTugas() {
             <div class="checkbox checked admin-only" onclick="event.stopPropagation(); toggleTugas(${t.id})">✓</div>
             <div style="flex:1; ${readOnly ? '' : 'cursor:pointer;'}" ${readOnly ? '' : `onclick="openTugasModal(${t.id})"`}>
                 <div class="task-title checked">${t.nama}</div>
+                <div class="task-meta"><span class="pill">📚 ${t.mapel || 'Tanpa mata pelajaran'}</span><span class="pill pill-due">📅 ${t.tenggat || 'Tanpa tenggat'}</span></div>
                 ${t.deskripsi ? `<div class="task-desc" style="text-decoration:line-through; color:var(--text-muted);">${t.deskripsi}</div>` : ''}
                 ${renderTaskFiles(t)}
             </div>
