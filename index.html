@@ -2618,15 +2618,6 @@ a{
       <div class="login-welcome" id="auth-title">Selamat datang 👋</div>
       <div class="login-sub" id="auth-sub">Masuk dengan email untuk mengakses dasbor kelas</div>
       <div class="login-error" id="login-error"></div>
-      <div class="verification-box" id="email-verification-box" style="display:none;">
-        <div class="verification-title">✉️ Verifikasi email diperlukan</div>
-        <div class="verification-email" id="verification-email-text"></div>
-        <div class="verification-copy">Verifikasi email terlebih dahulu untuk masuk ke aplikasi.</div>
-        <div class="verification-actions">
-          <button class="btn btn-ghost" type="button" onclick="resendVerificationEmail()">Kirim ulang</button>
-          <button class="btn btn-primary" type="button" onclick="checkEmailVerification()">Saya sudah verifikasi</button>
-        </div>
-      </div>
       <div class="field" id="auth-nama-field" style="display:none;">
         <label>Nama Lengkap</label>
         <input type="text" id="auth-nama" placeholder="Nama lengkap kamu">
@@ -3077,8 +3068,21 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 const VALID_ROLES = ['siswa', 'admin', 'superadmin'];
-const FS_COLLECTION = 'kelasku';
+const FS_COLLECTION = 'kelasku'; // legacy collection, admin-only migration source
 const FS_PROFILES = 'kelasku_profiles';
+const FS_PUBLIC = 'kelasku_public';
+const FS_ADMIN = 'kelasku_admin';
+const FS_META = 'kelasku_meta';
+const FS_REPORTS = 'kelasku_reports';
+const FS_NOTIFICATIONS = 'kelasku_notifications';
+const SECURITY_DATA_VERSION = 2;
+const PUBLIC_STATE_DOC = 'kelasku-state';
+const ADMIN_STATE_DOC = 'admin-state';
+let separatedSyncUnsubs = [];
+let reportSyncUnsub = null;
+let notificationSyncUnsub = null;
+let _loadedReportIds = new Set();
+let _separatedMigrationDone = false;
 const secondaryApp = firebase.initializeApp(firebaseConfig, 'Secondary');
 const secondaryAuth = secondaryApp.auth();
 secondaryAuth.setPersistence(firebase.auth.Auth.Persistence.NONE).catch(() => {});
@@ -3165,67 +3169,8 @@ async function validateKelaskuPassword(password) {
     return { valid: true, message: '' };
 }
 
-function clearEmailVerificationBox() {
-    const box = document.getElementById('email-verification-box');
-    if (box) box.style.display = 'none';
-}
+function clearEmailVerificationBox() {}
 
-function showEmailVerificationRequired(user) {
-    const box = document.getElementById('email-verification-box');
-    const emailEl = document.getElementById('verification-email-text');
-    if (emailEl) emailEl.textContent = user && user.email ? user.email : '';
-    if (box) box.style.display = 'block';
-    const errorEl = document.getElementById('login-error');
-    if (errorEl) {
-        errorEl.textContent = '';
-        errorEl.style.display = 'none';
-    }
-    const statusEl = document.getElementById('auth-status');
-    if (statusEl) {
-        statusEl.textContent = '⚠️ Email belum diverifikasi';
-        statusEl.style.color = 'var(--amber)';
-    }
-    showLogin();
-}
-
-async function resendVerificationEmail() {
-    const user = auth.currentUser;
-    if (!user) {
-        showNotification('Silakan masuk terlebih dahulu.', 'warning');
-        return;
-    }
-    if (user.emailVerified) {
-        showNotification('Email kamu sudah terverifikasi.', 'success');
-        await checkEmailVerification();
-        return;
-    }
-    try {
-        await user.sendEmailVerification();
-        showNotification('Email verifikasi sudah dikirim ulang.', 'success');
-    } catch (e) {
-        showNotification(authErrorMessage(e.code), 'error');
-    }
-}
-
-async function checkEmailVerification() {
-    const user = auth.currentUser;
-    if (!user) {
-        showNotification('Silakan masuk terlebih dahulu.', 'warning');
-        return;
-    }
-    try {
-        await user.reload();
-        if (!user.emailVerified) {
-            showNotification('Email belum terverifikasi. Buka email verifikasi lalu coba lagi.', 'warning');
-            showEmailVerificationRequired(user);
-            return;
-        }
-        clearEmailVerificationBox();
-        await loadUserProfile(user);
-    } catch (e) {
-        showNotification('Gagal memeriksa status verifikasi email.', 'error');
-    }
-}
 // ============================================================
 // AUTH STATE
 // ============================================================
@@ -3240,21 +3185,12 @@ auth.onAuthStateChanged(async (user) => {
         document.getElementById('auth-status').textContent = '⏳ Belum login';
         document.getElementById('auth-status').style.color = 'var(--amber)';
         showLogin();
-        if (typeof liveSyncStarted !== 'undefined') liveSyncStarted = false;
+        if (typeof stopSeparatedSync === 'function') stopSeparatedSync();
     }
 });
 
 async function loadUserProfile(user) {
     try {
-        // Always reload the Auth user so emailVerified is fresh.
-        await user.reload();
-
-        if (!user.emailVerified) {
-            currentUser = null;
-            showEmailVerificationRequired(user);
-            return;
-        }
-
         const ref = db.collection(FS_PROFILES).doc(user.uid);
         let snap = await ref.get();
 
@@ -3312,93 +3248,420 @@ async function loadUserProfile(user) {
 function showLogin() { document.getElementById('login-overlay').style.display = 'flex'; }
 function hideLogin() { document.getElementById('login-overlay').style.display = 'none'; }
 // ============================================================
-// STORAGE
+// SECURE SEPARATED STORAGE
 // ============================================================
-const storage = {
-    async get(key, shared) {
-        if (!shared) return localStorage.getItem(key) ? { value: localStorage.getItem(key) } : null;
-        try {
-            const snap = await db.collection(FS_COLLECTION).doc(key).get();
-            if (!snap.exists) return null;
-            return { value: snap.data().value };
-        } catch (e) {
-            console.warn('Firestore get error, fallback localStorage', e);
-            const v = localStorage.getItem(key);
-            return v ? { value: v } : null;
+// Public state is intentionally limited to class information that
+// students are allowed to see. Sensitive/admin-only data is stored
+// separately. Reports are stored one document per report so a student
+// can never read another student's report through the shared state.
+
+const PUBLIC_STATE_KEYS = [
+    'kas',
+    'kasFolders',
+    'autoCleanTugasDays',
+    'students',
+    'hp',
+    'piket',
+    'piketJadwal',
+    'tugas',
+    'jadwal',
+    'pengumuman',
+    'notifications'
+];
+
+const ADMIN_STATE_KEYS = [
+    'autoCleanReportDays',
+    'activityLog',
+    'nameChangeLog'
+];
+
+function pickStateKeys(source, keys) {
+    const out = {};
+    keys.forEach(key => {
+        if (source && Object.prototype.hasOwnProperty.call(source, key)) {
+            out[key] = source[key];
         }
-    },
-    async set(key, value, shared) {
-        if (!shared) { localStorage.setItem(key, value); return { synced: false, sharedMode: false }; }
-        try {
-            await db.collection(FS_COLLECTION).doc(key).set({
-                value,
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
-            localStorage.setItem(key, value);
-            return { synced: true, sharedMode: true };
-        } catch (e) {
-            console.warn('Firestore set error, tidak menyimpan state bersama ke localStorage', e);
-            return { synced: false, sharedMode: true, error: e };
+    });
+    return out;
+}
+
+function buildPublicState(source = state) {
+    const out = pickStateKeys(source, PUBLIC_STATE_KEYS);
+
+    // Staff and per-user notifications are never placed in the public
+    // state. Student/global notifications are okay for all verified users.
+    out.notifications = Array.isArray(source.notifications)
+        ? source.notifications.filter(n => !n.targetUid && n.targetRole !== 'staff')
+        : [];
+
+    return out;
+}
+
+function buildAdminState(source = state) {
+    const out = pickStateKeys(source, ADMIN_STATE_KEYS);
+    return out;
+}
+
+function hydrateLocalUiState() {
+    if (!state.reports) state.reports = [];
+    if (state.autoCleanReportDays === undefined || state.autoCleanReportDays === null) {
+        state.autoCleanReportDays = 7;
+    }
+    if (!state.piketJadwal) state.piketJadwal = {};
+    if (!state.calMinimized) state.calMinimized = { hp: false, piket: false };
+    if (!state.kasFolderMinimized || typeof state.kasFolderMinimized !== 'object') {
+        state.kasFolderMinimized = {};
+    }
+    if (!state.nameChangeLog) state.nameChangeLog = [];
+    if (!Array.isArray(state.notifications)) state.notifications = [];
+    if (!Array.isArray(state.activityLog)) state.activityLog = [];
+    if (!Array.isArray(state.jadwal)) {
+        // no-op; kept for compatibility with older saved state
+    }
+
+    DAY_NAMES.forEach(day => {
+        if (!state.jadwal[day]) state.jadwal[day] = [];
+        if (!state.piketJadwal[day]) state.piketJadwal[day] = [];
+    });
+
+    if (!state.hpSelectedDate) state.hpSelectedDate = todayKey();
+    if (!state.piketSelectedDate) state.piketSelectedDate = todayKey();
+    ensureRecord(state.hp, state.hpSelectedDate);
+    ensureRecord(state.piket, state.piketSelectedDate);
+    ensureAppFeatures();
+}
+
+async function readStateDocument(collectionName, docId, fallbackLocalKey = null) {
+    try {
+        const snap = await db.collection(collectionName).doc(docId).get();
+        if (snap.exists && typeof snap.data().value === 'string') {
+            const parsed = JSON.parse(snap.data().value);
+            if (fallbackLocalKey) {
+                localStorage.setItem(fallbackLocalKey, snap.data().value);
+            }
+            return parsed || {};
+        }
+        return null;
+    } catch (e) {
+        console.warn('Firestore state read error:', collectionName, e);
+        if (fallbackLocalKey) {
+            try {
+                const cached = localStorage.getItem(fallbackLocalKey);
+                return cached ? JSON.parse(cached) : null;
+            } catch (_) {}
+        }
+        return null;
+    }
+}
+
+async function writeStateDocument(collectionName, docId, value, localKey = null) {
+    await db.collection(collectionName).doc(docId).set({
+        value: JSON.stringify(value),
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    if (localKey) {
+        localStorage.setItem(localKey, JSON.stringify(value));
+    }
+}
+
+async function migrateLegacyStateOnce() {
+    if (!currentUser || !isAdmin() || _separatedMigrationDone) return;
+
+    const metaRef = db.collection(FS_META).doc('security-v2');
+    const metaSnap = await metaRef.get();
+    if (metaSnap.exists && metaSnap.data().version >= SECURITY_DATA_VERSION && metaSnap.data().migrated === true) {
+        _separatedMigrationDone = true;
+        return;
+    }
+
+    let legacy = null;
+    try {
+        const legacySnap = await db.collection(FS_COLLECTION).doc(PUBLIC_STATE_DOC).get();
+        if (legacySnap.exists && legacySnap.data().value) {
+            legacy = JSON.parse(legacySnap.data().value);
+        }
+    } catch (e) {
+        console.warn('Legacy state migration read failed:', e);
+    }
+
+    if (!legacy || typeof legacy !== 'object') {
+        legacy = state;
+    }
+
+    // Preserve all existing public class data.
+    const publicState = buildPublicState(legacy);
+    if (!Array.isArray(publicState.students)) publicState.students = [];
+    if (!publicState.jadwal || typeof publicState.jadwal !== 'object') publicState.jadwal = {};
+    if (!Array.isArray(publicState.tugas)) publicState.tugas = [];
+    if (!Array.isArray(publicState.pengumuman)) publicState.pengumuman = [];
+
+    // Preserve admin-only settings/logs separately.
+    const adminState = buildAdminState(legacy);
+    if (!Array.isArray(adminState.activityLog)) adminState.activityLog = [];
+    if (!Array.isArray(adminState.nameChangeLog)) adminState.nameChangeLog = [];
+
+    await writeStateDocument(FS_PUBLIC, PUBLIC_STATE_DOC, publicState, 'kelasku-public-state');
+    await writeStateDocument(FS_ADMIN, ADMIN_STATE_DOC, adminState, null);
+
+    // Migrate all legacy reports out of the shared state.
+    const legacyReports = Array.isArray(legacy.reports) ? legacy.reports : [];
+    if (legacyReports.length) {
+        let batch = db.batch();
+        let count = 0;
+        for (const report of legacyReports) {
+            if (!report || report.id == null) continue;
+            const ref = db.collection(FS_REPORTS).doc(String(report.id));
+            batch.set(ref, report, { merge: true });
+            count++;
+            if (count >= 450) {
+                await batch.commit();
+                batch = db.batch();
+                count = 0;
+            }
+        }
+        if (count) await batch.commit();
+    }
+
+    // Migrate sensitive per-user/staff notifications to a protected collection.
+    const legacyNotifications = Array.isArray(legacy.notifications) ? legacy.notifications : [];
+    if (legacyNotifications.length) {
+        let batch = db.batch();
+        let count = 0;
+        for (const n of legacyNotifications) {
+            if (!n || n.id == null) continue;
+            if (n.targetUid || n.targetRole === 'staff') {
+                const ref = db.collection(FS_NOTIFICATIONS).doc(String(n.id));
+                batch.set(ref, {
+                    id: n.id,
+                    at: n.at || Date.now(),
+                    title: String(n.title || '').slice(0, 200),
+                    text: String(n.text || '').slice(0, 1000),
+                    targetUid: n.targetUid || null,
+                    targetRole: n.targetRole || null,
+                    readBy: Array.isArray(n.readBy) ? n.readBy : [],
+                    createdByUid: n.createdByUid || null
+                }, { merge: true });
+                count++;
+                if (count >= 450) {
+                    await batch.commit();
+                    batch = db.batch();
+                    count = 0;
+                }
+            }
+        }
+        if (count) await batch.commit();
+    }
+
+    await metaRef.set({
+        version: SECURITY_DATA_VERSION,
+        migrated: true,
+        migratedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        migratedByUid: currentUser.uid
+    }, { merge: true });
+
+    _separatedMigrationDone = true;
+}
+
+async function loadReportsForCurrentUser() {
+    if (!currentUser) return;
+
+    try {
+        let query = db.collection(FS_REPORTS);
+        if (!isAdmin()) {
+            query = query.where('authorUid', '==', currentUser.uid);
+        }
+
+        const snap = await query.get();
+        state.reports = snap.docs.map(doc => ({ id: Number(doc.id) || doc.id, ...doc.data() }));
+        state.reports.sort((a, b) => Number(b.createdAt || b.id || 0) - Number(a.createdAt || a.id || 0));
+        _loadedReportIds = new Set(state.reports.map(r => String(r.id)));
+        ensureAppFeatures();
+    } catch (e) {
+        console.warn('Report load error:', e);
+        state.reports = [];
+        _loadedReportIds = new Set();
+    }
+}
+
+async function saveReportsForAdmin() {
+    if (!isAdmin()) return;
+
+    const currentIds = new Set(state.reports.map(r => String(r.id)));
+    const oldIds = Array.from(_loadedReportIds);
+
+    let batch = db.batch();
+    let count = 0;
+
+    for (const report of state.reports) {
+        if (!report || report.id == null) continue;
+        const ref = db.collection(FS_REPORTS).doc(String(report.id));
+        batch.set(ref, report, { merge: true });
+        count++;
+        if (count >= 450) {
+            await batch.commit();
+            batch = db.batch();
+            count = 0;
         }
     }
-};
-let _savePending = false, _saveAgain = false, _savePromise = null, _skipNextSync = false, _lastSaveSyncFailedNotified = false;
+
+    for (const oldId of oldIds) {
+        if (!currentIds.has(oldId)) {
+            batch.delete(db.collection(FS_REPORTS).doc(oldId));
+            count++;
+            if (count >= 450) {
+                await batch.commit();
+                batch = db.batch();
+                count = 0;
+            }
+        }
+    }
+
+    if (count) await batch.commit();
+    _loadedReportIds = currentIds;
+}
+
+async function saveTargetedNotifications() {
+    if (!currentUser) return;
+
+    const privateNotifications = (state.notifications || []).filter(n => n && (n.targetUid || n.targetRole === 'staff'));
+    if (!privateNotifications.length) return;
+
+    let batch = db.batch();
+    let count = 0;
+
+    for (const n of privateNotifications) {
+        if (n.id == null) continue;
+        const ref = db.collection(FS_NOTIFICATIONS).doc(String(n.id));
+        batch.set(ref, {
+            id: n.id,
+            at: n.at || Date.now(),
+            title: String(n.title || '').slice(0, 200),
+            text: String(n.text || '').slice(0, 1000),
+            targetUid: n.targetUid || null,
+            targetRole: n.targetRole || null,
+            readBy: Array.isArray(n.readBy) ? n.readBy : [],
+            createdByUid: n.createdByUid || currentUser.uid
+        }, { merge: true });
+        count++;
+        if (count >= 450) {
+            await batch.commit();
+            batch = db.batch();
+            count = 0;
+        }
+    }
+
+    if (count) await batch.commit();
+}
+
+async function loadTargetedNotifications() {
+    if (!currentUser) return;
+
+    try {
+        let query = db.collection(FS_NOTIFICATIONS);
+        if (isAdmin()) {
+            query = query.where('targetRole', '==', 'staff');
+        } else {
+            query = query.where('targetUid', '==', currentUser.uid);
+        }
+        const snap = await query.get();
+        const extra = snap.docs.map(doc => doc.data());
+        const publicNotifications = Array.isArray(state.notifications)
+            ? state.notifications.filter(n => !n.targetUid && n.targetRole !== 'staff')
+            : [];
+        state.notifications = publicNotifications.concat(extra);
+    } catch (e) {
+        console.warn('Targeted notification load error:', e);
+    }
+}
+
 async function saveState() {
     _saveAgain = true;
     if (_savePromise) return _savePromise;
+
     _savePromise = (async () => {
         _savePending = true;
         try {
             while (_saveAgain) {
                 _saveAgain = false;
-                const snapshot = JSON.stringify(state);
-                const result = await storage.set('kelasku-state', snapshot, true);
-                if (result && result.sharedMode && !result.synced) {
-                    console.error('Save state error: gagal sync ke Firestore', result.error);
-                    if (!_lastSaveSyncFailedNotified) {
-                        _lastSaveSyncFailedNotified = true;
-                        const isFull = result.error && /longer than|exceeds|too large|invalid-argument/i.test(String(result.error.message || result.error));
-                        showNotification(isFull ? '⚠️ Gagal sinkron: database penuh (maks 1MB). Laporan belum tersimpan ke server.' : '⚠️ Gagal sinkron ke server. Laporan belum terbagi ke pengguna lain.', 'error');
-                    }
-                } else {
-                    _lastSaveSyncFailedNotified = false;
-                    console.log('State saved successfully');
+
+                // Student devices only retain a local copy of PUBLIC data.
+                // They never write shared class state or admin/private data.
+                if (!currentUser || !isAdmin()) {
+                    const publicState = buildPublicState(state);
+                    localStorage.setItem('kelasku-public-state', JSON.stringify(publicState));
+                    // Remove the old monolithic cache so previous versions do not
+                    // leave sensitive reports/logs behind on a student's device.
+                    localStorage.removeItem('kelasku-state');
+                    continue;
                 }
+
+                const publicState = buildPublicState(state);
+                const adminState = buildAdminState(state);
+
+                await writeStateDocument(FS_PUBLIC, PUBLIC_STATE_DOC, publicState, 'kelasku-public-state');
+                await writeStateDocument(FS_ADMIN, ADMIN_STATE_DOC, adminState, null);
+                await saveReportsForAdmin();
+                await saveTargetedNotifications();
+
+                _lastSaveSyncFailedNotified = false;
+                console.log('Separated state saved successfully');
             }
         } catch (e) {
-            console.error('Save state error:', e);
-            showNotification('⚠️ Gagal menyimpan perubahan.', 'error');
-        } finally { _savePending = false; }
+            console.error('Save separated state error:', e);
+            showNotification('⚠️ Gagal menyimpan perubahan ke server.', 'error');
+        } finally {
+            _savePending = false;
+        }
     })();
-    try { return await _savePromise; } finally { _savePromise = null; }
+
+    try { return await _savePromise; }
+    finally { _savePromise = null; }
 }
+
 async function loadState() {
     try {
-        const r = await storage.get('kelasku-state', true);
-        if (r && r.value) {
-            const loaded = JSON.parse(r.value);
-            state = Object.assign(state, loaded);
-            if (!state.reports) state.reports = [];
-            if (state.autoCleanReportDays === undefined || state.autoCleanReportDays === null) state.autoCleanReportDays = 7;
-            if (!state.piketJadwal) state.piketJadwal = {};
-            if (!state.calMinimized) state.calMinimized = { hp: false, piket: false };
-            if (!state.kasFolderMinimized || typeof state.kasFolderMinimized !== 'object') state.kasFolderMinimized = {};
-            if (!state.nameChangeLog) state.nameChangeLog = [];
-            if (!Array.isArray(state.notifications)) state.notifications = [];
-            if (!Array.isArray(state.activityLog)) state.activityLog = [];
-            ensureAppFeatures();
-            DAY_NAMES.forEach(day => {
-                if (!state.jadwal[day]) state.jadwal[day] = [];
-                if (!state.piketJadwal[day]) state.piketJadwal[day] = [];
-            });
+        if (isAdmin()) {
+            await migrateLegacyStateOnce();
         }
-        if (!state.hpSelectedDate) state.hpSelectedDate = todayKey();
-        if (!state.piketSelectedDate) state.piketSelectedDate = todayKey();
-        ensureRecord(state.hp, state.hpSelectedDate);
-        ensureRecord(state.piket, state.piketSelectedDate);
-        ensureAppFeatures();
-    } catch (e) { console.warn('Load state error, using defaults', e); }
+
+        const publicState = await readStateDocument(
+            FS_PUBLIC,
+            PUBLIC_STATE_DOC,
+            'kelasku-public-state'
+        );
+
+        if (publicState) {
+            state = Object.assign(state, publicState);
+        }
+
+        if (isAdmin()) {
+            const adminState = await readStateDocument(FS_ADMIN, ADMIN_STATE_DOC, null);
+            if (adminState) state = Object.assign(state, adminState);
+        } else {
+            // Never hydrate sensitive state from old browser caches.
+            state.reports = [];
+            state.activityLog = [];
+            state.nameChangeLog = [];
+            state.autoCleanReportDays = 7;
+            localStorage.removeItem('kelasku-state');
+        }
+
+        await loadReportsForCurrentUser();
+        await loadTargetedNotifications();
+        hydrateLocalUiState();
+    } catch (e) {
+        console.warn('Load separated state error, using safe defaults', e);
+        if (!isAdmin()) {
+            state.reports = [];
+            state.activityLog = [];
+            state.nameChangeLog = [];
+            state.autoCleanReportDays = 7;
+            try { localStorage.removeItem('kelasku-state'); } catch (_) {}
+        }
+        hydrateLocalUiState();
+    }
 }
+
 // ============================================================
 // THEME
 // ============================================================
@@ -3487,12 +3750,7 @@ async function doAuthSubmit() {
             if (pendingRegisterName) {
                 try { await cred.user.updateProfile({ displayName: pendingRegisterName }); } catch (e) {}
             }
-            try {
-                await cred.user.sendEmailVerification();
-            } catch (verificationError) {
-                console.warn('Gagal mengirim email verifikasi:', verificationError);
-            }
-            showNotification('Akun berhasil dibuat. Cek email untuk verifikasi.', 'success', 4200);
+            showNotification('Akun berhasil dibuat.', 'success');
         } else {
             await auth.signInWithEmailAndPassword(email, password);
         }
@@ -3688,22 +3946,98 @@ function clearLocalData() {
 // WATCH LIVE SYNC
 // ============================================================
 let liveSyncStarted = false;
-function watchLiveSync() {
-    if (!authReady || liveSyncStarted) return;
-    liveSyncStarted = true;
-    db.collection(FS_COLLECTION).doc('kelasku-state').onSnapshot((snap) => {
-        if (_skipNextSync) { _skipNextSync = false; return; }
-        if (!snap.exists) return;
-        try {
-            const saved = JSON.parse(snap.data().value);
-            state = Object.assign(state, saved);
-            ensureAppFeatures();
-            if (document.getElementById('login-overlay').style.display === 'none') renderAll();
-        } catch (e) { console.warn('Sync error', e); }
+function stopSeparatedSync(){
+    separatedSyncUnsubs.forEach(fn=>{try{fn();}catch(_) {}});
+    separatedSyncUnsubs = [];
+    if (reportSyncUnsub) { try{reportSyncUnsub();}catch(_){} reportSyncUnsub = null; }
+    if (notificationSyncUnsub) { try{notificationSyncUnsub();}catch(_){} notificationSyncUnsub = null; }
+    liveSyncStarted = false;
+}
+function mergePublicAndCurrentState(saved){
+    if (!saved || typeof saved !== 'object') return;
+    const keepSensitive = {
+        reports: state.reports,
+        activityLog: state.activityLog,
+        nameChangeLog: state.nameChangeLog,
+        autoCleanReportDays: state.autoCleanReportDays
+    };
+    state = Object.assign(state, saved, keepSensitive);
+    hydrateLocalUiState();
+}
+function mergeAdminState(saved){
+    if (!saved || typeof saved !== 'object') return;
+    state = Object.assign(state, saved);
+    hydrateLocalUiState();
+}
+function mergeNotificationSnapshot(extra){
+    const publicNotifications = (state.notifications || []).filter(n => !n.targetUid && n.targetRole !== 'staff');
+    const seen = new Set();
+    const merged = [];
+    [...publicNotifications, ...(extra || [])].forEach(n => {
+        if (!n || n.id == null) return;
+        const key = String(n.id);
+        if (seen.has(key)) return;
+        seen.add(key);
+        merged.push(n);
     });
+    merged.sort((a,b)=>(b.at||0)-(a.at||0));
+    state.notifications = merged.slice(0,100);
+}
+function watchReportsSync(){
+    if (!currentUser || reportSyncUnsub) return;
+    let query = db.collection(FS_REPORTS);
+    if (!isAdmin()) query = query.where('authorUid', '==', currentUser.uid);
+    reportSyncUnsub = query.onSnapshot((snap)=>{
+        state.reports = snap.docs.map(doc => ({ id: Number(doc.id) || doc.id, ...doc.data() }));
+        state.reports.sort((a,b)=>Number(b.createdAt||b.id||0)-Number(a.createdAt||a.id||0));
+        _loadedReportIds = new Set(state.reports.map(r=>String(r.id)));
+        ensureAppFeatures();
+        if(document.getElementById('login-overlay').style.display === 'none'){
+            renderReports();
+            renderBeranda();
+        }
+    }, (e)=>console.warn('Report live sync error:',e));
+}
+function watchNotificationsSync(){
+    if (!currentUser || notificationSyncUnsub) return;
+    let query = db.collection(FS_NOTIFICATIONS);
+    if (isAdmin()) query = query.where('targetRole', '==', 'staff');
+    else query = query.where('targetUid', '==', currentUser.uid);
+    notificationSyncUnsub = query.onSnapshot((snap)=>{
+        mergeNotificationSnapshot(snap.docs.map(doc=>doc.data()));
+        if(document.getElementById('login-overlay').style.display === 'none') renderNotifications();
+    }, (e)=>console.warn('Notification live sync error:',e));
+}
+function watchLiveSync() {
+    if (!authReady || liveSyncStarted || !currentUser) return;
+    liveSyncStarted = true;
+
+    const publicUnsub = db.collection(FS_PUBLIC).doc(PUBLIC_STATE_DOC).onSnapshot((snap) => {
+        if (!snap.exists || !snap.data().value) return;
+        try {
+            mergePublicAndCurrentState(JSON.parse(snap.data().value));
+            if (document.getElementById('login-overlay').style.display === 'none') renderAll();
+        } catch (e) { console.warn('Public sync error', e); }
+    }, (e)=>console.warn('Public state sync error:',e));
+    separatedSyncUnsubs.push(publicUnsub);
+
+    if (isAdmin()) {
+        const adminUnsub = db.collection(FS_ADMIN).doc(ADMIN_STATE_DOC).onSnapshot((snap) => {
+            if (!snap.exists || !snap.data().value) return;
+            try {
+                mergeAdminState(JSON.parse(snap.data().value));
+                if (document.getElementById('login-overlay').style.display === 'none') renderAll();
+            } catch (e) { console.warn('Admin state sync error', e); }
+        }, (e)=>console.warn('Admin state sync error:',e));
+        separatedSyncUnsubs.push(adminUnsub);
+    }
+
+    watchReportsSync();
+    watchNotificationsSync();
 }
 // ============================================================
 // FUNGSI UTILITY
+
 // ============================================================
 function todayKey() {
     const d = new Date();
@@ -3769,18 +4103,81 @@ function addActivity(action,detail){
     state.activityLog=state.activityLog.slice(0,100);
 }
 function addNotification(title,text,target){
-    ensureAppFeatures();state.notifications.unshift({id:Date.now()+Math.random(),at:Date.now(),title,text,targetUid:target&&target.uid?target.uid:null,targetRole:target&&target.role?target.role:null,readBy:[]});state.notifications=state.notifications.slice(0,100);
+    ensureAppFeatures();
+    const n = {
+        id: Date.now() + Math.random(),
+        at: Date.now(),
+        title: String(title || '').slice(0, 200),
+        text: String(text || '').slice(0, 1000),
+        targetUid: target && target.uid ? target.uid : null,
+        targetRole: target && target.role ? target.role : null,
+        readBy: [],
+        createdByUid: currentUser ? currentUser.uid : null
+    };
+    state.notifications.unshift(n);
+    state.notifications = state.notifications.slice(0, 100);
+    return n;
 }
-function notificationForMe(n){if(!currentUser)return false;return(!n.targetUid&&!n.targetRole)||n.targetUid===currentUser.uid||n.targetRole===currentUser.role||(n.targetRole==='staff'&&isAdmin());}
-function getMyNotifications(){ensureAppFeatures();return state.notifications.filter(notificationForMe).sort((a,b)=>b.at-a.at);}
+function notificationForMe(n){
+    if(!currentUser)return false;
+    return (!n.targetUid&&!n.targetRole)
+        || n.targetUid===currentUser.uid
+        || n.targetRole===currentUser.role
+        || (n.targetRole==='staff'&&isAdmin());
+}
+function getMyNotifications(){
+    ensureAppFeatures();
+    return state.notifications.filter(notificationForMe).sort((a,b)=>b.at-a.at);
+}
 function renderNotifications(){
-    const list=document.getElementById('home-notifications'),badge=document.getElementById('home-notify-badge');if(!list)return;const items=getMyNotifications();const unread=items.filter(n=>!(n.readBy||[]).includes(currentUser?currentUser.uid:'')).length;
+    const list=document.getElementById('home-notifications'),badge=document.getElementById('home-notify-badge');
+    if(!list)return;
+    const items=getMyNotifications();
+    const unread=items.filter(n=>!(n.readBy||[]).includes(currentUser?currentUser.uid:'')).length;
     if(badge){badge.textContent=unread+' baru';badge.style.display=unread?'inline-block':'none';}
     if(!items.length){list.innerHTML='<div class="empty">Belum ada notifikasi.</div>';return;}
-    list.innerHTML=items.slice(0,6).map(n=>{const read=(n.readBy||[]).includes(currentUser?currentUser.uid:'');return `<div class="notify-item ${read?'read':'unread'}" onclick="markNotificationRead('${String(n.id)}')"><div class="notify-dot"></div><div style="flex:1;min-width:0"><div class="notify-title">${escapeHtml(n.title)}</div><div class="notify-text">${escapeHtml(n.text)}</div><div class="notify-time">${new Date(n.at).toLocaleString('id-ID')}</div></div></div>`;}).join('');
+    list.innerHTML=items.slice(0,6).map(n=>{
+        const read=(n.readBy||[]).includes(currentUser?currentUser.uid:'');
+        return `<div class="notify-item ${read?'read':'unread'}" onclick="markNotificationRead('${String(n.id).replace(/'/g,"\\'")}')"><div class="notify-dot"></div><div style="flex:1;min-width:0"><div class="notify-title">${escapeHtml(n.title)}</div><div class="notify-text">${escapeHtml(n.text)}</div><div class="notify-time">${new Date(n.at).toLocaleString('id-ID')}</div></div></div>`;
+    }).join('');
 }
-function markNotificationRead(id){const n=state.notifications.find(x=>String(x.id)===String(id));if(!n||!currentUser)return;if(!Array.isArray(n.readBy))n.readBy=[];if(!n.readBy.includes(currentUser.uid))n.readBy.push(currentUser.uid);saveState();renderNotifications();}
-function markAllNotificationsRead(){if(!currentUser)return;getMyNotifications().forEach(n=>{if(!Array.isArray(n.readBy))n.readBy=[];if(!n.readBy.includes(currentUser.uid))n.readBy.push(currentUser.uid);});saveState();renderNotifications();}
+async function markNotificationRead(id){
+    const n=state.notifications.find(x=>String(x.id)===String(id));
+    if(!n||!currentUser)return;
+    if(!Array.isArray(n.readBy))n.readBy=[];
+    if(!n.readBy.includes(currentUser.uid))n.readBy.push(currentUser.uid);
+
+    if(n.targetUid || n.targetRole === 'staff'){
+        try{
+            await db.collection(FS_NOTIFICATIONS).doc(String(n.id)).update({
+                readBy: firebase.firestore.FieldValue.arrayUnion(currentUser.uid)
+            });
+        }catch(e){console.warn('Notification read sync failed:',e);}
+    } else {
+        saveState();
+    }
+    renderNotifications();
+}
+async function markAllNotificationsRead(){
+    if(!currentUser)return;
+    const items=getMyNotifications();
+    const privateItems=[];
+    items.forEach(n=>{
+        if(!Array.isArray(n.readBy))n.readBy=[];
+        if(!n.readBy.includes(currentUser.uid))n.readBy.push(currentUser.uid);
+        if(n.targetUid || n.targetRole === 'staff') privateItems.push(n);
+    });
+
+    for(const n of privateItems){
+        try{
+            await db.collection(FS_NOTIFICATIONS).doc(String(n.id)).update({
+                readBy: firebase.firestore.FieldValue.arrayUnion(currentUser.uid)
+            });
+        }catch(e){console.warn('Notification read sync failed:',e);}
+    }
+    saveState();
+    renderNotifications();
+}
 function getCurrentStudentName(){
     const username=(currentUser&&currentUser.username||'').trim().toLocaleLowerCase('id-ID');
     return (state.students||[]).find(name=>String(name).trim().toLocaleLowerCase('id-ID')===username)||null;
@@ -4833,7 +5230,7 @@ async function submitReport() {
     const urgensi = document.getElementById('report-urgensi').value;
     if (!judul || !deskripsi) { showNotification('Judul dan deskripsi wajib diisi.', 'warning'); return; }
     const reportId = Date.now();
-    state.reports.push({
+    const newReport = {
         id: reportId,
         reportCode: 'LAP-'+String(reportId).slice(-6),
         judul, deskripsi, kategori, urgensi,
@@ -4847,14 +5244,41 @@ async function submitReport() {
         tanggal: tanggal || todayKey(),
         file: fileName,
         fileData
-    });
+    };
+    state.reports.push(newReport);
     fileInput.value = '';
-    addActivity('Membuat laporan', reportCode(state.reports[state.reports.length-1]) + ' · ' + judul);
-    addNotification('Laporan baru', (currentUser ? currentUser.username : 'Siswa') + ' mengirim laporan ' + reportCode(state.reports[state.reports.length-1]) + '.', {role:'staff'});
-    await saveState();
-    renderReports();
-    closeModal('report');
-    showNotification('Laporan berhasil dikirim!', 'success');
+    addActivity('Membuat laporan', reportCode(newReport) + ' · ' + judul);
+
+    // Reports are no longer stored in kelasku-state. Student creates only
+    // their own report document, which Rules also enforce by authorUid.
+    try {
+        await db.collection(FS_REPORTS).doc(String(reportId)).set(newReport);
+
+        try {
+            const staffNotification = addNotification(
+                'Laporan baru',
+                (currentUser ? currentUser.username : 'Siswa') + ' mengirim laporan ' + reportCode(newReport) + '.',
+                {role:'staff'}
+            );
+            await db.collection(FS_NOTIFICATIONS).doc(String(staffNotification.id)).set({
+                ...staffNotification,
+                createdByUid: currentUser.uid
+            });
+        } catch (notificationError) {
+            // A notification failure must never make a successfully-created
+            // report look like it failed. The report itself is the source of truth.
+            console.warn('Staff notification save failed:', notificationError);
+        }
+
+        _loadedReportIds.add(String(reportId));
+        renderReports();
+        closeModal('report');
+        showNotification('Laporan berhasil dikirim!', 'success');
+    } catch (e) {
+        state.reports = state.reports.filter(r => String(r.id) !== String(reportId));
+        showNotification('Gagal menyimpan laporan. Coba lagi.', 'error');
+        console.error('Create report error:', e);
+    }
 }
 function openReportFile(id) {
     const r = state.reports.find(x => x.id === Number(id));
@@ -4862,12 +5286,24 @@ function openReportFile(id) {
     if (r.fileData) { openFileData(r.fileData, r.file); }
     else { showNotification('File ini diunggah sebelum fitur penyimpanan file aktif.', 'warning'); }
 }
-function deleteReport() {
+async function deleteReport() {
     if (guardReadOnly()) return;
+    if (!isAdmin()) {
+        showNotification('Hanya Admin atau Super Admin yang dapat menghapus laporan.', 'error');
+        return;
+    }
     const editId = Number(document.getElementById('report-edit-id').value);
     if (!confirm('Hapus laporan ini?')) return;
-    state.reports = state.reports.filter(r => r.id !== editId);
-    saveState(); renderReports(); closeModal('report'); showNotification('Laporan dihapus.', 'info');
+    try {
+        await db.collection(FS_REPORTS).doc(String(editId)).delete();
+        state.reports = state.reports.filter(r => r.id !== editId);
+        _loadedReportIds.delete(String(editId));
+        renderReports();
+        closeModal('report');
+        showNotification('Laporan dihapus.', 'info');
+    } catch (e) {
+        showNotification('Gagal menghapus laporan.', 'error');
+    }
 }
 // ===== KAS ACTION =====
 async function submitKas() {
@@ -5075,12 +5511,6 @@ async function addAccount() {
             await createdUser.updateProfile({ displayName: nama });
         } catch (e) {}
 
-        try {
-            await createdUser.sendEmailVerification();
-        } catch (verificationError) {
-            console.warn('Akun dibuat tetapi email verifikasi gagal dikirim:', verificationError);
-        }
-
         await db.collection(FS_PROFILES).doc(createdUser.uid).set({
             email,
             username: nama,
@@ -5269,8 +5699,6 @@ updateClock(); setInterval(updateClock, 10000);
 window.doAuthSubmit = doAuthSubmit;
 window.toggleAuthMode = toggleAuthMode;
 window.doForgotPassword = doForgotPassword;
-window.resendVerificationEmail = resendVerificationEmail;
-window.checkEmailVerification = checkEmailVerification;
 window.confirmReauthentication = confirmReauthentication;
 window.cancelReauthentication = cancelReauthentication;
 window.toggleTheme = toggleTheme;
