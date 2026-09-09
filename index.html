@@ -6052,9 +6052,7 @@ async function migrateAllAttachmentsToDrive() {
         return;
     }
     if (!(await requireRecentReauthentication('memigrasikan semua lampiran ke Google Drive'))) return;
-    if (!confirm('Migrasikan ' + before.total + ' lampiran lama yang masih tersimpan sebagai Base64 ke Google Drive?
-
-File yang sudah memiliki ID Google Drive tidak akan diupload ulang.')) return;
+    if (!confirm('Migrasikan ' + before.total + ' lampiran lama yang masih tersimpan sebagai Base64 ke Google Drive?\n\nFile yang sudah memiliki ID Google Drive tidak akan diupload ulang.')) return;
 
     let migrated = 0;
     let skipped = 0;
