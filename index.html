@@ -3658,17 +3658,21 @@ async function loadTargetedNotifications() {
     }
 }
 
-let _savePending = false, _saveAgain = false, _savePromise = null, _lastSaveSyncFailedNotified = false;
+// Use window-backed save state so the lock survives script ordering/cache quirks.
+window.__kelaskuSavePending = false;
+window.__kelaskuSaveAgain = false;
+window.__kelaskuSavePromise = null;
+window.__kelaskuLastSaveSyncFailedNotified = false;
 
 async function saveState() {
-    _saveAgain = true;
-    if (_savePromise) return _savePromise;
+    window.__kelaskuSaveAgain = true;
+    if (window.__kelaskuSavePromise) return window.__kelaskuSavePromise;
 
-    _savePromise = (async () => {
-        _savePending = true;
+    window.__kelaskuSavePromise = (async () => {
+        window.__kelaskuSavePending = true;
         try {
-            while (_saveAgain) {
-                _saveAgain = false;
+            while (window.__kelaskuSaveAgain) {
+                window.__kelaskuSaveAgain = false;
 
                 // Student devices only retain a local copy of PUBLIC data.
                 // They never write shared class state or admin/private data.
@@ -3693,19 +3697,19 @@ async function saveState() {
                 await saveReportsForAdmin();
                 await saveTargetedNotifications();
 
-                _lastSaveSyncFailedNotified = false;
+                window.__kelaskuLastSaveSyncFailedNotified = false;
                 console.log('Separated state saved successfully');
             }
         } catch (e) {
             console.error('Save separated state error:', e);
             showNotification('⚠️ Gagal menyimpan perubahan ke server.', 'error');
         } finally {
-            _savePending = false;
+            window.__kelaskuSavePending = false;
         }
     })();
 
-    try { return await _savePromise; }
-    finally { _savePromise = null; }
+    try { return await window.__kelaskuSavePromise; }
+    finally { window.__kelaskuSavePromise = null; }
 }
 
 async function loadState() {
