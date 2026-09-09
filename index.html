@@ -3040,7 +3040,7 @@ function showNotification(message, type = 'success', duration = 2800) {
     };
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
-    toast.innerHTML = `<span class="toast-icon">${icons[type] || 'ℹ️'}</span><span class="toast-msg">${message}</span><button class="toast-close" onclick="this.parentElement.remove()">✕</button>`;
+    toast.innerHTML = `<span class="toast-icon">${escapeHtml(icons[type] || 'ℹ️')}</span><span class="toast-msg">${escapeHtml(message)}</span><button class="toast-close" onclick="this.parentElement.remove()">✕</button>`;
     container.appendChild(toast);
     const timer = setTimeout(() => {
         toast.classList.add('hiding');
@@ -4197,6 +4197,7 @@ function rosterIsSudah(v) {
 // FITUR UTAMA: NOTIFIKASI, AKTIVITAS, PENCARIAN
 // ============================================================
 function escapeHtml(value){return String(value==null?'':value).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');}
+function jsString(value){return escapeHtml(JSON.stringify(String(value==null?'':value)));}
 function ensureAppFeatures(){
     if(!Array.isArray(state.notifications))state.notifications=[];
     if(!Array.isArray(state.activityLog))state.activityLog=[];
@@ -4263,7 +4264,7 @@ function renderNotifications(){
     if(!items.length){list.innerHTML='<div class="empty">Belum ada notifikasi.</div>';return;}
     list.innerHTML=items.slice(0,6).map(n=>{
         const read=(n.readBy||[]).includes(currentUser?currentUser.uid:'');
-        return `<div class="notify-item ${read?'read':'unread'}" onclick="markNotificationRead('${String(n.id).replace(/'/g,"\\'")}')"><div class="notify-dot"></div><div style="flex:1;min-width:0"><div class="notify-title">${escapeHtml(n.title)}</div><div class="notify-text">${escapeHtml(n.text)}</div><div class="notify-time">${new Date(n.at).toLocaleString('id-ID')}</div></div></div>`;
+        return `<div class="notify-item ${read?'read':'unread'}" onclick="markNotificationRead('${String(n.id).replace(/'/g,"\\'")}')"><div class="notify-dot"></div><div style="flex:1;min-width:0"><div class="notify-title">${escapeHtml(n.title)}</div><div class="notify-text">${escapeHtml(n.text)}</div><div class="notify-time">${escapeHtml(new Date(n.at).toLocaleString('id-ID'))}</div></div></div>`;
     }).join('');
 }
 async function markNotificationRead(id){
@@ -4325,7 +4326,7 @@ function renderGlobalSearch(){
     state.pengumuman.forEach(p=>{if((p.text||'').toLowerCase().includes(q))results.push({type:'announcement',id:p.id,title:'Pengumuman',sub:p.text});});
     Object.keys(state.jadwal||{}).forEach(day=>(state.jadwal[day]||[]).forEach(j=>{if((j.mapel||'').toLowerCase().includes(q)||(j.guru||'').toLowerCase().includes(q)||day.toLowerCase().includes(q))results.push({type:'schedule',id:j.id,title:j.mapel,sub:day+' · '+j.jam+' · '+(j.guru||'')});}));
     if(!results.length){wrap.innerHTML='<div class="empty">Tidak ada hasil.</div>';return;}
-    wrap.innerHTML=results.slice(0,8).map(r=>`<div class="global-search-item" onclick="openGlobalSearchResult('${r.type}','${String(r.id).replace(/'/g,"\\'")}')"><div style="font-size:16px">${r.type==='student'?'🎓':r.type==='task'?'📝':r.type==='report'?'📋':r.type==='announcement'?'📢':'📅'}</div><div class="gsi-main"><div class="gsi-title">${escapeHtml(r.title)}</div><div class="gsi-sub">${escapeHtml(globalSearchTypeLabel(r.type))} · ${escapeHtml(r.sub)}</div></div></div>`).join('');
+    wrap.innerHTML=results.slice(0,8).map(r=>`<div class="global-search-item" onclick='openGlobalSearchResult(${jsString(r.type)},${jsString(r.id)})'><div style="font-size:16px">${r.type==='student'?'🎓':r.type==='task'?'📝':r.type==='report'?'📋':r.type==='announcement'?'📢':'📅'}</div><div class="gsi-main"><div class="gsi-title">${escapeHtml(r.title)}</div><div class="gsi-sub">${escapeHtml(globalSearchTypeLabel(r.type))} · ${escapeHtml(r.sub)}</div></div></div>`).join('');
 }
 function openGlobalSearchResult(type,id){const input=document.getElementById('global-search-input'),results=document.getElementById('global-search-results');if(input)input.value='';if(results)results.innerHTML='';if(type==='task'){goTo('tugas');openTugasModal(Number(id));}else if(type==='report'){goTo('laporan');openReportModal(Number(id));}else if(type==='announcement'){goTo('beranda');}else if(type==='schedule'){goTo('jadwal');}else if(type==='student'){goTo('hp');const h=document.getElementById('hp-search');if(h){h.value=id;rosterUI.hp.search=id;renderHp();}}}
 // ============================================================
@@ -4520,11 +4521,11 @@ function renderBeranda() {
     renderNotifications();
     const todayJadwal = state.jadwal[DAY_NAMES[new Date().getDay() - 1]] || [];
     document.getElementById('home-jadwal-list').innerHTML = todayJadwal.length ? todayJadwal.map(j => `
-        <div class="row-item"><div class="row-time">${j.jam}</div><div><div class="row-title">${j.mapel}</div><div class="row-sub">${j.guru}</div></div></div>
+        <div class="row-item"><div class="row-time">${escapeHtml(j.jam)}</div><div><div class="row-title">${escapeHtml(j.mapel)}</div><div class="row-sub">${escapeHtml(j.guru)}</div></div></div>
     `).join('') : `<div class="empty">Tidak ada pelajaran hari ini 🎉</div>`;
     document.getElementById('home-piket-list').innerHTML = piketTodayAssigned.length ? `
         <div style="display:flex; flex-wrap:wrap; gap:4px;">
-            ${piketTodayAssigned.map(s => `<span class="htag" style="background:${piketToday[s]?'var(--teal-glass)':'var(--rose-glass)'}; color:${piketToday[s]?'var(--teal)':'var(--rose)'}; font-size:10px;">${s}${piketToday[s]?' ✓':''}</span>`).join('')}
+            ${piketTodayAssigned.map(s => `<span class="htag" style="background:${piketToday[s]?'var(--teal-glass)':'var(--rose-glass)'}; color:${piketToday[s]?'var(--teal)':'var(--rose)'}; font-size:10px;">${escapeHtml(s)}${piketToday[s]?' ✓':''}</span>`).join('')}
         </div>
     ` : `<div class="empty">Belum ada jadwal piket untuk hari ini.</div>`;
     renderHomeTugas();
@@ -4556,12 +4557,12 @@ function renderHomeTugas() {
             } else { dueText = t.tenggat; }
         }
         return `
-            <div class="task-item home-task-item" ${isReadOnly() ? '' : `role="button" tabindex="0" title="Buka tugas ${t.nama || ''}" onclick="openTugasModal(${t.id})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openTugasModal(${t.id})}"`}>
+            <div class="task-item home-task-item" ${isReadOnly() ? '' : `role="button" tabindex="0" title="Buka tugas ${escapeHtml(t.nama || '')}" onclick="openTugasModal(${t.id})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openTugasModal(${t.id})}"`}>
                 <div class="checkbox" aria-hidden="true"></div>
                 <div style="flex:1; min-width:0;">
-                    <div class="task-title">${t.nama || 'Tugas tanpa nama'}</div>
-                    <div class="task-meta"><span class="pill ${dueClass}">📅 ${dueText}</span>${t.mapel ? `<span class="pill">${t.mapel}</span>` : ''}</div>
-                    ${t.deskripsi ? `<div class="task-desc">${t.deskripsi}</div>` : ''}
+                    <div class="task-title">${escapeHtml(t.nama || 'Tugas tanpa nama')}</div>
+                    <div class="task-meta"><span class="pill ${dueClass}">📅 ${dueText}</span>${t.mapel ? `<span class="pill">${escapeHtml(t.mapel)}</span>` : ''}</div>
+                    ${t.deskripsi ? `<div class="task-desc">${escapeHtml(t.deskripsi)}</div>` : ''}
                     ${renderTaskFiles(t)}
                 </div>
             </div>
@@ -4573,7 +4574,7 @@ function renderPengumuman() {
     list.innerHTML = state.pengumuman.length ? state.pengumuman.slice().reverse().map(p => `
         <div class="announce-item">
           <div class="announce-dot"></div>
-          <div style="flex:1;"><div class="announce-text">${p.text}</div><div class="announce-date">${p.date}</div></div>
+          <div style="flex:1;"><div class="announce-text">${escapeHtml(p.text)}</div><div class="announce-date">${escapeHtml(p.date)}</div></div>
           <button class="s-remove admin-only" onclick="deletePengumuman(${p.id})">×</button>
         </div>
     `).join('') : `<div class="empty">Belum ada pengumuman.</div>`;
@@ -4666,7 +4667,7 @@ function renderKasSiswa(){
                     ${folder.nominal ? `<span class="kas-summary-nominal">Rp${Number(folder.nominal).toLocaleString('id-ID')} / anak</span>` : ''}
                 </div>
                 <div class="kas-student-list">
-                    ${students.length ? students.map(st => `<div class="kas-student-row" ${isAdmin() ? `onclick="openKasStudentModal('${String(folder.id)}', '${String(st.name).replace(/'/g,"\'")}')" style="cursor:pointer;"` : ''}>
+                    ${students.length ? students.map(st => `<div class="kas-student-row" ${isAdmin() ? `onclick='openKasStudentModal(${jsString(folder.id)},${jsString(st.name)})' style="cursor:pointer;"` : ''}>
                         <div class="kas-student-avatar">${escapeHtml((st.name || '?').split(/\s+/).map(x=>x[0]||'').slice(0,2).join('').toUpperCase())}</div>
                         <div class="kas-student-info"><strong>${escapeHtml(st.name)}</strong><small>${st.status === 'sudah' ? 'Bayar' + (st.tanggal ? ' · ' + escapeHtml(st.tanggal) : '') + (st.jumlah ? ' · Rp' + Number(st.jumlah).toLocaleString('id-ID') : '') : 'Belum melakukan pembayaran'}</small></div>
                         <span class="kas-payment-badge ${st.status === 'sudah' ? 'sudah' : 'belum'}">${st.status === 'sudah' ? 'Sudah Bayar' : 'Belum Bayar'}</span>
@@ -4694,8 +4695,8 @@ function renderKas() {
         <div class="tx-item" role="button" tabindex="0" title="Klik untuk mengedit transaksi" onclick="openKasEditModal(${t.id})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openKasEditModal(${t.id})}">
             <div class="tx-icon" style="background:${t.jenis==='masuk'?'var(--teal-glass)':'var(--rose-glass)'}">${t.jenis==='masuk'?'⬇️':'⬆️'}</div>
             <div style="flex:1; min-width:0;">
-                <div class="tx-title">${t.ket}</div>
-                <div class="tx-sub">${t.tanggal}${t.file ? ` · <span style="cursor:pointer; text-decoration:underline;" onclick="event.stopPropagation(); openKasFile(${t.id})">📎 ${t.file}</span>` : ''}</div>
+                <div class="tx-title">${escapeHtml(t.ket)}</div>
+                <div class="tx-sub">${escapeHtml(t.tanggal)}${t.file ? ` · <span style="cursor:pointer; text-decoration:underline;" onclick="event.stopPropagation(); openKasFile(${t.id})">📎 ${escapeHtml(t.file)}</span>` : ''}</div>
             </div>
             <div class="tx-amt ${t.jenis==='masuk'?'plus':'minus'}">${t.jenis==='masuk'?'+':'-'}${rupiah(t.jumlah)}</div>
         </div>
@@ -4716,7 +4717,7 @@ function renderRosterView(cfg) {
     if (!names.length) { list.innerHTML = `<div class="empty">Tidak ada siswa yang dijadwalkan piket pada hari ini.</div>`; return; }
     const query = (cfg.searchQuery || '').trim().toLowerCase();
     const displayNames = query ? names.filter(n => n.toLowerCase().includes(query)) : names;
-    if (!displayNames.length) { list.innerHTML = `<div class="empty">Tidak ada nama yang cocok dengan pencarian "${cfg.searchQuery}".</div>`; return; }
+    if (!displayNames.length) { list.innerHTML = `<div class="empty">Tidak ada nama yang cocok dengan pencarian "${escapeHtml(cfg.searchQuery)}".</div>`; return; }
     list.innerHTML = displayNames.map(n => {
         const nameEsc = n.replace(/'/g, "\\'");
         const st = rosterStatusOf(rec[n]);
@@ -4726,14 +4727,14 @@ function renderRosterView(cfg) {
         else { badgeLabel = '✕ Belum'; badgeClass = 'undone'; }
         return `
         <div class="student-row">
-            <div class="s-avatar" onclick="openRosterStatusModal('${cfg.type}','${nameEsc}')" style="cursor:pointer;">${n.slice(0,2).toUpperCase()}</div>
-            <div style="flex:1; min-width:0; cursor:pointer;" onclick="openRosterStatusModal('${cfg.type}','${nameEsc}')">
-                <div class="s-name">${n}</div>
-                ${st && st.status==='belum' && st.alasan ? `<div class="s-reason">💬 ${st.alasan}</div>` : ''}
+            <div class="s-avatar" onclick='openRosterStatusModal(${jsString(cfg.type)},${jsString(nameEsc)})' style="cursor:pointer;">${escapeHtml(n.slice(0,2).toUpperCase())}</div>
+            <div style="flex:1; min-width:0; cursor:pointer;" onclick='openRosterStatusModal(${jsString(cfg.type)},${jsString(nameEsc)})'>
+                <div class="s-name">${escapeHtml(n)}</div>
+                ${st && st.status==='belum' && st.alasan ? `<div class="s-reason">💬 ${escapeHtml(st.alasan)}</div>` : ''}
             </div>
-            <label class="student-check admin-only" title="Tandai ${nameEsc}"><input type="checkbox" ${st && st.status==='sudah' ? 'checked' : ''} onchange="toggleRosterStudent('${cfg.type}','${nameEsc}', this.checked)"><span></span></label>
-            <div class="toggle-btn ${badgeClass}" onclick="openRosterStatusModal('${cfg.type}','${nameEsc}')" style="cursor:pointer;">${badgeLabel}</div>
-            <button class="s-remove admin-only" onclick="event.stopPropagation(); window.removeStudent('${nameEsc}')">×</button>
+            <label class="student-check admin-only" title="Tandai ${escapeHtml(nameEsc)}"><input type="checkbox" ${st && st.status==='sudah' ? 'checked' : ''} onchange='toggleRosterStudent(${jsString(cfg.type)},${jsString(nameEsc)},this.checked)'><span></span></label>
+            <div class="toggle-btn ${badgeClass}" onclick='openRosterStatusModal(${jsString(cfg.type)},${jsString(nameEsc)})' style="cursor:pointer;">${badgeLabel}</div>
+            <button class="s-remove admin-only" onclick='event.stopPropagation(); window.removeStudent(${jsString(nameEsc)})'>×</button>
         </div>
     `; }).join('');
 }
@@ -4824,7 +4825,7 @@ function resetRoster(type) {
 // ===== CALENDAR =====
 function renderMiniCalendar(prefix, year, month, selectedDate, dict, selectFnName) {
     const monthLabel = document.getElementById(prefix + '-month-label');
-    if (monthLabel) { const type = prefix === 'cal' ? 'hp' : 'piket'; monthLabel.innerHTML = `<span class="cal-month-click" onclick="toggleCalendar('${type}', event)">${MONTH_LABEL[month]}</span> <span class="cal-year-click" onclick="openMonthYearPicker('${type}', event)">${year}</span>`; }
+    if (monthLabel) { const type = prefix === 'cal' ? 'hp' : 'piket'; monthLabel.innerHTML = `<span class="cal-month-click" onclick="toggleCalendar('${type}', event)">${escapeHtml(MONTH_LABEL[month])}</span> <span class="cal-year-click" onclick="openMonthYearPicker('${type}', event)">${year}</span>`; }
     document.getElementById(prefix + '-dow-row').innerHTML = DOW_LABEL.map(d => `<div class="cal-dow">${d}</div>`).join('');
     const firstDow = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -4853,7 +4854,7 @@ function selectHpDate(key) { state.hpSelectedDate = key; saveState(); renderHpCa
 function selectPiketDate(key) { state.piketSelectedDate = key; saveState(); renderPiketCalendar(); renderPiket(); renderBeranda(); }
 function toggleCalendar(type, evt) { if (evt) evt.stopPropagation(); const key=type==='hp'?'hp':'piket'; if(!state.calMinimized) state.calMinimized={hp:false,piket:false}; state.calMinimized[key]=!state.calMinimized[key]; saveState(); updateCalendarUI(type); }
 function updateCalendarUI(type) { const key=type==='hp'?'hp':'piket'; const body=document.getElementById(type+'-cal-body'); const picker=document.getElementById(type+'-month-picker'); if(!body)return; const min=!!(state.calMinimized&&state.calMinimized[key]); body.classList.toggle('collapsed',min); if(picker&&!picker.classList.contains('open')) picker.innerHTML=''; }
-function openMonthYearPicker(type,evt){ if(evt)evt.stopPropagation(); const picker=document.getElementById(type+'-month-picker'), body=document.getElementById(type+'-cal-body'); if(!picker||!body)return; if(picker.classList.contains('open')){picker.classList.remove('open');picker.innerHTML='';return;} body.classList.add('collapsed'); const year=type==='hp'?calYear:piketCalYear, month=type==='hp'?calMonth:piketCalMonth; picker.classList.add('open'); picker.innerHTML=`<div class="cal-picker-year"><button type="button" onclick="changePickerYear('${type}',-1,event)">‹</button><strong>${year}</strong><button type="button" onclick="changePickerYear('${type}',1,event)">›</button></div><div class="cal-picker-months">${MONTH_LABEL.map((m,i)=>`<button type="button" class="${i===month?'active':''}" onclick="choosePickerMonth('${type}',${i},event)">${m}</button>`).join('')}</div>`; }
+function openMonthYearPicker(type,evt){ if(evt)evt.stopPropagation(); const picker=document.getElementById(type+'-month-picker'), body=document.getElementById(type+'-cal-body'); if(!picker||!body)return; if(picker.classList.contains('open')){picker.classList.remove('open');picker.innerHTML='';return;} body.classList.add('collapsed'); const year=type==='hp'?calYear:piketCalYear, month=type==='hp'?calMonth:piketCalMonth; picker.classList.add('open'); picker.innerHTML=`<div class="cal-picker-year"><button type="button" onclick="changePickerYear('${type}',-1,event)">‹</button><strong>${year}</strong><button type="button" onclick="changePickerYear('${type}',1,event)">›</button></div><div class="cal-picker-months">${MONTH_LABEL.map((m,i)=>`<button type="button" class="${i===month?'active':''}" onclick="choosePickerMonth('${type}',${i},event)">${escapeHtml(m)}</button>`).join('')}</div>`; }
 function changePickerYear(type,delta,evt){ if(evt)evt.stopPropagation(); if(type==='hp')calYear+=delta;else piketCalYear+=delta; const picker=document.getElementById(type+'-month-picker'); if(picker){picker.classList.remove('open');picker.innerHTML='';} openMonthYearPicker(type); }
 function choosePickerMonth(type,month,evt){ if(evt)evt.stopPropagation(); if(type==='hp'){calMonth=month;renderHpCalendar();}else{piketCalMonth=month;renderPiketCalendar();} const picker=document.getElementById(type+'-month-picker'); if(picker){picker.classList.remove('open');picker.innerHTML='';} saveState(); if(type==='hp')renderHp();else renderPiket(); }
 function openStatsModal(type) {
@@ -4873,7 +4874,7 @@ function openStatsModal(type) {
     const data = state.students.map(s => ({ name: s, total: totals[s], done: trues[s], pct: totals[s] ? Math.round(trues[s]/totals[s]*100) : 0 }));
     document.getElementById('stats-content').innerHTML = data.map(d => `
         <div class="stat-bar-row">
-            <div class="stat-bar-name">${d.name}</div>
+            <div class="stat-bar-name">${escapeHtml(d.name)}</div>
             <div class="stat-bar-track"><div class="stat-bar-fill" style="width:${d.pct}%; background:${d.pct>=80?'var(--teal)':d.pct>=50?'var(--amber)':'var(--rose)'};"></div></div>
             <div class="stat-bar-value">${d.done}/${d.total} (${d.pct}%)</div>
         </div>
@@ -4893,7 +4894,7 @@ function openPiketJadwalModal() {
     openModal('piket-jadwal');
 }
 function selectPiketJadwalDay(day) { piketJadwalActiveDay = day; renderPiketJadwalDayTabs(); renderPiketJadwalChecklist(); }
-function renderPiketJadwalDayTabs() { document.getElementById('piket-jadwal-day-tabs').innerHTML = SCHOOL_DAYS.map(d => `<div class="day-chip ${piketJadwalActiveDay===d?'active':''}" onclick="selectPiketJadwalDay('${d}')">${d}</div>`).join(''); }
+function renderPiketJadwalDayTabs() { document.getElementById('piket-jadwal-day-tabs').innerHTML = SCHOOL_DAYS.map(d => `<div class="day-chip ${piketJadwalActiveDay===d?'active':''}" onclick="selectPiketJadwalDay('${jsString(d)}')">${escapeHtml(d)}</div>`).join(''); }
 function renderPiketJadwalChecklist() {
     if (!state.piketJadwal) state.piketJadwal = {};
     const assigned = state.piketJadwal[piketJadwalActiveDay] || [];
@@ -4902,8 +4903,8 @@ function renderPiketJadwalChecklist() {
     const wrap = document.getElementById('piket-jadwal-checklist');
     wrap.innerHTML = state.students.length ? state.students.map(s => `
         <label class="piket-jadwal-row">
-            <input type="checkbox" ${assigned.includes(s) ? 'checked' : ''} onchange="togglePiketJadwalStudent('${s.replace(/'/g,"\\'")}', this.checked)">
-            <span>${s}</span>
+            <input type="checkbox" ${assigned.includes(s) ? 'checked' : ''} onchange='togglePiketJadwalStudent(${jsString(s)}, this.checked)'>
+            <span>${escapeHtml(s)}</span>
         </label>
     `).join('') : '<div class="empty">Belum ada data siswa. Tambahkan dulu di halaman Piket/HP.</div>';
 }
@@ -4919,15 +4920,15 @@ function togglePiketJadwalStudent(name, checked) {
     saveState(); renderPiket(); renderPiketCalendar(); renderBeranda();
 }
 // ===== JADWAL PELAJARAN =====
-function renderDayTabs() { document.getElementById('day-tabs').innerHTML = DAY_NAMES.map(d => `<div class="day-chip ${state.selectedDay===d?'active':''}" onclick="selectDay('${d}')">${d}</div>`).join(''); }
+function renderDayTabs() { document.getElementById('day-tabs').innerHTML = DAY_NAMES.map(d => `<div class="day-chip ${state.selectedDay===d?'active':''}" onclick="selectDay('${jsString(d)}')">${escapeHtml(d)}</div>`).join(''); }
 function selectDay(d) { state.selectedDay = d; renderDayTabs(); renderJadwalList(); }
 function renderJadwalList() {
     const items = state.jadwal[state.selectedDay] || [];
     const readOnly = isReadOnly();
     document.getElementById('jadwal-list').innerHTML = items.length ? items.map(j => `
         <div class="row-item" ${readOnly ? '' : `onclick="openJadwalModal(${j.id})"`} style="${readOnly ? '' : 'cursor:pointer;'}">
-            <div class="row-time">${j.jam}</div>
-            <div><div class="row-title">${j.mapel}</div><div class="row-sub">${j.guru}</div></div>
+            <div class="row-time">${escapeHtml(j.jam)}</div>
+            <div><div class="row-title">${escapeHtml(j.mapel)}</div><div class="row-sub">${escapeHtml(j.guru)}</div></div>
         </div>
     `).join('') : `<div class="empty">Tidak ada jadwal pelajaran.</div>`;
 }
@@ -5011,7 +5012,7 @@ function renderTaskFiles(t) {
     const files = getItemFiles(t);
     if (!files.length) return '';
     return `<div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:6px;">` +
-        files.map((f, idx) => `<div class="task-file" onclick="event.stopPropagation(); openTaskFileAt(${t.id},${idx})">📎 ${f.name}</div>`).join('') +
+        files.map((f, idx) => `<div class="task-file" onclick="event.stopPropagation(); openTaskFileAt(${t.id},${idx})">📎 ${escapeHtml(f.name)}</div>`).join('') +
         `</div>`;
 }
 function autoCleanDoneTugas() {
@@ -5043,9 +5044,9 @@ function renderTugas() {
         <div class="task-item">
             <div class="checkbox admin-only" onclick="event.stopPropagation(); toggleTugas(${t.id})"></div>
             <div style="flex:1; ${readOnly ? '' : 'cursor:pointer;'}" ${readOnly ? '' : `onclick="openTugasModal(${t.id})"`}>
-                <div class="task-title">${t.nama}</div>
-                <div class="task-meta"><span class="pill">📚 ${t.mapel || 'Tanpa mata pelajaran'}</span><span class="pill pill-due">📅 ${t.tenggat || 'Tanpa tenggat'}</span></div>
-                ${t.deskripsi ? `<div class="task-desc">${t.deskripsi}</div>` : ''}
+                <div class="task-title">${escapeHtml(t.nama)}</div>
+                <div class="task-meta"><span class="pill">📚 ${escapeHtml(t.mapel || 'Tanpa mata pelajaran')}</span><span class="pill pill-due">📅 ${t.tenggat || 'Tanpa tenggat'}</span></div>
+                ${t.deskripsi ? `<div class="task-desc">${escapeHtml(t.deskripsi)}</div>` : ''}
                 ${renderTaskFiles(t)}
             </div>
             <button class="s-remove admin-only" onclick="event.stopPropagation(); deleteTugas(${t.id})">×</button>
@@ -5056,9 +5057,9 @@ function renderTugas() {
         <div class="task-item">
             <div class="checkbox checked admin-only" onclick="event.stopPropagation(); toggleTugas(${t.id})">✓</div>
             <div style="flex:1; ${readOnly ? '' : 'cursor:pointer;'}" ${readOnly ? '' : `onclick="openTugasModal(${t.id})"`}>
-                <div class="task-title checked">${t.nama}</div>
-                <div class="task-meta"><span class="pill">📚 ${t.mapel || 'Tanpa mata pelajaran'}</span><span class="pill pill-due">📅 ${t.tenggat || 'Tanpa tenggat'}</span></div>
-                ${t.deskripsi ? `<div class="task-desc" style="text-decoration:line-through; color:var(--text-muted);">${t.deskripsi}</div>` : ''}
+                <div class="task-title checked">${escapeHtml(t.nama)}</div>
+                <div class="task-meta"><span class="pill">📚 ${escapeHtml(t.mapel || 'Tanpa mata pelajaran')}</span><span class="pill pill-due">📅 ${t.tenggat || 'Tanpa tenggat'}</span></div>
+                ${t.deskripsi ? `<div class="task-desc" style="text-decoration:line-through; color:var(--text-muted);">${escapeHtml(t.deskripsi)}</div>` : ''}
                 ${renderTaskFiles(t)}
             </div>
             <button class="s-remove admin-only" onclick="event.stopPropagation(); deleteTugas(${t.id})">×</button>
@@ -5120,7 +5121,7 @@ let _tugasEditFiles = [];
 function renderTugasFileChips() {
     const wrap = document.getElementById('tugas-file-chips');
     wrap.innerHTML = _tugasEditFiles.map((f, idx) => `
-        <div class="file-chip">📎 ${f.name}<span class="file-chip-remove" onclick="removeTugasEditFile(${idx})">×</span></div>
+        <div class="file-chip">📎 ${escapeHtml(f.name)}<span class="file-chip-remove" onclick="removeTugasEditFile(${idx})">×</span></div>
     `).join('');
 }
 function removeTugasEditFile(idx) { _tugasEditFiles.splice(idx,1); renderTugasFileChips(); }
@@ -5306,7 +5307,38 @@ async function compressImageAttachment(file) {
         return new File([compressed], attachmentNameForWebp(file.name), { type: 'image/webp' });
     } finally { URL.revokeObjectURL(sourceUrl); }
 }
+const ALLOWED_ATTACHMENT_MIME = new Set([
+    'application/pdf',
+    'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    'image/jpeg',
+    'image/png',
+    'image/webp',
+    'application/zip'
+]);
+const ALLOWED_ATTACHMENT_EXT = new Set(['pdf','doc','docx','xlsx','jpg','jpeg','png','webp','zip']);
+function validateAttachmentTypeClient(file) {
+    const name = String(file && file.name || '');
+    const ext = name.toLowerCase().split('.').pop();
+    const mime = String(file && file.type || '').toLowerCase();
+    if (!ALLOWED_ATTACHMENT_EXT.has(ext)) {
+        throw new Error('Jenis file tidak diizinkan. Gunakan PDF, DOC/DOCX, XLSX, JPG/JPEG, PNG, WEBP, atau ZIP.');
+    }
+    if (!ALLOWED_ATTACHMENT_MIME.has(mime)) {
+        throw new Error('Tipe file tidak diizinkan: ' + (mime || 'tidak diketahui') + '.');
+    }
+    const expected = {
+        pdf:'application/pdf', doc:'application/msword', docx:'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        xlsx:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', jpg:'image/jpeg', jpeg:'image/jpeg',
+        png:'image/png', webp:'image/webp', zip:'application/zip'
+    };
+    if (expected[ext] !== mime) throw new Error('Ekstensi file tidak sesuai dengan tipe file yang dilaporkan browser.');
+    return true;
+}
+
 async function prepareAttachment(file) {
+    validateAttachmentTypeClient(file);
     let prepared = file, compressed = false;
     if ((file.type || '').startsWith('image/')) {
         prepared = await compressImageAttachment(file);
@@ -5461,8 +5493,8 @@ function renderReports() {
         return `<div class="report-item" onclick="openReportModal(${r.id})">
             <div class="report-icon">${r.urgensi==='darurat'?'🚨':'📌'}</div>
             <div style="flex:1; min-width:0;">
-                <div class="report-title">${r.judul}</div>
-                <div class="report-meta"><span>${reportCode(r)}</span> • <span>${r.kategori}</span>${r.file ? ` <span class="report-file" onclick="event.stopPropagation();openReportFile(${r.id})">📎 ${r.file}</span>` : ''} <span class="report-status ${r.status}">${reportStatusLabel(r.status)}</span></div>
+                <div class="report-title">${escapeHtml(r.judul)}</div>
+                <div class="report-meta"><span>${escapeHtml(reportCode(r))}</span> • <span>${escapeHtml(r.kategori)}</span>${r.file ? ` <span class="report-file" onclick="event.stopPropagation();openReportFile(${r.id})">📎 ${escapeHtml(r.file)}</span>` : ''} <span class="report-status ${r.status}">${reportStatusLabel(r.status)}</span></div>
                 ${updated || response ? `<div class="report-meta" style="margin-top:5px;">${updated} ${response}</div>` : ''}
             </div>
         </div>`;
@@ -5542,7 +5574,7 @@ function openReportModal(id) {
         const responseEl = document.getElementById('report-tanggapan');
         if (responseEl) responseEl.value = r.tanggapan || '';
         const historyEl = document.getElementById('report-history');
-        if (historyEl) historyEl.innerHTML = (r.statusHistory || []).length ? '<b>Riwayat status</b><br>' + (r.statusHistory || []).map(h => `${reportStatusLabel(h.status)} — ${h.by || 'Admin'} — ${new Date(h.at).toLocaleString('id-ID')}`).reverse().join('<br>') : '<b>Riwayat status</b><br>Belum ada perubahan.';
+        if (historyEl) historyEl.innerHTML = (r.statusHistory || []).length ? '<b>Riwayat status</b><br>' + (r.statusHistory || []).map(h => `${escapeHtml(reportStatusLabel(h.status))} — ${escapeHtml(h.by || 'Admin')} — ${escapeHtml(new Date(h.at).toLocaleString('id-ID'))}`).reverse().join('<br>') : '<b>Riwayat status</b><br>Belum ada perubahan.';
     } else {
         document.getElementById('report-code-label').textContent = 'Laporan baru';
         document.getElementById('report-edit-id').value = '';
@@ -5864,15 +5896,15 @@ function renderAccountGroups(users) {
         if (!members.length) return '';
         const rowsHtml = members.map(u => `
             <div class="acc-row">
-                <div class="acc-info" style="cursor:pointer; width:100%;" onclick="openAccountEditModal('${u.id}')">
-                    <b>${u.username || u.email}</b>
-                    <div class="acc-email">${u.email || ''}${u.active===false ? ' · <span style="color:var(--rose);font-weight:700;">nonaktif</span>' : ''}</div>
+                <div class="acc-info" style="cursor:pointer; width:100%;" onclick='openAccountEditModal(${jsString(u.id)})'>
+                    <b>${escapeHtml(u.username || u.email)}</b>
+                    <div class="acc-email">${escapeHtml(u.email || '')}${u.active===false ? ' · <span style="color:var(--rose);font-weight:700;">nonaktif</span>' : ''}</div>
                 </div>
             </div>
         `).join('');
         return `
             <details class="role-group role-${r.key}" open>
-                <summary>${r.label}<span class="role-count">${members.length}</span></summary>
+                <summary>${escapeHtml(r.label)}<span class="role-count">${members.length}</span></summary>
                 <div class="role-body">${rowsHtml}</div>
             </details>
         `;
@@ -5883,7 +5915,7 @@ function filterAccountList() {
     const q = document.getElementById('account-search').value.trim().toLowerCase();
     if (!q) { renderAccountGroups(_allAccounts); return; }
     const filtered = _allAccounts.filter(u => (u.username || '').toLowerCase().includes(q) || (u.email || '').toLowerCase().includes(q));
-    if (!filtered.length) { document.getElementById('account-list').innerHTML = `<div class="acc-empty-search">Tidak ada akun yang cocok dengan "${q}"</div>`; return; }
+    if (!filtered.length) { document.getElementById('account-list').innerHTML = `<div class="acc-empty-search">Tidak ada akun yang cocok dengan "${escapeHtml(q)}"</div>`; return; }
     renderAccountGroups(filtered);
 }
 async function addAccount() {
