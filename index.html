@@ -3361,13 +3361,18 @@ async function readStateDocument(collectionName, docId, fallbackLocalKey = null)
 }
 
 async function writeStateDocument(collectionName, docId, value, localKey = null) {
+    const payload = JSON.stringify(value);
+    if (payload.length > 880000) {
+        throw new Error('Data utama terlalu besar untuk Firestore (' + Math.round(payload.length / 1024) + ' KB). Lampiran harus sudah dipindahkan ke Google Drive.');
+    }
     await db.collection(collectionName).doc(docId).set({
-        value: JSON.stringify(value),
+        value: payload,
         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
     });
     if (localKey) {
-        localStorage.setItem(localKey, JSON.stringify(value));
+        localStorage.setItem(localKey, payload);
     }
+    return { synced: true, collection: collectionName, bytes: payload.length };
 }
 
 async function migrateLegacyStateOnce() {
@@ -6066,19 +6071,130 @@ async function importBackup(file) {
         if (inputEl) inputEl.value = '';
         return;
     }
+
     const reader = new FileReader();
-    reader.onload = (e) => {
+    reader.onload = async (e) => {
         try {
             const parsed = JSON.parse(e.target.result);
-            state = Object.assign(state, parsed.state || parsed);
-            saveState();
+            const imported = parsed && parsed.state ? parsed.state : parsed;
+            if (!imported || typeof imported !== 'object') throw new Error('Format backup tidak valid.');
+
+            state = Object.assign(state, imported);
+            hydrateLocalUiState();
+
+            // Backup lama dapat berisi Base64 yang membuat dokumen Firestore
+            // melewati batas ukuran. Karena Drive sudah terhubung, pindahkan
+            // lampiran lama ke Drive terlebih dahulu, lalu simpan metadata saja.
+            let migrated = 0;
+            if (driveStorageEnabled()) {
+                for (const task of (state.tugas || [])) {
+                    const oldFiles = getItemFiles(task);
+                    if (!oldFiles.length) continue;
+                    const newFiles = [];
+                    for (const f of oldFiles) {
+                        if (f && f.driveFileId) {
+                            newFiles.push({
+                                name: f.name || 'lampiran',
+                                driveFileId: f.driveFileId,
+                                driveUrl: f.driveUrl || attachmentUrl(f),
+                                sizeBytes: Number(f.sizeBytes || f.size || 0),
+                                mimeType: f.mimeType || mimeTypeFromFilename(f.name),
+                                storage: 'google-drive'
+                            });
+                        } else if (f && f.data) {
+                            const stored = await uploadPreparedAttachment({
+                                name: f.name || 'lampiran',
+                                data: f.data,
+                                sizeBytes: Number(f.sizeBytes || Math.floor(base64FromDataUrl(f.data).length * 0.75)),
+                                mimeType: f.mimeType || mimeTypeFromFilename(f.name)
+                            }, 'task');
+                            newFiles.push(stored);
+                            migrated++;
+                        } else if (f) {
+                            newFiles.push(f);
+                        }
+                    }
+                    task.files = newFiles;
+                    delete task.file;
+                    delete task.fileData;
+                }
+
+                for (const kas of (state.kas || [])) {
+                    if (!kas) continue;
+                    if (kas.fileData && !kas.driveFileId) {
+                        const stored = await uploadPreparedAttachment({
+                            name: kas.file || 'lampiran',
+                            data: kas.fileData,
+                            sizeBytes: Number(kas.fileSize || Math.floor(base64FromDataUrl(kas.fileData).length * 0.75)),
+                            mimeType: kas.fileMimeType || mimeTypeFromFilename(kas.file)
+                        }, 'kas');
+                        kas.driveFileId = stored.driveFileId || '';
+                        kas.driveUrl = stored.driveUrl || stored.url || '';
+                        kas.fileSize = Number(stored.sizeBytes || 0);
+                        kas.fileMimeType = stored.mimeType || '';
+                        kas.storage = 'google-drive';
+                        kas.fileData = '';
+                        migrated++;
+                    } else if (kas.driveFileId) {
+                        kas.fileData = '';
+                        kas.storage = 'google-drive';
+                    }
+                }
+
+                for (const report of (state.reports || [])) {
+                    if (!report) continue;
+                    if (report.fileData && !report.driveFileId) {
+                        const stored = await uploadPreparedAttachment({
+                            name: report.file || 'lampiran',
+                            data: report.fileData,
+                            sizeBytes: Number(report.fileSize || Math.floor(base64FromDataUrl(report.fileData).length * 0.75)),
+                            mimeType: report.fileMimeType || mimeTypeFromFilename(report.file)
+                        }, 'report');
+                        report.driveFileId = stored.driveFileId || '';
+                        report.driveUrl = stored.driveUrl || stored.url || '';
+                        report.fileSize = Number(stored.sizeBytes || 0);
+                        report.fileMimeType = stored.mimeType || '';
+                        report.storage = 'google-drive';
+                        report.fileData = '';
+                        migrated++;
+                    } else if (report.driveFileId) {
+                        report.fileData = '';
+                        report.storage = 'google-drive';
+                    }
+                }
+            }
+
+            // Tunggu sampai semua write Firebase benar-benar selesai.
+            const result = await saveState();
+            if (result && result.synced === false) {
+                throw new Error('Firebase menolak penyimpanan data. Periksa Firestore Rules atau ukuran data.');
+            }
+
+            // Baca ulang dari Firebase agar yang tampil adalah data server,
+            // bukan hanya state sementara di browser.
+            await loadState();
             renderAll();
-            showNotification('Data berhasil dipulihkan!', 'success');
-        } catch (err) { showNotification('File backup tidak valid.', 'error'); }
+            showNotification(
+                migrated
+                    ? 'Import berhasil. ' + migrated + ' lampiran dipindahkan ke Google Drive dan data tersimpan di Firebase.'
+                    : 'Import berhasil dan data tersimpan di Firebase.',
+                'success',
+                7000
+            );
+        } catch (err) {
+            console.error('Import backup error:', err);
+            showNotification('Import gagal: ' + (err.message || err), 'error', 8000);
+        } finally {
+            if (inputEl) inputEl.value = '';
+        }
+    };
+    reader.onerror = () => {
         if (inputEl) inputEl.value = '';
+        showNotification('File backup tidak dapat dibaca.', 'error');
     };
     reader.readAsText(file);
 }
+
 // ============================================================
 // NAVIGATION
 // ============================================================
