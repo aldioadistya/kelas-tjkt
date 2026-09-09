@@ -3321,7 +3321,9 @@ function hydrateLocalUiState() {
     if (!state.nameChangeLog) state.nameChangeLog = [];
     if (!Array.isArray(state.notifications)) state.notifications = [];
     if (!Array.isArray(state.activityLog)) state.activityLog = [];
-    state.jadwal = ensureJadwalShape(state.jadwal);
+    if (!Array.isArray(state.jadwal)) {
+        // no-op; kept for compatibility with older saved state
+    }
 
     DAY_NAMES.forEach(day => {
         if (!state.jadwal[day]) state.jadwal[day] = [];
@@ -3710,50 +3712,6 @@ async function saveState() {
     finally { window.__kelaskuSavePromise = null; }
 }
 
-function jadwalHasEntries(jadwal) {
-    if (!jadwal || typeof jadwal !== 'object') return false;
-    return DAY_NAMES.some(day => Array.isArray(jadwal[day]) && jadwal[day].length > 0);
-}
-
-function ensureJadwalShape(source) {
-    if (!source || typeof source !== 'object') source = {};
-    DAY_NAMES.forEach(day => {
-        if (!Array.isArray(source[day])) source[day] = [];
-    });
-    return source;
-}
-
-async function recoverLegacyJadwalIfNeeded() {
-    if (!isAdmin()) return false;
-    if (jadwalHasEntries(state.jadwal)) return false;
-
-    try {
-        const legacySnap = await db.collection(FS_COLLECTION).doc(PUBLIC_STATE_DOC).get();
-        if (!legacySnap.exists) return false;
-        const raw = legacySnap.data() || {};
-        if (typeof raw.value !== 'string' || !raw.value) return false;
-
-        const recovered = JSON.parse(raw.value);
-        if (!recovered || typeof recovered !== 'object' || !jadwalHasEntries(recovered.jadwal)) return false;
-
-        state.jadwal = ensureJadwalShape(JSON.parse(JSON.stringify(recovered.jadwal)));
-        if (recovered.selectedDay && DAY_NAMES.includes(recovered.selectedDay)) {
-            state.selectedDay = recovered.selectedDay;
-        }
-
-        const recoveredPublic = buildPublicState({
-            ...recovered,
-            jadwal: state.jadwal,
-            selectedDay: state.selectedDay
-        });
-        await writeStateDocument(FS_PUBLIC, PUBLIC_STATE_DOC, recoveredPublic, 'kelasku-public-state');
-        return true;
-    } catch (recoveryError) {
-        console.warn('Legacy jadwal recovery failed:', recoveryError);
-        return false;
-    }
-}
-
 async function loadState() {
     try {
         if (isAdmin()) {
@@ -3767,27 +3725,36 @@ async function loadState() {
         );
 
         if (publicState) {
-            state = Object.assign(state, publicState);
+            // Jangan biarkan dokumen publik yang jadwalnya kosong menimpa
+            // jadwal yang masih ada di state browser. Ini penting saat proses
+            // migrasi/pemisahan data belum membawa field jadwal dengan benar.
+            const incoming = Object.assign({}, publicState);
+            const currentJadwal = state.jadwal && typeof state.jadwal === 'object'
+                ? state.jadwal
+                : {};
+            const incomingJadwal = incoming.jadwal && typeof incoming.jadwal === 'object'
+                ? incoming.jadwal
+                : null;
+            const currentHasJadwal = DAY_NAMES.some(day => Array.isArray(currentJadwal[day]) && currentJadwal[day].length);
+            const incomingHasJadwal = incomingJadwal && DAY_NAMES.some(day => Array.isArray(incomingJadwal[day]) && incomingJadwal[day].length);
+            if (currentHasJadwal && !incomingHasJadwal) {
+                incoming.jadwal = JSON.parse(JSON.stringify(currentJadwal));
+            }
+            state = Object.assign(state, incoming);
         }
 
-        // Jadwal harus selalu berbentuk object dengan key Senin-Jumat.
-        state.jadwal = ensureJadwalShape(state.jadwal);
-
-        // Admin: bila dokumen public sekarang kehilangan jadwal, pulihkan
-        // khusus bagian jadwal dari mirror lama tanpa mengganggu data lain.
-        if (isAdmin() && !jadwalHasEntries(state.jadwal)) {
-            await recoverLegacyJadwalIfNeeded();
-        }
-
-        // Admin recovery safety: jika seluruh public state benar-benar kosong,
-        // pulihkan dari mirror lama seperti mekanisme sebelumnya.
+        // Admin recovery safety: if the separated public document is empty or
+        // jelas kehilangan jadwal, re-read the legacy source sekali lagi.
+        // This prevents the dashboard from showing zeros until the user imports
+        // a backup manually.
         if (isAdmin()) {
             const publicLooksEmpty =
                 !publicState ||
                 ((Array.isArray(publicState.students) && publicState.students.length === 0) &&
                  (Array.isArray(publicState.tugas) && publicState.tugas.length === 0) &&
                  (Array.isArray(publicState.pengumuman) && publicState.pengumuman.length === 0) &&
-                 (Array.isArray(publicState.kas) && publicState.kas.length === 0));
+                 (Array.isArray(publicState.kas) && publicState.kas.length === 0)) ||
+                (!publicState.jadwal || !DAY_NAMES.some(day => Array.isArray(publicState.jadwal[day]) && publicState.jadwal[day].length));
 
             if (publicLooksEmpty) {
                 try {
@@ -3796,8 +3763,14 @@ async function loadState() {
                         const recovered = JSON.parse(legacySnap.data().value);
                         if (recovered && typeof recovered === 'object') {
                             const recoveredPublic = buildPublicState(recovered);
-                            state = Object.assign(state, recoveredPublic);
-                            state.jadwal = ensureJadwalShape(state.jadwal);
+                            const recoveredHasJadwal = recoveredPublic.jadwal && DAY_NAMES.some(day => Array.isArray(recoveredPublic.jadwal[day]) && recoveredPublic.jadwal[day].length);
+                            if (recoveredHasJadwal || !state.jadwal || !DAY_NAMES.some(day => Array.isArray(state.jadwal[day]) && state.jadwal[day].length)) {
+                                state = Object.assign(state, recoveredPublic);
+                            } else {
+                                // Pertahankan jadwal yang masih tersedia secara lokal.
+                                recoveredPublic.jadwal = JSON.parse(JSON.stringify(state.jadwal));
+                                state = Object.assign(state, recoveredPublic);
+                            }
                             await writeStateDocument(FS_PUBLIC, PUBLIC_STATE_DOC, recoveredPublic, 'kelasku-public-state');
                         }
                     }
@@ -3808,7 +3781,6 @@ async function loadState() {
 
             const adminState = await readStateDocument(FS_ADMIN, ADMIN_STATE_DOC, null);
             if (adminState) state = Object.assign(state, adminState);
-            state.jadwal = ensureJadwalShape(state.jadwal);
         } else {
             // Never hydrate sensitive state from old browser caches.
             state.reports = [];
@@ -4137,21 +4109,15 @@ function mergePublicAndCurrentState(saved){
         nameChangeLog: state.nameChangeLog,
         autoCleanReportDays: state.autoCleanReportDays
     };
-    const incoming = Object.assign({}, saved);
-
-    // Jangan menghapus jadwal yang sudah ada di browser hanya karena snapshot
-    // realtime yang datang sesaat masih berisi jadwal kosong/tidak lengkap.
-    if (
-        Object.prototype.hasOwnProperty.call(incoming, 'jadwal') &&
-        !jadwalHasEntries(incoming.jadwal) &&
-        jadwalHasEntries(state.jadwal)
-    ) {
-        incoming.jadwal = state.jadwal;
-        if (!incoming.selectedDay && state.selectedDay) incoming.selectedDay = state.selectedDay;
+    const merged = Object.assign({}, saved);
+    const currentJadwal = state.jadwal && typeof state.jadwal === 'object' ? state.jadwal : {};
+    const incomingJadwal = merged.jadwal && typeof merged.jadwal === 'object' ? merged.jadwal : null;
+    const currentHasJadwal = DAY_NAMES.some(day => Array.isArray(currentJadwal[day]) && currentJadwal[day].length);
+    const incomingHasJadwal = incomingJadwal && DAY_NAMES.some(day => Array.isArray(incomingJadwal[day]) && incomingJadwal[day].length);
+    if (currentHasJadwal && !incomingHasJadwal) {
+        merged.jadwal = JSON.parse(JSON.stringify(currentJadwal));
     }
-
-    incoming.jadwal = ensureJadwalShape(incoming.jadwal || state.jadwal);
-    state = Object.assign(state, incoming, keepSensitive);
+    state = Object.assign(state, merged, keepSensitive);
     hydrateLocalUiState();
 }
 function mergeAdminState(saved){
