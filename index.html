@@ -3115,6 +3115,7 @@ let state = {
         Kamis: [{ jam: "07:15-08:45", mapel: "Pemrograman Web", guru: "Pak Reza" }],
         Jumat: [{ jam: "07:15-08:45", mapel: "Pendidikan Agama", guru: "Pak Yusuf" }]
     },
+    _jadwalInitialized: false,
     pengumuman: [],
     reports: [],
     notifications: [],
@@ -3129,6 +3130,50 @@ let state = {
 };
 let localSettings = { session: null };
 const DAY_NAMES = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat"];
+
+const DEFAULT_JADWAL = {
+    Senin: [{ jam: "07:15-08:45", mapel: "Matematika", guru: "Bu Rina" }],
+    Selasa: [{ jam: "07:15-08:45", mapel: "Administrasi Jaringan", guru: "Pak Budi" }],
+    Rabu: [{ jam: "07:15-07:45", mapel: "Projek IPAS", guru: "Bu Hanadi" }],
+    Kamis: [{ jam: "07:15-08:45", mapel: "Pemrograman Web", guru: "Pak Reza" }],
+    Jumat: [{ jam: "07:15-08:45", mapel: "Pendidikan Agama", guru: "Pak Yusuf" }]
+};
+
+function hasJadwalItems(jadwal) {
+    return !!jadwal && DAY_NAMES.some(day => Array.isArray(jadwal[day]) && jadwal[day].length > 0);
+}
+
+function normalizeJadwalObject(source) {
+    const input = source && typeof source === 'object' ? source : {};
+    const out = {};
+    DAY_NAMES.forEach(day => { out[day] = []; });
+    Object.keys(input).forEach(key => {
+        const wanted = DAY_NAMES.find(day => String(day).toLowerCase() === String(key).trim().toLowerCase());
+        if (!wanted || !Array.isArray(input[key])) return;
+        out[wanted] = input[key].filter(item => item && typeof item === 'object').map(item => ({
+            id: item.id != null ? item.id : Date.now() + Math.random(),
+            jam: String(item.jam || '').trim(),
+            mapel: String(item.mapel || '').trim(),
+            guru: String(item.guru || '').trim()
+        })).filter(item => item.jam || item.mapel || item.guru);
+    });
+    return out;
+}
+
+function ensureJadwalState(seedIfNeverInitialized = true) {
+    const normalized = normalizeJadwalObject(state.jadwal);
+    const hasItems = hasJadwalItems(normalized);
+    const wasInitialized = state._jadwalInitialized === true;
+    if (!hasItems && seedIfNeverInitialized && !wasInitialized) {
+        state.jadwal = JSON.parse(JSON.stringify(DEFAULT_JADWAL));
+        state._jadwalInitialized = true;
+        return true;
+    }
+    state.jadwal = normalized;
+    if (hasItems) state._jadwalInitialized = true;
+    return false;
+}
+
 const SCHOOL_DAYS = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat"];
 const FULL_DAY_NAMES = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
 const MONTH_LABEL = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
@@ -3271,6 +3316,7 @@ const PUBLIC_STATE_KEYS = [
     'piketJadwal',
     'tugas',
     'jadwal',
+    '_jadwalInitialized',
     'pengumuman',
     'notifications'
 ];
@@ -3325,8 +3371,9 @@ function hydrateLocalUiState() {
         // no-op; kept for compatibility with older saved state
     }
 
+    state.jadwal = normalizeJadwalObject(state.jadwal);
+    if (hasJadwalItems(state.jadwal)) state._jadwalInitialized = true;
     DAY_NAMES.forEach(day => {
-        if (!state.jadwal[day]) state.jadwal[day] = [];
         if (!state.piketJadwal[day]) state.piketJadwal[day] = [];
     });
 
@@ -3714,6 +3761,12 @@ async function saveState() {
 
 async function loadState() {
     try {
+        // Capture the schedule that is already present in the local code before
+        // Firebase data is merged. This prevents an empty remote schedule from
+        // erasing the working schedule during migration/sync.
+        ensureJadwalState(true);
+        const localJadwalBeforeLoad = JSON.parse(JSON.stringify(state.jadwal));
+
         if (isAdmin()) {
             await migrateLegacyStateOnce();
         }
@@ -3725,74 +3778,60 @@ async function loadState() {
         );
 
         if (publicState) {
-            // Jangan biarkan dokumen publik yang jadwalnya kosong menimpa
-            // jadwal yang masih ada di state browser. Ini penting saat proses
-            // migrasi/pemisahan data belum membawa field jadwal dengan benar.
             const incoming = Object.assign({}, publicState);
-            const currentJadwal = state.jadwal && typeof state.jadwal === 'object'
-                ? state.jadwal
-                : {};
-            const incomingJadwal = incoming.jadwal && typeof incoming.jadwal === 'object'
-                ? incoming.jadwal
-                : null;
-            const currentHasJadwal = DAY_NAMES.some(day => Array.isArray(currentJadwal[day]) && currentJadwal[day].length);
-            const incomingHasJadwal = incomingJadwal && DAY_NAMES.some(day => Array.isArray(incomingJadwal[day]) && incomingJadwal[day].length);
-            if (currentHasJadwal && !incomingHasJadwal) {
-                incoming.jadwal = JSON.parse(JSON.stringify(currentJadwal));
+            const incomingJadwal = normalizeJadwalObject(incoming.jadwal);
+            const incomingHasJadwal = hasJadwalItems(incomingJadwal);
+            const localHasJadwal = hasJadwalItems(localJadwalBeforeLoad);
+
+            if (incomingHasJadwal) {
+                incoming.jadwal = incomingJadwal;
+                incoming._jadwalInitialized = true;
+            } else if (localHasJadwal && !incomingHasJadwal) {
+                incoming.jadwal = localJadwalBeforeLoad;
+                incoming._jadwalInitialized = true;
+            } else {
+                incoming.jadwal = incomingJadwal;
             }
+
             state = Object.assign(state, incoming);
         }
 
-        // Admin recovery safety: if the separated public document is empty or
-        // jelas kehilangan jadwal, re-read the legacy source sekali lagi.
-        // This prevents the dashboard from showing zeros until the user imports
-        // a backup manually.
+        // Try the legacy mirror only when the separated schedule is empty.
         if (isAdmin()) {
-            const publicLooksEmpty =
-                !publicState ||
-                ((Array.isArray(publicState.students) && publicState.students.length === 0) &&
-                 (Array.isArray(publicState.tugas) && publicState.tugas.length === 0) &&
-                 (Array.isArray(publicState.pengumuman) && publicState.pengumuman.length === 0) &&
-                 (Array.isArray(publicState.kas) && publicState.kas.length === 0)) ||
-                (!publicState.jadwal || !DAY_NAMES.some(day => Array.isArray(publicState.jadwal[day]) && publicState.jadwal[day].length));
-
-            if (publicLooksEmpty) {
+            const currentHasJadwal = hasJadwalItems(state.jadwal);
+            if (!currentHasJadwal) {
                 try {
                     const legacySnap = await db.collection(FS_COLLECTION).doc(PUBLIC_STATE_DOC).get();
                     if (legacySnap.exists && typeof legacySnap.data().value === 'string' && legacySnap.data().value) {
                         const recovered = JSON.parse(legacySnap.data().value);
-                        if (recovered && typeof recovered === 'object') {
-                            const recoveredPublic = buildPublicState(recovered);
-                            const recoveredHasJadwal = recoveredPublic.jadwal && DAY_NAMES.some(day => Array.isArray(recoveredPublic.jadwal[day]) && recoveredPublic.jadwal[day].length);
-                            if (recoveredHasJadwal || !state.jadwal || !DAY_NAMES.some(day => Array.isArray(state.jadwal[day]) && state.jadwal[day].length)) {
-                                state = Object.assign(state, recoveredPublic);
-                            } else {
-                                // Pertahankan jadwal yang masih tersedia secara lokal.
-                                recoveredPublic.jadwal = JSON.parse(JSON.stringify(state.jadwal));
-                                state = Object.assign(state, recoveredPublic);
-                            }
-                            await writeStateDocument(FS_PUBLIC, PUBLIC_STATE_DOC, recoveredPublic, 'kelasku-public-state');
+                        const recoveredJadwal = normalizeJadwalObject(recovered && recovered.jadwal);
+                        if (hasJadwalItems(recoveredJadwal)) {
+                            state.jadwal = recoveredJadwal;
+                            state._jadwalInitialized = true;
                         }
                     }
                 } catch (recoveryError) {
-                    console.warn('Legacy recovery read failed:', recoveryError);
+                    console.warn('Legacy schedule recovery failed:', recoveryError);
                 }
             }
-
-            const adminState = await readStateDocument(FS_ADMIN, ADMIN_STATE_DOC, null);
-            if (adminState) state = Object.assign(state, adminState);
-        } else {
-            // Never hydrate sensitive state from old browser caches.
-            state.reports = [];
-            state.activityLog = [];
-            state.nameChangeLog = [];
-            state.autoCleanReportDays = 7;
-            localStorage.removeItem('kelasku-state');
         }
+
+        // One-time seed only: if this app has never had a persisted schedule and
+        // every server source is empty, restore the original built-in schedule.
+        const seeded = ensureJadwalState(true);
+        if (seeded && isAdmin()) {
+            await saveState();
+        }
+
+        const adminState = isAdmin()
+            ? await readStateDocument(FS_ADMIN, ADMIN_STATE_DOC, null)
+            : null;
+        if (adminState) state = Object.assign(state, adminState);
 
         await loadReportsForCurrentUser();
         await loadTargetedNotifications();
         hydrateLocalUiState();
+        ensureJadwalState(false);
     } catch (e) {
         console.warn('Load separated state error, using safe defaults', e);
         if (!isAdmin()) {
@@ -3802,6 +3841,7 @@ async function loadState() {
             state.autoCleanReportDays = 7;
             try { localStorage.removeItem('kelasku-state'); } catch (_) {}
         }
+        ensureJadwalState(true);
         hydrateLocalUiState();
     }
 }
@@ -4066,6 +4106,7 @@ async function resetData() {
             Kamis: [{ jam: "07:15-08:45", mapel: "Pemrograman Web", guru: "Pak Reza" }],
             Jumat: [{ jam: "07:15-08:45", mapel: "Pendidikan Agama", guru: "Pak Yusuf" }]
         },
+        _jadwalInitialized: false,
         pengumuman: [],
         reports: [],
         notifications: [],
@@ -4110,16 +4151,26 @@ function mergePublicAndCurrentState(saved){
         autoCleanReportDays: state.autoCleanReportDays
     };
     const merged = Object.assign({}, saved);
-    const currentJadwal = state.jadwal && typeof state.jadwal === 'object' ? state.jadwal : {};
-    const incomingJadwal = merged.jadwal && typeof merged.jadwal === 'object' ? merged.jadwal : null;
-    const currentHasJadwal = DAY_NAMES.some(day => Array.isArray(currentJadwal[day]) && currentJadwal[day].length);
-    const incomingHasJadwal = incomingJadwal && DAY_NAMES.some(day => Array.isArray(incomingJadwal[day]) && incomingJadwal[day].length);
-    if (currentHasJadwal && !incomingHasJadwal) {
-        merged.jadwal = JSON.parse(JSON.stringify(currentJadwal));
+    const currentJadwal = normalizeJadwalObject(state.jadwal);
+    const incomingJadwal = normalizeJadwalObject(merged.jadwal);
+    const currentHasJadwal = hasJadwalItems(currentJadwal);
+    const incomingHasJadwal = hasJadwalItems(incomingJadwal);
+
+    if (incomingHasJadwal) {
+        merged.jadwal = incomingJadwal;
+        merged._jadwalInitialized = true;
+    } else if (currentHasJadwal) {
+        merged.jadwal = currentJadwal;
+        merged._jadwalInitialized = true;
+    } else {
+        merged.jadwal = incomingJadwal;
     }
+
     state = Object.assign(state, merged, keepSensitive);
     hydrateLocalUiState();
+    ensureJadwalState(false);
 }
+
 function mergeAdminState(saved){
     if (!saved || typeof saved !== 'object') return;
     state = Object.assign(state, saved);
@@ -4954,6 +5005,7 @@ function togglePiketJadwalStudent(name, checked) {
 function renderDayTabs() { document.getElementById('day-tabs').innerHTML = DAY_NAMES.map(d => `<div class="day-chip ${state.selectedDay===d?'active':''}" onclick="selectDay('${jsString(d)}')">${escapeHtml(d)}</div>`).join(''); }
 function selectDay(d) { state.selectedDay = d; renderDayTabs(); renderJadwalList(); }
 function renderJadwalList() {
+    ensureJadwalState(false);
     const items = state.jadwal[state.selectedDay] || [];
     const readOnly = isReadOnly();
     document.getElementById('jadwal-list').innerHTML = items.length ? items.map(j => `
