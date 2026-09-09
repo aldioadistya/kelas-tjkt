@@ -3397,11 +3397,10 @@ async function migrateLegacyStateOnce() {
         console.warn('Separated state verification failed:', e);
     }
 
-    if (meta.version >= SECURITY_DATA_VERSION && meta.migrated === true && separatedPublic) {
-        _separatedMigrationDone = true;
-        return;
-    }
-
+    // Do not trust the migration marker by itself. A previous migration can
+    // have produced an empty separated document while still marking itself
+    // complete. We therefore continue to inspect the legacy document and
+    // recover richer values when necessary.
     let legacy = null;
     try {
         const legacySnap = await db.collection(FS_COLLECTION).doc(PUBLIC_STATE_DOC).get();
@@ -3438,11 +3437,39 @@ async function migrateLegacyStateOnce() {
     if (!Array.isArray(adminState.activityLog)) adminState.activityLog = [];
     if (!Array.isArray(adminState.nameChangeLog)) adminState.nameChangeLog = [];
 
-    // Do not destroy already-imported/separated data. When separated docs
-    // already contain richer data, keep those values and only fill missing
-    // keys from the legacy source.
-    const mergedPublicState = separatedPublic ? Object.assign({}, publicState, separatedPublic) : publicState;
-    const mergedAdminState = separatedAdmin ? Object.assign({}, adminState, separatedAdmin) : adminState;
+    // Merge carefully so a previously-created empty/default separated state
+    // can never overwrite richer legacy data. For arrays/objects, prefer the
+    // non-empty separated value; otherwise recover the legacy value.
+    function mergeRecoveredState(baseState, existingState) {
+        const merged = Object.assign({}, baseState || {});
+        if (!existingState || typeof existingState !== 'object') return merged;
+
+        Object.keys(merged).forEach(key => {
+            const incoming = existingState[key];
+            const legacyValue = merged[key];
+            if (Array.isArray(legacyValue)) {
+                if (Array.isArray(incoming) && incoming.length > 0) merged[key] = incoming;
+                else if (!Array.isArray(incoming)) merged[key] = legacyValue;
+            } else if (legacyValue && typeof legacyValue === 'object') {
+                const incomingObj = incoming && typeof incoming === 'object' ? incoming : null;
+                const incomingKeys = incomingObj ? Object.keys(incomingObj).length : 0;
+                const legacyKeys = Object.keys(legacyValue).length;
+                merged[key] = incomingKeys > 0 || legacyKeys === 0 ? (incomingObj || legacyValue) : legacyValue;
+            } else if (incoming !== undefined && incoming !== null && incoming !== '') {
+                // For scalar settings, retain an explicitly configured separated value.
+                merged[key] = incoming;
+            }
+        });
+
+        // Preserve separated-only keys as well.
+        Object.keys(existingState).forEach(key => {
+            if (!Object.prototype.hasOwnProperty.call(merged, key)) merged[key] = existingState[key];
+        });
+        return merged;
+    }
+
+    const mergedPublicState = mergeRecoveredState(publicState, separatedPublic);
+    const mergedAdminState = mergeRecoveredState(adminState, separatedAdmin);
 
     await writeStateDocument(FS_PUBLIC, PUBLIC_STATE_DOC, mergedPublicState, 'kelasku-public-state');
     await writeStateDocument(FS_ADMIN, ADMIN_STATE_DOC, mergedAdminState, null);
@@ -3678,7 +3705,34 @@ async function loadState() {
             state = Object.assign(state, publicState);
         }
 
+        // Admin recovery safety: if the separated public document is empty or
+        // obviously the small default state, re-read the legacy source once.
+        // This prevents the dashboard from showing zeros until the user imports
+        // a backup manually.
         if (isAdmin()) {
+            const publicLooksEmpty =
+                !publicState ||
+                ((Array.isArray(publicState.students) && publicState.students.length === 0) &&
+                 (Array.isArray(publicState.tugas) && publicState.tugas.length === 0) &&
+                 (Array.isArray(publicState.pengumuman) && publicState.pengumuman.length === 0) &&
+                 (Array.isArray(publicState.kas) && publicState.kas.length === 0));
+
+            if (publicLooksEmpty) {
+                try {
+                    const legacySnap = await db.collection(FS_COLLECTION).doc(PUBLIC_STATE_DOC).get();
+                    if (legacySnap.exists && typeof legacySnap.data().value === 'string' && legacySnap.data().value) {
+                        const recovered = JSON.parse(legacySnap.data().value);
+                        if (recovered && typeof recovered === 'object') {
+                            const recoveredPublic = buildPublicState(recovered);
+                            state = Object.assign(state, recoveredPublic);
+                            await writeStateDocument(FS_PUBLIC, PUBLIC_STATE_DOC, recoveredPublic, 'kelasku-public-state');
+                        }
+                    }
+                } catch (recoveryError) {
+                    console.warn('Legacy recovery read failed:', recoveryError);
+                }
+            }
+
             const adminState = await readStateDocument(FS_ADMIN, ADMIN_STATE_DOC, null);
             if (adminState) state = Object.assign(state, adminState);
         } else {
