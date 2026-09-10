@@ -3504,6 +3504,10 @@ body.dark #login-overlay .login-cache-btn:hover{background:#172033!important;bor
 }
 </style>
 
+
+<style id="kelasku-login-transition-fix">
+body.kelasku-authenticated #login-overlay { display: none !important; }
+</style>
 </head>
 <body>
 <div class="ambient-mesh">
@@ -4209,9 +4213,11 @@ async function loadUserProfile(user) {
         document.getElementById('auth-status').style.color = 'var(--teal)';
         applyRole(currentUser.role);
 
-        // Penting: buka aplikasi lebih dulu setelah Auth + Profile valid.
+        // Auth + profile sudah valid: tampilkan aplikasi sekarang.
+        // Proses Firestore/Drive berikutnya tidak boleh mengunci halaman login.
         hideLogin();
         applyTheme();
+        document.body.classList.add('kelasku-authenticated');
 
         // Render awal harus selalu jalan walaupun Firestore sedang bermasalah.
         try {
@@ -5508,7 +5514,8 @@ function renderSettingsInfo() {
     if (reportInput) reportInput.value = (state.autoCleanReportDays !== undefined && state.autoCleanReportDays !== null) ? state.autoCleanReportDays : 7;
     renderStorageUsage();
     updateAttachmentHints();
-    if (isAdmin() && driveStorageEnabled()) void refreshDriveStorageUsage();
+    // Jangan memanggil Google Drive saat render awal/login.
+    // Pemeriksaan Drive dilakukan hanya ketika benar-benar dibutuhkan (upload/migrasi).
     const migrateBtn = document.getElementById('drive-migrate-btn');
     const migrationStatusEl = document.getElementById('drive-migration-status');
     if (migrateBtn) {
@@ -5599,6 +5606,9 @@ async function driveApiRequest(payload) {
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify(Object.assign({}, payload, { idToken }))
     });
+    if (!response.ok) {
+        throw new Error('Google Drive Bridge mengembalikan HTTP ' + response.status + '. Pastikan deployment Apps Script masih aktif.');
+    }
     const text = await response.text();
     let data;
     try { data = JSON.parse(text); } catch (e) { throw new Error('Respons Google Drive tidak valid.'); }
