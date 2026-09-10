@@ -6680,6 +6680,57 @@ window.todayKey = todayKey;
   }
 }
 </style>
+
+<style id="calendar-size-final-fix">
+/* Kalender dibuat lebih ringkas tanpa mengubah fungsi klik/tanggal. */
+.cal-grid {
+  gap: 3px !important;
+}
+.cal-day {
+  aspect-ratio: auto !important;
+  height: 38px !important;
+  min-height: 0 !important;
+  border-radius: 8px !important;
+  font-size: 11px !important;
+}
+.cal-dow {
+  font-size: 9px !important;
+  padding-bottom: 3px !important;
+}
+.cal-nav-btn {
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 8px !important;
+  font-size: 11px !important;
+}
+.cal-month {
+  font-size: 13px !important;
+}
+.cal-dot {
+  bottom: 3px !important;
+  width: 3px !important;
+  height: 3px !important;
+}
+@media screen and (max-width: 900px) {
+  .cal-grid { gap: 2px !important; }
+  .cal-day {
+    height: 32px !important;
+    border-radius: 7px !important;
+    font-size: 10.5px !important;
+  }
+  .cal-dow {
+    font-size: 8.5px !important;
+    padding-bottom: 2px !important;
+  }
+  .cal-nav-btn {
+    width: 26px !important;
+    height: 26px !important;
+    border-radius: 7px !important;
+    font-size: 10px !important;
+  }
+  .cal-month { font-size: 12px !important; }
+}
+</style>
 </body>
 </html>
 <style id="desktop-sidebar-final-fix">
