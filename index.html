@@ -1388,6 +1388,38 @@ body {
     line-height: 1.3;
     word-break: break-word;
 }
+.announce-title,
+.announce-title-btn {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--text-main);
+    line-height: 1.3;
+    word-break: break-word;
+    text-align: left;
+}
+.announce-title-btn {
+    width: 100%;
+    min-height: 0;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    font-family: inherit;
+    display: block !important;
+}
+.is-admin button.announce-title-btn {
+    display: block !important;
+}
+.announce-title-btn:active { opacity: .72; }
+.announce-description {
+    margin-top: 3px;
+    font-size: 11px;
+    line-height: 1.45;
+    color: var(--text-soft);
+    white-space: pre-wrap;
+    word-break: break-word;
+}
 .announce-date {
     font-size: 10px;
     color: var(--text-soft);
@@ -1457,21 +1489,6 @@ body {
     flex-shrink: 0;
     margin-left: 4px;
 }
-.announce-edit-btn {
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    border: 1px solid var(--glass-border);
-    background: var(--glass-card);
-    color: var(--text-soft);
-    font-size: 12px;
-    font-weight: 800;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-.announce-edit-btn:active { transform: scale(0.94); }
 .date-label {
     font-family: 'Sora', sans-serif;
     font-size: 13px;
@@ -3094,7 +3111,7 @@ a{
   <div class="modal-bg" id="modal-student"><div class="modal"><h3>Tambah Siswa</h3><div class="field"><label>Nama Lengkap</label><input id="student-nama" type="text" placeholder="Contoh: Muhammad Rizky"></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('student')">Batal</button><button class="btn btn-primary" onclick="submitStudent()">Tambah</button></div></div></div>
   <div class="modal-bg" id="modal-roster-status"><div class="modal"><h3 id="roster-status-title">Tandai Status</h3><div class="field-hint" style="margin:-6px 0 12px;">Tandai status <b id="roster-status-name" style="color:var(--text-main);"></b> untuk hari ini.</div><div class="roster-status-choices"><button class="roster-choice-btn done" id="roster-status-sudah-btn" onclick="setRosterStatusChoice('sudah')">✓ Sudah</button><button class="roster-choice-btn undone" id="roster-status-belum-btn" onclick="setRosterStatusChoice('belum')">✕ Belum</button></div><input type="hidden" id="roster-status-choice"><div class="field" id="roster-status-alasan-field" style="display:none;"><label>Keterangan</label><textarea id="roster-status-alasan" placeholder="Contoh: keterangan piket, catatan, dll." style="min-height:60px;"></textarea></div><div class="modal-actions"><button class="btn btn-ghost" id="roster-status-clear-btn" onclick="clearRosterStatus()" title="Kembalikan ke netral">↺ Reset</button><button class="btn btn-ghost" onclick="closeModal('roster-status')">Batal</button><button class="btn btn-primary" onclick="submitRosterStatus()">Simpan</button></div></div></div>
   <div class="modal-bg" id="modal-piket-jadwal"><div class="modal"><h3>Atur Jadwal Piket</h3><div class="field-hint" style="margin:-6px 0 10px;">Pilih hari, lalu centang siswa yang bertugas piket pada hari itu. Kosongkan semua centang = tidak ada piket hari itu.</div><div class="day-tabs" id="piket-jadwal-day-tabs" style="flex-wrap:wrap;"></div><div id="piket-jadwal-summary" class="piket-jadwal-summary"></div><div id="piket-jadwal-checklist" style="max-height:280px; overflow-y:auto; margin-top:4px;"></div><div class="modal-actions"><button class="btn btn-primary" onclick="closeModal('piket-jadwal')">Selesai</button></div></div></div>
-  <div class="modal-bg" id="modal-pengumuman"><div class="modal"><h3 id="pengumuman-modal-title">Tambah Pengumuman</h3><div class="field"><label>Isi</label><textarea id="pengumuman-teks" placeholder="Tulis informasi untuk kelas..."></textarea></div><div class="field"><label>Deadline (opsional)</label><input id="pengumuman-deadline" type="date"></div><div class="field"><label>Lampiran (opsional, bisa lebih dari 1)</label><div id="pengumuman-file-chips" style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px;"></div><input type="file" id="pengumuman-file" accept=".pdf,.doc,.docx,.xlsx,.jpg,.jpeg,.png,.webp,.zip" multiple onchange="onPengumumanFileSelected(this)"><div id="pengumuman-file-hint" class="field-hint">Maks 3 file. Batas 10MB/file saat Google Drive aktif.</div></div><input type="hidden" id="pengumuman-edit-id"><div class="modal-actions"><button class="btn btn-danger admin-only" id="pengumuman-delete-btn" style="display:none;" onclick="deletePengumumanCurrent()">Hapus</button><button class="btn btn-ghost" onclick="closeModal('pengumuman')">Batal</button><button class="btn btn-primary admin-only" id="pengumuman-submit-btn" onclick="submitPengumuman()">Publikasikan</button></div></div></div>
+  <div class="modal-bg" id="modal-pengumuman"><div class="modal"><h3 id="pengumuman-modal-title">Tambah Pengumuman</h3><div class="field"><label>Judul</label><input id="pengumuman-judul" type="text" placeholder="Contoh: Rapat Kelas Hari Jumat"></div><div class="field"><label>Deskripsi</label><textarea id="pengumuman-deskripsi" placeholder="Tulis informasi untuk kelas..."></textarea></div><div class="field"><label>Deadline (opsional)</label><input id="pengumuman-deadline" type="date"></div><div class="field"><label>Lampiran (opsional, bisa lebih dari 1)</label><div id="pengumuman-file-chips" style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px;"></div><input type="file" id="pengumuman-file" accept=".pdf,.doc,.docx,.xlsx,.jpg,.jpeg,.png,.webp,.zip" multiple onchange="onPengumumanFileSelected(this)"><div id="pengumuman-file-hint" class="field-hint">Maks 3 file. Batas 10MB/file saat Google Drive aktif.</div></div><input type="hidden" id="pengumuman-edit-id"><div class="modal-actions"><button class="btn btn-danger admin-only" id="pengumuman-delete-btn" style="display:none;" onclick="deletePengumumanCurrent()">Hapus</button><button class="btn btn-ghost" onclick="closeModal('pengumuman')">Batal</button><button class="btn btn-primary admin-only" id="pengumuman-submit-btn" onclick="submitPengumuman()">Publikasikan</button></div></div></div>
   <div class="modal-bg" id="modal-jadwal"><div class="modal"><h3 id="jadwal-modal-title">Atur Jam Pelajaran</h3><div class="field"><label>Hari</label><select id="jadwal-hari"><option value="Senin">Senin</option><option value="Selasa">Selasa</option><option value="Rabu">Rabu</option><option value="Kamis">Kamis</option><option value="Jumat">Jumat</option></select></div><div class="field"><label>Jam Mulai</label><input id="jadwal-mulai" type="time"></div><div class="field"><label>Jam Selesai</label><input id="jadwal-selesai" type="time"></div><div class="field"><label>Mata Pelajaran</label><input id="jadwal-mapel" type="text" placeholder="Mata Pelajaran"></div><div class="field"><label>Guru</label><input id="jadwal-guru" type="text" placeholder="Nama Guru"></div><input type="hidden" id="jadwal-edit-id"><div class="modal-actions"><button class="btn btn-danger admin-only" id="jadwal-delete-btn" style="display:none;" onclick="deleteJadwalCurrent()">Hapus</button><button class="btn btn-ghost" onclick="closeModal('jadwal')">Batal</button><button class="btn btn-primary admin-only" onclick="submitJadwal()">Simpan</button></div></div></div>
   <div class="modal-bg" id="modal-stats"><div class="modal"><h3 id="stats-title">📊 Statistik</h3><div id="stats-content" style="max-height:300px; overflow-y:auto;"></div><div class="modal-actions"><button class="btn btn-primary btn-block" onclick="closeModal('stats')">Tutup</button></div></div></div>
   <div class="modal-bg" id="modal-export"><div class="modal"><h3>Rekap Kas</h3><div class="field"><textarea id="export-text" readonly style="height:160px; font-family:monospace; font-size:11px;"></textarea></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('export')">Tutup</button><button class="btn btn-primary" onclick="copyExportText()">📋 Salin</button></div></div></div>
@@ -4460,7 +4477,7 @@ function renderGlobalSearch(){
     state.students.forEach(name=>{if(name.toLowerCase().includes(q))results.push({type:'student',id:name,title:name,sub:'Siswa'});});
     state.tugas.forEach(t=>{if((t.nama||'').toLowerCase().includes(q)||(t.mapel||'').toLowerCase().includes(q))results.push({type:'task',id:t.id,title:t.nama,sub:'Tugas · '+(t.mapel||'Tanpa mapel')});});
     state.reports.filter(r=>isAdmin()||r.authorUid===(currentUser&&currentUser.uid)).forEach(r=>{if((r.judul||'').toLowerCase().includes(q)||(r.reportCode||'').toLowerCase().includes(q)||(r.pelapor||'').toLowerCase().includes(q))results.push({type:'report',id:r.id,title:r.reportCode||reportCode(r),sub:'Laporan · '+r.judul});});
-    state.pengumuman.forEach(p=>{if((p.text||'').toLowerCase().includes(q))results.push({type:'announcement',id:p.id,title:'Pengumuman',sub:p.text});});
+    state.pengumuman.forEach(p=>{const title=String(p.judul||p.title||'Pengumuman');const desc=String((p.deskripsi!==undefined?p.deskripsi:p.text)||'');if((title+' '+desc).toLowerCase().includes(q))results.push({type:'announcement',id:p.id,title,sub:desc});});
     Object.keys(state.jadwal||{}).forEach(day=>(state.jadwal[day]||[]).forEach(j=>{if((j.mapel||'').toLowerCase().includes(q)||(j.guru||'').toLowerCase().includes(q)||day.toLowerCase().includes(q))results.push({type:'schedule',id:j.id,title:j.mapel,sub:day+' · '+j.jam+' · '+(j.guru||'')});}));
     if(!results.length){wrap.innerHTML='<div class="empty">Tidak ada hasil.</div>';return;}
     wrap.innerHTML=results.slice(0,8).map(r=>`<div class="global-search-item" onclick='openGlobalSearchResult(${jsString(r.type)},${jsString(r.id)})'><div style="font-size:16px">${r.type==='student'?'🎓':r.type==='task'?'📝':r.type==='report'?'📋':r.type==='announcement'?'📢':'📅'}</div><div class="gsi-main"><div class="gsi-title">${escapeHtml(r.title)}</div><div class="gsi-sub">${escapeHtml(globalSearchTypeLabel(r.type))} · ${escapeHtml(r.sub)}</div></div></div>`).join('');
@@ -4738,15 +4755,21 @@ function renderPengumuman() {
     if (!list) return;
     const items = Array.isArray(state.pengumuman) ? state.pengumuman : [];
     list.innerHTML = items.length ? items.slice().reverse().map(p => {
+        const title = String(p.judul || p.title || '').trim() || 'Pengumuman';
+        const description = String((p.deskripsi !== undefined ? p.deskripsi : p.text) || '').trim();
         const deadline = p.deadline || p.tenggat || '';
         const deadlineText = formatAnnouncementDeadline(deadline);
         const deadlineBadge = deadlineText ? `<span class="announce-pill${announcementDeadlineClass(deadline)}">📅 Deadline ${escapeHtml(deadlineText)}</span>` : '';
-        const actions = isReadOnly() ? '' : `<div class="announce-actions"><button class="announce-edit-btn admin-only" type="button" onclick="event.stopPropagation(); openPengumumanModal(${Number(p.id)})" title="Edit pengumuman">✏️</button><button class="s-remove admin-only" type="button" onclick="event.stopPropagation(); deletePengumuman(${Number(p.id)})" title="Hapus pengumuman">×</button></div>`;
+        const titleHtml = isReadOnly()
+            ? `<div class="announce-title">${escapeHtml(title)}</div>`
+            : `<button class="announce-title-btn admin-only" type="button" onclick="openPengumumanModal(${Number(p.id)})" title="Klik untuk edit">${escapeHtml(title)}</button>`;
+        const actions = isReadOnly() ? '' : `<div class="announce-actions"><button class="s-remove admin-only" type="button" onclick="event.stopPropagation(); deletePengumuman(${Number(p.id)})" title="Hapus pengumuman">×</button></div>`;
         return `
         <div class="announce-item">
           <div class="announce-dot"></div>
           <div style="flex:1; min-width:0;">
-            <div class="announce-text">${escapeHtml(p.text || '')}</div>
+            ${titleHtml}
+            ${description ? `<div class="announce-description">${escapeHtml(description)}</div>` : ''}
             <div class="announce-date">${escapeHtml(p.date || '')}</div>
             ${deadlineBadge ? `<div class="announce-meta">${deadlineBadge}</div>` : ''}
             ${renderAnnouncementFiles(p)}
@@ -6111,7 +6134,8 @@ async function onPengumumanFileSelected(input) {
 }
 function openPengumumanModal(id) {
     if (guardReadOnly()) return;
-    const textEl = document.getElementById('pengumuman-teks');
+    const judulEl = document.getElementById('pengumuman-judul');
+    const deskripsiEl = document.getElementById('pengumuman-deskripsi');
     const deadlineEl = document.getElementById('pengumuman-deadline');
     const editEl = document.getElementById('pengumuman-edit-id');
     const titleEl = document.getElementById('pengumuman-modal-title');
@@ -6123,7 +6147,8 @@ function openPengumumanModal(id) {
     if (id) {
         const p = state.pengumuman.find(x => Number(x.id) === Number(id));
         if (!p) { showNotification('Pengumuman tidak ditemukan.', 'error'); return; }
-        textEl.value = p.text || '';
+        judulEl.value = p.judul || p.title || '';
+        deskripsiEl.value = p.deskripsi !== undefined ? (p.deskripsi || '') : (p.text || '');
         deadlineEl.value = p.deadline || p.tenggat || '';
         editEl.value = p.id;
         titleEl.textContent = 'Edit Pengumuman';
@@ -6131,7 +6156,8 @@ function openPengumumanModal(id) {
         deleteEl.style.display = '';
         _pengumumanEditFiles = getItemFiles(p).map(f => ({...f}));
     } else {
-        textEl.value = '';
+        judulEl.value = '';
+        deskripsiEl.value = '';
         deadlineEl.value = '';
         editEl.value = '';
         titleEl.textContent = 'Tambah Pengumuman';
@@ -6151,11 +6177,12 @@ function openAnnouncementFileAt(id, idx) {
 }
 async function submitPengumuman() {
     if (guardReadOnly()) return;
-    const text = document.getElementById('pengumuman-teks').value.trim();
+    const judul = document.getElementById('pengumuman-judul').value.trim();
+    const deskripsi = document.getElementById('pengumuman-deskripsi').value.trim();
     const deadline = document.getElementById('pengumuman-deadline').value || '';
     const editId = document.getElementById('pengumuman-edit-id').value;
-    if (!text) {
-        showNotification('Isi pengumuman wajib diisi.', 'warning');
+    if (!judul || !deskripsi) {
+        showNotification('Judul dan deskripsi wajib diisi.', 'warning');
         return;
     }
 
@@ -6202,14 +6229,17 @@ async function submitPengumuman() {
                 void deleteDriveAttachment(oldFile, 'announcement');
             }
         });
-        p.text = text;
+        p.judul = judul;
+        p.title = judul;
+        p.deskripsi = deskripsi;
+        p.text = deskripsi;
         p.deadline = deadline;
         p.files = files;
         delete p.tenggat;
         delete p.file;
         delete p.fileData;
-        addActivity('Mengubah pengumuman', text);
-        addNotification('Pengumuman diperbarui', text + (deadline ? ' · Deadline ' + deadline : ''), {role:'siswa'});
+        addActivity('Mengubah pengumuman', judul);
+        addNotification('Pengumuman diperbarui', judul + (deadline ? ' · Deadline ' + deadline : ''), {role:'siswa'});
         await saveState();
         renderPengumuman();
         closeModal('pengumuman');
@@ -6219,13 +6249,16 @@ async function submitPengumuman() {
 
     state.pengumuman.push({
         id: Date.now(),
-        text,
+        judul,
+        title: judul,
+        deskripsi,
+        text: deskripsi,
         deadline,
         date: nowText,
         files
     });
-    addActivity('Menerbitkan pengumuman', text);
-    addNotification('Pengumuman baru', text + (deadline ? ' · Deadline ' + deadline : ''), {role:'siswa'});
+    addActivity('Menerbitkan pengumuman', judul);
+    addNotification('Pengumuman baru', judul + (deadline ? ' · Deadline ' + deadline : ''), {role:'siswa'});
     await saveState();
     renderPengumuman();
     closeModal('pengumuman');
@@ -6244,7 +6277,7 @@ function deletePengumuman(id) {
     if (!confirm('Hapus pengumuman ini?')) return false;
     void deleteDriveAttachments(getItemFiles(deletedAnnouncement), 'announcement');
     state.pengumuman = state.pengumuman.filter(p => Number(p.id) !== Number(id));
-    addActivity('Menghapus pengumuman', deletedAnnouncement.text || 'Pengumuman');
+    addActivity('Menghapus pengumuman', deletedAnnouncement.judul || deletedAnnouncement.title || deletedAnnouncement.text || 'Pengumuman');
     saveState();
     renderPengumuman();
     showNotification('Pengumuman dihapus.', 'info');
