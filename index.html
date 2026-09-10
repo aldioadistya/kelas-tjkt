@@ -3107,15 +3107,15 @@ a{
   <div class="modal-bg" id="modal-kas"><div class="modal"><h3 id="kas-modal-title">Tambah Transaksi Kas</h3><input type="hidden" id="kas-edit-id"><div class="field"><label>Jenis</label><select id="kas-jenis"><option value="masuk">Pemasukan (+)</option><option value="keluar">Pengeluaran (-)</option></select></div><div class="field"><label>Keterangan</label><input id="kas-ket" type="text" placeholder="Contoh: Kas Mingguan"></div><div class="field"><label>Jumlah (Rp)</label><input id="kas-jumlah" type="number" placeholder="0"></div><div class="field"><label>Lampiran (opsional)</label><input type="file" id="kas-file" accept=".jpg,.png,.pdf,.doc,.docx,.xlsx"><div id="kas-file-hint" class="field-hint">Maks 10MB saat Google Drive aktif. Saat edit, kosongkan jika ingin mempertahankan lampiran lama.</div></div><div class="modal-actions"><button class="btn btn-danger admin-only" id="kas-delete-btn" style="display:none;" onclick="hapusKasCurrent()">Hapus</button><button class="btn btn-ghost" onclick="closeModal('kas')">Batal</button><button class="btn btn-primary" onclick="submitKas()">Simpan</button></div></div></div>
   <div class="modal-bg" id="modal-kas-folder"><div class="modal"><h3>Tambah Folder Kas Siswa</h3><div class="field"><label>Nama Folder</label><input id="kas-folder-name" type="text" placeholder="Contoh: Kas September 2026"></div><div class="field"><label>Nominal Kas per Anak (Rp)</label><input id="kas-folder-nominal" type="number" min="0" placeholder="Contoh: 10000"></div><div class="field"><label>Keterangan (opsional)</label><input id="kas-folder-note" type="text" placeholder="Contoh: Kas bulanan"></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('kas-folder')">Batal</button><button class="btn btn-primary" onclick="submitKasFolder()">Buat Folder</button></div></div></div>
   <div class="modal-bg" id="modal-kas-student"><div class="modal"><h3 id="kas-student-modal-title">Pembayaran Kas Siswa</h3><input type="hidden" id="kas-student-folder-id"><input type="hidden" id="kas-student-name"><div class="field"><label>Nama Siswa</label><input id="kas-student-display" type="text" readonly></div><div class="field"><label>Status Pembayaran</label><select id="kas-student-status"><option value="belum">Belum Bayar</option><option value="sudah">Sudah Bayar</option></select></div><div class="field"><label>Jumlah Dibayar (Rp)</label><input id="kas-student-jumlah" type="number" min="0" placeholder="0"></div><div class="field"><label>Tanggal Bayar</label><input id="kas-student-tanggal" type="date"></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('kas-student')">Batal</button><button class="btn btn-primary admin-only" onclick="submitKasStudent()">Simpan</button></div></div></div>
-  <div class="modal-bg" id="modal-tugas"><div class="modal"><h3 id="tugas-modal-title">Tambah Tugas</h3><div class="field"><label>Nama Tugas</label><input id="tugas-nama" type="text" placeholder="Contoh: Laporan Jaringan"></div><div class="field"><label>Mata Pelajaran</label><input id="tugas-mapel" type="text" placeholder="Contoh: Administrasi Jaringan"></div><div class="field"><label>Deadline</label><input id="tugas-tenggat" type="date"></div><div class="field"><label>Deskripsi</label><textarea id="tugas-deskripsi" placeholder="Deskripsi tugas..."></textarea></div><div class="field"><label>Lampiran (opsional, bisa lebih dari 1)</label><div id="tugas-file-chips" style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px;"></div><input type="file" id="tugas-file" accept=".pdf,.doc,.docx,.jpg,.png,.jpeg,.zip" multiple onchange="onTugasFileSelected(this)"><div id="tugas-file-hint" class="field-hint">Maks 3 file. Batas 10MB/file saat Google Drive aktif.</div></div><input type="hidden" id="tugas-edit-id"><div class="modal-actions"><button class="btn btn-danger admin-only" id="tugas-delete-btn" style="display:none;" onclick="deleteTugasCurrent()">Hapus</button><button class="btn btn-ghost" onclick="closeModal('tugas')">Batal</button><button class="btn btn-primary admin-only" onclick="submitTugas()">Simpan</button></div></div></div>
+  <div class="modal-bg" id="modal-tugas"><div class="modal"><h3 id="tugas-modal-title">Tambah Tugas</h3><div class="field"><label>Nama Tugas</label><input id="tugas-nama" type="text" placeholder="Contoh: Laporan Jaringan"></div><div class="field"><label>Mata Pelajaran</label><input id="tugas-mapel" type="text" placeholder="Contoh: Administrasi Jaringan"></div><div class="field"><label>Deadline</label><input id="tugas-tenggat" type="date"></div><div class="field"><label>Deskripsi</label><textarea id="tugas-deskripsi" placeholder="Deskripsi tugas..."></textarea></div><div class="field"><label>Lampiran (opsional, bisa lebih dari 1)</label><div id="tugas-file-chips" style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px;"></div><input type="file" id="tugas-file" accept=".pdf,.doc,.docx,.xlsx,.jpg,.png,.jpeg,.webp" multiple onchange="onTugasFileSelected(this)"><div id="tugas-file-hint" class="field-hint">Maks 3 file. Batas 10MB/file saat Google Drive aktif.</div></div><input type="hidden" id="tugas-edit-id"><div class="modal-actions"><button class="btn btn-danger admin-only" id="tugas-delete-btn" style="display:none;" onclick="deleteTugasCurrent()">Hapus</button><button class="btn btn-ghost" onclick="closeModal('tugas')">Batal</button><button class="btn btn-primary admin-only" onclick="submitTugas()">Simpan</button></div></div></div>
   <div class="modal-bg" id="modal-student"><div class="modal"><h3>Tambah Siswa</h3><div class="field"><label>Nama Lengkap</label><input id="student-nama" type="text" placeholder="Contoh: Muhammad Rizky"></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('student')">Batal</button><button class="btn btn-primary" onclick="submitStudent()">Tambah</button></div></div></div>
   <div class="modal-bg" id="modal-roster-status"><div class="modal"><h3 id="roster-status-title">Tandai Status</h3><div class="field-hint" style="margin:-6px 0 12px;">Tandai status <b id="roster-status-name" style="color:var(--text-main);"></b> untuk hari ini.</div><div class="roster-status-choices"><button class="roster-choice-btn done" id="roster-status-sudah-btn" onclick="setRosterStatusChoice('sudah')">✓ Sudah</button><button class="roster-choice-btn undone" id="roster-status-belum-btn" onclick="setRosterStatusChoice('belum')">✕ Belum</button></div><input type="hidden" id="roster-status-choice"><div class="field" id="roster-status-alasan-field" style="display:none;"><label>Keterangan</label><textarea id="roster-status-alasan" placeholder="Contoh: keterangan piket, catatan, dll." style="min-height:60px;"></textarea></div><div class="modal-actions"><button class="btn btn-ghost" id="roster-status-clear-btn" onclick="clearRosterStatus()" title="Kembalikan ke netral">↺ Reset</button><button class="btn btn-ghost" onclick="closeModal('roster-status')">Batal</button><button class="btn btn-primary" onclick="submitRosterStatus()">Simpan</button></div></div></div>
   <div class="modal-bg" id="modal-piket-jadwal"><div class="modal"><h3>Atur Jadwal Piket</h3><div class="field-hint" style="margin:-6px 0 10px;">Pilih hari, lalu centang siswa yang bertugas piket pada hari itu. Kosongkan semua centang = tidak ada piket hari itu.</div><div class="day-tabs" id="piket-jadwal-day-tabs" style="flex-wrap:wrap;"></div><div id="piket-jadwal-summary" class="piket-jadwal-summary"></div><div id="piket-jadwal-checklist" style="max-height:280px; overflow-y:auto; margin-top:4px;"></div><div class="modal-actions"><button class="btn btn-primary" onclick="closeModal('piket-jadwal')">Selesai</button></div></div></div>
-  <div class="modal-bg" id="modal-pengumuman"><div class="modal"><h3 id="pengumuman-modal-title">Tambah Pengumuman</h3><div class="field"><label>Judul</label><input id="pengumuman-judul" type="text" placeholder="Contoh: Rapat Kelas Hari Jumat"></div><div class="field"><label style="font-size:12px;">Deskripsi</label><textarea id="pengumuman-deskripsi" placeholder="Tulis informasi untuk kelas..." style="font-size:14px; min-height:120px; line-height:1.5;"></textarea></div><div class="field"><label style="font-size:12px;">Deadline (opsional)</label><input id="pengumuman-deadline" type="date" style="font-size:14px; min-height:44px;"></div><div class="field"><label>Lampiran (opsional, bisa lebih dari 1)</label><div id="pengumuman-file-chips" style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px;"></div><input type="file" id="pengumuman-file" accept=".pdf,.doc,.docx,.xlsx,.jpg,.jpeg,.png,.webp,.zip" multiple onchange="onPengumumanFileSelected(this)"><div id="pengumuman-file-hint" class="field-hint">Maks 3 file. Batas 10MB/file saat Google Drive aktif.</div></div><input type="hidden" id="pengumuman-edit-id"><div class="modal-actions"><button class="btn btn-danger admin-only" id="pengumuman-delete-btn" style="display:none;" onclick="deletePengumumanCurrent()">Hapus</button><button class="btn btn-ghost" onclick="closeModal('pengumuman')">Batal</button><button class="btn btn-primary admin-only" id="pengumuman-submit-btn" onclick="submitPengumuman()">Publikasikan</button></div></div></div>
+  <div class="modal-bg" id="modal-pengumuman"><div class="modal"><h3 id="pengumuman-modal-title">Tambah Pengumuman</h3><div class="field"><label>Judul</label><input id="pengumuman-judul" type="text" placeholder="Contoh: Rapat Kelas Hari Jumat"></div><div class="field"><label style="font-size:12px;">Deskripsi</label><textarea id="pengumuman-deskripsi" placeholder="Tulis informasi untuk kelas..." style="font-size:14px; min-height:120px; line-height:1.5;"></textarea></div><div class="field"><label style="font-size:12px;">Deadline (opsional)</label><input id="pengumuman-deadline" type="date" style="font-size:14px; min-height:44px;"></div><div class="field"><label>Lampiran (opsional, bisa lebih dari 1)</label><div id="pengumuman-file-chips" style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px;"></div><input type="file" id="pengumuman-file" accept=".pdf,.doc,.docx,.xlsx,.jpg,.jpeg,.png,.webp" multiple onchange="onPengumumanFileSelected(this)"><div id="pengumuman-file-hint" class="field-hint">Maks 3 file. Batas 10MB/file saat Google Drive aktif.</div></div><input type="hidden" id="pengumuman-edit-id"><div class="modal-actions"><button class="btn btn-danger admin-only" id="pengumuman-delete-btn" style="display:none;" onclick="deletePengumumanCurrent()">Hapus</button><button class="btn btn-ghost" onclick="closeModal('pengumuman')">Batal</button><button class="btn btn-primary admin-only" id="pengumuman-submit-btn" onclick="submitPengumuman()">Publikasikan</button></div></div></div>
   <div class="modal-bg" id="modal-jadwal"><div class="modal"><h3 id="jadwal-modal-title">Atur Jam Pelajaran</h3><div class="field"><label>Hari</label><select id="jadwal-hari"><option value="Senin">Senin</option><option value="Selasa">Selasa</option><option value="Rabu">Rabu</option><option value="Kamis">Kamis</option><option value="Jumat">Jumat</option></select></div><div class="field"><label>Jam Mulai</label><input id="jadwal-mulai" type="time"></div><div class="field"><label>Jam Selesai</label><input id="jadwal-selesai" type="time"></div><div class="field"><label>Mata Pelajaran</label><input id="jadwal-mapel" type="text" placeholder="Mata Pelajaran"></div><div class="field"><label>Guru</label><input id="jadwal-guru" type="text" placeholder="Nama Guru"></div><input type="hidden" id="jadwal-edit-id"><div class="modal-actions"><button class="btn btn-danger admin-only" id="jadwal-delete-btn" style="display:none;" onclick="deleteJadwalCurrent()">Hapus</button><button class="btn btn-ghost" onclick="closeModal('jadwal')">Batal</button><button class="btn btn-primary admin-only" onclick="submitJadwal()">Simpan</button></div></div></div>
   <div class="modal-bg" id="modal-stats"><div class="modal"><h3 id="stats-title">📊 Statistik</h3><div id="stats-content" style="max-height:300px; overflow-y:auto;"></div><div class="modal-actions"><button class="btn btn-primary btn-block" onclick="closeModal('stats')">Tutup</button></div></div></div>
   <div class="modal-bg" id="modal-export"><div class="modal"><h3>Rekap Kas</h3><div class="field"><textarea id="export-text" readonly style="height:160px; font-family:monospace; font-size:11px;"></textarea></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('export')">Tutup</button><button class="btn btn-primary" onclick="copyExportText()">📋 Salin</button></div></div></div>
-  <div class="modal-bg" id="modal-report"><div class="modal"><h3 id="report-modal-title">Buat Laporan</h3><div id="report-code-label" class="field-hint" style="margin:-4px 0 8px; font-weight:700;"></div><div class="field"><label>Kategori</label><select id="report-kategori"><option value="Kekerasan/Berantem">Kekerasan</option><option value="Bullying">Bullying</option><option value="Kerusakan Fasilitas">Kerusakan</option><option value="Pencurian">Pencurian</option><option value="Pelanggaran Tata Tertib">Pelanggaran</option><option value="Lainnya">Lainnya</option></select></div><div class="field"><label>Judul</label><input id="report-judul" type="text" placeholder="Ringkasan singkat"></div><div class="field"><label>Deskripsi</label><textarea id="report-deskripsi" placeholder="Jelaskan kronologi..."></textarea></div><div class="field"><label>Tanggal Kejadian</label><input id="report-tanggal" type="date"></div><div class="field"><label>Urgensi</label><select id="report-urgensi"><option value="rendah">Rendah</option><option value="sedang" selected>Sedang</option><option value="tinggi">Tinggi</option><option value="darurat">Darurat 🚨</option></select></div><div class="field"><label>Lampiran (opsional)</label><input type="file" id="report-file" accept=".pdf,.doc,.docx,.jpg,.png,.jpeg,.zip"><div id="report-file-hint" class="field-hint">Maks 10MB saat Google Drive aktif.</div></div><input type="hidden" id="report-edit-id"><div id="report-status-field" style="display:none;" class="admin-only"><div class="field"><label>Status</label><select id="report-status"><option value="pending">Menunggu</option><option value="reviewed">Ditinjau</option><option value="resolved">Selesai</option><option value="rejected">Ditolak</option></select></div><div class="field"><label>Tanggapan Admin (opsional)</label><textarea id="report-tanggapan" placeholder="Tulis tanggapan untuk siswa..."></textarea></div><div id="report-history" class="field-hint" style="max-height:120px; overflow:auto; white-space:normal;"></div></div><div id="report-student-response" style="display:none;" class="field"><label>Tanggapan Admin</label><div id="report-student-response-text" style="padding:9px 10px; border:1px solid var(--glass-border); border-radius:8px; background:var(--glass-card); font-size:11px; white-space:pre-wrap;"></div></div><div class="modal-actions"><button class="btn btn-danger admin-only" id="report-delete-btn" style="display:none!important;" onclick="deleteReport()">Hapus</button><button class="btn btn-ghost" onclick="closeModal('report')">Batal</button><button class="btn btn-primary" id="report-submit-btn" onclick="submitReport()">Kirim</button></div></div></div>
+  <div class="modal-bg" id="modal-report"><div class="modal"><h3 id="report-modal-title">Buat Laporan</h3><div id="report-code-label" class="field-hint" style="margin:-4px 0 8px; font-weight:700;"></div><div class="field"><label>Kategori</label><select id="report-kategori"><option value="Kekerasan/Berantem">Kekerasan</option><option value="Bullying">Bullying</option><option value="Kerusakan Fasilitas">Kerusakan</option><option value="Pencurian">Pencurian</option><option value="Pelanggaran Tata Tertib">Pelanggaran</option><option value="Lainnya">Lainnya</option></select></div><div class="field"><label>Judul</label><input id="report-judul" type="text" placeholder="Ringkasan singkat"></div><div class="field"><label>Deskripsi</label><textarea id="report-deskripsi" placeholder="Jelaskan kronologi..."></textarea></div><div class="field"><label>Tanggal Kejadian</label><input id="report-tanggal" type="date"></div><div class="field"><label>Urgensi</label><select id="report-urgensi"><option value="rendah">Rendah</option><option value="sedang" selected>Sedang</option><option value="tinggi">Tinggi</option><option value="darurat">Darurat 🚨</option></select></div><div class="field"><label>Lampiran (opsional)</label><input type="file" id="report-file" accept=".pdf,.doc,.docx,.xlsx,.jpg,.png,.jpeg,.webp"><div id="report-file-hint" class="field-hint">Maks 10MB saat Google Drive aktif.</div></div><input type="hidden" id="report-edit-id"><div id="report-status-field" style="display:none;" class="admin-only"><div class="field"><label>Status</label><select id="report-status"><option value="pending">Menunggu</option><option value="reviewed">Ditinjau</option><option value="resolved">Selesai</option><option value="rejected">Ditolak</option></select></div><div class="field"><label>Tanggapan Admin (opsional)</label><textarea id="report-tanggapan" placeholder="Tulis tanggapan untuk siswa..."></textarea></div><div id="report-history" class="field-hint" style="max-height:120px; overflow:auto; white-space:normal;"></div></div><div id="report-student-response" style="display:none;" class="field"><label>Tanggapan Admin</label><div id="report-student-response-text" style="padding:9px 10px; border:1px solid var(--glass-border); border-radius:8px; background:var(--glass-card); font-size:11px; white-space:pre-wrap;"></div></div><div class="modal-actions"><button class="btn btn-danger admin-only" id="report-delete-btn" style="display:none!important;" onclick="deleteReport()">Hapus</button><button class="btn btn-ghost" onclick="closeModal('report')">Batal</button><button class="btn btn-primary" id="report-submit-btn" onclick="submitReport()">Kirim</button></div></div></div>
   <div class="modal-bg" id="modal-account-edit"><div class="modal"><h3>Edit Akun</h3><div class="field"><label>Nama Lengkap</label><input id="acc-edit-nama" type="text" placeholder="Nama lengkap"></div><div class="field"><label>Email</label><input id="acc-edit-email" type="text" disabled style="opacity:0.6;"></div><div class="field"><label>Peran</label><select id="acc-edit-role"><option value="siswa">Siswa</option><option value="admin">Admin</option><option value="superadmin">Super Admin</option></select></div><input type="hidden" id="acc-edit-id"><input type="hidden" id="acc-edit-active" value="true"><div class="modal-actions"><button class="btn btn-danger" id="acc-edit-toggle-btn" onclick="toggleAccountActiveFromModal()">✕ Nonaktifkan Akun</button><button class="btn btn-ghost" onclick="closeModal('account-edit')">Batal</button><button class="btn btn-primary" onclick="submitAccountEdit()">Simpan</button></div></div></div>
   <div class="modal-bg" id="modal-reauth"><div class="modal">
     <h3>🔐 Konfirmasi Keamanan</h3>
@@ -3687,7 +3687,14 @@ async function saveReportsForAdmin() {
     for (const report of state.reports) {
         if (!report || report.id == null) continue;
         const ref = db.collection(FS_REPORTS).doc(String(report.id));
-        batch.set(ref, report, { merge: true });
+        const writeData = { ...report };
+        // Firestore merge() does not remove omitted fields. Explicitly delete
+        // resolvedAt when a report is moved out of Selesai so Rules can enforce
+        // the workflow invariant without leaving stale cleanup timestamps.
+        if (!Object.prototype.hasOwnProperty.call(report, 'resolvedAt')) {
+            writeData.resolvedAt = firebase.firestore.FieldValue.delete();
+        }
+        batch.set(ref, writeData, { merge: true });
         count++;
         if (count >= 450) {
             await batch.commit();
@@ -3778,6 +3785,7 @@ async function saveState() {
 
     window.__kelaskuSavePromise = (async () => {
         window.__kelaskuSavePending = true;
+        let lastResult = { synced: true };
         try {
             while (window.__kelaskuSaveAgain) {
                 window.__kelaskuSaveAgain = false;
@@ -3787,9 +3795,8 @@ async function saveState() {
                 if (!currentUser || !isAdmin()) {
                     const publicState = buildPublicState(state);
                     localStorage.setItem('kelasku-public-state', JSON.stringify(publicState));
-                    // Remove the old monolithic cache so previous versions do not
-                    // leave sensitive reports/logs behind on a student's device.
                     localStorage.removeItem('kelasku-state');
+                    lastResult = { synced: true, localOnly: true };
                     continue;
                 }
 
@@ -3797,20 +3804,21 @@ async function saveState() {
                 const adminState = buildAdminState(state);
 
                 await writeStateDocument(FS_PUBLIC, PUBLIC_STATE_DOC, publicState, 'kelasku-public-state');
-                // Keep the original Firebase collection as a server-side
-                // compatibility mirror of the public class state. This does
-                // NOT contain Base64 attachments; file payloads live in Drive.
                 await writeStateDocument(FS_COLLECTION, PUBLIC_STATE_DOC, publicState, null);
                 await writeStateDocument(FS_ADMIN, ADMIN_STATE_DOC, adminState, null);
                 await saveReportsForAdmin();
                 await saveTargetedNotifications();
 
                 window.__kelaskuLastSaveSyncFailedNotified = false;
+                lastResult = { synced: true };
                 console.log('Separated state saved successfully');
             }
+            return lastResult;
         } catch (e) {
+            const message = String(e && e.message ? e.message : e || 'Gagal menyimpan perubahan ke server.');
             console.error('Save separated state error:', e);
             showNotification('⚠️ Gagal menyimpan perubahan ke server.', 'error');
+            return { synced: false, error: message };
         } finally {
             window.__kelaskuSavePending = false;
         }
@@ -5418,16 +5426,28 @@ function mimeTypeFromFilename(name) {
         jpeg:'image/jpeg',
         png:'image/png',
         webp:'image/webp',
-        zip:'application/zip'
+        
     })[ext] || 'application/octet-stream';
+}
+function isAllowedAttachmentHost(url) {
+    try {
+        const u = new URL(url, window.location.href);
+        if (u.protocol !== 'https:') return false;
+        const host = u.hostname.toLowerCase();
+        return host === 'drive.google.com'
+            || host === 'docs.google.com'
+            || host === 'drive.usercontent.google.com'
+            || host === 'lh3.googleusercontent.com';
+    } catch (_) {
+        return false;
+    }
 }
 function attachmentUrl(file) {
     if (!file) return '';
-    const directUrl = String(file.driveUrl || file.url || file.fileUrl || '').trim();
-    if (directUrl) return directUrl;
     const id = String(file.driveFileId || file.driveId || file.fileId || '').trim();
     if (id) return 'https://drive.google.com/file/d/' + encodeURIComponent(id) + '/view';
-    return '';
+    const directUrl = String(file.driveUrl || file.url || file.fileUrl || '').trim();
+    return directUrl && isAllowedAttachmentHost(directUrl) ? directUrl : '';
 }
 function openStoredAttachment(file) {
     if (!file) return;
@@ -5551,15 +5571,14 @@ const ALLOWED_ATTACHMENT_MIME = new Set([
     'image/jpeg',
     'image/png',
     'image/webp',
-    'application/zip'
 ]);
-const ALLOWED_ATTACHMENT_EXT = new Set(['pdf','doc','docx','xlsx','jpg','jpeg','png','webp','zip']);
+const ALLOWED_ATTACHMENT_EXT = new Set(['pdf','doc','docx','xlsx','jpg','jpeg','png','webp']);
 function validateAttachmentTypeClient(file) {
     const name = String(file && file.name || '');
     const ext = name.toLowerCase().split('.').pop();
     const mime = String(file && file.type || '').toLowerCase();
     if (!ALLOWED_ATTACHMENT_EXT.has(ext)) {
-        throw new Error('Jenis file tidak diizinkan. Gunakan PDF, DOC/DOCX, XLSX, JPG/JPEG, PNG, WEBP, atau ZIP.');
+        throw new Error('Jenis file tidak diizinkan. Gunakan PDF, DOC/DOCX, XLSX, JPG/JPEG, PNG, atau WEBP.');
     }
     if (!ALLOWED_ATTACHMENT_MIME.has(mime)) {
         throw new Error('Tipe file tidak diizinkan: ' + (mime || 'tidak diketahui') + '.');
@@ -5567,7 +5586,7 @@ function validateAttachmentTypeClient(file) {
     const expected = {
         pdf:'application/pdf', doc:'application/msword', docx:'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
         xlsx:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', jpg:'image/jpeg', jpeg:'image/jpeg',
-        png:'image/png', webp:'image/webp', zip:'application/zip'
+        png:'image/png', webp:'image/webp'
     };
     if (expected[ext] !== mime) throw new Error('Ekstensi file tidak sesuai dengan tipe file yang dilaporkan browser.');
     return true;
@@ -5782,7 +5801,7 @@ function setReportStaffView(isStaff) {
         if (delBtn) delBtn.style.setProperty('display', 'none', 'important');
         if (submitBtn) submitBtn.textContent = 'Simpan Status';
         if (titleEl) titleEl.textContent = 'Kelola Laporan';
-        if (responseEl) { responseEl.disabled = false; responseEl.readOnly = false; }
+        if (responseEl) { responseEl.disabled = true; responseEl.readOnly = true; }
     } else {
         if (statusField) statusField.style.display = 'none';
         if (delBtn) delBtn.style.setProperty('display', 'none', 'important');
@@ -5843,6 +5862,9 @@ async function submitReport() {
         if (!r) return;
         const newStatus = document.getElementById('report-status').value;
         const oldStatus = r.status || 'pending';
+        const oldHistory = Array.isArray(r.statusHistory) ? JSON.parse(JSON.stringify(r.statusHistory)) : [];
+        const hadResolvedAt = Object.prototype.hasOwnProperty.call(r, 'resolvedAt');
+        const oldResolvedAt = r.resolvedAt;
         const responseText = (document.getElementById('report-tanggapan')?.value || '').trim();
         const previousResponse = r.tanggapan || '';
         const statusChanged = oldStatus !== newStatus;
@@ -5860,7 +5882,16 @@ async function submitReport() {
         }
         if (newStatus === 'resolved') { if (oldStatus !== 'resolved' || !r.resolvedAt) { r.resolvedAt = Date.now(); } }
         else { delete r.resolvedAt; }
-        await saveState();
+        const saveResult = await saveState();
+        if (saveResult && saveResult.synced === false) {
+            r.status = oldStatus;
+            r.statusHistory = oldHistory;
+            if (hadResolvedAt) r.resolvedAt = oldResolvedAt;
+            else delete r.resolvedAt;
+            renderReports();
+            showNotification('Status gagal disimpan ke server. Perubahan dibatalkan.', 'error', 5000);
+            return;
+        }
         renderReports();
         closeModal('report');
         showNotification('Status laporan berhasil diperbarui.', 'success');
