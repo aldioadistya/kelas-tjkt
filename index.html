@@ -1061,10 +1061,6 @@ body {
     color: #fff;
     border-color: transparent;
 }
-.day-chip { appearance: none; -webkit-appearance: none; font: inherit; text-align: center; }
-#day-tabs { position: relative; z-index: 2; pointer-events: auto !important; }
-#day-tabs .day-chip { pointer-events: auto !important; user-select: none; -webkit-user-select: none; }
-
 .task-item {
     display: flex;
     align-items: flex-start;
@@ -2799,13 +2795,7 @@ a{
         <button class="mode-btn" id="mode-piket" onclick="setJadwalMode('piket')">🧹 Piket</button>
       </div>
       <div id="jadwal-mode-pelajaran">
-        <div class="day-tabs" id="day-tabs" aria-label="Pilih hari">
-          <button type="button" class="day-chip active" data-jadwal-day="Senin">Senin</button>
-          <button type="button" class="day-chip" data-jadwal-day="Selasa">Selasa</button>
-          <button type="button" class="day-chip" data-jadwal-day="Rabu">Rabu</button>
-          <button type="button" class="day-chip" data-jadwal-day="Kamis">Kamis</button>
-          <button type="button" class="day-chip" data-jadwal-day="Jumat">Jumat</button>
-        </div>
+        <div class="day-tabs" id="day-tabs"></div>
         <div class="section"><button class="fab-add admin-only" onclick="openJadwalModal()">＋ Tambah Jam</button></div>
         <div class="section"><div class="card" id="jadwal-list"></div></div>
       </div>
@@ -3323,23 +3313,23 @@ function hydrateLocalUiState() {
     if (state.autoCleanReportDays === undefined || state.autoCleanReportDays === null) {
         state.autoCleanReportDays = 7;
     }
-    if (!state.piketJadwal || typeof state.piketJadwal !== 'object' || Array.isArray(state.piketJadwal)) {
-        state.piketJadwal = {};
-    }
-    if (!state.jadwal || typeof state.jadwal !== 'object' || Array.isArray(state.jadwal)) {
-        state.jadwal = {};
-    }
-    if (!state.calMinimized) state.calMinimized = { hp: false, piket: false };
+    if (!state.piketJadwal) state.piketJadwal = {};
+    // Saat aplikasi dibuka, kalender selalu dalam keadaan minimize.
+    // Pengguna tetap bisa membukanya dengan klik nama bulan.
+    state.calMinimized = { hp: true, piket: true };
     if (!state.kasFolderMinimized || typeof state.kasFolderMinimized !== 'object') {
         state.kasFolderMinimized = {};
     }
     if (!state.nameChangeLog) state.nameChangeLog = [];
     if (!Array.isArray(state.notifications)) state.notifications = [];
     if (!Array.isArray(state.activityLog)) state.activityLog = [];
+    if (!Array.isArray(state.jadwal)) {
+        // no-op; kept for compatibility with older saved state
+    }
 
     DAY_NAMES.forEach(day => {
-        if (!Array.isArray(state.jadwal[day])) state.jadwal[day] = [];
-        if (!Array.isArray(state.piketJadwal[day])) state.piketJadwal[day] = [];
+        if (!state.jadwal[day]) state.jadwal[day] = [];
+        if (!state.piketJadwal[day]) state.piketJadwal[day] = [];
     });
 
     if (!state.hpSelectedDate) state.hpSelectedDate = todayKey();
@@ -3730,32 +3720,20 @@ async function loadState() {
             await migrateLegacyStateOnce();
         }
 
-        const currentJadwal = (state.jadwal && typeof state.jadwal === 'object' && !Array.isArray(state.jadwal))
-            ? JSON.parse(JSON.stringify(state.jadwal))
-            : {};
-
         const publicState = await readStateDocument(
             FS_PUBLIC,
             PUBLIC_STATE_DOC,
             'kelasku-public-state'
         );
 
-        if (publicState && typeof publicState === 'object') {
-            const incomingJadwal = publicState.jadwal;
-            const incomingHasJadwal = hasAnyJadwalItems(incomingJadwal);
-            const currentHasJadwal = hasAnyJadwalItems(currentJadwal);
-
+        if (publicState) {
             state = Object.assign(state, publicState);
-
-            // Jangan biarkan snapshot server yang kosong menghapus jadwal
-            // yang masih ada di state saat ini.
-            if (!incomingHasJadwal && currentHasJadwal) {
-                state.jadwal = currentJadwal;
-            }
         }
 
-        // Admin recovery safety: jika public state kosong/kurang lengkap,
-        // ambil legacy sekali lagi. Jadwal ikut dipulihkan secara eksplisit.
+        // Admin recovery safety: if the separated public document is empty or
+        // obviously the small default state, re-read the legacy source once.
+        // This prevents the dashboard from showing zeros until the user imports
+        // a backup manually.
         if (isAdmin()) {
             const publicLooksEmpty =
                 !publicState ||
@@ -3771,41 +3749,12 @@ async function loadState() {
                         const recovered = JSON.parse(legacySnap.data().value);
                         if (recovered && typeof recovered === 'object') {
                             const recoveredPublic = buildPublicState(recovered);
-
-                            // Kalau server public punya jadwal kosong, tetapi legacy
-                            // masih punya isi, prioritaskan jadwal legacy.
-                            if (!hasAnyJadwalItems(recoveredPublic.jadwal) && hasAnyJadwalItems(state.jadwal)) {
-                                recoveredPublic.jadwal = state.jadwal;
-                            }
-
                             state = Object.assign(state, recoveredPublic);
                             await writeStateDocument(FS_PUBLIC, PUBLIC_STATE_DOC, recoveredPublic, 'kelasku-public-state');
                         }
                     }
                 } catch (recoveryError) {
                     console.warn('Legacy recovery read failed:', recoveryError);
-                }
-            } else {
-                // Walaupun public state tidak sepenuhnya kosong, tetap coba
-                // memulihkan jadwal dari legacy bila public jadwal kosong.
-                if (!hasAnyJadwalItems(state.jadwal)) {
-                    try {
-                        const legacySnap = await db.collection(FS_COLLECTION).doc(PUBLIC_STATE_DOC).get();
-                        if (legacySnap.exists && typeof legacySnap.data().value === 'string' && legacySnap.data().value) {
-                            const recovered = JSON.parse(legacySnap.data().value);
-                            if (recovered && hasAnyJadwalItems(recovered.jadwal)) {
-                                state.jadwal = recovered.jadwal;
-                                await writeStateDocument(
-                                    FS_PUBLIC,
-                                    PUBLIC_STATE_DOC,
-                                    buildPublicState(recovered),
-                                    'kelasku-public-state'
-                                );
-                            }
-                        }
-                    } catch (e) {
-                        console.warn('Legacy jadwal recovery failed:', e);
-                    }
                 }
             }
 
@@ -3834,11 +3783,6 @@ async function loadState() {
         }
         hydrateLocalUiState();
     }
-}
-
-function hasAnyJadwalItems(jadwal) {
-    if (!jadwal || typeof jadwal !== 'object' || Array.isArray(jadwal)) return false;
-    return DAY_NAMES.some(day => Array.isArray(jadwal[day]) && jadwal[day].length > 0);
 }
 
 // ============================================================
@@ -4391,30 +4335,22 @@ function openGlobalSearchResult(type,id){const input=document.getElementById('gl
 // RENDER FUNGSI LENGKAP
 // ============================================================
 let calYear = 2026, calMonth = 8, piketCalYear = 2026, piketCalMonth = 8;
-function safeRender(fn, label) {
-    try {
-        if (typeof fn === 'function') fn();
-    } catch (e) {
-        console.error('Render ' + label + ' gagal:', e);
-    }
-}
 function renderAll() {
-    // Render satu per satu. Jadi jika modul lain error, Jadwal tetap hidup.
-    safeRender(renderBeranda, 'Beranda');
-    safeRender(renderKas, 'Kas');
-    safeRender(renderKasSiswa, 'Kas Siswa');
-    safeRender(renderHpCalendar, 'Kalender HP');
-    safeRender(renderHp, 'HP');
-    safeRender(renderPiketCalendar, 'Kalender Piket');
-    safeRender(renderPiket, 'Piket');
-    safeRender(renderDayTabs, 'Tab Hari Jadwal');
-    safeRender(renderJadwalList, 'Daftar Jadwal');
-    safeRender(renderTugas, 'Tugas');
-    safeRender(renderReports, 'Laporan');
-    safeRender(renderNotifications, 'Notifikasi');
-    safeRender(renderActivityLog, 'Aktivitas');
-    safeRender(renderAccountList, 'Manajemen Pengguna');
-    safeRender(renderSettingsInfo, 'Pengaturan');
+    renderBeranda();
+    renderKas();
+    renderKasSiswa();
+    renderHpCalendar();
+    renderHp();
+    renderPiketCalendar();
+    renderPiket();
+    renderDayTabs();
+    renderJadwalList();
+    renderTugas();
+    renderReports();
+    renderNotifications();
+    renderActivityLog();
+    renderAccountList();
+    renderSettingsInfo();
 }
 function renderSettingsInfo() {
     const input = document.getElementById('autoclean-days-input');
@@ -4986,41 +4922,15 @@ function togglePiketJadwalStudent(name, checked) {
     saveState(); renderPiket(); renderPiketCalendar(); renderBeranda();
 }
 // ===== JADWAL PELAJARAN =====
-function renderDayTabs() {
-    const wrap = document.getElementById('day-tabs');
-    if (!wrap) return;
-    if (!DAY_NAMES.includes(state.selectedDay)) state.selectedDay = DAY_NAMES[0];
-    wrap.innerHTML = DAY_NAMES.map(d => `
-        <button type="button"
-                class="day-chip ${state.selectedDay===d?'active':''}"
-                data-jadwal-day="${escapeHtml(d)}"
-                aria-pressed="${state.selectedDay===d ? 'true' : 'false'}">
-            ${escapeHtml(d)}
-        </button>
-    `).join('');
-}
-function selectDay(d) {
-    if (!DAY_NAMES.includes(d)) return;
-    if (!state.jadwal || typeof state.jadwal !== 'object' || Array.isArray(state.jadwal)) {
-        state.jadwal = {};
-    }
-    if (!Array.isArray(state.jadwal[d])) state.jadwal[d] = [];
-    state.selectedDay = d;
-    renderDayTabs();
-    renderJadwalList();
-}
+function renderDayTabs() { document.getElementById('day-tabs').innerHTML = DAY_NAMES.map(d => `<div class="day-chip ${state.selectedDay===d?'active':''}" onclick="selectDay('${jsString(d)}')">${escapeHtml(d)}</div>`).join(''); }
+function selectDay(d) { state.selectedDay = d; renderDayTabs(); renderJadwalList(); }
 function renderJadwalList() {
-    const wrap = document.getElementById('jadwal-list');
-    if (!wrap) return;
-    if (!state.jadwal || typeof state.jadwal !== 'object' || Array.isArray(state.jadwal)) {
-        state.jadwal = {};
-    }
-    const items = Array.isArray(state.jadwal[state.selectedDay]) ? state.jadwal[state.selectedDay] : [];
+    const items = state.jadwal[state.selectedDay] || [];
     const readOnly = isReadOnly();
-    wrap.innerHTML = items.length ? items.map(j => `
-        <div class="row-item" ${readOnly ? '' : `onclick="openJadwalModal(${Number(j.id)})"`} style="${readOnly ? '' : 'cursor:pointer;'}">
-            <div class="row-time">${escapeHtml(j.jam || '')}</div>
-            <div><div class="row-title">${escapeHtml(j.mapel || '')}</div><div class="row-sub">${escapeHtml(j.guru || '')}</div></div>
+    document.getElementById('jadwal-list').innerHTML = items.length ? items.map(j => `
+        <div class="row-item" ${readOnly ? '' : `onclick="openJadwalModal(${j.id})"`} style="${readOnly ? '' : 'cursor:pointer;'}">
+            <div class="row-time">${escapeHtml(j.jam)}</div>
+            <div><div class="row-title">${escapeHtml(j.mapel)}</div><div class="row-sub">${escapeHtml(j.guru)}</div></div>
         </div>
     `).join('') : `<div class="empty">Tidak ada jadwal pelajaran.</div>`;
 }
@@ -5098,10 +5008,6 @@ function setJadwalMode(mode) {
     document.getElementById('mode-piket').classList.toggle('active', mode === 'piket');
     document.getElementById('jadwal-mode-pelajaran').style.display = mode === 'pelajaran' ? 'block' : 'none';
     document.getElementById('jadwal-mode-piket').style.display = mode === 'piket' ? 'block' : 'none';
-    if (mode === 'pelajaran') {
-        renderDayTabs();
-        renderJadwalList();
-    }
 }
 // ===== TUGAS =====
 function renderTaskFiles(t) {
@@ -6444,22 +6350,12 @@ function goTo(name) {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     const tab = document.querySelector('.tab[data-tab="' + name + '"]');
     if (tab) tab.classList.add('active');
-    document.querySelectorAll('.desktop-nav-btn, .desktop-nav-item').forEach(t => t.classList.remove('active'));
-    const desktopTab = document.querySelector('.desktop-nav-btn[data-desktop-tab="' + name + '"], .desktop-nav-item[data-tab="' + name + '"]');
+    document.querySelectorAll('.desktop-nav-btn').forEach(t => t.classList.remove('active'));
+    const desktopTab = document.querySelector('.desktop-nav-btn[data-desktop-tab="' + name + '"]');
     if (desktopTab) desktopTab.classList.add('active');
     const content = document.querySelector('.content');
     if (content) content.scrollTop = 0;
     if (name === 'settings' && typeof renderAccountList === 'function') renderAccountList();
-    if (name === 'jadwal') {
-        const mode = state && state.jadwalMode === 'piket' ? 'piket' : 'pelajaran';
-        try {
-            setJadwalMode(mode);
-        } catch (e) {
-            console.warn('Jadwal mode render fallback:', e);
-            renderDayTabs();
-            renderJadwalList();
-        }
-    }
 }
 function openModal(name) { document.getElementById('modal-' + name).classList.add('open'); }
 function closeModal(name) { document.getElementById('modal-' + name).classList.remove('open'); }
@@ -6558,20 +6454,6 @@ window.togglePiketJadwalStudent = togglePiketJadwalStudent;
 window.selectPiketJadwalDay = selectPiketJadwalDay;
 window.todayKey = todayKey;
 </script>
-<script id="jadwal-day-click-guard">
-(function(){
-  document.addEventListener('click', function(event){
-    const chip = event.target.closest('#day-tabs .day-chip[data-jadwal-day]');
-    if(!chip) return;
-    const day = chip.getAttribute('data-jadwal-day');
-    if(!day || typeof window.selectDay !== 'function') return;
-    event.preventDefault();
-    event.stopPropagation();
-    window.selectDay(day);
-  }, true);
-})();
-</script>
-
 <script id="final-ui-guard">
 (function(){
   function resetReportScroll(){
