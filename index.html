@@ -2693,6 +2693,573 @@ a{
 }
 @keyframes mobileFade{from{opacity:.75;transform:translateY(3px)}to{opacity:1;transform:none}}
 </style>
+<style id="kelasku-ui-overrides-final">
+  /* Desktop login compact */
+@media screen and (min-width: 901px) {
+  .phone > .login-overlay {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    padding: 24px !important;
+    display: flex;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-direction: column !important;
+    background: rgba(5, 10, 24, 0.54) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    overflow-y: auto !important;
+  }
+  .phone > .login-overlay > .login-hero,
+  .phone > .login-overlay > .login-card {
+    width: min(420px, calc(100% - 32px)) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    flex: 0 0 auto !important;
+  }
+  .phone > .login-overlay > .login-hero {
+    margin-bottom: 0 !important;
+    padding: 18px 20px 22px !important;
+    border-radius: 22px 22px 0 0 !important;
+  }
+  .phone > .login-overlay > .login-card {
+    margin-top: 0 !important;
+    border-radius: 0 0 22px 22px !important;
+    padding: 18px 18px 16px !important;
+    box-shadow: 0 18px 48px rgba(0,0,0,.20) !important;
+  }
+  .phone > .login-overlay .login-logo { width: 54px !important; height: 54px !important; margin-bottom: 6px !important; }
+  .phone > .login-overlay .login-hero-title { font-size: 20px !important; }
+  .phone > .login-overlay .login-hero-sub { font-size: 10px !important; }
+  .phone > .login-overlay .login-welcome { font-size: 16px !important; }
+  .phone > .login-overlay .login-sub { font-size: 11px !important; margin-bottom: 12px !important; }
+  .phone > .login-overlay .login-card .field { margin-bottom: 10px !important; }
+  .phone > .login-overlay .login-card .field input { padding: 10px 12px !important; font-size: 14px !important; }
+  .phone > .login-overlay .login-card .btn { padding: 11px !important; font-size: 14px !important; }
+}
+
+  /* Desktop login visibility */
+@media screen and (min-width:901px) {
+  .phone > .login-overlay[style*="display: none"] { display: none !important; }
+  .phone > .login-overlay { z-index: 9999 !important; pointer-events: auto !important; }
+  .phone > .login-overlay .login-card,
+  .phone > .login-overlay .login-hero { pointer-events: auto !important; }
+  .phone > .login-overlay #auth-submit-btn { position: relative; z-index: 2; pointer-events: auto !important; }
+}
+
+  /* Desktop modal layer */
+@media screen and (min-width:901px){
+  /* Modal harus berada di atas sidebar + konten desktop agar overlay benar-benar menutup seluruh layar. */
+  .phone > .modal-bg{
+    position:absolute !important;
+    inset:0 !important;
+    z-index:1000 !important;
+    width:100% !important;
+    height:100% !important;
+  }
+  .phone > .modal-bg.open{display:flex !important;}
+  .phone > .desktop-sidebar{z-index:80 !important;}
+  .phone > .modal-bg .modal{
+    position:relative !important;
+    z-index:1001 !important;
+  }
+}
+
+  /* Calendar compact */
+/* Kalender dibuat lebih ringkas tanpa mengubah fungsi klik/tanggal. */
+.cal-grid {
+  gap: 3px !important;
+}
+.cal-day {
+  aspect-ratio: auto !important;
+  height: 38px !important;
+  min-height: 0 !important;
+  border-radius: 8px !important;
+  font-size: 11px !important;
+}
+.cal-dow {
+  font-size: 9px !important;
+  padding-bottom: 3px !important;
+}
+.cal-nav-btn {
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 8px !important;
+  font-size: 11px !important;
+}
+.cal-month {
+  font-size: 13px !important;
+}
+.cal-dot {
+  bottom: 3px !important;
+  width: 3px !important;
+  height: 3px !important;
+}
+@media screen and (max-width: 900px) {
+  .cal-grid { gap: 2px !important; }
+  .cal-day {
+    height: 32px !important;
+    border-radius: 7px !important;
+    font-size: 10.5px !important;
+  }
+  .cal-dow {
+    font-size: 8.5px !important;
+    padding-bottom: 2px !important;
+  }
+  .cal-nav-btn {
+    width: 26px !important;
+    height: 26px !important;
+    border-radius: 7px !important;
+    font-size: 10px !important;
+  }
+  .cal-month { font-size: 12px !important; }
+}
+
+  /* Desktop sidebar + task meta */
+@media screen and (min-width: 901px) {
+  html, body { width:100%; height:100%; overflow:hidden; }
+  body { display:block !important; align-items:initial !important; justify-content:initial !important; }
+  .phone {
+    position:relative !important;
+    display:grid !important;
+    width:100vw !important;
+    max-width:none !important;
+    height:100vh !important;
+    max-height:none !important;
+    margin:0 !important;
+    border:0 !important;
+    border-radius:0 !important;
+    box-shadow:none !important;
+    grid-template-columns:255px minmax(0,1fr) !important;
+    grid-template-rows:100vh !important;
+    overflow:hidden !important;
+  }
+  .desktop-sidebar { display:flex !important; grid-column:1 !important; grid-row:1 !important; width:255px !important; }
+  .phone > .screen { grid-column:2 !important; grid-row:1 !important; width:100% !important; min-width:0 !important; height:100vh !important; overflow-y:auto !important; overflow-x:hidden !important; }
+  .phone > .tabbar, .phone > .statusbar { display:none !important; }
+}
+@media screen and (min-width:901px) and (max-width:1200px) {
+  .phone { grid-template-columns:225px minmax(0,1fr) !important; }
+  .desktop-sidebar { width:225px !important; }
+  .phone > .screen { padding:24px 26px 30px !important; }
+}
+
+/* Perjelas badge Mata Pelajaran pada daftar tugas */
+.task-meta .pill {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    vertical-align: middle !important;
+    line-height: 1.15 !important;
+    min-height: 24px !important;
+    box-sizing: border-box !important;
+}
+.task-meta .pill:not(.pill-due) {
+    font-size: 12px !important;
+    padding: 4px 10px !important;
+    font-weight: 800 !important;
+    background: var(--violet-glass) !important;
+    color: var(--text-main) !important;
+    border: 1px solid rgba(139,92,246,0.22) !important;
+}
+.task-meta .pill-due {
+    font-size: 10.5px !important;
+    padding: 4px 10px !important;
+}
+body.dark .task-meta .pill:not(.pill-due) {
+    color: #f8fafc !important;
+    background: rgba(129,140,248,0.16) !important;
+    border-color: rgba(129,140,248,0.28) !important;
+}
+</style>
+
+<style id="kelasku-professional-ui">
+/* ============================================================
+   KELASKU — PROFESSIONAL / ELEGANT UI OVERRIDES
+   Clean surfaces, restrained color, crisp borders, no gradients.
+   Existing functionality and class names are intentionally preserved.
+   ============================================================ */
+:root{
+  --bg-gradient:#f8fafc;
+  --glass-bg:#f8fafc;
+  --glass-card:#ffffff;
+  --glass-border:#e2e8f0;
+  --glass-shadow:0 1px 2px rgba(15,23,42,.04),0 8px 24px rgba(15,23,42,.05);
+  --text-main:#111827;
+  --text-soft:#64748b;
+  --text-muted:#94a3b8;
+  --primary:#3b82f6;
+  --primary-gradient:#3b82f6;
+  --accent-gold:#475569;
+  --teal:#0f9f6e;
+  --teal-glass:#ecfdf5;
+  --rose:#e11d48;
+  --rose-glass:#fff1f2;
+  --violet:#6366f1;
+  --violet-glass:#eef2ff;
+  --amber:#d97706;
+  --amber-glass:#fff7ed;
+  --radius-xl:18px;
+  --radius-lg:14px;
+  --radius-md:10px;
+  --radius-sm:8px;
+  --input-bg:#ffffff;
+}
+
+body.dark{
+  --bg-gradient:#0f172a;
+  --glass-bg:#0f172a;
+  --glass-card:#111827;
+  --glass-border:#263244;
+  --glass-shadow:0 1px 2px rgba(0,0,0,.24),0 12px 28px rgba(0,0,0,.18);
+  --text-main:#f8fafc;
+  --text-soft:#94a3b8;
+  --text-muted:#64748b;
+  --primary:#60a5fa;
+  --primary-gradient:#3b82f6;
+  --accent-gold:#334155;
+  --teal-glass:#0b2a22;
+  --rose-glass:#35131d;
+  --violet-glass:#1e1b4b;
+  --amber-glass:#2b2113;
+  --input-bg:#0b1220;
+}
+
+html,body{background:var(--bg-gradient);}
+body{background:var(--bg-gradient);}
+
+/* Remove decorative ambient gradients / blobs */
+.ambient-mesh{display:none!important;}
+.blob{display:none!important;}
+
+/* Main shell */
+.phone{
+  background:var(--glass-bg);
+  border:1px solid var(--glass-border);
+  border-radius:24px;
+  box-shadow:0 14px 40px rgba(15,23,42,.08);
+  backdrop-filter:none;
+  -webkit-backdrop-filter:none;
+}
+@media(max-width:480px){
+  .phone{border-radius:0;box-shadow:none;border:none;}
+}
+
+/* Header / status */
+.statusbar{
+  background:var(--glass-card);
+  border-bottom:1px solid var(--glass-border);
+}
+.theme-btn{
+  background:var(--glass-card);
+  border:1px solid var(--glass-border);
+  border-radius:9px;
+}
+
+/* Content area */
+.screen{
+  background:transparent;
+  padding:14px 18px 22px;
+  scrollbar-color:#cbd5e1 transparent;
+}
+body.dark .screen{scrollbar-color:#475569 transparent;}
+
+/* Login */
+.login-overlay{
+  background:var(--bg-gradient);
+  backdrop-filter:none;
+  -webkit-backdrop-filter:none;
+}
+.login-hero{
+  background:#0f172a;
+  border-radius:0 0 20px 20px;
+  box-shadow:none;
+}
+.login-logo{transform:none;animation:none;}
+.login-logo img{box-shadow:0 4px 12px rgba(0,0,0,.18);}
+.login-card{
+  background:var(--glass-card);
+  backdrop-filter:none;
+  border:1px solid var(--glass-border);
+  border-radius:16px;
+  box-shadow:var(--glass-shadow);
+}
+.login-card .field input,
+.field input,.field select,.field textarea{
+  background:var(--input-bg);
+  border:1px solid var(--glass-border);
+}
+.login-card .field input:focus,
+.field input:focus,.field select:focus,.field textarea:focus{
+  border-color:var(--primary);
+  box-shadow:0 0 0 3px rgba(59,130,246,.10);
+}
+.login-card .btn,
+.btn-primary,
+.fab-add{
+  background:var(--primary);
+  box-shadow:none;
+}
+.login-card .btn:hover,
+.btn-primary:hover,
+.fab-add:hover{background:#2563eb;}
+
+/* Hero and summary surfaces */
+.hero{
+  background:#0f172a;
+  border-radius:16px;
+  box-shadow:none;
+}
+.hero::before{display:none;}
+.avatar{
+  background:#1e293b;
+  border:1px solid #334155;
+}
+.htag{
+  background:#1e293b;
+  border:1px solid #334155;
+}
+.stat-grid{gap:12px;}
+.stat-card{
+  background:var(--glass-card);
+  border:1px solid var(--glass-border);
+  border-radius:14px;
+  box-shadow:var(--glass-shadow);
+}
+.balance-card{
+  background:#334155;
+  border-radius:16px;
+  box-shadow:none;
+}
+.balance-card::after{display:none;}
+
+/* Generic cards */
+.card{
+  background:var(--glass-card);
+  border:1px solid var(--glass-border);
+  border-radius:14px;
+  box-shadow:var(--glass-shadow);
+}
+.section{margin-top:20px;}
+.section-title{font-size:15px;}
+.section-link{
+  color:var(--primary);
+  background:transparent;
+  border:0;
+  padding:4px 2px;
+}
+.section-link:hover{background:#eff6ff;}
+body.dark .section-link:hover{background:#172554;}
+
+/* Rows */
+.row-item,.tx-item,.student-row,.announce-item,.report-item,.task-item{
+  border-bottom:1px solid var(--glass-border);
+}
+.row-time{
+  color:var(--primary);
+  background:#eff6ff;
+  border:1px solid #dbeafe;
+  border-radius:8px;
+}
+body.dark .row-time{
+  background:#172554;
+  border-color:#1e3a8a;
+}
+.task-file,.file-chip,.announce-file{
+  background:var(--glass-card);
+  border:1px solid var(--glass-border);
+  color:var(--primary);
+}
+.task-file:active,.announce-file:active{
+  background:var(--primary);
+}
+
+/* Calendar */
+.cal-card{margin-top:12px;}
+.cal-nav-btn{
+  background:var(--glass-card);
+  border:1px solid var(--glass-border);
+  border-radius:9px;
+}
+.cal-grid{gap:3px;}
+.cal-day{
+  border-radius:8px;
+}
+.cal-day:hover{
+  background:#f1f5f9;
+}
+body.dark .cal-day:hover{background:#1e293b;}
+.cal-day.today{
+  border:1.5px solid var(--primary);
+  background:#eff6ff;
+}
+body.dark .cal-day.today{background:#172554;}
+.cal-day.selected{
+  background:var(--primary);
+  box-shadow:none;
+}
+.cal-dot{background:var(--primary);}
+.cal-day.selected .cal-dot{background:#fff;}
+
+/* Day tabs / mode switch */
+.mode-switch{
+  background:var(--glass-card);
+  border:1px solid var(--glass-border);
+  border-radius:10px;
+  box-shadow:none;
+}
+.mode-btn{
+  background:transparent;
+  border:0;
+  border-radius:8px;
+}
+.mode-btn.active{
+  background:var(--primary);
+  color:#fff;
+}
+.day-chip{
+  background:var(--glass-card);
+  border:1px solid var(--glass-border);
+  border-radius:9px;
+}
+.day-chip.active{
+  background:var(--primary);
+  border-color:var(--primary);
+}
+
+/* Announcements */
+.announce-title,.announce-title-btn{font-size:14px;}
+.announce-description{font-size:13px;line-height:1.55;}
+.announce-pill{
+  background:var(--glass-card);
+  border:1px solid var(--glass-border);
+}
+.announce-pill.overdue{
+  border-color:#fecdd3;
+}
+
+/* Tasks */
+.checkbox{
+  border:1.5px solid #cbd5e1;
+  background:var(--glass-card);
+  border-radius:6px;
+}
+.checkbox.checked{
+  background:var(--primary);
+  border-color:var(--primary);
+}
+.pill-due{
+  background:#fff1f2;
+  color:#be123c;
+}
+body.dark .pill-due{
+  background:#35131d;
+  color:#fda4af;
+}
+
+/* Roster */
+.toggle-btn{
+  background:var(--glass-card);
+  border:1px solid var(--glass-border);
+}
+.toggle-btn.done{
+  background:var(--teal);
+}
+.toggle-btn.undone{
+  background:var(--rose-glass);
+}
+.s-avatar{
+  background:#eff6ff;
+  color:#2563eb;
+}
+body.dark .s-avatar{
+  background:#172554;
+  color:#93c5fd;
+}
+
+/* Buttons */
+.btn{
+  border-radius:10px;
+  box-shadow:none;
+}
+.btn-ghost{
+  background:var(--glass-card);
+  border:1px solid var(--glass-border);
+}
+.btn-danger{background:var(--rose);}
+.fab-add{
+  border-radius:10px;
+  min-height:46px;
+}
+
+/* Modal */
+.modal-bg{background:rgba(15,23,42,.42);backdrop-filter:blur(2px);}
+.modal{
+  background:var(--glass-card);
+  backdrop-filter:none;
+  border:1px solid var(--glass-border);
+  border-radius:18px 18px 0 0;
+  box-shadow:0 -8px 30px rgba(15,23,42,.12);
+}
+body.dark .modal-bg{background:rgba(2,6,23,.64);}
+
+/* Toast */
+.toast{
+  background:var(--glass-card);
+  backdrop-filter:none;
+  border:1px solid var(--glass-border);
+  box-shadow:var(--glass-shadow);
+  border-radius:12px;
+}
+
+/* Bottom navigation */
+.tabbar{
+  background:var(--glass-card);
+  backdrop-filter:none;
+  -webkit-backdrop-filter:none;
+  border-top:1px solid var(--glass-border);
+}
+.tab{font-size:10.5px;}
+.tab.active{color:var(--primary);}
+
+/* Admin/user areas */
+.acc-row{border-bottom:1px solid var(--glass-border);}
+.acc-badge.superadmin,.acc-badge.admin{
+  background:#eef2ff;
+  color:#4f46e5;
+}
+.acc-badge.siswa{
+  background:#ecfdf5;
+  color:#047857;
+}
+
+/* Piket / checklist surfaces */
+.piket-jadwal-row,
+.summary-box{
+  background:var(--glass-card);
+  border:1px solid var(--glass-border);
+}
+.roster-choice-btn{
+  background:var(--glass-card);
+  border:1px solid var(--glass-border);
+}
+.roster-choice-btn.done.active{background:var(--teal);}
+.roster-choice-btn.undone.active{background:var(--rose);}
+
+/* Focus accessibility */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible{
+  outline:2px solid rgba(59,130,246,.35);
+  outline-offset:2px;
+}
+
+/* Keep borders crisp in both themes */
+*{border-color:var(--glass-border);}
+</style>
+
 </head>
 <body>
 <div class="ambient-mesh">
@@ -6931,7 +7498,11 @@ window.togglePiketJadwalStudent = togglePiketJadwalStudent;
 window.selectPiketJadwalDay = selectPiketJadwalDay;
 window.todayKey = todayKey;
 </script>
-<script id="jadwal-day-click-guard">
+
+
+<script id="kelasku-runtime-guards">
+(function(){
+  // Jadwal: pastikan klik hari tetap terhubung setelah render ulang.
 (function(){
   document.addEventListener('click', function(event){
     const chip = event.target.closest('#day-tabs .day-chip[data-jadwal-day]');
@@ -6943,9 +7514,8 @@ window.todayKey = todayKey;
     window.selectDay(day);
   }, true);
 })();
-</script>
 
-<script id="final-ui-guard">
+  // Laporan: reset posisi scroll modal saat dibuka.
 (function(){
   function resetReportScroll(){
     const modal = document.querySelector('#modal-report .modal');
@@ -6963,9 +7533,8 @@ window.todayKey = todayKey;
   });
   observer.observe(document.body, {subtree:true, attributes:true, attributeFilter:['class']});
 })();
-</script>
 
-<script>
+  // Desktop: sinkronkan navigasi sidebar dengan tab aktif.
 (function(){
  const sync=()=>{
    const active=document.querySelector('.tab.active');
@@ -6976,190 +7545,7 @@ window.todayKey = todayKey;
  if(typeof oldGoTo==='function'){window.goTo=function(){const r=oldGoTo.apply(this,arguments);setTimeout(sync,0);return r;};}
  setTimeout(sync,500);
 })();
+})();
 </script>
-
-<style id="desktop-login-compact-safe">
-@media screen and (min-width: 901px) {
-  .phone > .login-overlay {
-    position: absolute !important;
-    inset: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    padding: 24px !important;
-    display: flex;
-    align-items: center !important;
-    justify-content: center !important;
-    flex-direction: column !important;
-    background: rgba(5, 10, 24, 0.54) !important;
-    backdrop-filter: blur(8px) !important;
-    -webkit-backdrop-filter: blur(8px) !important;
-    overflow-y: auto !important;
-  }
-  .phone > .login-overlay > .login-hero,
-  .phone > .login-overlay > .login-card {
-    width: min(420px, calc(100% - 32px)) !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-    flex: 0 0 auto !important;
-  }
-  .phone > .login-overlay > .login-hero {
-    margin-bottom: 0 !important;
-    padding: 18px 20px 22px !important;
-    border-radius: 22px 22px 0 0 !important;
-  }
-  .phone > .login-overlay > .login-card {
-    margin-top: 0 !important;
-    border-radius: 0 0 22px 22px !important;
-    padding: 18px 18px 16px !important;
-    box-shadow: 0 18px 48px rgba(0,0,0,.20) !important;
-  }
-  .phone > .login-overlay .login-logo { width: 54px !important; height: 54px !important; margin-bottom: 6px !important; }
-  .phone > .login-overlay .login-hero-title { font-size: 20px !important; }
-  .phone > .login-overlay .login-hero-sub { font-size: 10px !important; }
-  .phone > .login-overlay .login-welcome { font-size: 16px !important; }
-  .phone > .login-overlay .login-sub { font-size: 11px !important; margin-bottom: 12px !important; }
-  .phone > .login-overlay .login-card .field { margin-bottom: 10px !important; }
-  .phone > .login-overlay .login-card .field input { padding: 10px 12px !important; font-size: 14px !important; }
-  .phone > .login-overlay .login-card .btn { padding: 11px !important; font-size: 14px !important; }
-}
-</style>
-
-<style id="desktop-login-visibility-fix">
-@media screen and (min-width:901px) {
-  .phone > .login-overlay[style*="display: none"] { display: none !important; }
-  .phone > .login-overlay { z-index: 9999 !important; pointer-events: auto !important; }
-  .phone > .login-overlay .login-card,
-  .phone > .login-overlay .login-hero { pointer-events: auto !important; }
-  .phone > .login-overlay #auth-submit-btn { position: relative; z-index: 2; pointer-events: auto !important; }
-}
-</style>
-
-
-<style id="desktop-modal-layer-fix">
-@media screen and (min-width:901px){
-  /* Modal harus berada di atas sidebar + konten desktop agar overlay benar-benar menutup seluruh layar. */
-  .phone > .modal-bg{
-    position:absolute !important;
-    inset:0 !important;
-    z-index:1000 !important;
-    width:100% !important;
-    height:100% !important;
-  }
-  .phone > .modal-bg.open{display:flex !important;}
-  .phone > .desktop-sidebar{z-index:80 !important;}
-  .phone > .modal-bg .modal{
-    position:relative !important;
-    z-index:1001 !important;
-  }
-}
-</style>
-
-<style id="calendar-size-final-fix">
-/* Kalender dibuat lebih ringkas tanpa mengubah fungsi klik/tanggal. */
-.cal-grid {
-  gap: 3px !important;
-}
-.cal-day {
-  aspect-ratio: auto !important;
-  height: 38px !important;
-  min-height: 0 !important;
-  border-radius: 8px !important;
-  font-size: 11px !important;
-}
-.cal-dow {
-  font-size: 9px !important;
-  padding-bottom: 3px !important;
-}
-.cal-nav-btn {
-  width: 28px !important;
-  height: 28px !important;
-  border-radius: 8px !important;
-  font-size: 11px !important;
-}
-.cal-month {
-  font-size: 13px !important;
-}
-.cal-dot {
-  bottom: 3px !important;
-  width: 3px !important;
-  height: 3px !important;
-}
-@media screen and (max-width: 900px) {
-  .cal-grid { gap: 2px !important; }
-  .cal-day {
-    height: 32px !important;
-    border-radius: 7px !important;
-    font-size: 10.5px !important;
-  }
-  .cal-dow {
-    font-size: 8.5px !important;
-    padding-bottom: 2px !important;
-  }
-  .cal-nav-btn {
-    width: 26px !important;
-    height: 26px !important;
-    border-radius: 7px !important;
-    font-size: 10px !important;
-  }
-  .cal-month { font-size: 12px !important; }
-}
-</style>
 </body>
 </html>
-<style id="desktop-sidebar-final-fix">
-@media screen and (min-width: 901px) {
-  html, body { width:100%; height:100%; overflow:hidden; }
-  body { display:block !important; align-items:initial !important; justify-content:initial !important; }
-  .phone {
-    position:relative !important;
-    display:grid !important;
-    width:100vw !important;
-    max-width:none !important;
-    height:100vh !important;
-    max-height:none !important;
-    margin:0 !important;
-    border:0 !important;
-    border-radius:0 !important;
-    box-shadow:none !important;
-    grid-template-columns:255px minmax(0,1fr) !important;
-    grid-template-rows:100vh !important;
-    overflow:hidden !important;
-  }
-  .desktop-sidebar { display:flex !important; grid-column:1 !important; grid-row:1 !important; width:255px !important; }
-  .phone > .screen { grid-column:2 !important; grid-row:1 !important; width:100% !important; min-width:0 !important; height:100vh !important; overflow-y:auto !important; overflow-x:hidden !important; }
-  .phone > .tabbar, .phone > .statusbar { display:none !important; }
-}
-@media screen and (min-width:901px) and (max-width:1200px) {
-  .phone { grid-template-columns:225px minmax(0,1fr) !important; }
-  .desktop-sidebar { width:225px !important; }
-  .phone > .screen { padding:24px 26px 30px !important; }
-}
-
-/* Perjelas badge Mata Pelajaran pada daftar tugas */
-.task-meta .pill {
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    vertical-align: middle !important;
-    line-height: 1.15 !important;
-    min-height: 24px !important;
-    box-sizing: border-box !important;
-}
-.task-meta .pill:not(.pill-due) {
-    font-size: 12px !important;
-    padding: 4px 10px !important;
-    font-weight: 800 !important;
-    background: var(--violet-glass) !important;
-    color: var(--text-main) !important;
-    border: 1px solid rgba(139,92,246,0.22) !important;
-}
-.task-meta .pill-due {
-    font-size: 10.5px !important;
-    padding: 4px 10px !important;
-}
-body.dark .task-meta .pill:not(.pill-due) {
-    color: #f8fafc !important;
-    background: rgba(129,140,248,0.16) !important;
-    border-color: rgba(129,140,248,0.28) !important;
-}
-</style>
