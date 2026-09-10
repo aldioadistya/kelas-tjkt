@@ -3610,67 +3610,91 @@ body.kelasku-authenticated #login-overlay { display: none !important; }
   </aside>
   <div class="screen">
     <div class="view active" id="view-beranda">
-      <div class="hero">
+      <div class="dashboard-topbar">
+        <div class="dashboard-search">
+          <span class="dashboard-search-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 5 5"></path></svg></span>
+          <input class="home-search-input" id="global-search-input" type="text" placeholder="Cari di Kelasku..." oninput="renderGlobalSearch()" aria-label="Cari di Kelasku">
+          <span class="dashboard-search-kbd">⌘ K</span>
+          <div id="global-search-results" class="global-search-results dashboard-search-results"></div>
+        </div>
+        <div class="dashboard-user-menu">
+          <div class="dashboard-user-meta">
+            <strong id="dashboard-user-name">Pengguna</strong>
+            <span id="dashboard-user-role">Siswa</span>
+          </div>
+          <div class="dashboard-user-avatar" id="dashboard-user-avatar">TJ</div>
+        </div>
+      </div>
+
+      <div class="hero dashboard-hero">
         <div class="hero-top">
           <div>
-            <div class="hero-eyebrow">Aplikasi Kelas Digital</div>
-            <div class="hero-name" id="greeting-user">Halo, Pengurus Kelas 👋</div>
+            <div class="hero-eyebrow">Ringkasan kelas</div>
+            <div class="hero-name" id="greeting-user">Halo, Pengguna</div>
+            <div class="hero-copy">Kelola aktivitas kelas dengan cepat dari satu tempat.</div>
           </div>
-          <div class="avatar">TJ</div>
+          <div class="avatar" id="hero-avatar">TJ</div>
         </div>
         <div class="hero-tags">
-          <span class="htag">🏫 X TJKT 1</span>
+          <span class="htag"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 4l9 6.5"></path><path d="M5 10v9h14v-9"></path><path d="M9 19v-5h6v5"></path></svg> X TJKT 1</span>
           <span class="htag" id="tag-today">Jumat, 04 Sep</span>
         </div>
       </div>
-      <div class="stat-grid">
-        <div class="stat-card"><div class="stat-top"><div class="stat-icon" style="background:var(--amber-glass)">💰</div><div class="stat-label">Saldo Kas</div></div><div class="stat-value" id="home-saldo">Rp0</div></div>
-        <div class="stat-card"><div class="stat-top"><div class="stat-icon" style="background:var(--violet-glass)">📱</div><div class="stat-label">Titip HP</div></div><div class="stat-value" id="home-hp">0/0</div></div>
-        <div class="stat-card"><div class="stat-top"><div class="stat-icon" style="background:var(--teal-glass)">🧹</div><div class="stat-label">Piket Hari Ini</div></div><div class="stat-value" id="home-piket-count">0/0</div></div>
-        <div class="stat-card"><div class="stat-top"><div class="stat-icon" style="background:var(--rose-glass)">📝</div><div class="stat-label">Tugas Aktif</div></div><div class="stat-value" id="home-tugas">0</div></div>
-        <div class="stat-card report-home-card" onclick="goTo('laporan')"><div class="stat-top"><div class="stat-icon" style="background:var(--primary-glass)">📋</div><div class="stat-label">Laporan</div></div><div class="stat-value" id="home-reports">0</div></div>
-      </div>
-      <div class="section">
-        <div class="card home-search-wrap">
-          <div style="font-size:11px;font-weight:800;color:var(--text-main);margin-bottom:7px;">🔎 Cari di Kelasku</div>
-          <input class="home-search-input" id="global-search-input" type="text" placeholder="Cari siswa, tugas, laporan, pengumuman, jadwal..." oninput="renderGlobalSearch()">
-          <div id="global-search-results" class="global-search-results"></div>
+
+      <div class="stat-grid dashboard-stat-grid">
+        <div class="stat-card dashboard-stat-card">
+          <div class="stat-top"><div class="stat-icon dashboard-icon-blue"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"></rect><path d="M3 10h18"></path><circle cx="16" cy="14" r="1.5"></circle></svg></div><div class="stat-status">Keuangan</div></div>
+          <div class="stat-label">Saldo Kas</div><div class="stat-value" id="home-saldo">Rp0</div>
+        </div>
+        <div class="stat-card dashboard-stat-card">
+          <div class="stat-top"><div class="stat-icon dashboard-icon-violet"><svg viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2"></rect><path d="M10 18.5h4"></path></svg></div><div class="stat-status">Hari ini</div></div>
+          <div class="stat-label">Titip HP</div><div class="stat-value" id="home-hp">0/0</div>
+        </div>
+        <div class="stat-card dashboard-stat-card">
+          <div class="stat-top"><div class="stat-icon dashboard-icon-teal"><svg viewBox="0 0 24 24"><path d="M8 7h8"></path><path d="M6 10h12"></path><path d="M5 13h14"></path><path d="M8 16h8"></path></svg></div><div class="stat-status">Hari ini</div></div>
+          <div class="stat-label">Piket Hari Ini</div><div class="stat-value" id="home-piket-count">0/0</div>
+        </div>
+        <div class="stat-card dashboard-stat-card">
+          <div class="stat-top"><div class="stat-icon dashboard-icon-amber"><svg viewBox="0 0 24 24"><path d="M6 4h12v16H6z"></path><path d="M9 8h6"></path><path d="M9 12h6"></path><path d="M9 16h4"></path></svg></div><div class="stat-status">Aktif</div></div>
+          <div class="stat-label">Tugas Aktif</div><div class="stat-value" id="home-tugas">0</div>
+        </div>
+        <div class="stat-card dashboard-stat-card report-home-card" onclick="goTo('laporan')">
+          <div class="stat-top"><div class="stat-icon dashboard-icon-rose"><svg viewBox="0 0 24 24"><path d="M6 3h9l3 3v15H6z"></path><path d="M15 3v4h4"></path><path d="M9 12h6"></path><path d="M9 15h6"></path></svg></div><div class="stat-status">Perlu ditinjau</div></div>
+          <div class="stat-label">Laporan</div><div class="stat-value" id="home-reports">0</div>
         </div>
       </div>
-      <div class="section">
-        <div class="section-head">
-          <div class="section-title">🔔 Notifikasi <span id="home-notify-badge" style="display:none;margin-left:5px;font-size:9px;padding:2px 7px;border-radius:99px;background:var(--rose-glass);color:var(--rose);">0 baru</span></div>
-          <div class="section-link" onclick="markAllNotificationsRead()">Tandai dibaca</div>
-        </div>
-        <div class="card" id="home-notifications"></div>
+
+      <div class="dashboard-main-grid">
+        <section class="section dashboard-panel dashboard-panel-announcements">
+          <div class="section-head">
+            <div><div class="section-kicker">INFORMASI KELAS</div><div class="section-title">Pengumuman</div></div>
+            <button class="section-action admin-only" type="button" onclick="openPengumumanModal()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Tambah</button>
+          </div>
+          <div class="card dashboard-card" id="pengumuman-list"></div>
+        </section>
+
+        <section class="section dashboard-panel dashboard-panel-notifications">
+          <div class="section-head">
+            <div><div class="section-kicker">PEMBARUAN</div><div class="section-title">Notifikasi <span id="home-notify-badge" class="dashboard-notify-badge" style="display:none;">0 baru</span></div></div>
+            <button class="section-action" type="button" onclick="markAllNotificationsRead()">Tandai dibaca</button>
+          </div>
+          <div class="card dashboard-card dashboard-notification-card" id="home-notifications"></div>
+        </section>
       </div>
-      <div class="section">
-        <div class="section-head">
-          <div class="section-title">📢 Pengumuman</div>
-          <div class="section-link admin-only" onclick="openPengumumanModal()">＋ Tambah</div>
-        </div>
-        <div class="card" id="pengumuman-list"></div>
-      </div>
-      <div class="section">
-        <div class="section-head">
-          <div class="section-title">📅 Jadwal Hari Ini</div>
-          <div class="section-link" onclick="goTo('jadwal')">Lihat Semua</div>
-        </div>
-        <div class="card" id="home-jadwal-list"></div>
-      </div>
-      <div class="section">
-        <div class="section-head">
-          <div class="section-title">🧹 Piket Hari Ini</div>
-          <div class="section-link" onclick="goTo('jadwal'); setJadwalMode('piket');">Lihat Semua</div>
-        </div>
-        <div class="card" id="home-piket-list"></div>
-      </div>
-      <div class="section">
-        <div class="section-head">
-          <div class="section-title">📝 Tugas Terdekat</div>
-          <div class="section-link" onclick="goTo('tugas')">Lihat Semua</div>
-        </div>
-        <div class="card" id="home-tugas-list"></div>
+
+      <div class="dashboard-secondary-grid">
+        <section class="section dashboard-panel">
+          <div class="section-head"><div><div class="section-kicker">HARI INI</div><div class="section-title">Jadwal Hari Ini</div></div><button class="section-action" type="button" onclick="goTo('jadwal')">Lihat semua</button></div>
+          <div class="card dashboard-card compact-list" id="home-jadwal-list"></div>
+        </section>
+        <section class="section dashboard-panel">
+          <div class="section-head"><div><div class="section-kicker">KEBERSIHAN</div><div class="section-title">Piket Hari Ini</div></div><button class="section-action" type="button" onclick="goTo('jadwal'); setJadwalMode('piket');">Lihat semua</button></div>
+          <div class="card dashboard-card compact-list" id="home-piket-list"></div>
+        </section>
+        <section class="section dashboard-panel">
+          <div class="section-head"><div><div class="section-kicker">DEADLINE</div><div class="section-title">Tugas Terdekat</div></div><button class="section-action" type="button" onclick="goTo('tugas')">Lihat semua</button></div>
+          <div class="card dashboard-card compact-list" id="home-tugas-list"></div>
+        </section>
       </div>
     </div>
     <div class="view" id="view-kas">
@@ -5664,7 +5688,17 @@ function setAutoCleanReportDays(value) {
     showNotification(days === 0 ? 'Auto-hapus laporan selesai dimatikan.' : 'Laporan selesai akan otomatis terhapus setelah ' + days + ' hari.', 'success');
 }
 function renderBeranda() {
-    document.getElementById('greeting-user').textContent = 'Halo, ' + (currentUser ? currentUser.username : 'Pengurus Kelas') + ' 👋';
+    const displayName = currentUser ? currentUser.username : 'Pengurus Kelas';
+    document.getElementById('greeting-user').textContent = 'Halo, ' + displayName;
+    const topName = document.getElementById('dashboard-user-name');
+    const topRole = document.getElementById('dashboard-user-role');
+    const topAvatar = document.getElementById('dashboard-user-avatar');
+    const heroAvatar = document.getElementById('hero-avatar');
+    if (topName) topName.textContent = displayName;
+    if (topRole) topRole.textContent = currentUser ? (currentUser.role === 'superadmin' ? 'Super Admin' : currentUser.role === 'admin' ? 'Admin' : 'Siswa') : 'Siswa';
+    const initials = displayName.split(/\s+/).filter(Boolean).slice(0,2).map(x => x[0]).join('').toUpperCase() || 'TJ';
+    if (topAvatar) topAvatar.textContent = initials;
+    if (heroAvatar) heroAvatar.textContent = initials;
     document.getElementById('tag-today').textContent = new Date().toLocaleDateString('id-ID', { weekday: 'long', day: '2-digit', month: 'short' });
     const saldo = state.kas.reduce((a, t) => a + (t.jenis === 'masuk' ? t.jumlah : -t.jumlah), 0);
     document.getElementById('home-saldo').textContent = rupiah(saldo);
@@ -5683,7 +5717,7 @@ function renderBeranda() {
     const todayJadwal = state.jadwal[DAY_NAMES[new Date().getDay() - 1]] || [];
     document.getElementById('home-jadwal-list').innerHTML = todayJadwal.length ? todayJadwal.map(j => `
         <div class="row-item"><div class="row-time">${escapeHtml(j.jam)}</div><div><div class="row-title">${escapeHtml(j.mapel)}</div><div class="row-sub">${escapeHtml(j.guru)}</div></div></div>
-    `).join('') : `<div class="empty">Tidak ada pelajaran hari ini 🎉</div>`;
+    `).join('') : `<div class="empty">Tidak ada pelajaran hari ini.</div>`;
     document.getElementById('home-piket-list').innerHTML = piketTodayAssigned.length ? `
         <div style="display:flex; flex-wrap:wrap; gap:4px;">
             ${piketTodayAssigned.map(s => `<span class="htag" style="background:${piketToday[s]?'var(--teal-glass)':'var(--rose-glass)'}; color:${piketToday[s]?'var(--teal)':'var(--rose)'}; font-size:10px;">${escapeHtml(s)}${piketToday[s]?' ✓':''}</span>`).join('')}
@@ -5703,7 +5737,7 @@ function renderHomeTugas() {
     };
     const nearest = active.slice().sort((a,b)=>toTime(a)-toTime(b)).slice(0,3);
     if (!nearest.length) {
-        list.innerHTML = `<div class="empty" style="padding:16px 10px; text-align:center;">Belum ada tugas terdekat. 🎉</div>`;
+        list.innerHTML = `<div class="empty" style="padding:16px 10px; text-align:center;">Belum ada tugas terdekat.</div>`;
         return;
     }
     const today = new Date(); today.setHours(0,0,0,0);
@@ -5722,7 +5756,7 @@ function renderHomeTugas() {
                 <div class="checkbox" aria-hidden="true"></div>
                 <div style="flex:1; min-width:0;">
                     <div class="task-title">${escapeHtml(t.nama || 'Tugas tanpa nama')}</div>
-                    <div class="task-meta"><span class="pill ${dueClass}">📅 ${dueText}</span>${t.mapel ? `<span class="pill">${escapeHtml(t.mapel)}</span>` : ''}</div>
+                    <div class="task-meta"><span class="pill ${dueClass}">${dueText}</span>${t.mapel ? `<span class="pill">${escapeHtml(t.mapel)}</span>` : ''}</div>
                     ${t.deskripsi ? `<div class="task-desc">${escapeHtml(t.deskripsi)}</div>` : ''}
                     ${renderTaskFiles(t)}
                 </div>
@@ -7982,3 +8016,141 @@ window.todayKey = todayKey;
 
 <!-- Kelasku compatibility patch: resilient Firestore sync + legacy fallback -->
 </html>
+
+<style id="dashboard-saas-professional-v4">
+/* ============================================================
+   DASHBOARD / SAAS PROFESSIONAL V4
+   ============================================================ */
+:root{
+  --dash-surface:#ffffff;
+  --dash-surface-soft:#f8fafc;
+  --dash-border:#e2e8f0;
+  --dash-text:#0f172a;
+  --dash-muted:#64748b;
+  --dash-primary:#2563eb;
+  --dash-primary-soft:#eff6ff;
+  --dash-shadow:0 1px 2px rgba(15,23,42,.04),0 8px 24px rgba(15,23,42,.05);
+}
+.dashboard-topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:20px;position:relative;z-index:30}
+.dashboard-search{position:relative;flex:1;max-width:640px;display:flex;align-items:center;background:var(--dash-surface);border:1px solid var(--dash-border);border-radius:12px;height:44px;box-shadow:0 1px 2px rgba(15,23,42,.03)}
+.dashboard-search:focus-within{border-color:rgba(37,99,235,.55);box-shadow:0 0 0 3px rgba(37,99,235,.10)}
+.dashboard-search-icon{width:42px;display:grid;place-items:center;color:#94a3b8;flex:0 0 42px}
+.dashboard-search-icon svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.dashboard-search .home-search-input{border:0!important;box-shadow:none!important;background:transparent!important;height:42px!important;padding:0 6px!important;min-width:0}
+.dashboard-search-kbd{font:600 10px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:#94a3b8;border:1px solid #e2e8f0;border-radius:6px;padding:5px 7px;margin-right:8px;background:#f8fafc}
+.dashboard-search-results{top:50px!important;left:0!important;right:0!important;z-index:100!important}
+.dashboard-user-menu{display:flex;align-items:center;gap:10px}
+.dashboard-user-meta{display:flex;flex-direction:column;align-items:flex-end;line-height:1.15}
+.dashboard-user-meta strong{font-size:12px;color:var(--dash-text);font-weight:700}
+.dashboard-user-meta span{font-size:10px;color:var(--dash-muted);margin-top:3px}
+.dashboard-user-avatar,.dashboard-hero .avatar{display:grid;place-items:center;border-radius:11px;background:#0f172a;color:#fff;font-weight:800;letter-spacing:.02em}
+.dashboard-user-avatar{width:36px;height:36px;font-size:11px}
+.dashboard-hero{background:linear-gradient(135deg,#111827 0%,#1d4ed8 100%)!important;border:1px solid rgba(15,23,42,.12)!important;border-radius:18px!important;box-shadow:0 14px 34px rgba(15,23,42,.14)!important;padding:24px 26px!important;margin-bottom:16px!important}
+.dashboard-hero .hero-eyebrow{color:#bfdbfe!important;letter-spacing:.08em!important}
+.dashboard-hero .hero-name{font-size:25px!important;line-height:1.15!important;color:#fff!important;letter-spacing:-.02em!important}
+.dashboard-hero .hero-copy{margin-top:6px;color:#dbeafe;font-size:12px;font-weight:500;max-width:520px}
+.dashboard-hero .hero-tags{margin-top:16px!important;gap:8px!important}
+.dashboard-hero .htag{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.10)!important;border:1px solid rgba(255,255,255,.14)!important;color:#fff!important;padding:6px 9px!important;font-size:10px!important;border-radius:999px!important}
+.dashboard-hero .htag svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+.dashboard-hero .avatar{width:48px;height:48px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);font-size:12px}
+.dashboard-stat-grid{grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:12px!important;margin-bottom:20px!important}
+.dashboard-stat-card{position:relative;padding:16px!important;border:1px solid var(--dash-border)!important;background:var(--dash-surface)!important;border-radius:14px!important;box-shadow:var(--dash-shadow)!important;transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease}
+.dashboard-stat-card:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(15,23,42,.08)!important;border-color:#cbd5e1!important}
+.dashboard-stat-card .stat-top{align-items:center!important;justify-content:space-between!important}
+.dashboard-stat-card .stat-icon{width:28px!important;height:28px!important;border-radius:8px!important;display:grid!important;place-items:center!important;background:var(--dash-primary-soft)!important;color:var(--dash-primary)!important}
+.dashboard-stat-card .stat-icon svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+.dashboard-icon-blue{background:#eff6ff!important;color:#2563eb!important}.dashboard-icon-violet{background:#f5f3ff!important;color:#7c3aed!important}.dashboard-icon-teal{background:#ecfeff!important;color:#0f766e!important}.dashboard-icon-amber{background:#fffbeb!important;color:#b45309!important}.dashboard-icon-rose{background:#fff1f2!important;color:#be123c!important}
+.dashboard-stat-card .stat-status{font-size:9px!important;font-weight:700!important;color:#94a3b8!important;letter-spacing:.02em}
+.dashboard-stat-card .stat-label{margin-top:12px!important;color:var(--dash-muted)!important;font-size:11px!important;font-weight:600!important}
+.dashboard-stat-card .stat-value{margin-top:4px!important;color:var(--dash-text)!important;font-size:21px!important;font-weight:700!important;letter-spacing:-.02em}
+.dashboard-main-grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:16px;align-items:start}
+.dashboard-secondary-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:start}
+.dashboard-panel{min-width:0}
+.dashboard-panel .section-head{margin-bottom:8px!important;align-items:flex-end!important}
+.section-kicker{font-size:9px;font-weight:800;letter-spacing:.11em;color:#94a3b8;margin-bottom:2px}
+.dashboard-panel .section-title{font-size:14px!important;color:var(--dash-text)!important;font-weight:750!important;letter-spacing:-.01em}
+.section-action{display:inline-flex;align-items:center;gap:5px;border:1px solid transparent;background:transparent;color:var(--dash-muted);padding:6px 8px;border-radius:8px;font-size:10px;font-weight:700;cursor:pointer;transition:.15s ease}
+.section-action:hover{background:#f8fafc;color:var(--dash-text);border-color:var(--dash-border)}
+.section-action svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+.dashboard-card{background:var(--dash-surface)!important;border:1px solid var(--dash-border)!important;border-radius:14px!important;box-shadow:var(--dash-shadow)!important;padding:14px!important;min-height:0}
+.dashboard-notify-badge{display:inline-flex;align-items:center;margin-left:5px;font-size:8px;padding:3px 6px;border-radius:999px;background:#fef2f2;color:#dc2626;border:1px solid #fecaca;font-weight:800}
+.dashboard-notification-card:empty{min-height:96px}
+.dashboard-notification-card .empty{padding:14px 4px!important;text-align:left!important;color:var(--dash-muted)!important;font-size:10px!important}
+.dashboard-card .announce-item{padding:12px 0!important;border-bottom:1px solid #eef2f7!important;align-items:flex-start!important}
+.dashboard-card .announce-item:first-child{padding-top:2px!important}
+.dashboard-card .announce-item:last-child{border-bottom:0!important;padding-bottom:2px!important}
+.dashboard-card .announce-dot{width:7px!important;height:7px!important;margin-top:7px!important;background:#3b82f6!important;box-shadow:0 0 0 4px #eff6ff!important}
+.dashboard-card .announce-title,.dashboard-card .announce-title-btn{font-size:12px!important;font-weight:750!important;color:var(--dash-text)!important}
+.dashboard-card .announce-description{font-size:10.5px!important;line-height:1.55!important;color:var(--dash-muted)!important;margin-top:4px!important}
+.dashboard-card .announce-date{font-size:9px!important;color:#94a3b8!important;margin-top:6px!important}
+.dashboard-card .announce-meta{margin-top:7px!important}
+.dashboard-card .announce-pill{font-size:8.5px!important;padding:4px 7px!important;border:1px solid #dbeafe!important;background:#eff6ff!important;color:#1d4ed8!important;border-radius:999px!important}
+.dashboard-card .announce-files{margin-top:8px!important}
+.dashboard-card .announce-file{padding:6px 8px!important;border:1px solid #edf2f7!important;background:#f8fafc!important;border-radius:8px!important;font-size:9px!important}
+.dashboard-card .announce-actions{align-self:flex-start!important}
+.dashboard-card .s-remove{width:auto!important;height:28px!important;padding:0 9px!important;border-radius:8px!important;border:1px solid #e2e8f0!important;background:#fff!important;color:#64748b!important;font-size:9px!important;font-weight:700!important}
+.dashboard-card .s-remove:hover{background:#f8fafc!important;color:#0f172a!important;border-color:#cbd5e1!important}
+.compact-list{min-height:118px}
+.compact-list .empty{padding:18px 4px!important;text-align:left!important;font-size:10px!important;color:var(--dash-muted)!important}
+.dashboard-card .row-item{padding:9px 0!important;border-bottom:1px solid #eef2f7!important}
+.dashboard-card .row-item:last-child{border-bottom:0!important}
+.dashboard-card .row-time{font-size:10px!important;font-weight:800!important;color:#2563eb!important;min-width:62px!important}
+.dashboard-card .row-title{font-size:11px!important;font-weight:700!important;color:var(--dash-text)!important}
+.dashboard-card .row-sub{font-size:9px!important;color:var(--dash-muted)!important;margin-top:2px!important}
+.dashboard-card .htag{border:1px solid #e2e8f0!important;background:#f8fafc!important;color:#475569!important;font-size:8.5px!important;border-radius:999px!important;padding:4px 7px!important}
+.dashboard-card .task-item{padding:9px 0!important;border-bottom:1px solid #eef2f7!important}
+.dashboard-card .task-item:last-child{border-bottom:0!important}
+.dashboard-card .task-title{font-size:11px!important;font-weight:700!important;color:var(--dash-text)!important}
+.dashboard-card .task-meta{margin-top:5px!important;gap:5px!important}
+.dashboard-card .pill{font-size:8.5px!important;padding:4px 7px!important;border:1px solid #e2e8f0!important;background:#f8fafc!important;color:#64748b!important}
+.dashboard-card .pill-due{background:#eff6ff!important;border-color:#dbeafe!important;color:#1d4ed8!important}
+
+/* Desktop-first behavior while preserving the existing mobile app shell. */
+@media screen and (min-width:901px){
+  .dashboard-topbar{margin-top:-2px}
+  .screen .view{max-width:1180px;margin:0 auto}
+  .dashboard-main-grid{margin-bottom:0}
+}
+@media screen and (max-width:1150px) and (min-width:901px){
+  .dashboard-stat-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+}
+@media screen and (max-width:900px){
+  .dashboard-topbar{gap:10px;margin-bottom:12px}
+  .dashboard-search{max-width:none}
+  .dashboard-search-kbd{display:none}
+  .dashboard-user-meta{display:none}
+  .dashboard-user-avatar{width:34px;height:34px}
+  .dashboard-hero{padding:20px!important;border-radius:16px!important}
+  .dashboard-hero .hero-name{font-size:21px!important}
+  .dashboard-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+  .dashboard-main-grid,.dashboard-secondary-grid{grid-template-columns:1fr;gap:12px}
+  .dashboard-stat-card .stat-value{font-size:19px!important}
+}
+@media screen and (max-width:560px){
+  .dashboard-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .dashboard-stat-card{padding:13px!important}
+  .dashboard-stat-card .stat-status{font-size:8px!important}
+  .dashboard-stat-card .stat-label{font-size:10px!important}
+  .dashboard-stat-card .stat-value{font-size:18px!important}
+}
+@media (prefers-reduced-motion:reduce){
+  .dashboard-stat-card,.section-action,.dashboard-search{transition:none!important}
+}
+</style>
+
+<style id="dashboard-sidebar-polish-v4">
+@media screen and (min-width:901px){
+  .desktop-sidebar{background:#f8fafc!important;border-right:1px solid #e2e8f0!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+  .desktop-brand{padding:20px 18px!important;border-bottom:1px solid #e2e8f0!important}
+  .desktop-nav{padding:14px 10px 20px!important;gap:4px!important}
+  .desktop-nav-item{position:relative!important;gap:12px!important;padding:11px 12px 11px 13px!important;border-radius:10px!important;color:#64748b!important;font-weight:650!important}
+  .desktop-nav-item span{width:20px!important;height:20px!important;flex-basis:20px!important}
+  .desktop-nav-item span svg{width:20px!important;height:20px!important;stroke-width:1.75!important}
+  .desktop-nav-item:hover{background:#f1f5f9!important;color:#1d4ed8!important}
+  .desktop-nav-item.active{background:#eff6ff!important;color:#1d4ed8!important}
+  .desktop-nav-item.active:before{content:"";position:absolute;left:-1px;top:8px;bottom:8px;width:3px;border-radius:0 3px 3px 0;background:#3b82f6}
+}
+@media screen and (max-width:900px){
+  .desktop-nav-item span svg{stroke-width:1.75!important}
+}
+</style>
