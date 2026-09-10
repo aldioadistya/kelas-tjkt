@@ -4301,7 +4301,7 @@ async function readStateDocument(collectionName, docId, fallbackLocalKey = null)
         }
         return null;
     } catch (e) {
-        console.warn('Firestore state read error:', collectionName, e);
+        handleFirestoreSyncError(e, 'Firestore state read: ' + collectionName);
         if (fallbackLocalKey) {
             try {
                 const cached = localStorage.getItem(fallbackLocalKey);
@@ -4331,8 +4331,18 @@ async function migrateLegacyStateOnce() {
     if (!currentUser || !isAdmin() || _separatedMigrationDone) return;
 
     const metaRef = db.collection(FS_META).doc('security-v2');
-    const metaSnap = await metaRef.get();
-    const meta = metaSnap.exists ? (metaSnap.data() || {}) : {};
+    let meta = {};
+    try {
+        const metaSnap = await metaRef.get();
+        meta = metaSnap.exists ? (metaSnap.data() || {}) : {};
+    } catch (e) {
+        if (isFirestorePermissionError(e)) {
+            handleFirestoreSyncError(e, 'Security migration metadata read');
+            _separatedMigrationDone = true;
+            return;
+        }
+        throw e;
+    }
 
     // Once the migration has been completed successfully, do not rerun it on
     // every page load. Re-running against the legacy document is unnecessary
@@ -4639,16 +4649,61 @@ async function saveState() {
 
                 const publicState = buildPublicState(state);
                 const adminState = buildAdminState(state);
+                const syncResults = [];
 
-                await writeStateDocument(FS_PUBLIC, PUBLIC_STATE_DOC, publicState, 'kelasku-public-state');
-                await writeStateDocument(FS_COLLECTION, PUBLIC_STATE_DOC, publicState, null);
-                await writeStateDocument(FS_ADMIN, ADMIN_STATE_DOC, adminState, null);
-                await saveReportsForAdmin();
-                await saveTargetedNotifications();
+                // Primary separated storage.
+                try {
+                    await writeStateDocument(FS_PUBLIC, PUBLIC_STATE_DOC, publicState, 'kelasku-public-state');
+                    syncResults.push('public');
+                } catch (e) {
+                    handleFirestoreSyncError(e, 'Public state save');
+                }
+
+                // Compatibility snapshot for admins. Keep the complete admin
+                // state here as a fallback for older Rules / temporary Rules mismatch.
+                try {
+                    await writeStateDocument(FS_COLLECTION, PUBLIC_STATE_DOC, state, null);
+                    syncResults.push('legacy');
+                } catch (e) {
+                    if (isFirestorePermissionError(e)) {
+                        handleFirestoreSyncError(e, 'Legacy state save');
+                    } else if (String(e && e.message || '').includes('Data utama terlalu besar')) {
+                        // Large-state fallback: keep the legacy document useful
+                        // for core public data without failing the whole save.
+                        try {
+                            await writeStateDocument(FS_COLLECTION, PUBLIC_STATE_DOC, publicState, null);
+                            syncResults.push('legacy-public');
+                        } catch (fallbackError) {
+                            handleFirestoreSyncError(fallbackError, 'Legacy public fallback save');
+                        }
+                    } else {
+                        throw e;
+                    }
+                }
+
+                try {
+                    await writeStateDocument(FS_ADMIN, ADMIN_STATE_DOC, adminState, null);
+                    syncResults.push('admin');
+                } catch (e) {
+                    handleFirestoreSyncError(e, 'Admin state save');
+                }
+
+                try {
+                    await saveReportsForAdmin();
+                } catch (e) {
+                    handleFirestoreSyncError(e, 'Reports save');
+                }
+
+                try {
+                    await saveTargetedNotifications();
+                } catch (e) {
+                    handleFirestoreSyncError(e, 'Notifications save');
+                }
 
                 window.__kelaskuLastSaveSyncFailedNotified = false;
-                lastResult = { synced: true };
-                console.log('Separated state saved successfully');
+                const synced = syncResults.length > 0;
+                lastResult = { synced, partial: syncResults.length > 0 && syncResults.length < 5, sources: syncResults };
+                console.log('Kelasku state save completed:', syncResults.join(', ') || 'local fallback');
             }
             return lastResult;
         } catch (e) {
@@ -4669,6 +4724,21 @@ async function loadState() {
     try {
         if (isAdmin()) {
             await migrateLegacyStateOnce();
+
+            // Compatibility fallback: admin always keeps a readable legacy
+            // snapshot as a second source. This prevents a temporary Rules
+            // mismatch from blanking the app or removing admin-visible data.
+            try {
+                const legacySnap = await db.collection(FS_COLLECTION).doc(PUBLIC_STATE_DOC).get();
+                if (legacySnap.exists && typeof legacySnap.data().value === 'string' && legacySnap.data().value) {
+                    const legacyState = JSON.parse(legacySnap.data().value);
+                    if (legacyState && typeof legacyState === 'object') {
+                        state = Object.assign(state, legacyState);
+                    }
+                }
+            } catch (e) {
+                handleFirestoreSyncError(e, 'Legacy compatibility read');
+            }
         }
 
         const currentJadwal = (state.jadwal && typeof state.jadwal === 'object' && !Array.isArray(state.jadwal))
@@ -5067,6 +5137,31 @@ function clearLocalData() {
     location.reload();
 }
 // ============================================================
+// FIRESTORE SYNC COMPATIBILITY / ERROR HANDLING
+// ============================================================
+let firestorePermissionNoticeShown = false;
+function isFirestorePermissionError(error) {
+    const code = String(error && error.code || '').toLowerCase();
+    const message = String(error && error.message || error || '').toLowerCase();
+    return code.includes('permission-denied')
+        || message.includes('missing or insufficient permissions')
+        || message.includes('permission-denied');
+}
+function notifyFirestorePermissionOnce() {
+    if (firestorePermissionNoticeShown) return;
+    firestorePermissionNoticeShown = true;
+    showNotification('Sinkronisasi server terbatas. Data lokal tetap dipertahankan.', 'warning', 5000);
+}
+function handleFirestoreSyncError(error, label) {
+    if (isFirestorePermissionError(error)) {
+        console.warn(label + ': akses Firestore ditolak; sinkronisasi bagian ini dilewati.');
+        notifyFirestorePermissionOnce();
+        return;
+    }
+    console.warn(label + ':', error);
+}
+
+// ============================================================
 // WATCH LIVE SYNC
 // ============================================================
 let liveSyncStarted = false;
@@ -5120,7 +5215,7 @@ function watchReportsSync(){
             renderReports();
             renderBeranda();
         }
-    }, (e)=>console.warn('Report live sync error:',e));
+    }, (e)=>handleFirestoreSyncError(e, 'Report live sync error'));
 }
 function watchNotificationsSync(){
     if (!currentUser || notificationSyncUnsub) return;
@@ -5130,7 +5225,7 @@ function watchNotificationsSync(){
     notificationSyncUnsub = query.onSnapshot((snap)=>{
         mergeNotificationSnapshot(snap.docs.map(doc=>doc.data()));
         if(document.getElementById('login-overlay').style.display === 'none') renderNotifications();
-    }, (e)=>console.warn('Notification live sync error:',e));
+    }, (e)=>handleFirestoreSyncError(e, 'Notification live sync error'));
 }
 function watchLiveSync() {
     if (!authReady || liveSyncStarted || !currentUser) return;
@@ -5141,8 +5236,8 @@ function watchLiveSync() {
         try {
             mergePublicAndCurrentState(JSON.parse(snap.data().value));
             if (document.getElementById('login-overlay').style.display === 'none') renderAll();
-        } catch (e) { console.warn('Public sync error', e); }
-    }, (e)=>console.warn('Public state sync error:',e));
+        } catch (e) { handleFirestoreSyncError(e, 'Public sync parse error'); }
+    }, (e)=>handleFirestoreSyncError(e, 'Public state sync error'));
     separatedSyncUnsubs.push(publicUnsub);
 
     if (isAdmin()) {
@@ -5151,7 +5246,7 @@ function watchLiveSync() {
             try {
                 mergeAdminState(JSON.parse(snap.data().value));
                 if (document.getElementById('login-overlay').style.display === 'none') renderAll();
-            } catch (e) { console.warn('Admin state sync error', e); }
+            } catch (e) { handleFirestoreSyncError(e, 'Admin state sync error'); }
         }, (e)=>console.warn('Admin state sync error:',e));
         separatedSyncUnsubs.push(adminUnsub);
     }
@@ -7825,4 +7920,6 @@ window.todayKey = todayKey;
 })();
 </script>
 </body>
+
+<!-- Kelasku compatibility patch: resilient Firestore sync + legacy fallback -->
 </html>
