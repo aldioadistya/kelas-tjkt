@@ -1061,6 +1061,10 @@ body {
     color: #fff;
     border-color: transparent;
 }
+.day-chip { appearance: none; -webkit-appearance: none; font: inherit; text-align: center; }
+#day-tabs { position: relative; z-index: 2; pointer-events: auto !important; }
+#day-tabs .day-chip { pointer-events: auto !important; user-select: none; -webkit-user-select: none; }
+
 .task-item {
     display: flex;
     align-items: flex-start;
@@ -2795,7 +2799,13 @@ a{
         <button class="mode-btn" id="mode-piket" onclick="setJadwalMode('piket')">🧹 Piket</button>
       </div>
       <div id="jadwal-mode-pelajaran">
-        <div class="day-tabs" id="day-tabs"></div>
+        <div class="day-tabs" id="day-tabs" aria-label="Pilih hari">
+          <button type="button" class="day-chip active" data-jadwal-day="Senin">Senin</button>
+          <button type="button" class="day-chip" data-jadwal-day="Selasa">Selasa</button>
+          <button type="button" class="day-chip" data-jadwal-day="Rabu">Rabu</button>
+          <button type="button" class="day-chip" data-jadwal-day="Kamis">Kamis</button>
+          <button type="button" class="day-chip" data-jadwal-day="Jumat">Jumat</button>
+        </div>
         <div class="section"><button class="fab-add admin-only" onclick="openJadwalModal()">＋ Tambah Jam</button></div>
         <div class="section"><div class="card" id="jadwal-list"></div></div>
       </div>
@@ -2833,7 +2843,7 @@ a{
       </div>
     </div>
     <div class="view" id="view-tugas">
-      <div class="pagehead"><h1>Manajemen Tugas</h1><p>Pantau tenggat &amp; kumpulkan berkas tugas</p></div>
+      <div class="pagehead"><h1>Manajemen Tugas</h1><p>Pantau deadline &amp; kumpulkan berkas tugas</p></div>
       <div class="section"><button class="fab-add admin-only" onclick="openTugasModal()">＋ Tambah Tugas</button></div>
       <div class="section">
         <div class="section-head"><div class="section-title">Belum Selesai</div></div>
@@ -3001,11 +3011,11 @@ a{
   <div class="modal-bg" id="modal-kas"><div class="modal"><h3 id="kas-modal-title">Tambah Transaksi Kas</h3><input type="hidden" id="kas-edit-id"><div class="field"><label>Jenis</label><select id="kas-jenis"><option value="masuk">Pemasukan (+)</option><option value="keluar">Pengeluaran (-)</option></select></div><div class="field"><label>Keterangan</label><input id="kas-ket" type="text" placeholder="Contoh: Kas Mingguan"></div><div class="field"><label>Jumlah (Rp)</label><input id="kas-jumlah" type="number" placeholder="0"></div><div class="field"><label>Lampiran (opsional)</label><input type="file" id="kas-file" accept=".jpg,.png,.pdf,.doc,.docx,.xlsx"><div id="kas-file-hint" class="field-hint">Maks 10MB saat Google Drive aktif. Saat edit, kosongkan jika ingin mempertahankan lampiran lama.</div></div><div class="modal-actions"><button class="btn btn-danger admin-only" id="kas-delete-btn" style="display:none;" onclick="hapusKasCurrent()">Hapus</button><button class="btn btn-ghost" onclick="closeModal('kas')">Batal</button><button class="btn btn-primary" onclick="submitKas()">Simpan</button></div></div></div>
   <div class="modal-bg" id="modal-kas-folder"><div class="modal"><h3>Tambah Folder Kas Siswa</h3><div class="field"><label>Nama Folder</label><input id="kas-folder-name" type="text" placeholder="Contoh: Kas September 2026"></div><div class="field"><label>Nominal Kas per Anak (Rp)</label><input id="kas-folder-nominal" type="number" min="0" placeholder="Contoh: 10000"></div><div class="field"><label>Keterangan (opsional)</label><input id="kas-folder-note" type="text" placeholder="Contoh: Kas bulanan"></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('kas-folder')">Batal</button><button class="btn btn-primary" onclick="submitKasFolder()">Buat Folder</button></div></div></div>
   <div class="modal-bg" id="modal-kas-student"><div class="modal"><h3 id="kas-student-modal-title">Pembayaran Kas Siswa</h3><input type="hidden" id="kas-student-folder-id"><input type="hidden" id="kas-student-name"><div class="field"><label>Nama Siswa</label><input id="kas-student-display" type="text" readonly></div><div class="field"><label>Status Pembayaran</label><select id="kas-student-status"><option value="belum">Belum Bayar</option><option value="sudah">Sudah Bayar</option></select></div><div class="field"><label>Jumlah Dibayar (Rp)</label><input id="kas-student-jumlah" type="number" min="0" placeholder="0"></div><div class="field"><label>Tanggal Bayar</label><input id="kas-student-tanggal" type="date"></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('kas-student')">Batal</button><button class="btn btn-primary admin-only" onclick="submitKasStudent()">Simpan</button></div></div></div>
-  <div class="modal-bg" id="modal-tugas"><div class="modal"><h3 id="tugas-modal-title">Tambah Tugas</h3><div class="field"><label>Nama Tugas</label><input id="tugas-nama" type="text" placeholder="Contoh: Laporan Jaringan"></div><div class="field"><label>Mata Pelajaran</label><input id="tugas-mapel" type="text" placeholder="Contoh: Administrasi Jaringan"></div><div class="field"><label>Tenggat</label><input id="tugas-tenggat" type="date"></div><div class="field"><label>Deskripsi</label><textarea id="tugas-deskripsi" placeholder="Deskripsi tugas..."></textarea></div><div class="field"><label>Lampiran (opsional, bisa lebih dari 1)</label><div id="tugas-file-chips" style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px;"></div><input type="file" id="tugas-file" accept=".pdf,.doc,.docx,.jpg,.png,.jpeg,.zip" multiple onchange="onTugasFileSelected(this)"><div id="tugas-file-hint" class="field-hint">Maks 3 file. Batas 10MB/file saat Google Drive aktif.</div></div><input type="hidden" id="tugas-edit-id"><div class="modal-actions"><button class="btn btn-danger admin-only" id="tugas-delete-btn" style="display:none;" onclick="deleteTugasCurrent()">Hapus</button><button class="btn btn-ghost" onclick="closeModal('tugas')">Batal</button><button class="btn btn-primary admin-only" onclick="submitTugas()">Simpan</button></div></div></div>
+  <div class="modal-bg" id="modal-tugas"><div class="modal"><h3 id="tugas-modal-title">Tambah Tugas</h3><div class="field"><label>Nama Tugas</label><input id="tugas-nama" type="text" placeholder="Contoh: Laporan Jaringan"></div><div class="field"><label>Mata Pelajaran</label><input id="tugas-mapel" type="text" placeholder="Contoh: Administrasi Jaringan"></div><div class="field"><label>Deadline</label><input id="tugas-tenggat" type="date"></div><div class="field"><label>Deskripsi</label><textarea id="tugas-deskripsi" placeholder="Deskripsi tugas..."></textarea></div><div class="field"><label>Lampiran (opsional, bisa lebih dari 1)</label><div id="tugas-file-chips" style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px;"></div><input type="file" id="tugas-file" accept=".pdf,.doc,.docx,.jpg,.png,.jpeg,.zip" multiple onchange="onTugasFileSelected(this)"><div id="tugas-file-hint" class="field-hint">Maks 3 file. Batas 10MB/file saat Google Drive aktif.</div></div><input type="hidden" id="tugas-edit-id"><div class="modal-actions"><button class="btn btn-danger admin-only" id="tugas-delete-btn" style="display:none;" onclick="deleteTugasCurrent()">Hapus</button><button class="btn btn-ghost" onclick="closeModal('tugas')">Batal</button><button class="btn btn-primary admin-only" onclick="submitTugas()">Simpan</button></div></div></div>
   <div class="modal-bg" id="modal-student"><div class="modal"><h3>Tambah Siswa</h3><div class="field"><label>Nama Lengkap</label><input id="student-nama" type="text" placeholder="Contoh: Muhammad Rizky"></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('student')">Batal</button><button class="btn btn-primary" onclick="submitStudent()">Tambah</button></div></div></div>
   <div class="modal-bg" id="modal-roster-status"><div class="modal"><h3 id="roster-status-title">Tandai Status</h3><div class="field-hint" style="margin:-6px 0 12px;">Tandai status <b id="roster-status-name" style="color:var(--text-main);"></b> untuk hari ini.</div><div class="roster-status-choices"><button class="roster-choice-btn done" id="roster-status-sudah-btn" onclick="setRosterStatusChoice('sudah')">✓ Sudah</button><button class="roster-choice-btn undone" id="roster-status-belum-btn" onclick="setRosterStatusChoice('belum')">✕ Belum</button></div><input type="hidden" id="roster-status-choice"><div class="field" id="roster-status-alasan-field" style="display:none;"><label>Keterangan</label><textarea id="roster-status-alasan" placeholder="Contoh: keterangan piket, catatan, dll." style="min-height:60px;"></textarea></div><div class="modal-actions"><button class="btn btn-ghost" id="roster-status-clear-btn" onclick="clearRosterStatus()" title="Kembalikan ke netral">↺ Reset</button><button class="btn btn-ghost" onclick="closeModal('roster-status')">Batal</button><button class="btn btn-primary" onclick="submitRosterStatus()">Simpan</button></div></div></div>
   <div class="modal-bg" id="modal-piket-jadwal"><div class="modal"><h3>Atur Jadwal Piket</h3><div class="field-hint" style="margin:-6px 0 10px;">Pilih hari, lalu centang siswa yang bertugas piket pada hari itu. Kosongkan semua centang = tidak ada piket hari itu.</div><div class="day-tabs" id="piket-jadwal-day-tabs" style="flex-wrap:wrap;"></div><div id="piket-jadwal-summary" class="piket-jadwal-summary"></div><div id="piket-jadwal-checklist" style="max-height:280px; overflow-y:auto; margin-top:4px;"></div><div class="modal-actions"><button class="btn btn-primary" onclick="closeModal('piket-jadwal')">Selesai</button></div></div></div>
-  <div class="modal-bg" id="modal-pengumuman"><div class="modal"><h3>Tambah Pengumuman</h3><div class="field"><label>Isi</label><input id="pengumuman-teks" type="text" placeholder="Tulis informasi untuk kelas..."></div><div class="field"><label>Deadline</label><input id="pengumuman-deadline" type="date"></div><div class="field"><label>Lampiran (opsional, bisa lebih dari 1)</label><div id="pengumuman-file-chips" style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px;"></div><input type="file" id="pengumuman-file" accept=".pdf,.doc,.docx,.xlsx,.jpg,.png,.jpeg,.webp,.zip" multiple onchange="onPengumumanFileSelected(this)"><div id="pengumuman-file-hint" class="field-hint">Maks 3 file. Batas 10MB/file saat Google Drive aktif.</div></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('pengumuman')">Batal</button><button class="btn btn-primary" onclick="submitPengumuman()">Publikasikan</button></div></div></div>
+  <div class="modal-bg" id="modal-pengumuman"><div class="modal"><h3>Tambah Pengumuman</h3><div class="field"><label>Isi</label><input id="pengumuman-teks" type="text" placeholder="Tulis informasi untuk kelas..."></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('pengumuman')">Batal</button><button class="btn btn-primary" onclick="submitPengumuman()">Publikasikan</button></div></div></div>
   <div class="modal-bg" id="modal-jadwal"><div class="modal"><h3 id="jadwal-modal-title">Atur Jam Pelajaran</h3><div class="field"><label>Hari</label><select id="jadwal-hari"><option value="Senin">Senin</option><option value="Selasa">Selasa</option><option value="Rabu">Rabu</option><option value="Kamis">Kamis</option><option value="Jumat">Jumat</option></select></div><div class="field"><label>Jam Mulai</label><input id="jadwal-mulai" type="time"></div><div class="field"><label>Jam Selesai</label><input id="jadwal-selesai" type="time"></div><div class="field"><label>Mata Pelajaran</label><input id="jadwal-mapel" type="text" placeholder="Mata Pelajaran"></div><div class="field"><label>Guru</label><input id="jadwal-guru" type="text" placeholder="Nama Guru"></div><input type="hidden" id="jadwal-edit-id"><div class="modal-actions"><button class="btn btn-danger admin-only" id="jadwal-delete-btn" style="display:none;" onclick="deleteJadwalCurrent()">Hapus</button><button class="btn btn-ghost" onclick="closeModal('jadwal')">Batal</button><button class="btn btn-primary admin-only" onclick="submitJadwal()">Simpan</button></div></div></div>
   <div class="modal-bg" id="modal-stats"><div class="modal"><h3 id="stats-title">📊 Statistik</h3><div id="stats-content" style="max-height:300px; overflow-y:auto;"></div><div class="modal-actions"><button class="btn btn-primary btn-block" onclick="closeModal('stats')">Tutup</button></div></div></div>
   <div class="modal-bg" id="modal-export"><div class="modal"><h3>Rekap Kas</h3><div class="field"><textarea id="export-text" readonly style="height:160px; font-family:monospace; font-size:11px;"></textarea></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('export')">Tutup</button><button class="btn btn-primary" onclick="copyExportText()">📋 Salin</button></div></div></div>
@@ -3313,7 +3323,12 @@ function hydrateLocalUiState() {
     if (state.autoCleanReportDays === undefined || state.autoCleanReportDays === null) {
         state.autoCleanReportDays = 7;
     }
-    if (!state.piketJadwal) state.piketJadwal = {};
+    if (!state.piketJadwal || typeof state.piketJadwal !== 'object' || Array.isArray(state.piketJadwal)) {
+        state.piketJadwal = {};
+    }
+    if (!state.jadwal || typeof state.jadwal !== 'object' || Array.isArray(state.jadwal)) {
+        state.jadwal = {};
+    }
     if (!state.calMinimized) state.calMinimized = { hp: false, piket: false };
     if (!state.kasFolderMinimized || typeof state.kasFolderMinimized !== 'object') {
         state.kasFolderMinimized = {};
@@ -3321,13 +3336,10 @@ function hydrateLocalUiState() {
     if (!state.nameChangeLog) state.nameChangeLog = [];
     if (!Array.isArray(state.notifications)) state.notifications = [];
     if (!Array.isArray(state.activityLog)) state.activityLog = [];
-    if (!Array.isArray(state.jadwal)) {
-        // no-op; kept for compatibility with older saved state
-    }
 
     DAY_NAMES.forEach(day => {
-        if (!state.jadwal[day]) state.jadwal[day] = [];
-        if (!state.piketJadwal[day]) state.piketJadwal[day] = [];
+        if (!Array.isArray(state.jadwal[day])) state.jadwal[day] = [];
+        if (!Array.isArray(state.piketJadwal[day])) state.piketJadwal[day] = [];
     });
 
     if (!state.hpSelectedDate) state.hpSelectedDate = todayKey();
@@ -3718,20 +3730,32 @@ async function loadState() {
             await migrateLegacyStateOnce();
         }
 
+        const currentJadwal = (state.jadwal && typeof state.jadwal === 'object' && !Array.isArray(state.jadwal))
+            ? JSON.parse(JSON.stringify(state.jadwal))
+            : {};
+
         const publicState = await readStateDocument(
             FS_PUBLIC,
             PUBLIC_STATE_DOC,
             'kelasku-public-state'
         );
 
-        if (publicState) {
+        if (publicState && typeof publicState === 'object') {
+            const incomingJadwal = publicState.jadwal;
+            const incomingHasJadwal = hasAnyJadwalItems(incomingJadwal);
+            const currentHasJadwal = hasAnyJadwalItems(currentJadwal);
+
             state = Object.assign(state, publicState);
+
+            // Jangan biarkan snapshot server yang kosong menghapus jadwal
+            // yang masih ada di state saat ini.
+            if (!incomingHasJadwal && currentHasJadwal) {
+                state.jadwal = currentJadwal;
+            }
         }
 
-        // Admin recovery safety: if the separated public document is empty or
-        // obviously the small default state, re-read the legacy source once.
-        // This prevents the dashboard from showing zeros until the user imports
-        // a backup manually.
+        // Admin recovery safety: jika public state kosong/kurang lengkap,
+        // ambil legacy sekali lagi. Jadwal ikut dipulihkan secara eksplisit.
         if (isAdmin()) {
             const publicLooksEmpty =
                 !publicState ||
@@ -3747,12 +3771,41 @@ async function loadState() {
                         const recovered = JSON.parse(legacySnap.data().value);
                         if (recovered && typeof recovered === 'object') {
                             const recoveredPublic = buildPublicState(recovered);
+
+                            // Kalau server public punya jadwal kosong, tetapi legacy
+                            // masih punya isi, prioritaskan jadwal legacy.
+                            if (!hasAnyJadwalItems(recoveredPublic.jadwal) && hasAnyJadwalItems(state.jadwal)) {
+                                recoveredPublic.jadwal = state.jadwal;
+                            }
+
                             state = Object.assign(state, recoveredPublic);
                             await writeStateDocument(FS_PUBLIC, PUBLIC_STATE_DOC, recoveredPublic, 'kelasku-public-state');
                         }
                     }
                 } catch (recoveryError) {
                     console.warn('Legacy recovery read failed:', recoveryError);
+                }
+            } else {
+                // Walaupun public state tidak sepenuhnya kosong, tetap coba
+                // memulihkan jadwal dari legacy bila public jadwal kosong.
+                if (!hasAnyJadwalItems(state.jadwal)) {
+                    try {
+                        const legacySnap = await db.collection(FS_COLLECTION).doc(PUBLIC_STATE_DOC).get();
+                        if (legacySnap.exists && typeof legacySnap.data().value === 'string' && legacySnap.data().value) {
+                            const recovered = JSON.parse(legacySnap.data().value);
+                            if (recovered && hasAnyJadwalItems(recovered.jadwal)) {
+                                state.jadwal = recovered.jadwal;
+                                await writeStateDocument(
+                                    FS_PUBLIC,
+                                    PUBLIC_STATE_DOC,
+                                    buildPublicState(recovered),
+                                    'kelasku-public-state'
+                                );
+                            }
+                        }
+                    } catch (e) {
+                        console.warn('Legacy jadwal recovery failed:', e);
+                    }
                 }
             }
 
@@ -3781,6 +3834,11 @@ async function loadState() {
         }
         hydrateLocalUiState();
     }
+}
+
+function hasAnyJadwalItems(jadwal) {
+    if (!jadwal || typeof jadwal !== 'object' || Array.isArray(jadwal)) return false;
+    return DAY_NAMES.some(day => Array.isArray(jadwal[day]) && jadwal[day].length > 0);
 }
 
 // ============================================================
@@ -4333,22 +4391,30 @@ function openGlobalSearchResult(type,id){const input=document.getElementById('gl
 // RENDER FUNGSI LENGKAP
 // ============================================================
 let calYear = 2026, calMonth = 8, piketCalYear = 2026, piketCalMonth = 8;
+function safeRender(fn, label) {
+    try {
+        if (typeof fn === 'function') fn();
+    } catch (e) {
+        console.error('Render ' + label + ' gagal:', e);
+    }
+}
 function renderAll() {
-    renderBeranda();
-    renderKas();
-    renderKasSiswa();
-    renderHpCalendar();
-    renderHp();
-    renderPiketCalendar();
-    renderPiket();
-    renderDayTabs();
-    renderJadwalList();
-    renderTugas();
-    renderReports();
-    renderNotifications();
-    renderActivityLog();
-    renderAccountList();
-    renderSettingsInfo();
+    // Render satu per satu. Jadi jika modul lain error, Jadwal tetap hidup.
+    safeRender(renderBeranda, 'Beranda');
+    safeRender(renderKas, 'Kas');
+    safeRender(renderKasSiswa, 'Kas Siswa');
+    safeRender(renderHpCalendar, 'Kalender HP');
+    safeRender(renderHp, 'HP');
+    safeRender(renderPiketCalendar, 'Kalender Piket');
+    safeRender(renderPiket, 'Piket');
+    safeRender(renderDayTabs, 'Tab Hari Jadwal');
+    safeRender(renderJadwalList, 'Daftar Jadwal');
+    safeRender(renderTugas, 'Tugas');
+    safeRender(renderReports, 'Laporan');
+    safeRender(renderNotifications, 'Notifikasi');
+    safeRender(renderActivityLog, 'Aktivitas');
+    safeRender(renderAccountList, 'Manajemen Pengguna');
+    safeRender(renderSettingsInfo, 'Pengaturan');
 }
 function renderSettingsInfo() {
     const input = document.getElementById('autoclean-days-input');
@@ -4405,9 +4471,7 @@ function updateAttachmentHints() {
     const taskHint = document.getElementById('tugas-file-hint');
     const reportHint = document.getElementById('report-file-hint');
     const kasHint = document.getElementById('kas-file-hint');
-    const announcementHint = document.getElementById('pengumuman-file-hint');
     if (taskHint) taskHint.textContent = 'Maks 3 file, masing-masing ' + maxText + '.' + suffix;
-    if (announcementHint) announcementHint.textContent = 'Maks 3 file, masing-masing ' + maxText + '.' + suffix;
     if (reportHint) reportHint.textContent = 'Maks ' + maxText + ' per laporan.' + suffix;
     if (kasHint) kasHint.textContent = 'Maks ' + maxText + '. Saat edit, kosongkan jika ingin mempertahankan lampiran lama.' + suffix;
 }
@@ -4549,7 +4613,7 @@ function renderHomeTugas() {
     }
     const today = new Date(); today.setHours(0,0,0,0);
     list.innerHTML = nearest.map(t => {
-        let dueText = 'Tanpa tenggat', dueClass = 'pill-due';
+        let dueText = 'Tanpa deadline', dueClass = 'pill-due';
         if (t.tenggat) {
             const due = new Date(t.tenggat + 'T00:00:00');
             if (!Number.isNaN(due.getTime())) {
@@ -4576,7 +4640,7 @@ function renderPengumuman() {
     list.innerHTML = state.pengumuman.length ? state.pengumuman.slice().reverse().map(p => `
         <div class="announce-item">
           <div class="announce-dot"></div>
-          <div style="flex:1;"><div class="announce-text">${escapeHtml(p.text)}</div><div class="announce-date">${escapeHtml(p.date)}${p.deadline ? ` • Deadline: ${escapeHtml(new Date(p.deadline + "T00:00:00").toLocaleDateString("id-ID"))}` : ""}</div>${renderAnnouncementFiles(p)}</div>
+          <div style="flex:1;"><div class="announce-text">${escapeHtml(p.text)}</div><div class="announce-date">${escapeHtml(p.date)}</div></div>
           <button class="s-remove admin-only" onclick="deletePengumuman(${p.id})">×</button>
         </div>
     `).join('') : `<div class="empty">Belum ada pengumuman.</div>`;
@@ -4922,15 +4986,41 @@ function togglePiketJadwalStudent(name, checked) {
     saveState(); renderPiket(); renderPiketCalendar(); renderBeranda();
 }
 // ===== JADWAL PELAJARAN =====
-function renderDayTabs() { document.getElementById('day-tabs').innerHTML = DAY_NAMES.map(d => `<div class="day-chip ${state.selectedDay===d?'active':''}" onclick="selectDay('${jsString(d)}')">${escapeHtml(d)}</div>`).join(''); }
-function selectDay(d) { state.selectedDay = d; renderDayTabs(); renderJadwalList(); }
+function renderDayTabs() {
+    const wrap = document.getElementById('day-tabs');
+    if (!wrap) return;
+    if (!DAY_NAMES.includes(state.selectedDay)) state.selectedDay = DAY_NAMES[0];
+    wrap.innerHTML = DAY_NAMES.map(d => `
+        <button type="button"
+                class="day-chip ${state.selectedDay===d?'active':''}"
+                data-jadwal-day="${escapeHtml(d)}"
+                aria-pressed="${state.selectedDay===d ? 'true' : 'false'}">
+            ${escapeHtml(d)}
+        </button>
+    `).join('');
+}
+function selectDay(d) {
+    if (!DAY_NAMES.includes(d)) return;
+    if (!state.jadwal || typeof state.jadwal !== 'object' || Array.isArray(state.jadwal)) {
+        state.jadwal = {};
+    }
+    if (!Array.isArray(state.jadwal[d])) state.jadwal[d] = [];
+    state.selectedDay = d;
+    renderDayTabs();
+    renderJadwalList();
+}
 function renderJadwalList() {
-    const items = state.jadwal[state.selectedDay] || [];
+    const wrap = document.getElementById('jadwal-list');
+    if (!wrap) return;
+    if (!state.jadwal || typeof state.jadwal !== 'object' || Array.isArray(state.jadwal)) {
+        state.jadwal = {};
+    }
+    const items = Array.isArray(state.jadwal[state.selectedDay]) ? state.jadwal[state.selectedDay] : [];
     const readOnly = isReadOnly();
-    document.getElementById('jadwal-list').innerHTML = items.length ? items.map(j => `
-        <div class="row-item" ${readOnly ? '' : `onclick="openJadwalModal(${j.id})"`} style="${readOnly ? '' : 'cursor:pointer;'}">
-            <div class="row-time">${escapeHtml(j.jam)}</div>
-            <div><div class="row-title">${escapeHtml(j.mapel)}</div><div class="row-sub">${escapeHtml(j.guru)}</div></div>
+    wrap.innerHTML = items.length ? items.map(j => `
+        <div class="row-item" ${readOnly ? '' : `onclick="openJadwalModal(${Number(j.id)})"`} style="${readOnly ? '' : 'cursor:pointer;'}">
+            <div class="row-time">${escapeHtml(j.jam || '')}</div>
+            <div><div class="row-title">${escapeHtml(j.mapel || '')}</div><div class="row-sub">${escapeHtml(j.guru || '')}</div></div>
         </div>
     `).join('') : `<div class="empty">Tidak ada jadwal pelajaran.</div>`;
 }
@@ -5008,6 +5098,10 @@ function setJadwalMode(mode) {
     document.getElementById('mode-piket').classList.toggle('active', mode === 'piket');
     document.getElementById('jadwal-mode-pelajaran').style.display = mode === 'pelajaran' ? 'block' : 'none';
     document.getElementById('jadwal-mode-piket').style.display = mode === 'piket' ? 'block' : 'none';
+    if (mode === 'pelajaran') {
+        renderDayTabs();
+        renderJadwalList();
+    }
 }
 // ===== TUGAS =====
 function renderTaskFiles(t) {
@@ -5047,7 +5141,7 @@ function renderTugas() {
             <div class="checkbox admin-only" onclick="event.stopPropagation(); toggleTugas(${t.id})"></div>
             <div style="flex:1; ${readOnly ? '' : 'cursor:pointer;'}" ${readOnly ? '' : `onclick="openTugasModal(${t.id})"`}>
                 <div class="task-title">${escapeHtml(t.nama)}</div>
-                <div class="task-meta"><span class="pill">📚 ${escapeHtml(t.mapel || 'Tanpa mata pelajaran')}</span><span class="pill pill-due">📅 ${t.tenggat || 'Tanpa tenggat'}</span></div>
+                <div class="task-meta"><span class="pill">📚 ${escapeHtml(t.mapel || 'Tanpa mata pelajaran')}</span><span class="pill pill-due">📅 ${t.tenggat || 'Tanpa deadline'}</span></div>
                 ${t.deskripsi ? `<div class="task-desc">${escapeHtml(t.deskripsi)}</div>` : ''}
                 ${renderTaskFiles(t)}
             </div>
@@ -5060,7 +5154,7 @@ function renderTugas() {
             <div class="checkbox checked admin-only" onclick="event.stopPropagation(); toggleTugas(${t.id})">✓</div>
             <div style="flex:1; ${readOnly ? '' : 'cursor:pointer;'}" ${readOnly ? '' : `onclick="openTugasModal(${t.id})"`}>
                 <div class="task-title checked">${escapeHtml(t.nama)}</div>
-                <div class="task-meta"><span class="pill">📚 ${escapeHtml(t.mapel || 'Tanpa mata pelajaran')}</span><span class="pill pill-due">📅 ${t.tenggat || 'Tanpa tenggat'}</span></div>
+                <div class="task-meta"><span class="pill">📚 ${escapeHtml(t.mapel || 'Tanpa mata pelajaran')}</span><span class="pill pill-due">📅 ${t.tenggat || 'Tanpa deadline'}</span></div>
                 ${t.deskripsi ? `<div class="task-desc" style="text-decoration:line-through; color:var(--text-muted);">${escapeHtml(t.deskripsi)}</div>` : ''}
                 ${renderTaskFiles(t)}
             </div>
@@ -5411,7 +5505,7 @@ async function submitTugas() {
     state.tugas.push({ id: Date.now(), nama, mapel, tenggat, deskripsi, files, selesai: false });
     document.getElementById('tugas-deskripsi').value = '';
     addActivity('Menambahkan tugas', nama);
-    addNotification('Tugas baru', 'Tugas baru: ' + nama + (tenggat ? ' · Tenggat ' + tenggat : ''), {role:'siswa'});
+    addNotification('Tugas baru', 'Tugas baru: ' + nama + (tenggat ? ' · Deadline ' + tenggat : ''), {role:'siswa'});
     await saveState(); renderTugas(); renderBeranda(); closeModal('tugas'); showNotification('Tugas berhasil ditambahkan.', 'success');
 }
 function deleteTugasCurrent() {
@@ -5856,69 +5950,12 @@ function openExportModal() {
 }
 function copyExportText() { const el = document.getElementById('export-text'); el.select(); document.execCommand('copy'); showNotification('Rekap kas telah disalin ke clipboard.', 'success'); }
 // ===== PENGUMUMAN ACTION =====
-let _pengumumanEditFiles = [];
-function renderPengumumanFileChips() {
-    const wrap = document.getElementById('pengumuman-file-chips');
-    if (!wrap) return;
-    wrap.innerHTML = _pengumumanEditFiles.map((f, idx) => `
-        <div class="file-chip">📎 ${escapeHtml(f.name)}<span class="file-chip-remove" onclick="removePengumumanFile(${idx})">×</span></div>
-    `).join('');
-}
-function removePengumumanFile(idx) { _pengumumanEditFiles.splice(idx, 1); renderPengumumanFileChips(); }
-async function onPengumumanFileSelected(input) {
-    const remainingSlots = MAX_FILES_PER_ITEM - _pengumumanEditFiles.length;
-    const picked = Array.from(input.files || []);
-    if (picked.length > remainingSlots) { showNotification('Maksimal ' + MAX_FILES_PER_ITEM + ' file per pengumuman. Sisa slot: ' + remainingSlots + '.', 'error'); input.value = ''; return; }
-    for (const file of picked) {
-        try {
-            const attachment = await prepareAttachment(file);
-            _pengumumanEditFiles.push({ name: attachment.name, data: attachment.data, sizeBytes: attachment.sizeBytes, mimeType: attachment.mimeType, storage:'pending' });
-            if (attachment.compressed) showNotification('Gambar "' + file.name + '" dikompres otomatis.', 'success');
-        } catch (e) { showNotification('File "' + file.name + '": ' + (e.message || 'gagal diproses') + '.', 'error'); }
-    }
-    input.value = '';
-    renderPengumumanFileChips();
-}
-function openAnnouncementFileAt(id, idx) {
-    const p = state.pengumuman.find(x => x.id === Number(id));
-    if (!p) return;
-    const files = getItemFiles(p);
-    const f = files[idx];
-    if (f) openStoredAttachment(f);
-}
-function renderAnnouncementFiles(p) {
-    const files = getItemFiles(p);
-    if (!files.length) return '';
-    return `<div class="task-files">${files.map((f, idx) => `<button class="file-link" type="button" onclick="event.stopPropagation(); openAnnouncementFileAt(${p.id},${idx})">📎 ${escapeHtml(f.name)}</button>`).join('')}</div>`;
-}
-function openPengumumanModal() {
-    document.getElementById('pengumuman-teks').value = '';
-    document.getElementById('pengumuman-deadline').value = '';
-    const fileInput = document.getElementById('pengumuman-file');
-    if (fileInput) fileInput.value = '';
-    _pengumumanEditFiles = [];
-    renderPengumumanFileChips();
-    openModal('pengumuman');
-}
-async function submitPengumuman() {
+function openPengumumanModal() { document.getElementById('pengumuman-teks').value = ''; openModal('pengumuman'); }
+function submitPengumuman() {
     if (guardReadOnly()) return;
     const text = document.getElementById('pengumuman-teks').value.trim();
     if (!text) return;
-    const deadline = document.getElementById('pengumuman-deadline').value;
-    let files = [];
-    try {
-        for (const file of _pengumumanEditFiles.slice()) {
-            if (driveStorageEnabled() && file.driveFileId) {
-                files.push({ name:file.name, driveFileId:file.driveFileId, driveUrl:file.driveUrl || attachmentUrl(file), sizeBytes:Number(file.sizeBytes || 0), mimeType:file.mimeType || '', storage:'google-drive' });
-            } else if (file.data) {
-                files.push(await uploadPreparedAttachment(file, 'announcement'));
-            } else files.push(file);
-        }
-    } catch (e) {
-        showNotification('Gagal menyimpan lampiran pengumuman: ' + (e.message || 'error'), 'error', 5000);
-        return;
-    }
-    state.pengumuman.push({ id: Date.now(), text, date: new Date().toLocaleDateString('id-ID'), deadline: deadline || '', files });
+    state.pengumuman.push({ id: Date.now(), text, date: new Date().toLocaleDateString('id-ID') });
     addActivity('Menerbitkan pengumuman', text);
     addNotification('Pengumuman baru', text, {role:'siswa'});
     saveState(); renderPengumuman(); closeModal('pengumuman'); showNotification('Pengumuman berhasil dipublikasikan.', 'success');
@@ -5927,7 +5964,6 @@ function deletePengumuman(id) {
     if (guardReadOnly()) return;
     const deletedAnnouncement = state.pengumuman.find(p => p.id === id);
     state.pengumuman = state.pengumuman.filter(p => p.id !== id);
-    if (deletedAnnouncement) void deleteDriveAttachments(getItemFiles(deletedAnnouncement), 'announcement');
     addActivity('Menghapus pengumuman', deletedAnnouncement ? deletedAnnouncement.text : 'Pengumuman');
     saveState(); renderPengumuman(); showNotification('Pengumuman dihapus.', 'info');
 }
@@ -6408,12 +6444,22 @@ function goTo(name) {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     const tab = document.querySelector('.tab[data-tab="' + name + '"]');
     if (tab) tab.classList.add('active');
-    document.querySelectorAll('.desktop-nav-btn').forEach(t => t.classList.remove('active'));
-    const desktopTab = document.querySelector('.desktop-nav-btn[data-desktop-tab="' + name + '"]');
+    document.querySelectorAll('.desktop-nav-btn, .desktop-nav-item').forEach(t => t.classList.remove('active'));
+    const desktopTab = document.querySelector('.desktop-nav-btn[data-desktop-tab="' + name + '"], .desktop-nav-item[data-tab="' + name + '"]');
     if (desktopTab) desktopTab.classList.add('active');
     const content = document.querySelector('.content');
     if (content) content.scrollTop = 0;
     if (name === 'settings' && typeof renderAccountList === 'function') renderAccountList();
+    if (name === 'jadwal') {
+        const mode = state && state.jadwalMode === 'piket' ? 'piket' : 'pelajaran';
+        try {
+            setJadwalMode(mode);
+        } catch (e) {
+            console.warn('Jadwal mode render fallback:', e);
+            renderDayTabs();
+            renderJadwalList();
+        }
+    }
 }
 function openModal(name) { document.getElementById('modal-' + name).classList.add('open'); }
 function closeModal(name) { document.getElementById('modal-' + name).classList.remove('open'); }
@@ -6512,6 +6558,20 @@ window.togglePiketJadwalStudent = togglePiketJadwalStudent;
 window.selectPiketJadwalDay = selectPiketJadwalDay;
 window.todayKey = todayKey;
 </script>
+<script id="jadwal-day-click-guard">
+(function(){
+  document.addEventListener('click', function(event){
+    const chip = event.target.closest('#day-tabs .day-chip[data-jadwal-day]');
+    if(!chip) return;
+    const day = chip.getAttribute('data-jadwal-day');
+    if(!day || typeof window.selectDay !== 'function') return;
+    event.preventDefault();
+    event.stopPropagation();
+    window.selectDay(day);
+  }, true);
+})();
+</script>
+
 <script id="final-ui-guard">
 (function(){
   function resetReportScroll(){
