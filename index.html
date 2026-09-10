@@ -8154,3 +8154,184 @@ window.todayKey = todayKey;
   .desktop-nav-item span svg{stroke-width:1.75!important}
 }
 </style>
+
+<style id="dashboard-darkmode-fix-v5">
+/* ============================================================
+   DARK MODE FIX V5
+   Keep the SaaS dashboard hierarchy, but remove light surfaces
+   leaking into dark mode.
+   ============================================================ */
+body.dark{
+  --dash-surface:#111827;
+  --dash-surface-soft:#0f172a;
+  --dash-border:#253246;
+  --dash-text:#f8fafc;
+  --dash-muted:#94a3b8;
+  --dash-primary:#60a5fa;
+  --dash-primary-soft:#172554;
+  --dash-shadow:0 1px 2px rgba(0,0,0,.28),0 10px 28px rgba(0,0,0,.18);
+}
+
+@media screen and (min-width:901px){
+  body.dark .desktop-sidebar{
+    background:#0b1220!important;
+    border-right:1px solid #1f2a3b!important;
+  }
+  body.dark .desktop-brand{
+    border-bottom-color:#1f2a3b!important;
+  }
+  body.dark .desktop-nav-item{
+    color:#94a3b8!important;
+  }
+  body.dark .desktop-nav-item:hover{
+    background:#111827!important;
+    color:#93c5fd!important;
+  }
+  body.dark .desktop-nav-item.active{
+    background:#172554!important;
+    color:#bfdbfe!important;
+  }
+}
+
+body.dark .dashboard-topbar .dashboard-search{
+  background:#111827!important;
+  border-color:#334155!important;
+  box-shadow:0 1px 2px rgba(0,0,0,.2)!important;
+}
+body.dark .dashboard-search-kbd{
+  color:#94a3b8!important;
+  border-color:#334155!important;
+  background:#0f172a!important;
+}
+body.dark .dashboard-search-icon{
+  color:#94a3b8!important;
+}
+body.dark .dashboard-user-meta strong{color:#f8fafc!important;}
+body.dark .dashboard-user-meta span{color:#94a3b8!important;}
+body.dark .dashboard-user-avatar{
+  background:#1e293b!important;
+  border:1px solid #334155!important;
+}
+
+/* Hero stays prominent, but its shadow/border are tuned for dark mode. */
+body.dark .dashboard-hero{
+  background:linear-gradient(135deg,#111827 0%,#1d4ed8 100%)!important;
+  border-color:#29406b!important;
+  box-shadow:0 16px 34px rgba(0,0,0,.24)!important;
+}
+
+body.dark .dashboard-stat-card,
+body.dark .dashboard-card{
+  background:#111827!important;
+  border-color:#253246!important;
+  box-shadow:var(--dash-shadow)!important;
+}
+body.dark .dashboard-stat-card:hover{
+  border-color:#3b4d67!important;
+  box-shadow:0 10px 26px rgba(0,0,0,.25)!important;
+}
+body.dark .dashboard-stat-card .stat-status{color:#64748b!important;}
+body.dark .dashboard-stat-card .stat-label{color:#94a3b8!important;}
+body.dark .dashboard-stat-card .stat-value{color:#f8fafc!important;}
+
+/* Stat icon surfaces */
+body.dark .dashboard-icon-blue{background:#172554!important;color:#60a5fa!important;}
+body.dark .dashboard-icon-violet{background:#1e1b4b!important;color:#a78bfa!important;}
+body.dark .dashboard-icon-teal{background:#0b2a22!important;color:#5eead4!important;}
+body.dark .dashboard-icon-amber{background:#2b2113!important;color:#fbbf24!important;}
+body.dark .dashboard-icon-rose{background:#35131d!important;color:#fb7185!important;}
+body.dark .dashboard-stat-card .stat-icon{background:#172554!important;color:#60a5fa!important;}
+
+body.dark .dashboard-panel .section-title{color:#f8fafc!important;}
+body.dark .section-kicker{color:#64748b!important;}
+body.dark .section-action{color:#94a3b8!important;}
+body.dark .section-action:hover{
+  background:#172033!important;
+  color:#e2e8f0!important;
+  border-color:#334155!important;
+}
+
+body.dark .dashboard-notify-badge{
+  background:#35131d!important;
+  color:#fb7185!important;
+  border-color:#5b2531!important;
+}
+body.dark .dashboard-notification-card .empty,
+body.dark .compact-list .empty{
+  color:#94a3b8!important;
+}
+
+/* Announcement / list rows */
+body.dark .dashboard-card .announce-item,
+body.dark .dashboard-card .row-item,
+body.dark .dashboard-card .task-item{
+  border-bottom-color:#253246!important;
+}
+body.dark .dashboard-card .announce-title,
+body.dark .dashboard-card .announce-title-btn,
+body.dark .dashboard-card .row-title,
+body.dark .dashboard-card .task-title{
+  color:#f8fafc!important;
+}
+body.dark .dashboard-card .announce-description,
+body.dark .dashboard-card .announce-date,
+body.dark .dashboard-card .row-sub{
+  color:#94a3b8!important;
+}
+body.dark .dashboard-card .announce-dot{
+  background:#60a5fa!important;
+  box-shadow:0 0 0 4px #172554!important;
+}
+body.dark .dashboard-card .announce-pill,
+body.dark .dashboard-card .pill-due{
+  background:#172554!important;
+  border-color:#294b8a!important;
+  color:#93c5fd!important;
+}
+body.dark .dashboard-card .announce-file{
+  background:#0f172a!important;
+  border-color:#253246!important;
+  color:#93c5fd!important;
+}
+body.dark .dashboard-card .s-remove{
+  background:#0f172a!important;
+  border-color:#334155!important;
+  color:#cbd5e1!important;
+}
+body.dark .dashboard-card .s-remove:hover{
+  background:#172033!important;
+  border-color:#475569!important;
+  color:#f8fafc!important;
+}
+body.dark .dashboard-card .htag,
+body.dark .dashboard-card .pill{
+  background:#0f172a!important;
+  border-color:#334155!important;
+  color:#cbd5e1!important;
+}
+body.dark .dashboard-card .row-time{
+  background:#172554!important;
+  border-color:#294b8a!important;
+  color:#93c5fd!important;
+}
+
+/* Prevent inline legacy white surfaces inside these dashboard cards. */
+body.dark .dashboard-card [style*="background:#fff"],
+body.dark .dashboard-card [style*="background: #fff"],
+body.dark .dashboard-card [style*="background:#ffffff"],
+body.dark .dashboard-card [style*="background: #ffffff"]{
+  background:#0f172a!important;
+}
+
+/* The main desktop content should not have a separate light shell. */
+body.dark .screen,
+body.dark .phone{
+  background:#0f172a!important;
+}
+body.dark .statusbar{
+  background:#0f172a!important;
+  border-bottom-color:#1f2a3b!important;
+}
+
+/* Keep login dark-mode styling untouched by the dashboard patch. */
+</style>
