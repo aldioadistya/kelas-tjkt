@@ -4146,9 +4146,23 @@ auth.onAuthStateChanged(async (user) => {
 });
 
 async function loadUserProfile(user) {
+    // Authentication sukses harus segera membuka aplikasi.
+    // Sinkronisasi/rendering data adalah proses lanjutan dan tidak boleh
+    // membuat pengguna terpental kembali ke halaman login.
     try {
         const ref = db.collection(FS_PROFILES).doc(user.uid);
-        let snap = await ref.get();
+        let snap;
+
+        try {
+            snap = await ref.get();
+        } catch (profileReadError) {
+            console.error('Profile read failed:', profileReadError);
+            const code = String(profileReadError && profileReadError.code || '');
+            if (code.includes('permission-denied')) {
+                throw new Error('Profil akun tidak dapat dibaca oleh Firestore. Pastikan Rules kelasku_profiles mengizinkan akun membaca profilnya sendiri.');
+            }
+            throw profileReadError;
+        }
 
         // Pengguna baru selalu dibuat sebagai siswa.
         // Hanya Super Admin yang boleh mengubah role setelah profile dibuat.
@@ -4184,23 +4198,58 @@ async function loadUserProfile(user) {
             role
         };
 
+        // Simpan role terakhir sebagai fallback UI saja. Otorisasi tetap
+        // ditentukan oleh Firestore Rules, bukan oleh localStorage.
+        try {
+            localStorage.setItem('kelasku-last-role-' + user.uid, role);
+        } catch (_) {}
+
         clearEmailVerificationBox();
         document.getElementById('auth-status').textContent = '✅ Login (' + user.email + ')';
         document.getElementById('auth-status').style.color = 'var(--teal)';
         applyRole(currentUser.role);
-        await loadState();
-        applyTheme();
+
+        // Penting: buka aplikasi lebih dulu setelah Auth + Profile valid.
         hideLogin();
-        renderAll();
-        watchLiveSync();
+        applyTheme();
+
+        // Render awal harus selalu jalan walaupun Firestore sedang bermasalah.
+        try {
+            renderAll();
+        } catch (renderError) {
+            console.error('Initial render error:', renderError);
+        }
+
+        // Data server hanya inisialisasi tambahan. Error di sini tidak boleh
+        // dianggap sebagai kegagalan login.
+        try {
+            await loadState();
+        } catch (stateError) {
+            console.warn('Initial state load skipped:', stateError);
+            notifyFirestorePermissionOnce();
+        }
+
+        try {
+            renderAll();
+        } catch (renderError2) {
+            console.error('Post-load render error:', renderError2);
+        }
+
+        try {
+            watchLiveSync();
+        } catch (syncError) {
+            console.warn('Live sync startup skipped:', syncError);
+        }
     } catch (e) {
         console.error('Load user profile error:', e);
-        document.getElementById('login-error').textContent = 'Gagal memuat profil pengguna. Periksa koneksi internet.';
+        const errorText = String(e && e.message ? e.message : e || 'Gagal memuat profil pengguna.');
+        document.getElementById('login-error').textContent = errorText;
         document.getElementById('login-error').style.display = 'block';
+        currentUser = null;
+        try { await auth.signOut(); } catch (_) {}
         showLogin();
     }
 }
-
 function showLogin() { document.getElementById('login-overlay').style.display = 'flex'; }
 function hideLogin() { document.getElementById('login-overlay').style.display = 'none'; }
 // ============================================================
