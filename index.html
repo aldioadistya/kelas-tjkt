@@ -1904,6 +1904,20 @@ body.dark .s-name { color: #f1f5f9 !important; }
     border: none !important;
     box-shadow: none !important;
 }
+
+/* v21 notification accordion */
+.notification-settings-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px;}
+.notification-settings-summary{font-size:10px;font-weight:800;color:var(--primary);margin-top:4px;}
+.notification-bulk-actions{display:flex;gap:6px;flex:0 0 auto;}
+.notif-bulk-btn{border:1px solid var(--glass-border);background:var(--glass-card);color:var(--text-main);border-radius:9px;padding:6px 8px;font-size:9px;font-weight:800;cursor:pointer;}
+.notif-bulk-btn.muted{color:var(--text-soft);}
+.notification-accordion-trigger{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid var(--glass-border);background:var(--glass-card);color:var(--text-main);border-radius:11px;padding:10px 11px;font-size:10px;font-weight:800;cursor:pointer;}
+.notification-trigger-meta{display:inline-flex;align-items:center;gap:8px;color:var(--text-soft);font-size:9px;}
+.notification-trigger-dot{width:7px;height:7px;display:inline-block;border-radius:50%;background:var(--primary);margin-right:5px;}
+.notification-accordion-panel{margin-top:7px;padding:0 10px;border:1px solid var(--glass-border);border-radius:11px;background:var(--input-bg);}
+.notification-accordion-panel[hidden]{display:none;}
+body.dark .notification-accordion-trigger,body.dark .notif-bulk-btn{background:rgba(15,23,42,.55);color:#f8fafc;}
+body.dark .notification-accordion-panel{background:rgba(15,23,42,.38);}
 </style>
 <style>
 #report-stats span{border:1px solid var(--glass-border);}
@@ -4013,20 +4027,59 @@ body.dark .balance-card .bf-item { color: rgba(255,255,255,.92) !important; }
             <button id="drive-migrate-btn" class="btn btn-ghost" style="width:100%; margin-top:8px; padding:8px; font-size:10px;" onclick="migrateAllAttachmentsToDrive()">☁️ Migrasikan lampiran lama ke Drive</button>
             <div id="drive-migration-status" class="field-hint" style="margin-top:6px;">Belum dicek.</div>
           </div>
-          <div class="settings-section">
+          <div class="settings-section notification-settings-card">
             <div class="settings-label">Notifikasi</div>
-            <div class="field-hint" style="margin:-3px 0 8px;">Pilih jenis notifikasi yang ingin diterima di Beranda.</div>
-            <div class="notif-setting-row">
-              <div><div class="notif-setting-title">Tugas</div><div class="notif-setting-desc">Tugas baru dan perubahan tugas</div></div>
-              <label class="notif-switch"><input type="checkbox" id="notif-pref-tugas" onchange="setNotificationPreference('tugas', this.checked)"><span></span></label>
+            <div class="notification-settings-head">
+              <div>
+                <div class="field-hint" style="margin:-2px 0 0;">Atur notifikasi kelas tanpa memenuhi halaman.</div>
+                <div class="notification-settings-summary" id="notif-pref-summary">9 dari 9 aktif</div>
+              </div>
+              <div class="notification-bulk-actions">
+                <button class="notif-bulk-btn" type="button" onclick="setAllNotificationPreferences(true)">Semua ON</button>
+                <button class="notif-bulk-btn muted" type="button" onclick="setAllNotificationPreferences(false)">Semua OFF</button>
+              </div>
             </div>
-            <div class="notif-setting-row">
-              <div><div class="notif-setting-title">Pengumuman</div><div class="notif-setting-desc">Pengumuman baru dan perubahan pengumuman</div></div>
-              <label class="notif-switch"><input type="checkbox" id="notif-pref-pengumuman" onchange="setNotificationPreference('pengumuman', this.checked)"><span></span></label>
-            </div>
-            <div class="notif-setting-row">
-              <div><div class="notif-setting-title">Piket</div><div class="notif-setting-desc">Perubahan jadwal piket kelas</div></div>
-              <label class="notif-switch"><input type="checkbox" id="notif-pref-piket" onchange="setNotificationPreference('piket', this.checked)"><span></span></label>
+            <button class="notification-accordion-trigger" type="button" aria-expanded="false" onclick="toggleNotificationSettings()">
+              <span><span class="notification-trigger-dot"></span> Pengaturan per kategori</span>
+              <span class="notification-trigger-meta"><span id="notif-pref-trigger-count">9/9 aktif</span><span id="notif-pref-chevron">⌄</span></span>
+            </button>
+            <div class="notification-accordion-panel" id="notification-settings-panel" hidden>
+              <div class="notif-setting-row">
+                <div><div class="notif-setting-title">Tugas</div><div class="notif-setting-desc">Tugas baru dan perubahan tugas</div></div>
+                <label class="notif-switch"><input type="checkbox" id="notif-pref-tugas" onchange="setNotificationPreference('tugas', this.checked)"><span></span></label>
+              </div>
+              <div class="notif-setting-row">
+                <div><div class="notif-setting-title">Pengumuman</div><div class="notif-setting-desc">Pengumuman baru dan perubahan pengumuman</div></div>
+                <label class="notif-switch"><input type="checkbox" id="notif-pref-pengumuman" onchange="setNotificationPreference('pengumuman', this.checked)"><span></span></label>
+              </div>
+              <div class="notif-setting-row">
+                <div><div class="notif-setting-title">Piket</div><div class="notif-setting-desc">Perubahan jadwal piket kelas</div></div>
+                <label class="notif-switch"><input type="checkbox" id="notif-pref-piket" onchange="setNotificationPreference('piket', this.checked)"><span></span></label>
+              </div>
+              <div class="notif-setting-row">
+                <div><div class="notif-setting-title">Kas</div><div class="notif-setting-desc">Pemasukan, pengeluaran, dan perubahan saldo</div></div>
+                <label class="notif-switch"><input type="checkbox" id="notif-pref-kas" onchange="setNotificationPreference('kas', this.checked)"><span></span></label>
+              </div>
+              <div class="notif-setting-row">
+                <div><div class="notif-setting-title">Laporan</div><div class="notif-setting-desc">Perubahan status dan tanggapan laporan</div></div>
+                <label class="notif-switch"><input type="checkbox" id="notif-pref-laporan" onchange="setNotificationPreference('laporan', this.checked)"><span></span></label>
+              </div>
+              <div class="notif-setting-row">
+                <div><div class="notif-setting-title">Jadwal Kelas</div><div class="notif-setting-desc">Jadwal pelajaran baru dan perubahan jadwal</div></div>
+                <label class="notif-switch"><input type="checkbox" id="notif-pref-jadwal" onchange="setNotificationPreference('jadwal', this.checked)"><span></span></label>
+              </div>
+              <div class="notif-setting-row">
+                <div><div class="notif-setting-title">Titip HP</div><div class="notif-setting-desc">Pembaruan status penitipan HP</div></div>
+                <label class="notif-switch"><input type="checkbox" id="notif-pref-hp" onchange="setNotificationPreference('hp', this.checked)"><span></span></label>
+              </div>
+              <div class="notif-setting-row">
+                <div><div class="notif-setting-title">Aktivitas</div><div class="notif-setting-desc">Pembaruan aktivitas penting di kelas</div></div>
+                <label class="notif-switch"><input type="checkbox" id="notif-pref-aktivitas" onchange="setNotificationPreference('aktivitas', this.checked)"><span></span></label>
+              </div>
+              <div class="notif-setting-row">
+                <div><div class="notif-setting-title">Sistem</div><div class="notif-setting-desc">Pesan penting dari sistem Kelasku</div></div>
+                <label class="notif-switch"><input type="checkbox" id="notif-pref-sistem" onchange="setNotificationPreference('sistem', this.checked)"><span></span></label>
+              </div>
             </div>
           </div>
           <div class="settings-section">
@@ -5558,20 +5611,69 @@ function addActivity(action,detail){
     state.activityLog=state.activityLog.slice(0,100);
 }
 function notificationPreferenceKey(){ return 'kelasku_notification_prefs_' + (currentUser && currentUser.uid ? currentUser.uid : 'guest'); }
+const NOTIFICATION_CATEGORIES=[
+    ['tugas','Tugas'],['pengumuman','Pengumuman'],['piket','Piket'],['kas','Kas'],['laporan','Laporan'],
+    ['jadwal','Jadwal Kelas'],['hp','Titip HP'],['aktivitas','Aktivitas'],['sistem','Sistem']
+];
 function getNotificationPreferences(){
-    const defaults={tugas:true,pengumuman:true,piket:true};
-    try{ const raw=localStorage.getItem(notificationPreferenceKey()); if(!raw)return defaults; const p=JSON.parse(raw); return {tugas:p.tugas!==false,pengumuman:p.pengumuman!==false,piket:p.piket!==false}; }catch(_){ return defaults; }
+    const defaults={tugas:true,pengumuman:true,piket:true,kas:true,laporan:true,jadwal:true,hp:true,aktivitas:true,sistem:true};
+    try{
+        const raw=localStorage.getItem(notificationPreferenceKey());
+        if(!raw)return defaults;
+        const p=JSON.parse(raw)||{};
+        const merged={...defaults};
+        Object.keys(merged).forEach(k=>{ merged[k]=p[k]!==false; });
+        return merged;
+    }catch(_){ return defaults; }
 }
 function saveNotificationPreferences(prefs){ try{ localStorage.setItem(notificationPreferenceKey(),JSON.stringify(prefs)); }catch(_){} }
 function setNotificationPreference(kind,enabled){
     const prefs=getNotificationPreferences(); if(!Object.prototype.hasOwnProperty.call(prefs,kind))return;
     prefs[kind]=!!enabled; saveNotificationPreferences(prefs); renderNotificationPreferenceInputs();
 }
+function setAllNotificationPreferences(enabled){
+    const prefs=getNotificationPreferences();
+    Object.keys(prefs).forEach(k=>prefs[k]=!!enabled);
+    saveNotificationPreferences(prefs);
+    renderNotificationPreferenceInputs();
+}
+function toggleNotificationSettings(){
+    const panel=document.getElementById('notification-settings-panel');
+    const trigger=document.querySelector('.notification-accordion-trigger');
+    if(!panel||!trigger)return;
+    const open=!panel.hidden;
+    panel.hidden=open;
+    trigger.setAttribute('aria-expanded',String(!open));
+    const chevron=document.getElementById('notif-pref-chevron');
+    if(chevron)chevron.textContent=open?'⌄':'⌃';
+}
 function renderNotificationPreferenceInputs(){
     const prefs=getNotificationPreferences();
-    ['tugas','pengumuman','piket'].forEach(k=>{const el=document.getElementById('notif-pref-'+k);if(el)el.checked=prefs[k]!==false;});
+    let active=0;
+    NOTIFICATION_CATEGORIES.forEach(([k])=>{
+        const el=document.getElementById('notif-pref-'+k);
+        if(prefs[k]!==false)active++;
+        if(el)el.checked=prefs[k]!==false;
+    });
+    const total=NOTIFICATION_CATEGORIES.length;
+    const summary=document.getElementById('notif-pref-summary');
+    const triggerCount=document.getElementById('notif-pref-trigger-count');
+    if(summary)summary.textContent=active+' dari '+total+' aktif';
+    if(triggerCount)triggerCount.textContent=active+'/'+total+' aktif';
 }
-function notificationCategory(title){ const t=String(title||'').toLowerCase(); if(t.includes('tugas'))return 'tugas'; if(t.includes('pengumuman'))return 'pengumuman'; if(t.includes('piket'))return 'piket'; return null; }
+function notificationCategory(title){
+    const t=String(title||'').toLowerCase();
+    if(t.includes('tugas'))return 'tugas';
+    if(t.includes('pengumuman'))return 'pengumuman';
+    if(t.includes('piket'))return 'piket';
+    if(t.includes('kas')||t.includes('saldo')||t.includes('pemasukan')||t.includes('pengeluaran'))return 'kas';
+    if(t.includes('laporan'))return 'laporan';
+    if(t.includes('jadwal'))return 'jadwal';
+    if(t.includes('titip hp')||t.includes('titip')||t.includes('hp'))return 'hp';
+    if(t.includes('aktivitas'))return 'aktivitas';
+    if(t.includes('sistem')||t.includes('kelasku'))return 'sistem';
+    return null;
+}
 function addNotification(title,text,target){
     ensureAppFeatures();
     const category=notificationCategory(title);
