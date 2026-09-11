@@ -6080,13 +6080,72 @@ function removeStudent(name) {
     for (let day in state.piketJadwal) { state.piketJadwal[day] = (state.piketJadwal[day] || []).filter(s => s !== name); }
     saveState(); renderHp(); renderPiket(); renderBeranda();
 }
-function openStudentModal() { document.getElementById('student-nama').value = ''; openModal('student'); }
+let _editingStudentName = null;
+function openStudentModal() {
+    if (guardReadOnly()) return;
+    _editingStudentName = null;
+    const title = document.querySelector('#modal-student h3');
+    const button = document.querySelector('#modal-student .modal-actions .btn-primary');
+    document.getElementById('student-nama').value = '';
+    if(title) title.textContent = 'Tambah Siswa';
+    if(button) button.textContent = 'Tambah';
+    openModal('student');
+}
+function openStudentEditModal(oldName) {
+    if (!isAdmin()) return;
+    const current = String(oldName || '').trim();
+    if (!current) return;
+    _editingStudentName = current;
+    const title = document.querySelector('#modal-student h3');
+    const button = document.querySelector('#modal-student .modal-actions .btn-primary');
+    const input = document.getElementById('student-nama');
+    if(input) input.value = current;
+    if(title) title.textContent = 'Edit Nama Siswa';
+    if(button) button.textContent = 'Simpan';
+    openModal('student');
+}
 function submitStudent() {
     if (guardReadOnly()) return;
-    const nama = document.getElementById('student-nama').value.trim();
-    if (!nama) return;
+    const nama = document.getElementById('student-nama').value.trim().replace(/\s+/g, ' ');
+    if (!nama) { showNotification('Nama siswa wajib diisi.', 'warning'); return; }
+    if (nama.length > 80) { showNotification('Nama siswa maksimal 80 karakter.', 'warning'); return; }
+    const duplicate = (state.students || []).some(s => s.toLowerCase() === nama.toLowerCase() && s !== _editingStudentName);
+    if (duplicate) { showNotification('Nama siswa sudah ada.', 'warning'); return; }
+
+    if (_editingStudentName) {
+        const oldName = _editingStudentName;
+        const idx = state.students.indexOf(oldName);
+        if (idx < 0) { _editingStudentName = null; closeModal('student'); return; }
+        state.students[idx] = nama;
+
+        // Pindahkan status Titip HP/Piket dari nama lama ke nama baru.
+        [state.hp, state.piket].forEach(dict => {
+            if (!dict || typeof dict !== 'object') return;
+            Object.keys(dict).forEach(dateKey => {
+                const rec = dict[dateKey];
+                if (!rec || typeof rec !== 'object') return;
+                if (Object.prototype.hasOwnProperty.call(rec, oldName)) {
+                    if (!Object.prototype.hasOwnProperty.call(rec, nama)) rec[nama] = rec[oldName];
+                    delete rec[oldName];
+                }
+            });
+        });
+        if (state.piketJadwal && typeof state.piketJadwal === 'object') {
+            Object.keys(state.piketJadwal).forEach(day => {
+                if (Array.isArray(state.piketJadwal[day])) {
+                    state.piketJadwal[day] = state.piketJadwal[day].map(s => s === oldName ? nama : s);
+                }
+            });
+        }
+        addActivity('Mengubah nama siswa', oldName + ' → ' + nama);
+        _editingStudentName = null;
+        saveState(); renderHp(); renderPiket(); renderBeranda(); closeModal('student');
+        showNotification('Nama siswa berhasil diperbarui.', 'success');
+        return;
+    }
+
     if (!state.students.includes(nama)) { state.students.push(nama); addActivity('Menambahkan siswa', nama); }
-    saveState(); renderHp(); renderPiket(); closeModal('student'); showNotification('Siswa berhasil ditambahkan.', 'success');
+    saveState(); renderHp(); renderPiket(); renderBeranda(); closeModal('student'); showNotification('Siswa berhasil ditambahkan.', 'success');
 }
 function resetRoster(type) {
     if (guardReadOnly()) return;
@@ -8102,15 +8161,40 @@ window.todayKey = todayKey;
   }
 
   function professionalRenderHp(){
-    const date=state.hpSelectedDate||todayKey(); const rec=ensureRecord(state.hp,date); const names=Array.isArray(state.students)?state.students:[]; const collected=names.filter(n=>rosterIsSudah(rec[n])).length;
-    const pe=document.getElementById('hp-collected'), re=document.getElementById('hp-remaining'); if(pe)pe.textContent=collected;if(re)re.textContent=names.length-collected;
+    const date=state.hpSelectedDate||todayKey();
+    const rec=ensureRecord(state.hp,date);
+    const names=Array.isArray(state.students)?state.students:[];
+    const collected=names.filter(n=>rosterIsSudah(rec[n])).length;
+    const pe=document.getElementById('hp-collected'), re=document.getElementById('hp-remaining');
+    if(pe)pe.textContent=collected; if(re)re.textContent=Math.max(0,names.length-collected);
     const list=document.getElementById('hp-list'); if(!list)return;
-    const query=(rosterUI.hp.search||'').trim().toLowerCase(); const filtered=query?names.filter(n=>n.toLowerCase().includes(query)):names;
-    let html=''; filtered.slice(0,36).forEach((n,i)=>{const st=rosterStatusOf(rec[n]); html+=`<div class="hp-slot ${st&&st.status==='sudah'?'':'empty-slot'}"><div class="hp-slot-head"><span>Slot ${i+1}</span><span>${st&&st.status==='sudah'?'Tersimpan':'Kosong'}</span></div><div style="display:flex;gap:9px;align-items:center">${st&&st.status==='sudah'?`<div class="hp-avatar">${esc(n.split(/\s+/).map(x=>x[0]||'').slice(0,2).join('').toUpperCase())}</div><div style="min-width:0"><div class="hp-slot-name">${esc(n)}</div><div class="hp-slot-time">${st.waktu?esc(st.waktu):'Hari ini'}</div></div>`:`<button class="hp-empty-add" onclick="openRosterStatusModal('hp',${JSON.stringify(n).replace(/"/g,'&quot;')})">+ Titip</button>`}</div><span class="hp-slot-status ${st&&st.status==='sudah'?'done':'todo'}">${st&&st.status==='sudah'?'Sudah Titip':'Belum Titip'}</span>${st&&st.status==='sudah'&&isAdmin()?`<label style="position:absolute;right:10px;bottom:9px;font-size:9px"><input type="checkbox" checked onchange="toggleRosterStudent('hp',${JSON.stringify(n).replace(/"/g,'&quot;')},this.checked)"> selesai</label>`:''}</div>`});
+    const query=(rosterUI.hp.search||'').trim().toLowerCase();
+    const filtered=query?names.filter(n=>String(n).toLowerCase().includes(query)):names;
+    let html='';
+    filtered.slice(0,36).forEach((n,i)=>{
+      const st=rosterStatusOf(rec[n]);
+      const safeName=JSON.stringify(String(n)).replace(/"/g,'&quot;');
+      const initials=esc(String(n).split(/\s+/).map(x=>x[0]||'').slice(0,2).join('').toUpperCase());
+      const editButton=isAdmin()?`<button type="button" class="hp-slot-edit admin-only" onclick="event.stopPropagation();openStudentEditModal(${safeName})" aria-label="Edit nama siswa" title="Edit nama">Edit</button>`:'';
+      html+=`<div class="hp-slot ${st&&st.status==='sudah'?'':'empty-slot'}">
+        <div class="hp-slot-head"><span>Slot ${i+1}</span><span>${st&&st.status==='sudah'?'Tersimpan':'Kosong'}</span></div>
+        <div style="display:flex;gap:9px;align-items:center;min-width:0">
+          ${st&&st.status==='sudah'?`<div class="hp-avatar">${initials}</div><div style="min-width:0;flex:1"><button type="button" class="hp-slot-name hp-slot-name-button" ${isAdmin()?`onclick="event.stopPropagation();openStudentEditModal(${safeName})"`:''} title="${isAdmin()?'Klik untuk mengedit nama':''}">${esc(n)}</button><div class="hp-slot-time">${st.waktu?esc(st.waktu):'Hari ini'}</div></div>${editButton}`:`<div style="flex:1"><button class="hp-empty-add" onclick="openRosterStatusModal('hp',${safeName})">+ Titip</button></div>${editButton}`}
+        </div>
+        <span class="hp-slot-status ${st&&st.status==='sudah'?'done':'todo'}">${st&&st.status==='sudah'?'Sudah Titip':'Belum Titip'}</span>
+        ${st&&st.status==='sudah'&&isAdmin()?`<label style="position:absolute;right:10px;bottom:9px;font-size:9px"><input type="checkbox" checked onchange="toggleRosterStudent('hp',${safeName},this.checked)"> selesai</label>`:''}
+      </div>`;
+    });
     list.innerHTML=html||'<div class="empty" style="grid-column:1/-1;padding:32px">Tidak ada siswa yang cocok dengan pencarian.</div>';
     const section=document.getElementById('hp-list')?.closest('.section');
-    if(section && !document.getElementById('hp-pro-summary')){const s=document.createElement('div');s.id='hp-pro-summary';s.className='hp-pro-summary';s.innerHTML='<div class="hp-progress-wrap"><div class="hp-progress-meta"><span id="hp-pro-progress-text">0/0 HP Terkumpul</span><span id="hp-pro-progress-pct">0%</span></div><div class="hp-progress"><span id="hp-pro-progress-bar" style="width:0%"></span></div></div><div style="font-size:10px;color:var(--ui-muted)">Maksimal 36 slot</div>';const sb=section.querySelector('.search-box');if(sb)sb.before(s);else section.prepend(s)}
-    const pct=names.length?Math.round(collected/names.length*100):0; const pt=document.getElementById('hp-pro-progress-text'),pp=document.getElementById('hp-pro-progress-pct'),pb=document.getElementById('hp-pro-progress-bar');if(pt)pt.textContent=`${collected}/${names.length} HP Terkumpul`;if(pp)pp.textContent=pct+'%';if(pb)pb.style.width=pct+'%';
+    if(section && !document.getElementById('hp-pro-summary')){
+      const s=document.createElement('div'); s.id='hp-pro-summary'; s.className='hp-pro-summary';
+      s.innerHTML='<div class="hp-progress-wrap"><div class="hp-progress-meta"><span id="hp-pro-progress-text">0/0 HP Terkumpul</span><span id="hp-pro-progress-pct">0%</span></div><div class="hp-progress"><span id="hp-pro-progress-bar" style="width:0%"></span></div></div><div style="font-size:10px;color:var(--ui-muted)">Maksimal 36 slot</div>';
+      const sb=section.querySelector('.search-box'); if(sb)sb.before(s); else section.prepend(s);
+    }
+    const pct=names.length?Math.round(collected/names.length*100):0;
+    const pt=document.getElementById('hp-pro-progress-text'),pp=document.getElementById('hp-pro-progress-pct'),pb=document.getElementById('hp-pro-progress-bar');
+    if(pt)pt.textContent=`${collected}/${names.length} HP Terkumpul`; if(pp)pp.textContent=pct+'%'; if(pb)pb.style.width=pct+'%';
   }
 
   function professionalRenderJadwalList(){
@@ -8246,6 +8330,19 @@ body.dark #view-jadwal .section-link {
   color:#94a3b8 !important;
   -webkit-text-fill-color:#94a3b8 !important;
 }
+</style>
+
+<style id="hp-student-edit-fix">
+.hp-slot-name-button{
+  border:0; background:transparent; padding:0; margin:0; color:inherit; font:inherit; font-weight:800; text-align:left; cursor:default; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+body:not(.dark) .hp-slot-name-button{color:#0f172a}
+body.dark .hp-slot-name-button{color:#f8fafc}
+body.dark .hp-slot-name-button:hover{text-decoration:underline;text-underline-offset:3px}
+.hp-slot-edit{border:1px solid var(--ui-border,#dbe3ee);background:transparent;color:var(--ui-muted,#64748b);font-size:9px;font-weight:800;padding:4px 7px;border-radius:7px;cursor:pointer;flex:0 0 auto}
+.hp-slot-edit:hover{background:var(--ui-soft-bg,#f8fafc);color:var(--ui-text,#0f172a);border-color:#bfdbfe}
+body.dark .hp-slot-edit{border-color:#334155;color:#94a3b8;background:#111827}
+body.dark .hp-slot-edit:hover{background:#1e293b;color:#f8fafc;border-color:#3b82f6}
 </style>
 </body>
 
