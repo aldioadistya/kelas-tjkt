@@ -4100,6 +4100,22 @@ body.dark .kas-deadline-badge{color:#fbbf24;background:rgba(251,191,36,.10);bord
               </div>
             </div>
           </div>
+          <div class="settings-section notification-rule-editor admin-only">
+            <div class="settings-label">Editor Notifikasi</div>
+            <div class="field-hint" style="margin:-3px 0 10px;">Pilih notifikasi lalu ubah isi pesan, jarak pengulangan, dan batas tampilnya.</div>
+            <select id="notif-rule-category" class="notif-rule-select" onchange="loadNotificationRuleEditor()">
+              <option value="tugas">Tugas</option><option value="pengumuman">Pengumuman</option><option value="piket">Piket</option><option value="kas">Kas</option><option value="laporan">Laporan</option><option value="jadwal">Jadwal Kelas</option><option value="hp">Titip HP</option><option value="aktivitas">Aktivitas</option><option value="sistem">Sistem</option>
+            </select>
+            <label class="notif-rule-field"><span>Judul notifikasi</span><input id="notif-rule-title" maxlength="120" placeholder="Judul notifikasi"></label>
+            <label class="notif-rule-field"><span>Isi notifikasi</span><textarea id="notif-rule-message" maxlength="500" rows="3" placeholder="Isi notifikasi"></textarea></label>
+            <div class="field-hint notif-rule-help">Placeholder: <b>{detail}</b> = isi/detail otomatis · <b>{judul}</b> · <b>{hari}</b> · <b>{tanggal}</b> · <b>{deadline}</b> · <b>{nama}</b></div>
+            <div class="notif-rule-grid">
+              <label class="notif-rule-field"><span>Jarak pengulangan</span><div class="notif-rule-number"><input id="notif-rule-interval" type="number" min="0" max="1440" inputmode="numeric"><b>menit</b></div></label>
+              <label class="notif-rule-field"><span>Maks. pengulangan</span><div class="notif-rule-number"><input id="notif-rule-max" type="number" min="0" max="10" inputmode="numeric"><b>x</b></div></label>
+            </div>
+            <label class="notif-rule-toggle"><input id="notif-rule-enabled" type="checkbox"><span>Aktifkan notifikasi kategori ini</span></label>
+            <button class="btn btn-primary btn-block" type="button" onclick="saveNotificationRuleEditor()">Simpan pengaturan notifikasi</button>
+          </div>
           <div class="settings-section">
             <div class="settings-label">Backup &amp; Pemulihan</div>
             <div style="display:flex; gap:8px;">
@@ -4282,7 +4298,18 @@ let state = {
     activityLog: [],
     notificationSettings: {
         enabled: {tugas:true,pengumuman:true,piket:true,kas:true,laporan:true,jadwal:true,hp:true,aktivitas:true,sistem:true},
-        kas: {days:[3,2,1,0], intervalHours:2, maxPerPeriod:2}
+        kas: {days:[3,2,1,0], intervalHours:2, maxPerPeriod:2},
+        rules: {
+            tugas: {enabled:true,title:'Tugas baru',message:'Ada tugas baru: {detail}',intervalMinutes:0,maxRepeats:0},
+            pengumuman: {enabled:true,title:'Pengumuman baru',message:'Ada pengumuman: {detail}',intervalMinutes:0,maxRepeats:0},
+            piket: {enabled:true,title:'Jadwal piket',message:'Jadwal piket diperbarui: {detail}',intervalMinutes:0,maxRepeats:0},
+            kas: {enabled:true,title:'Tagihan kas',message:'Pengingat kas: {detail}',intervalMinutes:120,maxRepeats:2},
+            laporan: {enabled:true,title:'Laporan diperbarui',message:'Status laporan: {detail}',intervalMinutes:0,maxRepeats:0},
+            jadwal: {enabled:true,title:'Jadwal kelas',message:'Jadwal kelas diperbarui: {detail}',intervalMinutes:0,maxRepeats:0},
+            hp: {enabled:true,title:'Titip HP',message:'Pembaruan titip HP: {detail}',intervalMinutes:0,maxRepeats:0},
+            aktivitas: {enabled:true,title:'Aktivitas kelas',message:'Ada aktivitas baru: {detail}',intervalMinutes:0,maxRepeats:0},
+            sistem: {enabled:true,title:'Kelasku',message:'{detail}',intervalMinutes:0,maxRepeats:0}
+        }
     },
     jadwalMode: 'pelajaran',
     selectedDay: 'Senin',
@@ -4401,6 +4428,7 @@ async function loadUserProfile(user) {
             document.getElementById('login-error').style.display = 'block';
             currentUser = null;
             stopKasPaymentReminderScheduler();
+    stopNotificationRepeatScheduler();
     await auth.signOut();
             return;
         }
@@ -4456,6 +4484,7 @@ async function loadUserProfile(user) {
         try {
             watchLiveSync();
     startKasPaymentReminderScheduler();
+    startNotificationRepeatScheduler();
         } catch (syncError) {
             console.warn('Live sync startup skipped:', syncError);
         }
@@ -4490,7 +4519,8 @@ const PUBLIC_STATE_KEYS = [
     'tugas',
     'jadwal',
     'pengumuman',
-    'notifications'
+    'notifications',
+    'notificationSettings'
 ];
 
 const ADMIN_STATE_KEYS = [
@@ -5620,6 +5650,27 @@ function ensureAppFeatures(){
     if(!state.notificationSettings.kas.days.length)state.notificationSettings.kas.days=[0];
     state.notificationSettings.kas.intervalHours=Math.max(1,Math.min(24,Number(state.notificationSettings.kas.intervalHours)||2));
     state.notificationSettings.kas.maxPerPeriod=Math.max(1,Math.min(10,Number(state.notificationSettings.kas.maxPerPeriod)||2));
+    const notifRuleDefaults = {
+        tugas:{enabled:true,title:'Tugas baru',message:'Ada tugas baru: {detail}',intervalMinutes:0,maxRepeats:0},
+        pengumuman:{enabled:true,title:'Pengumuman baru',message:'Ada pengumuman: {detail}',intervalMinutes:0,maxRepeats:0},
+        piket:{enabled:true,title:'Jadwal piket',message:'Jadwal piket diperbarui: {detail}',intervalMinutes:0,maxRepeats:0},
+        kas:{enabled:true,title:'Tagihan kas',message:'Pengingat kas: {detail}',intervalMinutes:120,maxRepeats:2},
+        laporan:{enabled:true,title:'Laporan diperbarui',message:'Status laporan: {detail}',intervalMinutes:0,maxRepeats:0},
+        jadwal:{enabled:true,title:'Jadwal kelas',message:'Jadwal kelas diperbarui: {detail}',intervalMinutes:0,maxRepeats:0},
+        hp:{enabled:true,title:'Titip HP',message:'Pembaruan titip HP: {detail}',intervalMinutes:0,maxRepeats:0},
+        aktivitas:{enabled:true,title:'Aktivitas kelas',message:'Ada aktivitas baru: {detail}',intervalMinutes:0,maxRepeats:0},
+        sistem:{enabled:true,title:'Kelasku',message:'{detail}',intervalMinutes:0,maxRepeats:0}
+    };
+    state.notificationSettings.rules={...(state.notificationSettings.rules||{})};
+    Object.keys(notifRuleDefaults).forEach(k=>{
+        state.notificationSettings.rules[k]={...notifRuleDefaults[k],...(state.notificationSettings.rules[k]||{})};
+        const r=state.notificationSettings.rules[k];
+        r.enabled=r.enabled!==false;
+        r.title=String(r.title||notifRuleDefaults[k].title).slice(0,120);
+        r.message=String(r.message||notifRuleDefaults[k].message).slice(0,500);
+        r.intervalMinutes=Math.max(0,Math.min(1440,Number(r.intervalMinutes)||0));
+        r.maxRepeats=Math.max(0,Math.min(10,Number(r.maxRepeats)||0));
+    });
     if(!Array.isArray(state.kasFolders))state.kasFolders=[];
     state.kasFolders.forEach(folder=>{
         if(!folder.id)folder.id=Date.now()+Math.random();
@@ -5701,6 +5752,7 @@ function renderNotificationPreferenceInputs(){
     const iv=document.getElementById('notif-kas-interval');if(iv)iv.value=String(k.intervalHours);
     const mx=document.getElementById('notif-kas-max');if(mx)mx.value=String(k.maxPerPeriod);
     const ks=document.getElementById('notif-kas-summary');if(ks)ks.textContent=(k.days||[]).map(d=>d===0?'hari H':d+' hari sebelum').join(' • ')+' · '+k.maxPerPeriod+'x · '+k.intervalHours+' jam';
+    if(document.getElementById('notif-rule-category')) loadNotificationRuleEditor();
 }
 function notificationCategory(title){
     const t=String(title||'').toLowerCase();
@@ -5715,13 +5767,106 @@ function notificationCategory(title){
     if(t.includes('sistem')||t.includes('kelasku'))return 'sistem';
     return null;
 }
-function addNotification(title,text,target){
+function loadNotificationRuleEditor(){
+    if(!isAdmin())return;
     ensureAppFeatures();
-    const category=notificationCategory(title);
-    if(category && getNotificationPreferences()[category]===false) return null;
-    const n={id:Date.now()+Math.random(),at:Date.now(),title:String(title||'').slice(0,200),text:String(text||'').slice(0,1000),category,targetUid:target&&target.uid?target.uid:null,targetRole:target&&target.role?target.role:null,readBy:[],createdByUid:currentUser?currentUser.uid:null};
-    state.notifications.unshift(n); state.notifications=state.notifications.slice(0,100); return n;
+    const sel=document.getElementById('notif-rule-category'); const key=sel?sel.value:'tugas';
+    const r=state.notificationSettings.rules[key]; if(!r)return;
+    const t=document.getElementById('notif-rule-title'); const m=document.getElementById('notif-rule-message'); const i=document.getElementById('notif-rule-interval'); const x=document.getElementById('notif-rule-max'); const e=document.getElementById('notif-rule-enabled');
+    if(t)t.value=r.title||''; if(m)m.value=r.message||''; if(i)i.value=String(r.intervalMinutes||0); if(x)x.value=String(r.maxRepeats||0); if(e)e.checked=r.enabled!==false;
 }
+async function saveNotificationRuleEditor(){
+    if(!isAdmin())return;
+    ensureAppFeatures();
+    const key=(document.getElementById('notif-rule-category')||{}).value||'tugas';
+    const r=state.notificationSettings.rules[key]||{};
+    r.title=String(document.getElementById('notif-rule-title')?.value||'').trim().slice(0,120)||'Notifikasi';
+    r.message=String(document.getElementById('notif-rule-message')?.value||'').trim().slice(0,500)||'{detail}';
+    r.intervalMinutes=Math.max(0,Math.min(1440,Number(document.getElementById('notif-rule-interval')?.value)||0));
+    r.maxRepeats=Math.max(0,Math.min(10,Number(document.getElementById('notif-rule-max')?.value)||0));
+    r.enabled=!!document.getElementById('notif-rule-enabled')?.checked;
+    state.notificationSettings.rules[key]=r;
+    await saveState();
+    renderNotificationPreferenceInputs();
+    loadNotificationRuleEditor();
+    showNotification('Pengaturan notifikasi '+(NOTIFICATION_CATEGORIES.find(x=>x[0]===key)||['',key])[1]+' berhasil disimpan.','success');
+}
+function notificationRuleFor(category){
+    ensureAppFeatures();
+    return state.notificationSettings.rules && state.notificationSettings.rules[category] ? state.notificationSettings.rules[category] : null;
+}
+function applyNotificationTemplate(template, ctx){
+    let out=String(template||'');
+    const map={
+        detail:String(ctx.detail||''),
+        judul:String(ctx.judul||ctx.detail||''),
+        nama:String(ctx.nama||''),
+        hari:String(ctx.hari||''),
+        tanggal:String(ctx.tanggal||''),
+        deadline:String(ctx.deadline||''),
+        jenis:String(ctx.jenisLabel||'')
+    };
+    Object.keys(map).forEach(k=>{out=out.split('{'+k+'}').join(map[k]);});
+    return out.trim();
+}
+function notificationContext(category,title,text,meta){
+    const m=meta||{};
+    return {detail:m.detail!=null?m.detail:String(text||''),judul:m.judul||'',nama:m.nama||'',hari:m.hari||'',tanggal:m.tanggal||'',deadline:m.deadline||'',jenisLabel:(NOTIFICATION_CATEGORIES.find(x=>x[0]===category)||['',category])[1]};
+}
+function addNotification(title,text,target,meta){
+    ensureAppFeatures();
+    const rawTitle=String(title||'').slice(0,200);
+    const category=notificationCategory(rawTitle);
+    const prefs=getNotificationPreferences();
+    if(category && prefs[category]===false) return null;
+    const rule=notificationRuleFor(category);
+    if(category && rule && rule.enabled===false) return null;
+    const ctx=notificationContext(category,rawTitle,text,meta);
+    const finalTitle=category&&rule?applyNotificationTemplate(rule.title,ctx)||rawTitle:rawTitle;
+    const finalText=category&&rule?applyNotificationTemplate(rule.message,ctx)||String(text||''):String(text||'');
+    const n={id:Date.now()+Math.random(),at:Date.now(),title:finalTitle.slice(0,200),text:finalText.slice(0,1000),category,targetUid:target&&target.uid?target.uid:null,targetRole:target&&target.role?target.role:null,readBy:[],createdByUid:currentUser?currentUser.uid:null,repeatIntervalMinutes:category&&rule?Number(rule.intervalMinutes)||0:0,maxRepeats:category&&rule?Number(rule.maxRepeats)||0:0};
+    state.notifications.unshift(n); state.notifications=state.notifications.slice(0,100);
+    return n;
+}
+function notificationRepeatStorage(){
+    const key='kelasku-notif-repeat-'+(currentUser?currentUser.uid:'guest');
+    try{return {key,data:JSON.parse(localStorage.getItem(key)||'{}')||{}};}catch(_){return {key,data:{}};}
+}
+function saveNotificationRepeatStorage(store){try{localStorage.setItem(store.key,JSON.stringify(store.data));}catch(_) {}}
+function runNotificationRepeatScheduler(){
+    if(!currentUser)return;
+    const store=notificationRepeatStorage();
+    const now=Date.now(); let changed=false;
+    (state.notifications||[]).forEach(src=>{
+        if(!src||!src.id||Number(src.repeatIntervalMinutes||0)<=0||Number(src.maxRepeats||0)<=0)return;
+        if(!notificationForMe(src))return;
+        // Never recursively repeat a repeat notification.
+        if(src.repeatOf)return;
+        const key=String(src.id);
+        const rec=store.data[key]||{count:0,lastAt:Number(src.at)||now};
+        const elapsed=now-Number(rec.lastAt||src.at||now);
+        const interval=Math.max(1,Number(src.repeatIntervalMinutes)||0)*60*1000;
+        if(rec.count>=Number(src.maxRepeats||0) || elapsed<interval)return;
+        const repeat={...src,id:Date.now()+Math.random(),at:now,readBy:[],repeatOf:src.id,repeatIndex:rec.count+1};
+        repeat.title=src.title;
+        repeat.text=src.repeatIndex!=null ? src.text : (src.text + ' • Pengingat ke-'+(rec.count+1));
+        state.notifications.unshift(repeat);
+        state.notifications=state.notifications.slice(0,100);
+        rec.count++; rec.lastAt=now; store.data[key]=rec; changed=true;
+    });
+    // Clean stale repeat counters.
+    Object.keys(store.data).forEach(k=>{if(!(state.notifications||[]).some(n=>String(n.id)===k || String(n.repeatOf)===k))delete store.data[k];});
+    if(changed){saveNotificationRepeatStorage(store);renderNotifications();}
+}
+function startNotificationRepeatScheduler(){
+    if(window.__kelaskuNotificationRepeatTimer)clearInterval(window.__kelaskuNotificationRepeatTimer);
+    runNotificationRepeatScheduler();
+    window.__kelaskuNotificationRepeatTimer=setInterval(runNotificationRepeatScheduler,60000);
+}
+function stopNotificationRepeatScheduler(){
+    if(window.__kelaskuNotificationRepeatTimer){clearInterval(window.__kelaskuNotificationRepeatTimer);window.__kelaskuNotificationRepeatTimer=null;}
+}
+
 function notificationForMe(n){
     if(!currentUser)return false;
     return (!n.targetUid&&!n.targetRole)
@@ -6665,13 +6810,15 @@ function notifyChangedPiketSchedules(before, after) {
             addNotification(
                 'Jadwal piket diperbarui',
                 `Piket ${day}: ${preview}${more}.`,
-                {role:'siswa'}
+                {role:'siswa'},
+                {hari:day,detail:`Piket ${day}: ${preview}${more}.`}
             );
         } else {
             addNotification(
                 'Jadwal piket dihapus',
                 `Jadwal piket hari ${day} sekarang kosong.`,
-                {role:'siswa'}
+                {role:'siswa'},
+                {hari:day,detail:`Jadwal piket hari ${day} sekarang kosong.`}
             );
         }
     });
@@ -6798,12 +6945,12 @@ function submitJadwal() {
         for (let day in state.jadwal) { state.jadwal[day] = state.jadwal[day].filter(j => j.id !== Number(editId)); }
         state.jadwal[hari].push({ id: Number(editId), jam: mulai+'-'+selesai, mapel, guru });
         addActivity('Mengubah jadwal', mapel + ' · ' + hari + ' ' + mulai + '-' + selesai);
-        addNotification('Jadwal diperbarui', mapel + ' · ' + hari + ' ' + mulai + '-' + selesai, {role:'siswa'});
+        addNotification('Jadwal diperbarui', mapel + ' · ' + hari + ' ' + mulai + '-' + selesai, {role:'siswa'}, {hari,detail:mapel + ' · ' + hari + ' ' + mulai + '-' + selesai});
         saveState(); renderJadwalList(); renderBeranda(); closeModal('jadwal'); showNotification('Jadwal berhasil diperbarui.', 'success'); return;
     }
     state.jadwal[hari].push({ id: Date.now(), jam: mulai+'-'+selesai, mapel, guru });
     addActivity('Menambahkan jadwal', mapel + ' · ' + hari + ' ' + mulai + '-' + selesai);
-    addNotification('Jadwal baru', mapel + ' · ' + hari + ' ' + mulai + '-' + selesai, {role:'siswa'});
+    addNotification('Jadwal baru', mapel + ' · ' + hari + ' ' + mulai + '-' + selesai, {role:'siswa'}, {hari,detail:mapel + ' · ' + hari + ' ' + mulai + '-' + selesai});
     saveState(); renderJadwalList(); renderBeranda(); closeModal('jadwal'); showNotification('Jadwal berhasil ditambahkan.', 'success');
 }
 function deleteJadwalCurrent() {
@@ -7245,13 +7392,13 @@ async function submitTugas() {
             delete t.file; delete t.fileData;
         }
         addActivity('Mengubah tugas', t ? t.nama : 'Tugas');
-        addNotification('Tugas diperbarui', 'Tugas ' + (t ? t.nama : '') + ' telah diperbarui.', {role:'siswa'});
+        addNotification('Tugas diperbarui', 'Tugas ' + (t ? t.nama : '') + ' telah diperbarui.', {role:'siswa'}, {nama:t?t.nama:'',judul:t?t.nama:'',deadline:t?t.tenggat:'',detail:'Tugas ' + (t ? t.nama : '') + ' telah diperbarui.'});
         await saveState(); renderTugas(); renderBeranda(); closeModal('tugas'); showNotification('Tugas berhasil diperbarui.', 'success'); return;
     }
     state.tugas.push({ id: Date.now(), nama, mapel, tenggat, deskripsi, files, selesai: false });
     document.getElementById('tugas-deskripsi').value = '';
     addActivity('Menambahkan tugas', nama);
-    addNotification('Tugas baru', 'Tugas baru: ' + nama + (tenggat ? ' · Deadline ' + tenggat : ''), {role:'siswa'});
+    addNotification('Tugas baru', 'Tugas baru: ' + nama + (tenggat ? ' · Deadline ' + tenggat : ''), {role:'siswa'}, {nama,judul:nama,deadline:tenggat,detail:'Tugas baru: ' + nama + (tenggat ? ' · Deadline ' + tenggat : '')});
     await saveState(); renderTugas(); renderBeranda(); closeModal('tugas'); showNotification('Tugas berhasil ditambahkan.', 'success');
 }
 function deleteTugasCurrent() {
@@ -7849,7 +7996,7 @@ async function submitPengumuman() {
         delete p.file;
         delete p.fileData;
         addActivity('Mengubah pengumuman', judul);
-        addNotification('Pengumuman diperbarui', judul + (deadline ? ' · Deadline ' + deadline : ''), {role:'siswa'});
+        addNotification('Pengumuman diperbarui', judul + (deadline ? ' · Deadline ' + deadline : ''), {role:'siswa'}, {judul,deadline,detail:judul + (deadline ? ' · Deadline ' + deadline : '')});
         await saveState();
         renderPengumuman();
         closeModal('pengumuman');
@@ -7868,7 +8015,7 @@ async function submitPengumuman() {
         files
     });
     addActivity('Menerbitkan pengumuman', judul);
-    addNotification('Pengumuman baru', judul + (deadline ? ' · Deadline ' + deadline : ''), {role:'siswa'});
+    addNotification('Pengumuman baru', judul + (deadline ? ' · Deadline ' + deadline : ''), {role:'siswa'}, {judul,deadline,detail:judul + (deadline ? ' · Deadline ' + deadline : '')});
     await saveState();
     renderPengumuman();
     closeModal('pengumuman');
@@ -8542,6 +8689,8 @@ window.toggleKasNotificationDay = toggleKasNotificationDay;
 window.openAdminNotificationMenu = openAdminNotificationMenu;
 window.runKasPaymentReminders = runKasPaymentReminders;
 window.renderNotificationPreferenceInputs = renderNotificationPreferenceInputs;
+window.loadNotificationRuleEditor = loadNotificationRuleEditor;
+window.saveNotificationRuleEditor = saveNotificationRuleEditor;
 window.openPengumumanModal = openPengumumanModal;
 window.submitPengumuman = submitPengumuman;
 window.onPengumumanFileSelected = onPengumumanFileSelected;
@@ -9459,4 +9608,18 @@ body.dark #view-laporan td { color:#f8fafc !important; border-color:#334155 !imp
 .notif-number-grid input{width:72px;border:1px solid var(--glass-border);background:var(--input-bg);color:var(--text-main);border-radius:8px;padding:7px 8px;font-weight:800}
 .notif-number-grid b{font-size:9px;color:var(--text-soft)}
 body.dark .notif-kas-controls{background:rgba(129,140,248,.08)}
+
+/* v25 notification rule editor */
+.notif-rule-select,.notif-rule-field input,.notif-rule-field textarea{width:100%;border:1px solid var(--glass-border);background:var(--input-bg);color:var(--text-main);border-radius:12px;padding:10px 12px;font-size:12px;outline:none;}
+.notif-rule-select{margin-bottom:10px;font-weight:700;}
+.notif-rule-field{display:block;margin:8px 0;}
+.notif-rule-field>span{display:block;font-size:10px;color:var(--text-soft);font-weight:800;margin-bottom:5px;text-transform:uppercase;letter-spacing:.25px;}
+.notif-rule-field textarea{resize:vertical;line-height:1.45;}
+.notif-rule-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.notif-rule-number{display:flex;align-items:center;gap:6px;}
+.notif-rule-number input{flex:1;min-width:0;}
+.notif-rule-number b{font-size:10px;color:var(--text-soft);} 
+.notif-rule-help{margin:7px 0 10px;line-height:1.5;}
+.notif-rule-toggle{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;color:var(--text-main);margin:10px 0 12px;}
+.notif-rule-toggle input{accent-color:var(--primary);}
 </style>
