@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="id"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/><title>Kelasku — X TJKT 1</title><link href="manifest.json" rel="manifest"/><meta content="yes" name="mobile-web-app-capable"/><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/><meta content="#0F172A" name="theme-color"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Sora:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><style>
 :root {
     --bg-gradient: linear-gradient(135deg, #e0e7ff 0%, #f1f5f9 50%, #fae8ff 100%);
@@ -3953,8 +3954,6 @@ body.dark .kas-deadline-badge{color:#fbbf24;background:rgba(251,191,36,.10);bord
 <div class="card" id="report-list"></div>
 </div>
 </div>
-
-</div>
 <div class="view" id="view-settings">
 <div class="pagehead"><h1>Pengaturan</h1><p>Atur preferensi &amp; akses sistem</p></div>
 <div class="section">
@@ -4031,8 +4030,6 @@ body.dark .kas-deadline-badge{color:#fbbf24;background:rgba(251,191,36,.10);bord
 <button class="btn btn-ghost" id="drive-migrate-btn" onclick="migrateAllAttachmentsToDrive()" style="width:100%; margin-top:8px; padding:8px; font-size:10px;">☁️ Migrasikan lampiran lama ke Drive</button>
 <div class="field-hint" id="drive-migration-status" style="margin-top:6px;">Belum dicek.</div>
 </div>
-
-
 <div class="settings-section">
 <div class="settings-label">Backup &amp; Pemulihan</div>
 <div style="display:flex; gap:8px;">
@@ -4064,7 +4061,8 @@ body.dark .kas-deadline-badge{color:#fbbf24;background:rgba(251,191,36,.10);bord
 </div>
 </div>
 </div>
-</div>
+</div></div>
+
 </div>
 <div class="tabbar">
 <button class="tab active" data-tab="beranda" onclick="goTo('beranda')">
@@ -4115,7 +4113,7 @@ body.dark .kas-deadline-badge{color:#fbbf24;background:rgba(251,191,36,.10);bord
 <button class="btn btn-primary" onclick="confirmReauthentication()" type="button">Verifikasi</button>
 </div>
 </div></div>
-</div>
+
 <script>
 // ============================================================
 // TOAST NOTIFICATION
@@ -9026,7 +9024,6 @@ body.dark #kas-list .tx-item .tx-sub span { color: #93c5fd !important; -webkit-t
 /* Logout control stays above settings surfaces and is always interactive. */
 #view-settings button[onclick="logout()"] { position: relative !important; z-index: 999 !important; pointer-events: auto !important; opacity: 1 !important; visibility: visible !important; }
 </style>
-
 <script id="kas-notif-simple-js">
 (function(){
   const KAS_REMINDER_DAYS=[3,2,1,0];
