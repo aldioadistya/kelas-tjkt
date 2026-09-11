@@ -3956,6 +3956,21 @@ body.dark .kas-deadline-badge{color:#fbbf24;background:rgba(251,191,36,.10);bord
         <div class="card" id="report-list"></div>
       </div>
     </div>
+    <div class="view admin-only-view" id="view-notifikasi">
+      <div class="pagehead"><h1>Notifikasi</h1><p>Kelola semua notifikasi kelas dari satu menu.</p></div>
+      <div class="section">
+        <div class="notification-menu-intro card">
+          <div class="notification-menu-intro-icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 00-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M10 21h4"></path></svg>
+          </div>
+          <div>
+            <div class="notification-menu-intro-title">Pengaturan Notifikasi Kelas</div>
+            <div class="notification-menu-intro-text">Atur isi pesan, waktu pengulangan, jumlah kemunculan, dan aktif/nonaktif setiap jenis notifikasi.</div>
+          </div>
+        </div>
+        <div id="notification-menu-host"></div>
+      </div>
+    </div>
     <div class="view" id="view-settings">
       <div class="pagehead"><h1>Pengaturan</h1><p>Atur preferensi &amp; akses sistem</p></div>
       <div class="section">
@@ -8558,31 +8573,31 @@ function autoOpenKasAndCalendarPanels(name) {
     }
 }
 
+function ensureNotificationMenuView() {
+    const host = document.getElementById('notification-menu-host');
+    if (!host) return;
+    const settingsView = document.getElementById('view-settings');
+    if (!settingsView || !isAdmin()) return;
+    const notificationCard = settingsView.querySelector('.notification-settings-card');
+    const ruleEditor = settingsView.querySelector('.notification-rule-editor');
+    if (notificationCard && notificationCard.parentElement !== host) host.appendChild(notificationCard);
+    if (ruleEditor && ruleEditor.parentElement !== host) host.appendChild(ruleEditor);
+}
+
 function openAdminNotificationMenu() {
     if (typeof isAdmin === 'function' && !isAdmin()) return;
-    goTo('settings');
-    const panel = document.getElementById('notification-settings-panel');
-    const trigger = document.querySelector('.notification-accordion-trigger');
-    if (panel && panel.hidden) {
-        if (typeof toggleNotificationSettings === 'function') {
-            toggleNotificationSettings();
-        } else {
-            panel.hidden = false;
-            if (trigger) trigger.setAttribute('aria-expanded', 'true');
-        }
-    }
-    const card = document.querySelector('.notification-settings-card');
-    if (card) {
-        setTimeout(() => card.scrollIntoView({behavior:'smooth', block:'start'}), 40);
-    }
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    const tab = document.getElementById('bottom-admin-notif-tab');
-    if (tab) tab.classList.add('active');
+    ensureNotificationMenuView();
+    goTo('notifikasi');
+    if (typeof renderNotificationPreferenceInputs === 'function') renderNotificationPreferenceInputs();
+    const card = document.getElementById('view-notifikasi');
+    if (card) card.scrollTop = 0;
 }
 
 function goTo(name) {
+    if (name === 'notifikasi') ensureNotificationMenuView();
     const target = document.getElementById('view-' + name);
     if (!target) return;
+    if (name === 'notifikasi' && typeof isAdmin === 'function' && !isAdmin()) return;
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
     target.classList.add('active');
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -8594,7 +8609,7 @@ function goTo(name) {
     const content = document.querySelector('.content');
     if (content) content.scrollTop = 0;
     if (name === 'settings' && typeof renderAccountList === 'function') renderAccountList();
-        if (name === 'settings' && typeof renderNotificationPreferenceInputs === 'function') renderNotificationPreferenceInputs();
+        if ((name === 'settings' || name === 'notifikasi') && typeof renderNotificationPreferenceInputs === 'function') renderNotificationPreferenceInputs();
     if (name === 'jadwal') {
         const mode = state && state.jadwalMode === 'piket' ? 'piket' : 'pelajaran';
         try {
@@ -8915,7 +8930,7 @@ window.todayKey = todayKey;
   window.renderReports=function(){if(typeof oldRenderReports==='function')oldRenderReports();updateReportUI();};
 
   function boot(){
-    try{ensureKasEnhancements();injectTaskFilters();injectReportUI();injectSettingsNav();}catch(e){console.warn('Module V6 UI init',e)}
+    try{ensureKasEnhancements();injectTaskFilters();injectReportUI();injectSettingsNav();ensureNotificationMenuView();}catch(e){console.warn('Module V6 UI init',e)}
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
@@ -9609,6 +9624,17 @@ body.dark #view-laporan td { color:#f8fafc !important; border-color:#334155 !imp
 .notif-number-grid b{font-size:9px;color:var(--text-soft)}
 body.dark .notif-kas-controls{background:rgba(129,140,248,.08)}
 
+/* Dedicated Notifikasi menu */
+.notification-menu-intro{display:flex;align-items:center;gap:12px;margin-bottom:10px;padding:14px 15px;}
+.notification-menu-intro-icon{width:40px;height:40px;flex:0 0 40px;border-radius:12px;background:var(--violet-glass);color:var(--primary);display:flex;align-items:center;justify-content:center;}
+.notification-menu-intro-icon svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.notification-menu-intro-title{font-family:'Sora',sans-serif;font-size:13px;font-weight:800;color:var(--text-main);}
+.notification-menu-intro-text{margin-top:2px;font-size:10.5px;line-height:1.45;color:var(--text-soft);}
+#view-notifikasi .notification-settings-card,#view-notifikasi .notification-rule-editor{display:block!important;margin-top:10px;}
+#view-notifikasi .notification-settings-card{background:var(--glass-card);}
+#view-notifikasi .notification-rule-editor{background:var(--glass-card);}
+body.dark #view-notifikasi .notification-menu-intro{border-color:rgba(255,255,255,.08);}
+@media(max-width:560px){.notification-menu-intro{align-items:flex-start;padding:12px;}.notification-menu-intro-icon{width:36px;height:36px;flex-basis:36px}.notification-menu-intro-icon svg{width:19px;height:19px;}}
 /* v25 notification rule editor */
 .notif-rule-select,.notif-rule-field input,.notif-rule-field textarea{width:100%;border:1px solid var(--glass-border);background:var(--input-bg);color:var(--text-main);border-radius:12px;padding:10px 12px;font-size:12px;outline:none;}
 .notif-rule-select{margin-bottom:10px;font-weight:700;}
