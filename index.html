@@ -8164,6 +8164,89 @@ window.todayKey = todayKey;
 })();
 </script>
 
+
+<style id="kelasku-jadwal-dark-v8">
+/* Jadwal: dark mode contrast fix */
+body.dark #view-jadwal .mode-switch {
+  background:#111827 !important;
+  border:1px solid #334155 !important;
+  border-radius:12px !important;
+  padding:4px !important;
+  box-shadow:0 4px 14px rgba(0,0,0,.18) !important;
+}
+body.dark #view-jadwal .mode-btn {
+  background:transparent !important;
+  color:#cbd5e1 !important;
+  border:1px solid transparent !important;
+  -webkit-text-fill-color:#cbd5e1 !important;
+  font-weight:700 !important;
+  min-height:38px !important;
+}
+body.dark #view-jadwal .mode-btn.active {
+  background:#2563eb !important;
+  color:#ffffff !important;
+  -webkit-text-fill-color:#ffffff !important;
+  border-color:#3b82f6 !important;
+  box-shadow:0 2px 8px rgba(37,99,235,.28) !important;
+}
+body.dark #view-jadwal .mode-btn:hover:not(.active) {
+  background:#1e293b !important;
+  color:#f8fafc !important;
+  -webkit-text-fill-color:#f8fafc !important;
+}
+body.dark #view-jadwal .day-tabs {
+  background:transparent !important;
+}
+body.dark #view-jadwal .day-chip {
+  background:#111827 !important;
+  color:#cbd5e1 !important;
+  border:1px solid #334155 !important;
+  -webkit-text-fill-color:#cbd5e1 !important;
+  font-weight:700 !important;
+}
+body.dark #view-jadwal .day-chip.active {
+  background:#172554 !important;
+  color:#93c5fd !important;
+  border-color:#3b82f6 !important;
+  -webkit-text-fill-color:#93c5fd !important;
+  box-shadow:inset 0 0 0 1px rgba(59,130,246,.18) !important;
+}
+body.dark #view-jadwal .day-chip:hover:not(.active) {
+  background:#1e293b !important;
+  color:#f8fafc !important;
+  -webkit-text-fill-color:#f8fafc !important;
+}
+body.dark #view-jadwal .fab-add {
+  background:#2563eb !important;
+  color:#ffffff !important;
+  border:1px solid #3b82f6 !important;
+  -webkit-text-fill-color:#ffffff !important;
+  box-shadow:0 4px 12px rgba(37,99,235,.22) !important;
+}
+body.dark #view-jadwal .section > .card#jadwal-list,
+body.dark #view-jadwal #jadwal-mode-piket .section > .card {
+  background:#111827 !important;
+  border-color:#334155 !important;
+}
+/* Do not let generic inline/old styles make dark-mode labels disappear. */
+body.dark #view-jadwal .pagehead h1,
+body.dark #view-jadwal .pagehead p,
+body.dark #view-jadwal .section-title,
+body.dark #view-jadwal .date-label,
+body.dark #view-jadwal .section-link,
+body.dark #view-jadwal .section-head,
+body.dark #view-jadwal .timeline-card,
+body.dark #view-jadwal .timeline-card * {
+  color:#f8fafc !important;
+  -webkit-text-fill-color:#f8fafc !important;
+}
+body.dark #view-jadwal .pagehead p,
+body.dark #view-jadwal .timeline-sub,
+body.dark #view-jadwal .section-link {
+  color:#94a3b8 !important;
+  -webkit-text-fill-color:#94a3b8 !important;
+}
+</style>
 </body>
 
 <!-- Kelasku compatibility patch: resilient Firestore sync + legacy fallback -->
