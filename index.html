@@ -5087,7 +5087,39 @@ async function doForgotPassword() {
         showNotification(authErrorMessage(e.code), 'error');
     }
 }
-function logout() { auth.signOut(); }
+async function logout() {
+    const wasLoggedIn = !!currentUser || !!auth.currentUser;
+    try {
+        // Stop all Firestore listeners first so no late snapshot can repaint
+        // the authenticated UI while the sign-out transition is happening.
+        if (typeof stopSeparatedSync === 'function') stopSeparatedSync();
+        currentUser = null;
+        authReady = false;
+        liveSyncStarted = false;
+        // Show the login screen immediately for a responsive UX.
+        showLogin();
+        const statusEl = document.getElementById('auth-status');
+        if (statusEl) {
+            statusEl.textContent = '⏳ Keluar...';
+            statusEl.style.color = 'var(--text-soft)';
+        }
+        await auth.signOut();
+        const emailEl = document.getElementById('auth-email');
+        const passwordEl = document.getElementById('auth-password');
+        if (emailEl) emailEl.value = '';
+        if (passwordEl) passwordEl.value = '';
+        const errEl = document.getElementById('login-error');
+        if (errEl) errEl.style.display = 'none';
+        if (statusEl) statusEl.textContent = '⏳ Belum login';
+    } catch (e) {
+        console.error('Logout error:', e);
+        // If Firebase could not sign out, return to the authenticated UI.
+        currentUser = auth.currentUser ? currentUser : null;
+        authReady = !!auth.currentUser;
+        if (wasLoggedIn && auth.currentUser) hideLogin();
+        showNotification('Gagal keluar dari akun. Periksa koneksi lalu coba lagi.', 'error', 4500);
+    }
+}
 function isAdmin() { return currentUser && (currentUser.role === 'superadmin' || currentUser.role === 'admin'); }
 function isSuperAdmin() { return currentUser && currentUser.role === 'superadmin'; }
 function isReadOnly() { return !currentUser || currentUser.role === 'siswa'; }
@@ -8465,6 +8497,46 @@ body.dark .hp-edit-status-btn.active{background:#172554;border-color:#3b82f6;col
   text-decoration-thickness: 0 !important;
   text-underline-offset: 0 !important;
   -webkit-text-decoration-line: none !important;
+}
+</style>
+
+<style id="kelasku-v15-final-fixes">
+/* Logout: make the action reliably clickable and visually stable. */
+#view-settings [onclick="logout()"],
+#view-settings button[onclick="logout()"] {
+    position: relative !important;
+    z-index: 20 !important;
+    pointer-events: auto !important;
+    cursor: pointer !important;
+}
+
+/* Kas transaction typography: explicit dark-mode contrast. */
+body.dark #kas-list .tx-item,
+body.dark #kas-list .tx-item * {
+    -webkit-text-fill-color: currentColor;
+}
+body.dark #kas-list .tx-title {
+    color: #f8fafc !important;
+    -webkit-text-fill-color: #f8fafc !important;
+}
+body.dark #kas-list .tx-sub {
+    color: #94a3b8 !important;
+    -webkit-text-fill-color: #94a3b8 !important;
+}
+body.dark #kas-list .tx-amt.plus {
+    color: #34d399 !important;
+    -webkit-text-fill-color: #34d399 !important;
+}
+body.dark #kas-list .tx-amt.minus {
+    color: #fb7185 !important;
+    -webkit-text-fill-color: #fb7185 !important;
+}
+body.dark #kas-list .tx-item {
+    border-color: #334155 !important;
+}
+body.dark #kas-list .tx-item .tx-sub span {
+    color: #93c5fd !important;
+    -webkit-text-fill-color: #93c5fd !important;
 }
 </style>
 </body>
