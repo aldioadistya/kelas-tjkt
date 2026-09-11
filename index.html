@@ -5088,36 +5088,51 @@ async function doForgotPassword() {
     }
 }
 async function logout() {
-    const wasLoggedIn = !!currentUser || !!auth.currentUser;
+    const statusEl = document.getElementById('auth-status');
+    const emailEl = document.getElementById('auth-email');
+    const passwordEl = document.getElementById('auth-password');
     try {
-        // Stop all Firestore listeners first so no late snapshot can repaint
-        // the authenticated UI while the sign-out transition is happening.
         if (typeof stopSeparatedSync === 'function') stopSeparatedSync();
+        separatedSyncUnsubs = [];
+        reportSyncUnsub = null;
+        notificationSyncUnsub = null;
         currentUser = null;
         authReady = false;
         liveSyncStarted = false;
-        // Show the login screen immediately for a responsive UX.
-        showLogin();
-        const statusEl = document.getElementById('auth-status');
         if (statusEl) {
-            statusEl.textContent = '⏳ Keluar...';
+            statusEl.textContent = 'Keluar...';
             statusEl.style.color = 'var(--text-soft)';
         }
-        await auth.signOut();
-        const emailEl = document.getElementById('auth-email');
-        const passwordEl = document.getElementById('auth-password');
+        // Give the UI an immediate deterministic logged-out state.
+        showLogin();
+        document.body.classList.remove('is-admin','is-superadmin');
         if (emailEl) emailEl.value = '';
         if (passwordEl) passwordEl.value = '';
         const errEl = document.getElementById('login-error');
-        if (errEl) errEl.style.display = 'none';
-        if (statusEl) statusEl.textContent = '⏳ Belum login';
+        if (errEl) { errEl.textContent = ''; errEl.style.display = 'none'; }
+
+        // Firebase Auth signOut clears its persisted auth session.
+        if (auth.currentUser) await auth.signOut();
+
+        if (statusEl) statusEl.textContent = 'Belum login';
+        // Reload only after successful sign-out so every in-memory listener/state is reset.
+        setTimeout(() => {
+            try { window.location.replace(window.location.href.split('#')[0]); }
+            catch (_) { window.location.reload(); }
+        }, 80);
     } catch (e) {
         console.error('Logout error:', e);
-        // If Firebase could not sign out, return to the authenticated UI.
-        currentUser = auth.currentUser ? currentUser : null;
-        authReady = !!auth.currentUser;
-        if (wasLoggedIn && auth.currentUser) hideLogin();
-        showNotification('Gagal keluar dari akun. Periksa koneksi lalu coba lagi.', 'error', 4500);
+        // Even if network/Firebase has a transient problem, do not leave an apparently
+        // logged-in UI on screen. Re-check Auth and keep the login gate visible.
+        if (auth.currentUser) {
+            showNotification('Gagal keluar dari akun. Coba lagi.', 'error', 4500);
+            hideLogin();
+        } else {
+            currentUser = null;
+            authReady = false;
+            showLogin();
+            if (statusEl) statusEl.textContent = 'Belum login';
+        }
     }
 }
 function isAdmin() { return currentUser && (currentUser.role === 'superadmin' || currentUser.role === 'admin'); }
@@ -8539,6 +8554,24 @@ body.dark #kas-list .tx-item .tx-sub span {
     -webkit-text-fill-color: #93c5fd !important;
 }
 </style>
+
+<style id="kelasku-v16-final-ui-fixes">
+/* Transaction text must remain readable in both themes. */
+#kas-list .tx-item .tx-title { color: #0f172a !important; }
+#kas-list .tx-item .tx-sub { color: #64748b !important; }
+#kas-list .tx-item .tx-amt.plus { color: #059669 !important; }
+#kas-list .tx-item .tx-amt.minus { color: #dc2626 !important; }
+body.dark #kas-list .tx-item .tx-title { color: #f8fafc !important; -webkit-text-fill-color: #f8fafc !important; }
+body.dark #kas-list .tx-item .tx-sub { color: #94a3b8 !important; -webkit-text-fill-color: #94a3b8 !important; }
+body.dark #kas-list .tx-item .tx-amt.plus { color: #34d399 !important; -webkit-text-fill-color: #34d399 !important; }
+body.dark #kas-list .tx-item .tx-amt.minus { color: #fb7185 !important; -webkit-text-fill-color: #fb7185 !important; }
+body.dark #kas-list .tx-item { background: transparent !important; border-bottom-color: #334155 !important; }
+body.dark #kas-list .tx-item .tx-sub span { color: #93c5fd !important; -webkit-text-fill-color: #93c5fd !important; }
+
+/* Logout control stays above settings surfaces and is always interactive. */
+#view-settings button[onclick="logout()"] { position: relative !important; z-index: 999 !important; pointer-events: auto !important; opacity: 1 !important; visibility: visible !important; }
+</style>
+
 </body>
 
 <!-- Kelasku compatibility patch: resilient Firestore sync + legacy fallback -->
