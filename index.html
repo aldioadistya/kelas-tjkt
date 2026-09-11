@@ -8417,6 +8417,19 @@ body.dark .hp-edit-status-btn{background:#111827;border-color:#334155;color:#94a
 body.dark .hp-edit-status-btn.active{background:#172554;border-color:#3b82f6;color:#93c5fd;}
 @media(max-width:560px){.hp-edit-status-grid{grid-template-columns:1fr;}}
 </style>
+
+<style id="hp-name-no-underline">
+/* Nama siswa di Titip HP adalah area klik, bukan link. */
+.student-row .s-name,
+.student-row .s-name:hover,
+.student-row .s-name:focus,
+.student-row .s-name:active {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  text-decoration-thickness: 0 !important;
+  text-underline-offset: 0 !important;
+}
+</style>
 </body>
 
 <!-- Kelasku compatibility patch: resilient Firestore sync + legacy fallback -->
