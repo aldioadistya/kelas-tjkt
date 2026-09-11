@@ -3615,6 +3615,11 @@ body.dark .balance-card .bf-item { color: rgba(255,255,255,.92) !important; }
 <style id="calendar-date-sync-v18">
 /* v18: tanggal kalender HP/Piket di-reset ke hari ini saat modul dibuka kembali. */
 </style>
+
+<style id="kas-deadline-reminder-v22">
+.kas-deadline-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:800;padding:4px 8px;border-radius:999px;background:rgba(245,158,11,.10);color:var(--amber);border:1px solid rgba(245,158,11,.18);}
+body.dark .kas-deadline-badge{color:#fbbf24;background:rgba(251,191,36,.10);border-color:rgba(251,191,36,.22);}
+</style>
 </head>
 <body>
 <div class="ambient-mesh">
@@ -4027,7 +4032,7 @@ body.dark .balance-card .bf-item { color: rgba(255,255,255,.92) !important; }
             <button id="drive-migrate-btn" class="btn btn-ghost" style="width:100%; margin-top:8px; padding:8px; font-size:10px;" onclick="migrateAllAttachmentsToDrive()">☁️ Migrasikan lampiran lama ke Drive</button>
             <div id="drive-migration-status" class="field-hint" style="margin-top:6px;">Belum dicek.</div>
           </div>
-          <div class="settings-section notification-settings-card">
+          <div class="settings-section notification-settings-card admin-only">
             <div class="settings-label">Notifikasi</div>
             <div class="notification-settings-head">
               <div>
@@ -4134,12 +4139,15 @@ body.dark .balance-card .bf-item { color: rgba(255,255,255,.92) !important; }
     <button class="tab" data-tab="laporan" onclick="goTo('laporan')">
       <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><path d="M12 8v4" /><path d="M12 16h.01" /></svg>Laporan
     </button>
+    <button class="tab admin-only" id="bottom-admin-notif-tab" type="button" onclick="openAdminNotificationMenu()">
+      <svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 00-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9" /><path d="M10 21h4" /></svg>Notifikasi
+    </button>
     <button class="tab" data-tab="settings" onclick="goTo('settings')">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06A1.65 1.65 0 0019.4 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" /></svg>Setelan
     </button>
   </div>
   <div class="modal-bg" id="modal-kas"><div class="modal"><h3 id="kas-modal-title">Tambah Transaksi Kas</h3><input type="hidden" id="kas-edit-id"><div class="field"><label>Jenis</label><select id="kas-jenis"><option value="masuk">Pemasukan (+)</option><option value="keluar">Pengeluaran (-)</option></select></div><div class="field"><label>Keterangan</label><input id="kas-ket" type="text" placeholder="Contoh: Kas Mingguan"></div><div class="field"><label>Jumlah (Rp)</label><input id="kas-jumlah" type="number" placeholder="0"></div><div class="field"><label>Lampiran (opsional)</label><input type="file" id="kas-file" accept=".jpg,.png,.pdf,.doc,.docx,.xlsx"><div id="kas-file-hint" class="field-hint">Maks 10MB saat Google Drive aktif. Saat edit, kosongkan jika ingin mempertahankan lampiran lama.</div></div><div class="modal-actions"><button class="btn btn-danger admin-only" id="kas-delete-btn" style="display:none;" onclick="hapusKasCurrent()">Hapus</button><button class="btn btn-ghost" onclick="closeModal('kas')">Batal</button><button class="btn btn-primary" onclick="submitKas()">Simpan</button></div></div></div>
-  <div class="modal-bg" id="modal-kas-folder"><div class="modal"><h3>Tambah Folder Kas Siswa</h3><div class="field"><label>Nama Folder</label><input id="kas-folder-name" type="text" placeholder="Contoh: Kas September 2026"></div><div class="field"><label>Nominal Kas per Anak (Rp)</label><input id="kas-folder-nominal" type="number" min="0" placeholder="Contoh: 10000"></div><div class="field"><label>Keterangan (opsional)</label><input id="kas-folder-note" type="text" placeholder="Contoh: Kas bulanan"></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('kas-folder')">Batal</button><button class="btn btn-primary" onclick="submitKasFolder()">Buat Folder</button></div></div></div>
+  <div class="modal-bg" id="modal-kas-folder"><div class="modal"><h3>Tambah Folder Kas Siswa</h3><div class="field"><label>Nama Folder</label><input id="kas-folder-name" type="text" placeholder="Contoh: Kas September 2026"></div><div class="field"><label>Nominal Kas per Anak (Rp)</label><input id="kas-folder-nominal" type="number" min="0" placeholder="Contoh: 10000"></div><div class="field"><label>Tanggal Jatuh Tempo</label><input id="kas-folder-deadline" type="date"><div class="field-hint">Notifikasi tagihan akan muncul 3 hari, 2 hari, 1 hari, dan pada hari H jika siswa belum bayar.</div></div><div class="field"><label>Keterangan (opsional)</label><input id="kas-folder-note" type="text" placeholder="Contoh: Kas bulanan"></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('kas-folder')">Batal</button><button class="btn btn-primary" onclick="submitKasFolder()">Buat Folder</button></div></div></div>
   <div class="modal-bg" id="modal-kas-student"><div class="modal"><h3 id="kas-student-modal-title">Pembayaran Kas Siswa</h3><input type="hidden" id="kas-student-folder-id"><input type="hidden" id="kas-student-name"><div class="field"><label>Nama Siswa</label><input id="kas-student-display" type="text" readonly></div><div class="field"><label>Status Pembayaran</label><select id="kas-student-status"><option value="belum">Belum Bayar</option><option value="sudah">Sudah Bayar</option></select></div><div class="field"><label>Jumlah Dibayar (Rp)</label><input id="kas-student-jumlah" type="number" min="0" placeholder="0"></div><div class="field"><label>Tanggal Bayar</label><input id="kas-student-tanggal" type="date"></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('kas-student')">Batal</button><button class="btn btn-primary admin-only" onclick="submitKasStudent()">Simpan</button></div></div></div>
   <div class="modal-bg" id="modal-tugas"><div class="modal"><h3 id="tugas-modal-title">Tambah Tugas</h3><div class="field"><label>Nama Tugas</label><input id="tugas-nama" type="text" placeholder="Contoh: Laporan Jaringan"></div><div class="field"><label>Mata Pelajaran</label><input id="tugas-mapel" type="text" placeholder="Contoh: Administrasi Jaringan"></div><div class="field"><label>Deadline</label><input id="tugas-tenggat" type="date"></div><div class="field"><label>Deskripsi</label><textarea id="tugas-deskripsi" placeholder="Deskripsi tugas..."></textarea></div><div class="field"><label>Lampiran (opsional, bisa lebih dari 1)</label><div id="tugas-file-chips" style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px;"></div><input type="file" id="tugas-file" accept=".pdf,.doc,.docx,.xlsx,.jpg,.png,.jpeg,.webp" multiple onchange="onTugasFileSelected(this)"><div id="tugas-file-hint" class="field-hint">Maks 3 file. Batas 10MB/file saat Google Drive aktif.</div></div><input type="hidden" id="tugas-edit-id"><div class="modal-actions"><button class="btn btn-danger admin-only" id="tugas-delete-btn" style="display:none;" onclick="deleteTugasCurrent()">Hapus</button><button class="btn btn-ghost" onclick="closeModal('tugas')">Batal</button><button class="btn btn-primary admin-only" onclick="submitTugas()">Simpan</button></div></div></div>
   <div class="modal-bg" id="modal-student"><div class="modal"><h3>Tambah Siswa</h3><div class="field"><label>Nama Lengkap</label><input id="student-nama" type="text" placeholder="Contoh: Muhammad Rizky"></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('student')">Batal</button><button class="btn btn-primary" onclick="submitStudent()">Tambah</button></div></div></div><div class="modal-bg" id="modal-hp-edit"><div class="modal hp-edit-modal"><h3>Edit Titip HP</h3><div class="hp-edit-name-current" id="hp-edit-current-name">-</div><div class="field"><label>Nama Siswa</label><input id="hp-edit-name" type="text" maxlength="80" placeholder="Nama lengkap siswa"></div><div class="field"><label>Status</label><div class="hp-edit-status-grid"><button type="button" class="hp-edit-status-btn" id="hp-edit-sudah-btn" onclick="setHpEditStatus('sudah')">Sudah Terkumpul</button><button type="button" class="hp-edit-status-btn" id="hp-edit-belum-btn" onclick="setHpEditStatus('belum')">Belum Terkumpul</button></div><input type="hidden" id="hp-edit-status"></div><div class="field" id="hp-edit-reason-field" style="display:none"><label>Alasan belum terkumpul</label><textarea id="hp-edit-reason" rows="3" maxlength="200" placeholder="Contoh: Tidak membawa HP / izin / terlambat"></textarea></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('hp-edit')">Batal</button><button class="btn btn-primary" onclick="submitHpEdit()">Simpan Perubahan</button></div></div></div>
@@ -4375,7 +4383,8 @@ async function loadUserProfile(user) {
             document.getElementById('login-error').textContent = 'Akun ini telah dinonaktifkan. Hubungi Super Admin.';
             document.getElementById('login-error').style.display = 'block';
             currentUser = null;
-            await auth.signOut();
+            stopKasPaymentReminderScheduler();
+    await auth.signOut();
             return;
         }
 
@@ -4429,6 +4438,7 @@ async function loadUserProfile(user) {
 
         try {
             watchLiveSync();
+    startKasPaymentReminderScheduler();
         } catch (syncError) {
             console.warn('Live sync startup skipped:', syncError);
         }
@@ -5741,6 +5751,76 @@ async function markAllNotificationsRead(){
     saveState();
     renderNotifications();
 }
+function kasReminderStorageKey(){
+    return 'kelasku_kas_reminder_state_' + (currentUser && currentUser.uid ? currentUser.uid : 'guest');
+}
+function loadKasReminderState(){
+    try{ const raw=localStorage.getItem(kasReminderStorageKey()); return raw ? (JSON.parse(raw)||{}) : {}; }catch(_){ return {}; }
+}
+function saveKasReminderState(data){ try{ localStorage.setItem(kasReminderStorageKey(), JSON.stringify(data)); }catch(_){} }
+function kasDateDiff(deadline){
+    if(!deadline) return null;
+    const [y,m,d]=String(deadline).split('-').map(Number);
+    if(!y||!m||!d) return null;
+    const due = new Date(y,m-1,d); due.setHours(0,0,0,0);
+    const now = new Date(); now.setHours(0,0,0,0);
+    return Math.round((due-now)/86400000);
+}
+function formatKasReminderDay(diff){
+    if(diff===0) return 'hari ini';
+    return diff + ' hari lagi';
+}
+function buildKasReminderText(folder, diff, variant){
+    const amount = folder && folder.nominal ? ' Rp' + Number(folder.nominal).toLocaleString('id-ID') : '';
+    const day = formatKasReminderDay(diff);
+    const messages = [
+        'Tagihan kas' + amount + ' untuk "' + (folder.name||'Kas') + '" jatuh tempo ' + day + '. Kamu masih tercatat belum bayar.',
+        'Pengingat kas: "' + (folder.name||'Kas') + '"' + amount + ' belum dibayar. Jatuh tempo ' + day + '.',
+        'Kas belum lunas. Silakan siapkan pembayaran' + amount + ' untuk "' + (folder.name||'Kas') + '" — jatuh tempo ' + day + '.',
+        'Jangan lupa kas' + amount + ': "' + (folder.name||'Kas') + '" jatuh tempo ' + day + ' dan statusmu masih belum bayar.'
+    ];
+    return messages[Math.max(0, variant) % messages.length];
+}
+async function runKasPaymentReminders(forceCheck=false){
+    if(!currentUser || isAdmin()) return;
+    if(!getNotificationPreferences().kas) return;
+    ensureAppFeatures();
+    const myName = getCurrentStudentName();
+    if(!myName) return;
+    const reminderState = loadKasReminderState();
+    let dirty = false;
+    const now = Date.now();
+    for(const folder of (state.kasFolders||[])){
+        const student = (folder.students||[]).find(st => String(st.name||'').trim().toLocaleLowerCase('id-ID') === String(myName).trim().toLocaleLowerCase('id-ID'));
+        if(!student || student.status === 'sudah' || !folder.deadline) continue;
+        const diff = kasDateDiff(folder.deadline);
+        if(![3,2,1,0].includes(diff)) continue;
+        const stageKey = String(folder.id) + '|' + folder.deadline + '|' + diff;
+        const rec = reminderState[stageKey] || {count:0,lastAt:0,variant:0};
+        // Maximum 2 reminders for each stage, with at least 2 hours between them.
+        if(Number(rec.count||0) >= 2) continue;
+        if(!forceCheck && rec.lastAt && (now-Number(rec.lastAt)) < 2*60*60*1000) continue;
+        const notification = addNotification('Tagihan kas', buildKasReminderText(folder,diff,Number(rec.variant||0)), {uid:currentUser.uid});
+        if(notification){
+            rec.count = Number(rec.count||0)+1;
+            rec.lastAt = now;
+            rec.variant = Number(rec.variant||0)+1;
+            reminderState[stageKey] = rec;
+            dirty = true;
+            try{ await db.collection(FS_NOTIFICATIONS).doc(String(notification.id)).set({...notification, createdByUid: currentUser.uid}); }
+            catch(e){ console.warn('Kas reminder notification sync failed:',e); }
+        }
+    }
+    if(dirty){ saveKasReminderState(reminderState); renderNotifications(); }
+}
+function startKasPaymentReminderScheduler(){
+    if(window.__kelaskuKasReminderTimer) clearInterval(window.__kelaskuKasReminderTimer);
+    runKasPaymentReminders(true);
+    window.__kelaskuKasReminderTimer=setInterval(()=>runKasPaymentReminders(false), 10*60*1000);
+}
+function stopKasPaymentReminderScheduler(){
+    if(window.__kelaskuKasReminderTimer){ clearInterval(window.__kelaskuKasReminderTimer); window.__kelaskuKasReminderTimer=null; }
+}
 function getCurrentStudentName(){
     const username=(currentUser&&currentUser.username||'').trim().toLocaleLowerCase('id-ID');
     return (state.students||[]).find(name=>String(name).trim().toLocaleLowerCase('id-ID')===username)||null;
@@ -6106,14 +6186,16 @@ function renderPengumuman() {
     }).join('') : `<div class="empty">Belum ada pengumuman.</div>`;
 }
 function getKasFolder(folderId){ return state.kasFolders.find(f => String(f.id) === String(folderId)); }
-function openKasFolderModal(){ if (guardReadOnly()) return; document.getElementById('kas-folder-name').value = ''; document.getElementById('kas-folder-nominal').value = ''; document.getElementById('kas-folder-note').value = ''; openModal('kas-folder'); }
+function openKasFolderModal(){ if (guardReadOnly()) return; document.getElementById('kas-folder-name').value = ''; document.getElementById('kas-folder-nominal').value = ''; document.getElementById('kas-folder-deadline').value = ''; document.getElementById('kas-folder-note').value = ''; openModal('kas-folder'); }
 function submitKasFolder(){
     if (guardReadOnly()) return;
     const name = document.getElementById('kas-folder-name').value.trim();
     const nominal = Math.max(0, Number(document.getElementById('kas-folder-nominal').value || 0));
+    const deadline = document.getElementById('kas-folder-deadline').value || '';
     const note = document.getElementById('kas-folder-note').value.trim();
     if (!name) { showNotification('Nama folder wajib diisi.', 'warning'); return; }
-    const folder = { id: Date.now()+Math.random(), name, nominal, note, createdAt: Date.now(), students: state.students.map(name => ({name, status:'belum', jumlah:0, tanggal:''})) };
+    if (deadline && deadline < todayKey()) { showNotification('Tanggal jatuh tempo tidak boleh sudah lewat.', 'warning'); return; }
+    const folder = { id: Date.now()+Math.random(), name, nominal, deadline, note, createdAt: Date.now(), students: state.students.map(name => ({name, status:'belum', jumlah:0, tanggal:''})) };
     state.kasFolders.unshift(folder);
     addActivity('Membuat folder kas siswa', name);
     saveState();
@@ -6183,6 +6265,7 @@ function renderKasSiswa(){
                 <div style="min-width:0;flex:1;cursor:pointer;" onclick="toggleKasFolder('${String(folder.id)}')" title="${minimized ? 'Buka folder' : 'Minimalkan folder'}">
                     <div class="kas-folder-name">📁 ${escapeHtml(folder.name)}</div>
                     ${folder.note ? `<div class="kas-folder-note">${escapeHtml(folder.note)}</div>` : ''}
+                    ${folder.deadline ? `<div class="kas-folder-note" style="margin-top:3px;">Jatuh tempo: ${escapeHtml(folder.deadline)}</div>` : ''}
                 </div>
                 <button class="btn btn-danger admin-only" style="padding:6px 8px;font-size:10px;" onclick="event.stopPropagation();deleteKasFolder('${String(folder.id)}')">Hapus</button>
             </div>
@@ -6191,6 +6274,7 @@ function renderKasSiswa(){
                     <span class="kas-summary-paid">✓ ${paid} Sudah Bayar</span>
                     <span class="kas-summary-unpaid">! ${unpaid} Belum Bayar</span>
                     ${folder.nominal ? `<span class="kas-summary-nominal">Rp${Number(folder.nominal).toLocaleString('id-ID')} / anak</span>` : ''}
+                    ${folder.deadline ? `<span class="kas-deadline-badge">Jatuh tempo ${escapeHtml(folder.deadline)}</span>` : ''}
                 </div>
                 <div class="kas-student-list">
                     ${students.length ? students.map(st => `<div class="kas-student-row" ${isAdmin() ? `onclick='openKasStudentModal(${jsString(folder.id)},${jsString(st.name)})' style="cursor:pointer;"` : ''}>
@@ -8296,6 +8380,28 @@ function autoOpenKasAndCalendarPanels(name) {
     }
 }
 
+function openAdminNotificationMenu() {
+    if (typeof isAdmin === 'function' && !isAdmin()) return;
+    goTo('settings');
+    const panel = document.getElementById('notification-settings-panel');
+    const trigger = document.querySelector('.notification-accordion-trigger');
+    if (panel && panel.hidden) {
+        if (typeof toggleNotificationSettings === 'function') {
+            toggleNotificationSettings();
+        } else {
+            panel.hidden = false;
+            if (trigger) trigger.setAttribute('aria-expanded', 'true');
+        }
+    }
+    const card = document.querySelector('.notification-settings-card');
+    if (card) {
+        setTimeout(() => card.scrollIntoView({behavior:'smooth', block:'start'}), 40);
+    }
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    const tab = document.getElementById('bottom-admin-notif-tab');
+    if (tab) tab.classList.add('active');
+}
+
 function goTo(name) {
     const target = document.getElementById('view-' + name);
     if (!target) return;
@@ -8399,6 +8505,8 @@ window.openGlobalSearchResult = openGlobalSearchResult;
 window.markNotificationRead = markNotificationRead;
 window.markAllNotificationsRead = markAllNotificationsRead;
 window.setNotificationPreference = setNotificationPreference;
+window.openAdminNotificationMenu = openAdminNotificationMenu;
+window.runKasPaymentReminders = runKasPaymentReminders;
 window.renderNotificationPreferenceInputs = renderNotificationPreferenceInputs;
 window.openPengumumanModal = openPengumumanModal;
 window.submitPengumuman = submitPengumuman;
