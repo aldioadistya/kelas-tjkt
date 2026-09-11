@@ -3549,6 +3549,12 @@ body.dark .kas-pro-metric{box-shadow:0 6px 18px rgba(0,0,0,.16)}
 @media(max-width:430px){.pagehead h1{font-size:22px}.hp-slot{min-height:126px;padding:10px}.kas-pro-metric{padding:14px}.kpm-value{font-size:21px}}
 </style>
 
+<style id="tugas-card-click-edit-v12">
+.task-pro-card[role="button"]{cursor:pointer;transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease}
+.task-pro-card[role="button"]:hover{transform:translateY(-1px)}
+.task-pro-card[role="button"]:focus-visible{outline:2px solid var(--ui-accent,#3b82f6);outline-offset:2px}
+.task-pro-actions button{position:relative;z-index:2}
+</style>
 </head>
 <body>
 <div class="ambient-mesh">
@@ -8273,7 +8279,7 @@ window.todayKey = todayKey;
   function taskMatches(t){const left=daysLeft(t.tenggat);if(taskFilter==='done')return !!t.selesai;if(taskFilter==='active')return !t.selesai;if(taskFilter==='soon')return !t.selesai&&left<=3;return true}
   function professionalRenderTugas(){
     injectTaskFilters(); autoCleanDoneTugas(); const all=(state.tugas||[]).filter(taskMatches); const open=all.filter(t=>!t.selesai),done=all.filter(t=>t.selesai); const hint=document.getElementById('tugas-autoclean-hint');if(hint)hint.textContent='';
-    const renderCard=t=>{const left=daysLeft(t.tenggat);const dc=t.selesai?'deadline-safe':left<=1?'deadline-danger':left<=3?'deadline-soon':'deadline-safe';const dl=t.selesai?'Selesai':t.tenggat?(left<0?'Lewat deadline':left===0?'Hari ini':left===1?'H-1':`H-${left}`):'Tanpa deadline';return `<div class="task-pro-card"><div class="task-pro-top"><div class="task-pro-title">${esc(t.nama)}</div><span class="task-pro-deadline ${dc}">${dl}</span></div><div class="task-pro-meta"><span class="task-pro-tag">${esc(t.mapel||'Tanpa mapel')}</span>${t.tenggat?`<span class="task-pro-tag">${esc(t.tenggat)}</span>`:''}</div>${t.deskripsi?`<div class="task-pro-desc">${esc(t.deskripsi)}</div>`:''}${renderTaskFiles(t)}<div class="task-pro-actions">${isAdmin()?`<button class="primary" onclick="event.stopPropagation();openTugasModal(${Number(t.id)})">Edit</button>${t.selesai?`<button onclick="event.stopPropagation();toggleTugas(${Number(t.id)})">Buka lagi</button>`:`<button onclick="event.stopPropagation();toggleTugas(${Number(t.id)})">Tandai selesai</button>`}`:`<button onclick="event.stopPropagation();openTugasModal(${Number(t.id)})">Lihat</button>`}</div></div>`};
+    const renderCard=t=>{const left=daysLeft(t.tenggat);const dc=t.selesai?'deadline-safe':left<=1?'deadline-danger':left<=3?'deadline-soon':'deadline-safe';const dl=t.selesai?'Selesai':t.tenggat?(left<0?'Lewat deadline':left===0?'Hari ini':left===1?'H-1':`H-${left}`):'Tanpa deadline';const clickable=isAdmin()?` role="button" tabindex="0" title="Klik untuk membuka editor" onclick="openTugasModal(${Number(t.id)})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openTugasModal(${Number(t.id)})}"`:' ';return `<div class="task-pro-card"${clickable}><div class="task-pro-top"><div class="task-pro-title">${esc(t.nama)}</div><span class="task-pro-deadline ${dc}">${dl}</span></div><div class="task-pro-meta"><span class="task-pro-tag">${esc(t.mapel||'Tanpa mapel')}</span>${t.tenggat?`<span class="task-pro-tag">${esc(t.tenggat)}</span>`:''}</div>${t.deskripsi?`<div class="task-pro-desc">${esc(t.deskripsi)}</div>`:''}${renderTaskFiles(t)}<div class="task-pro-actions">${t.selesai?`<button onclick="event.stopPropagation();toggleTugas(${Number(t.id)})">Buka lagi</button>`:`<button onclick="event.stopPropagation();toggleTugas(${Number(t.id)})">Tandai selesai</button>`}</div></div>`};
     const a=document.getElementById('tugas-open-list'),b=document.getElementById('tugas-done-list');if(a){a.className='task-column';a.innerHTML=`<div class="task-column-title">Aktif</div>${open.length?open.map(renderCard).join(''):'<div class="empty" style="padding:28px 12px">Tidak ada tugas aktif.</div>'}`;}if(b){b.className='task-column';b.innerHTML=`<div class="task-column-title">Selesai</div>${done.length?done.map(renderCard).join(''):'<div class="empty" style="padding:28px 12px">Belum ada tugas selesai.</div>'}`;}
     const openSection=a?.closest('.section'); const doneSection=b?.closest('.section');
     if(openSection && doneSection){
@@ -8397,7 +8403,7 @@ body.dark #view-jadwal .section-link {
 }
 body:not(.dark) .hp-slot-name-button{color:#0f172a}
 body.dark .hp-slot-name-button{color:#f8fafc}
-body.dark .hp-slot-name-button:hover{text-decoration:underline;text-underline-offset:3px}
+body.dark .hp-slot-name-button:hover{text-decoration:none!important;text-decoration-line:none!important}
 .hp-slot-edit{border:1px solid var(--ui-border,#dbe3ee);background:transparent;color:var(--ui-muted,#64748b);font-size:9px;font-weight:800;padding:4px 7px;border-radius:7px;cursor:pointer;flex:0 0 auto}
 .hp-slot-edit:hover{background:var(--ui-soft-bg,#f8fafc);color:var(--ui-text,#0f172a);border-color:#bfdbfe}
 body.dark .hp-slot-edit{border-color:#334155;color:#94a3b8;background:#111827}
@@ -8406,7 +8412,7 @@ body.dark .hp-slot-edit:hover{background:#1e293b;color:#f8fafc;border-color:#3b8
 
 <style id="hp-edit-combined-fix">
 .hp-slot-name-button{cursor:pointer!important;}
-.hp-slot-name-button:hover{text-decoration:underline;text-underline-offset:3px;}
+.hp-slot-name-button:hover{text-decoration:none!important;text-decoration-line:none!important;}
 .hp-edit-modal{max-width:420px;}
 .hp-edit-name-current{font-size:11px;color:var(--ui-muted,#64748b);margin:-4px 0 14px;}
 .hp-edit-status-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
@@ -8428,6 +8434,7 @@ body.dark .hp-edit-status-btn.active{background:#172554;border-color:#3b82f6;col
   text-decoration-line: none !important;
   text-decoration-thickness: 0 !important;
   text-underline-offset: 0 !important;
+  -webkit-text-decoration-line: none !important;
 }
 </style>
 </body>
