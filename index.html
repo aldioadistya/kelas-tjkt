@@ -619,6 +619,15 @@ body {
     display: block;
     animation: fadeInUp 0.2s ease;
 }
+/* SETTINGS VISIBILITY FIX: ensure Settings content is never hidden by later UI overrides */
+#view-settings{position:relative;}
+
+#view-settings { min-height: 1px; }
+#view-settings.active { display: block !important; visibility: visible !important; opacity: 1 !important; }
+#view-settings.active .section,
+#view-settings.active .card,
+#view-settings.active .settings-section { visibility: visible; }
+
 @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(6px); }
     to { opacity: 1; transform: translateY(0); }
@@ -8515,8 +8524,13 @@ function goTo(name) {
     if (desktopTab) desktopTab.classList.add('active');
     const content = document.querySelector('.content');
     if (content) content.scrollTop = 0;
-    if (name === 'settings' && typeof renderAccountList === 'function') renderAccountList();
-        if (name === 'settings' && typeof renderNotificationPreferenceInputs === 'function') renderNotificationPreferenceInputs();
+    if (name === 'settings') {
+        if (typeof renderAccountList === 'function') { try { renderAccountList(); } catch (e) { console.warn('Render settings account list failed:', e); } }
+        if (typeof renderNotificationPreferenceInputs === 'function') { try { renderNotificationPreferenceInputs(); } catch (e) { console.warn('Render notification preferences failed:', e); } }
+        target.style.display = 'block';
+        target.style.visibility = 'visible';
+        target.style.opacity = '1';
+    }
     if (name === 'jadwal') {
         const mode = state && state.jadwalMode === 'piket' ? 'piket' : 'pelajaran';
         try {
