@@ -1,4 +1,43 @@
 <!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Kelasku — X TJKT 1</title><link rel="manifest" href="manifest.json"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#0F172A"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet"><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <style>
 :root {
 --bg-gradient: linear-gradient(135deg, #e0e7ff 0%, #f1f5f9 50%, #fae8ff 100%);
@@ -62,6 +101,7 @@
   --dash-primary:#2563eb;
   --dash-primary-soft:#eff6ff;
   --dash-shadow:0 1px 2px rgba(15,23,42,.04),0 8px 24px rgba(15,23,42,.05);
+
     /* Design system tokens */
     --font-sans: 'Plus Jakarta Sans', sans-serif;
     --font-display: 'Sora', sans-serif;
@@ -377,7 +417,10 @@
     --shadow-token-56: var(--dash-shadow);
     --shadow-token-57: var(--glass-shadow);
 }
+
 /* ---- Consolidated style block 1 ---- */
+
+
 body.dark {
     --bg-gradient: linear-gradient(135deg, var(--color-neutral) 0%, var(--color-ink) 50%, var(--color-blue-1e1035) 100%);
     --glass-bg: var(--color-alpha-029);
@@ -484,9 +527,9 @@ body {
     cursor: pointer;
     font-size: 15px;
     color: var(--text-main);
-    transition: transform 0.15s;
+    transition: transform .24s cubic-bezier(.22,1,.36,1);
 }
-.theme-btn:active { transform: scale(0.9); }
+.theme-btn:active { transform: scale(.97); }
 .screen {
     flex: 1;
     overflow-y: auto;
@@ -546,7 +589,7 @@ body {
     justify-content: center;
     margin: 0 auto var(--space-10);
     transform: rotate(-6deg);
-    animation: logoWiggle 3.5s ease-in-out infinite;
+    animation: logoWiggle 5.5s cubic-bezier(.45,0,.2,1) infinite;
 }
 .login-logo img {
     width: 100%;
@@ -636,6 +679,7 @@ body {
     padding: var(--space-8) var(--space-10);
     font-size: 10.5px;
 }
+
 .login-card .field { margin-bottom: 14px; }
 .login-card .field label {
     font-size: 11px;
@@ -704,7 +748,7 @@ body {
     align-items: center;
     gap: var(--space-12);
     pointer-events: auto;
-    animation: toastSlide 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    animation: toastSlide 0.46s cubic-bezier(.22,1,.36,1);
     transition: opacity 0.3s, transform 0.3s;
     color: var(--text-main);
 }
@@ -814,9 +858,9 @@ body {
     border-radius: var(--radius-token-32);
     padding: var(--space-12) var(--space-12);
     box-shadow: var(--shadow-token-57);
-    transition: transform 0.15s;
+    transition: transform .24s cubic-bezier(.22,1,.36,1);
 }
-.stat-card:active { transform: scale(0.97); }
+.stat-card:active { transform: scale(.985); }
 .stat-top {
     display: flex;
     align-items: center;
@@ -945,7 +989,7 @@ body {
     font-size: 11px;
     font-weight: 700;
     padding: var(--space-6) 0;
-    transition: color 0.15s;
+    transition: color .22s ease;
 }
 .tab svg {
     width: 24px;
@@ -955,7 +999,7 @@ body {
     stroke-width: 2.2;
     stroke-linecap: round;
     stroke-linejoin: round;
-    transition: transform 0.15s;
+    transition: transform .24s cubic-bezier(.22,1,.36,1);
 }
 .tab.active {
     color: var(--primary);
@@ -968,7 +1012,7 @@ body {
 }
 .view.active {
     display: block;
-    animation: fadeInUp 0.2s ease;
+    animation: fadeInUp 0.34s cubic-bezier(.22,1,.36,1);
 }
 @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(6px); }
@@ -1049,14 +1093,14 @@ body {
     font-weight: 700;
     font-size: 13px;
     cursor: pointer;
-    transition: transform 0.15s;
+    transition: transform .24s cubic-bezier(.22,1,.36,1);
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: var(--space-6);
     min-height: 38px;
 }
-.btn:active { transform: scale(0.96); }
+.btn:active { transform: scale(.985); }
 .btn-primary {
     background: var(--primary-gradient);
     color: var(--color-white);
@@ -1127,10 +1171,10 @@ body {
     width: 100%;
     cursor: pointer;
     box-shadow: 0 4px 14px var(--color-alpha-094);
-    transition: transform 0.15s;
+    transition: transform .24s cubic-bezier(.22,1,.36,1);
     min-height: 48px;
 }
-.fab-add:active { transform: scale(0.97); }
+.fab-add:active { transform: scale(.985); }
 .cal-card { margin-top: 10px; }
 .cal-head {
     display: flex;
@@ -1190,7 +1234,7 @@ body {
     border-radius: var(--radius-token-06);
     cursor: pointer;
     color: var(--text-main);
-    transition: background 0.15s;
+    transition: background-color .22s ease, border-color .22s ease, box-shadow .22s ease;
 }
 .cal-day.empty { cursor: default; }
 .cal-day.today {
@@ -1219,7 +1263,7 @@ body {
 .cal-day.selected .cal-dot { background: var(--color-white); }
 .cal-body-wrap {
     overflow: hidden;
-    transition: max-height 0.3s ease, opacity 0.2s ease;
+    transition: max-height .42s cubic-bezier(.22,1,.36,1), opacity .28s ease, margin-top .42s cubic-bezier(.22,1,.36,1);
     max-height: 400px;
     opacity: 1;
 }
@@ -1295,7 +1339,7 @@ body {
     font-weight: 700;
     cursor: pointer;
     color: var(--text-soft);
-    transition: all 0.15s;
+    transition: all .22s cubic-bezier(.22,1,.36,1);
 }
 .toggle-btn.done {
     background: var(--teal);
@@ -1333,7 +1377,7 @@ body {
     font-weight: 700;
     font-size: 13px;
     cursor: pointer;
-    transition: all 0.15s;
+    transition: all .22s cubic-bezier(.22,1,.36,1);
 }
 .roster-choice-btn.done.active {
     background: var(--teal);
@@ -1380,7 +1424,7 @@ body {
     color: var(--text-soft);
     background: var(--surface-2);
     border: 1px solid var(--color-alpha-017);
-    transition: all 0.15s;
+    transition: all .22s cubic-bezier(.22,1,.36,1);
 }
 .mode-btn.active {
     background: var(--primary-gradient);
@@ -1406,7 +1450,7 @@ body {
     border: 1px solid var(--glass-border);
     color: var(--text-soft);
     cursor: pointer;
-    transition: all 0.15s;
+    transition: all .22s cubic-bezier(.22,1,.36,1);
 }
 .day-chip.active {
     background: var(--primary-gradient);
@@ -1416,6 +1460,7 @@ body {
 .day-chip { appearance: none; -webkit-appearance: none; font: inherit; text-align: center; }
 #day-tabs { position: relative; z-index: 2; pointer-events: auto ; }
 #day-tabs .day-chip { pointer-events: auto ; user-select: none; -webkit-user-select: none; }
+
 .task-item {
     display: flex;
     align-items: flex-start;
@@ -1437,7 +1482,7 @@ body {
     justify-content: center;
     color: var(--color-white);
     font-size: 11px;
-    transition: all 0.15s;
+    transition: all .22s cubic-bezier(.22,1,.36,1);
 }
 .checkbox.checked {
     background: var(--teal);
@@ -1521,7 +1566,7 @@ body {
     background: var(--glass-card);
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-token-13);
-    transition: background 0.15s, transform 0.15s;
+    transition: background-color .22s ease, transform .24s cubic-bezier(.22,1,.36,1), box-shadow .22s ease;
 }
 .file-chip {
     display: inline-flex;
@@ -1544,7 +1589,7 @@ body {
 .task-file:active {
     background: var(--primary-gradient);
     color: var(--color-white);
-    transform: scale(0.96);
+    transform: scale(.985);
 }
 .search-box {
     display: flex;
@@ -1572,7 +1617,7 @@ body {
 .search-box input::placeholder { color: var(--text-muted); }
 .roster-list-wrap {
     overflow: hidden;
-    transition: max-height 0.3s ease, opacity 0.2s ease;
+    transition: max-height .42s cubic-bezier(.22,1,.36,1), opacity .28s ease, margin-top .42s cubic-bezier(.22,1,.36,1);
     max-height: 2000px;
     opacity: 1;
 }
@@ -1598,7 +1643,7 @@ body {
     width: 100%;
     border-radius: var(--radius-token-18);
     padding: var(--space-20);
-    animation: slideUp 0.25s ease;
+    animation: slideUp 0.34s cubic-bezier(.22,1,.36,1);
     max-height: 80vh;
     overflow-y: auto;
     box-shadow: var(--shadow-token-57);
@@ -1776,6 +1821,7 @@ body {
     color: var(--text-soft);
     margin-top: 2px;
 }
+
 .announce-meta {
     display: flex;
     flex-wrap: wrap;
@@ -1818,7 +1864,7 @@ body {
     background: var(--glass-card);
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-token-13);
-    transition: background 0.15s, transform 0.15s;
+    transition: background-color .22s ease, transform .24s cubic-bezier(.22,1,.36,1), box-shadow .22s ease;
     max-width: 100%;
 }
 .announce-file span {
@@ -1830,7 +1876,7 @@ body {
 .announce-file:active {
     background: var(--primary-gradient);
     color: var(--color-white);
-    transform: scale(0.96);
+    transform: scale(.985);
 }
 .announce-actions {
     display: flex;
@@ -1861,7 +1907,7 @@ body {
 .stat-bar-fill {
     height: 100%;
     border-radius: var(--radius-token-29);
-    transition: width 0.3s;
+    transition: width .42s cubic-bezier(.22,1,.36,1);
 }
 .stat-bar-value {
     font-size: 10px;
@@ -1932,7 +1978,7 @@ body {
     background: var(--glass-card);
     border: 1px solid var(--glass-border);
     cursor: pointer;
-    transition: background 0.15s;
+    transition: background-color .22s ease, border-color .22s ease, box-shadow .22s ease;
 }
 .piket-jadwal-row input[type="checkbox"] {
     width: 20px;
@@ -2240,10 +2286,16 @@ body.dark .s-name { color: var(--color-neutral-f1f5f9) ; }
     border: none ;
     box-shadow: none;
 }
+
+
 /* ---- Consolidated style block 2 ---- */
+
 #report-stats span{border:1px solid var(--glass-border);}
 @media(max-width:520px){#view-laporan #report-search{width:140px;min-width:120px}.report-status{margin-left:0}}
+
+
 /* ---- Consolidated style block 3 ---- */
+
 #modal-report input:disabled,
 #modal-report textarea:disabled,
 #modal-report select:disabled {
@@ -2253,9 +2305,15 @@ body.dark .s-name { color: var(--color-neutral-f1f5f9) ; }
 #modal-report input[type="checkbox"]:disabled {
     cursor: not-allowed;
 }
+
+
 /* ---- Consolidated style block 4 ---- */
+
 .home-search-wrap{position:relative}.home-search-input{width:100%;box-sizing:border-box;border:1px solid var(--glass-border);border-radius: var(--radius-token-06);padding: var(--space-10) var(--space-12);font-size:12px;background:var(--input-bg);color:var(--text-main);outline:none}.global-search-results{margin-top:7px;display:flex;flex-direction:column;gap: var(--space-5)}.global-search-item{display:flex;align-items:center;gap: var(--space-8);padding: var(--space-9) var(--space-10);border:1px solid var(--glass-border);border-radius: var(--radius-token-30);background:var(--glass-card);cursor:pointer}.global-search-item .gsi-main{flex:1;min-width:0}.global-search-item .gsi-title{font-size:11px;font-weight:800;color:var(--text-main);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.global-search-item .gsi-sub{font-size:9.5px;color:var(--text-soft);margin-top:2px}.notify-item{display:flex;gap: var(--space-9);padding: var(--space-9) var(--space-2);border-bottom:1px solid var(--glass-border);cursor:pointer}.notify-item:last-child{border-bottom:0}.notify-item.unread{background:var(--primary-glass);border-radius: var(--radius-token-26);padding-left:7px;padding-right:7px}.notify-dot{width:7px;height:7px;border-radius: var(--radius-token-21);background:var(--primary);margin-top:5px;flex:none}.notify-item.read .notify-dot{opacity:.25}.notify-title{font-size:11px;font-weight:800;color:var(--text-main)}.notify-text{font-size:10px;line-height:1.4;color:var(--text-soft);margin-top:2px}.notify-time{font-size:9px;color:var(--text-muted);margin-top:3px}.activity-row{padding: var(--space-8) 0;border-bottom:1px solid var(--glass-border)}.activity-row:last-child{border-bottom:0}.activity-main{font-size:10.5px;color:var(--text-main);line-height:1.4}.activity-meta{font-size:9px;color:var(--text-muted);margin-top:2px}.report-home-card{cursor:pointer}@media(max-width:520px){.home-search-input{font-size:11px}}
+
+
 /* ---- Consolidated style block 5 ---- */
+
 #modal-report .modal {
   color: var(--color-neutral-f8fafc) ;
   max-height: 80% ;
@@ -2348,7 +2406,10 @@ body.dark .s-name { color: var(--color-neutral-f1f5f9) ; }
 #activity-log-list::-webkit-scrollbar-corner {
   background: transparent ;
 }
+
+
 /* ---- Consolidated style block 6 ---- */
+
 body:not(.dark) #modal-report .modal {
   color: var(--text-main) ;
   background: linear-gradient(145deg, var(--color-alpha-061), var(--color-alpha-048)) ;
@@ -2395,7 +2456,10 @@ body:not(.dark) #modal-report .modal #report-student-response-text {
 body:not(.dark) #modal-report .modal .modal-actions .btn-ghost {
   color: var(--color-blue-334155) ;
 }
+
+
 /* ---- Consolidated style block 7 ---- */
+
 #modal-report .modal {
   max-height: 82vh ;
   overflow-y: auto ;
@@ -2576,12 +2640,18 @@ body.dark #view-laporan #report-filter {
     padding: var(--space-18) var(--space-16) var(--space-20) ;
   }
 }
+
+
 /* ---- Consolidated style block 8 ---- */
+
 .screen {
   min-height: 0 ;
   flex: 1 1 auto ;
 }
+
+
 /* ---- Consolidated style block 9 ---- */
+
 #modal-report .modal {
   padding: var(--space-16) ;
   border-radius: var(--radius-token-17);
@@ -2744,7 +2814,10 @@ body.dark .home-task-item .checkbox {
     overflow-wrap: anywhere;
 }
 .home-task-item .task-file { margin-top: 1px; }
+
+
 /* ---- Consolidated style block 10 ---- */
+
 html, body {
   width: 100%;
   min-width: 0;
@@ -2805,7 +2878,10 @@ html, body {
   .screen { padding-top: 6px; padding-bottom: 10px; }
   .section { margin-top: 10px; }
 }
+
+
 /* ---- Consolidated style block 11 ---- */
+
 .kas-siswa-section .section-head{align-items:flex-start;gap: var(--space-10);}
 .kas-folder-list{display:flex;flex-direction:column;gap: var(--space-10);}
 .kas-folder{background:var(--glass-card);border:1px solid var(--glass-border);border-radius: var(--radius-token-09);padding: var(--space-12) var(--space-14);box-shadow: var(--shadow-token-57);}
@@ -2814,7 +2890,7 @@ html, body {
 .kas-folder-toggle{width:28px;height:28px;border-radius: var(--radius-token-26);border:1px solid var(--glass-border);background:var(--glass-card);color:var(--text-main);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;cursor:pointer;padding: 0;}
 .kas-folder-name{font-family:'Sora',sans-serif;font-size:13px;font-weight:800;color:var(--text-main);}
 .kas-folder-note{font-size:10px;color:var(--text-soft);margin-top:3px;}
-.kas-folder-content-wrap{overflow:hidden;max-height:2000px;opacity:1;transition:max-height .3s ease,opacity .2s ease,margin-top .3s ease;}
+.kas-folder-content-wrap{overflow:hidden;max-height:2000px;opacity:1;transition:max-height .42s cubic-bezier(.22,1,.36,1),opacity .28s ease,margin-top .42s cubic-bezier(.22,1,.36,1);}
 .kas-folder-content-wrap.collapsed{max-height:0;opacity:0;margin-top:-8px;}
 .kas-folder-summary{display:flex;gap: var(--space-6);flex-wrap:wrap;margin-top:8px;}
 .kas-folder-summary span{font-size:9px;font-weight:800;padding: var(--space-4) var(--space-7);border-radius: var(--radius-token-28);border:1px solid var(--glass-border);color:var(--text-main);}
@@ -2837,14 +2913,21 @@ html, body {
  .kas-payment-badge{font-size:8px;padding: var(--space-4) var(--space-6);}
 }
 .my-progress-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap: var(--space-8)}.my-progress-item{padding: var(--space-10) var(--space-8);border:1px solid var(--glass-border);border-radius: var(--radius-token-07);background:var(--surface-2);text-align:center}.my-progress-value{font-size:16px;font-weight:900;color:var(--text-main);line-height:1.15}.my-progress-label{margin-top:4px;font-size:9px;font-weight:700;color:var(--text-soft);line-height:1.25}.my-progress-note{margin-top:9px;font-size:10px;color:var(--text-soft);line-height:1.45}.achievement-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap: var(--space-8)}.achievement-badge{min-height:104px;padding: var(--space-10) var(--space-7);border:1px solid var(--glass-border);border-radius: var(--radius-token-08);background:var(--surface-2);text-align:center;opacity:.48;filter:grayscale(1);transition:.2s ease}.achievement-badge.earned{opacity:1;filter:none;background:var(--teal-glass);border-color:var(--color-alpha-022)}.achievement-icon{font-size:23px;line-height:1}.achievement-name{margin-top:7px;font-size:10px;font-weight:900;color:var(--text-main);line-height:1.25}.achievement-status{margin-top:4px;font-size:8.5px;font-weight:700;color:var(--text-soft);line-height:1.3}.achievement-badge.earned .achievement-status{color:var(--teal)}@media(max-width:360px){.my-progress-grid,.achievement-grid{gap: var(--space-5)}.my-progress-item{padding: var(--space-8) var(--space-4)}.achievement-badge{padding: var(--space-8) var(--space-4)}}
+
+
 /* ---- Consolidated style block 12 ---- */
 .cal-month-click,.cal-year-click{cursor:pointer;border-radius: var(--radius-token-24);padding: var(--space-2) var(--space-4)}.cal-month-click:hover,.cal-year-click:hover{background:var(--glass-card-hover)}.cal-month-picker{display:none;margin: var(--space-neg-2) 0 var(--space-10);padding: var(--space-10);border:1px solid var(--glass-border);border-radius: var(--radius-token-08);background:var(--glass-card);box-shadow: 0 8px 24px var(--color-alpha-005)}.cal-month-picker.open{display:block}.cal-picker-year{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}.cal-picker-year button,.cal-picker-months button{border:1px solid var(--glass-border);background:var(--surface-2);color:var(--text-main);border-radius: var(--radius-token-26);cursor:pointer;font-weight:700}.cal-picker-year strong,.cal-year-click{color:var(--text-main)}.cal-picker-year button{width:30px;height:28px}.cal-picker-months{display:grid;grid-template-columns:repeat(4,1fr);gap: var(--space-6)}.cal-picker-months button{padding: var(--space-7) var(--space-4);font-size:10px}.cal-picker-months button.active{background:var(--primary);color:var(--color-white);border-color:var(--primary)}.bulk-all-btn{border:1px solid var(--glass-border);background:var(--glass-card);color:var(--text-main);border-radius: var(--radius-token-26);padding: var(--space-6) var(--space-9);font-size:10px;font-weight:800;cursor:pointer}.student-check{width:22px;height:22px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:0 0 auto}.student-check input{position:absolute;opacity:0;pointer-events:none}.student-check span{width:16px;height:16px;border:1px solid var(--glass-border);border-radius: var(--radius-token-22);background:var(--surface-2);position:relative}.student-check input:checked+span{background:var(--primary);border-color:var(--primary)}.student-check input:checked+span:after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--color-white);font-size:11px;font-weight:900}
+
 /* ---- Consolidated style block 13 ---- */
+
 .login-logo{width:64px;height:64px;border-radius: var(--radius-token-11);display:flex;align-items:center;justify-content:center;margin: 0 auto var(--space-10);overflow:hidden}.login-logo img{width:100%;height:100%;display:block;object-fit:cover;border-radius: var(--radius-token-11)}.login-hero-title{font-family:'Sora',sans-serif;font-size:22px;font-weight:800}.login-hero-sub{font-size:11px;opacity:.85;margin-top:2px;font-weight:600;letter-spacing:.5px;text-transform:uppercase}.login-logo img{box-shadow: none}
 a{
     -webkit-tap-highlight-color: transparent;
 }
+
+
 /* ---- Consolidated style block 14 ---- */
+
 .desktop-sidebar{display:none}
 @media screen and (min-width:901px){
   html,body{width:100%;height:100%;overflow:hidden}
@@ -2858,7 +2941,7 @@ a{
   .desktop-brand-title{font-family:'Sora',sans-serif;font-size:18px;font-weight:800;color:var(--text-main);line-height:1.05}
   .desktop-brand-sub{font-size:10px;color:var(--text-soft);font-weight:700;margin-top:4px}
   .desktop-nav{padding: var(--space-14) var(--space-12) var(--space-20);display:flex;flex-direction:column;gap: var(--space-5)}
-  .desktop-nav-item{width:100%;display:flex;align-items:center;gap: var(--space-12);padding: var(--space-12) var(--space-14);border:0;border-radius: var(--radius-token-08);background:transparent;color:var(--text-soft);font:700 13px 'Plus Jakarta Sans',sans-serif;text-align:left;cursor:pointer;transition:.15s}
+  .desktop-nav-item{width:100%;display:flex;align-items:center;gap: var(--space-12);padding: var(--space-12) var(--space-14);border:0;border-radius: var(--radius-token-08);background:transparent;color:var(--text-soft);font:700 13px 'Plus Jakarta Sans',sans-serif;text-align:left;cursor:pointer;transition:.24s cubic-bezier(.22,1,.36,1)}
   .desktop-nav-item span{width:22px;height:22px;display:flex;align-items:center;justify-content:center;flex:0 0 22px;color:currentColor}.desktop-nav-item span svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
   .desktop-nav-item:hover{background:var(--color-alpha-088);color:var(--primary)}
   .desktop-nav-item.active{background:var(--color-alpha-089);color:var(--primary)}
@@ -2869,12 +2952,18 @@ a{
   .login-overlay{z-index:100}
 }
 @media screen and (max-width:1200px) and (min-width:901px){.desktop-sidebar{width:225px}.phone{grid-template-columns:225px minmax(0,1fr)}.phone>.screen{padding: var(--space-24) var(--space-26) var(--space-30)}}
+
+
 /* ---- Consolidated style block 15 ---- */
+
 @media screen and (min-width:901px){
   .desktop-brand-logo{width:48px;height:48px;min-width:48px;min-height:48px;border-radius: var(--radius-token-09);overflow:hidden;display:flex;align-items:center;justify-content:center;background:transparent;}
   .desktop-brand-logo img{width:48px;height:48px;display:block;object-fit:cover;border-radius: var(--radius-token-09);box-shadow: none;}
 }
+
+
 /* ---- Consolidated style block 16 ---- */
+
 @media screen and (min-width:901px){
   .desktop-brand{gap: var(--space-12)}
   .desktop-brand-logo{
@@ -2889,7 +2978,10 @@ a{
     box-shadow: none;
   }
 }
+
+
 /* ---- Consolidated style block 17 ---- */
+
 @media screen and (min-width: 901px) {
   .phone > .login-overlay {
     z-index: 9999 ;
@@ -2917,7 +3009,10 @@ a{
     cursor: pointer ;
   }
 }
+
+
 /* ---- Consolidated style block 18 ---- */
+
 /* Mobile UI: cleaner, calmer, more human-crafted */
 @media screen and (max-width:900px){
   html,body{background:var(--color-neutral-f6f7fb);}
@@ -2988,6 +3083,7 @@ a{
   .tab{font-size:10px;padding: var(--space-5) 0;gap: var(--space-2);}
   .tab svg{width:22px;height:22px;stroke-width:2;}
   .view.active{animation:mobileFade .16s ease;}
+
   /* Forms and modals */
   .modal-bg{align-items:flex-end;background:var(--color-alpha-042);}
   .modal{
@@ -3001,6 +3097,7 @@ a{
   .field input,.field select,.field textarea{font-size:12.5px;padding: var(--space-10) var(--space-11);border-radius: var(--radius-token-07);}
   .btn{border-radius: var(--radius-token-07);min-height:40px;font-size:12.5px;}
   .modal-actions{gap: var(--space-7);margin-top:12px;}
+
   /* Login */
   .login-overlay{padding: 0 var(--space-14) var(--space-18);background:var(--glass-bg);backdrop-filter:blur(14px);}
   .login-hero{
@@ -3018,8 +3115,11 @@ a{
   .login-card .btn{font-size:13.5px;padding: var(--space-12);border-radius: var(--radius-token-07);}
   .login-card .login-actions span{font-size:11px;}
 }
-@keyframes mobileFade{from{opacity:.75;transform:translateY(3px)}to{opacity:1;transform:none}}
+@keyframes mobileFade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+
 /* ---- Consolidated style block 19 ---- */
+
   /* Desktop login compact */
 @media screen and (min-width: 901px) {
   .phone > .login-overlay {
@@ -3064,6 +3164,7 @@ a{
   .phone > .login-overlay .login-card .field input { padding: var(--space-10) var(--space-12) ; font-size: 14px ; }
   .phone > .login-overlay .login-card .btn { padding: var(--space-11) ; font-size: 14px ; }
 }
+
   /* Desktop login visibility */
 @media screen and (min-width:901px) {
   .phone > .login-overlay[style*="display: none"] { display: none ; }
@@ -3072,6 +3173,7 @@ a{
   .phone > .login-overlay .login-hero { pointer-events: auto ; }
   .phone > .login-overlay #auth-submit-btn { position: relative; z-index: 2; pointer-events: auto ; }
 }
+
   /* Desktop modal layer */
 @media screen and (min-width:901px){
   /* Modal harus berada di atas sidebar + konten desktop agar overlay benar-benar menutup seluruh layar. */
@@ -3089,6 +3191,7 @@ a{
     z-index:1001 ;
   }
 }
+
   /* Calendar compact */
 /* Kalender dibuat lebih ringkas tanpa mengubah fungsi klik/tanggal. */
 .cal-grid {
@@ -3138,6 +3241,7 @@ a{
   }
   .cal-month { font-size: 12px ; }
 }
+
   /* Desktop sidebar + task meta */
 @media screen and (min-width: 901px) {
   html, body { width:100%; height:100%; overflow:hidden; }
@@ -3166,6 +3270,7 @@ a{
   .desktop-sidebar { width:225px ; }
   .phone > .screen { padding: var(--space-24) var(--space-26) var(--space-30) ; }
 }
+
 /* Perjelas badge Mata Pelajaran pada daftar tugas */
 .task-meta .pill {
     display: inline-flex ;
@@ -3193,12 +3298,17 @@ body.dark .task-meta .pill:not(.pill-due) {
     background: var(--color-alpha-020) ;
     border-color: var(--color-alpha-021) ;
 }
+
+
 /* ---- Consolidated style block 20 ---- */
+
 /* ============================================================
    KELASKU — PROFESSIONAL / ELEGANT UI OVERRIDES
    Clean surfaces, restrained color, crisp borders, no gradients.
    Existing functionality and class names are intentionally preserved.
    ============================================================ */
+
+
 body.dark{
   --bg-gradient:var(--color-ink);
   --glass-bg:var(--color-ink);
@@ -3217,11 +3327,14 @@ body.dark{
   --amber-glass:var(--color-accent);
   --input-bg:var(--color-blue-0b1220);
 }
+
 html,body{background:var(--bg-gradient);}
 body{background:var(--bg-gradient);}
+
 /* Remove decorative ambient gradients / blobs */
 .ambient-mesh{display:none;}
 .blob{display:none;}
+
 /* Main shell */
 .phone{
   background:var(--glass-bg);
@@ -3234,6 +3347,7 @@ body{background:var(--bg-gradient);}
 @media(max-width:480px){
   .phone{border-radius: var(--radius-token-01);box-shadow: none;border:none;}
 }
+
 /* Header / status */
 .statusbar{
   background:var(--glass-card);
@@ -3244,6 +3358,7 @@ body{background:var(--bg-gradient);}
   border:1px solid var(--glass-border);
   border-radius: var(--radius-token-30);
 }
+
 /* Content area */
 .screen{
   background:transparent;
@@ -3251,6 +3366,7 @@ body{background:var(--bg-gradient);}
   scrollbar-color:var(--color-accent-cbd5e1) transparent;
 }
 body.dark .screen{scrollbar-color:var(--color-blue-475569) transparent;}
+
 /* Login */
 .login-overlay{
   background:var(--bg-gradient);
@@ -3262,7 +3378,7 @@ body.dark .screen{scrollbar-color:var(--color-blue-475569) transparent;}
   border-radius: var(--radius-token-02);
   box-shadow: none;
 }
-.login-logo{transform:none;animation:none;}
+.login-logo{transform:none;}
 .login-logo img{box-shadow: 0 4px 12px var(--color-alpha-005);}
 .login-card{
   background:var(--glass-card);
@@ -3290,6 +3406,7 @@ body.dark .screen{scrollbar-color:var(--color-blue-475569) transparent;}
 .login-card .btn:hover,
 .btn-primary:hover,
 .fab-add:hover{background:var(--color-blue);}
+
 /* Hero and summary surfaces */
 .hero{
   background:var(--color-ink);
@@ -3318,6 +3435,7 @@ body.dark .screen{scrollbar-color:var(--color-blue-475569) transparent;}
   box-shadow: none;
 }
 .balance-card::after{display:none;}
+
 /* Generic cards */
 .card{
   background:var(--glass-card);
@@ -3335,6 +3453,7 @@ body.dark .screen{scrollbar-color:var(--color-blue-475569) transparent;}
 }
 .section-link:hover{background:var(--color-neutral-eff6ff);}
 body.dark .section-link:hover{background:var(--color-blue-172554);}
+
 /* Rows */
 .row-item,.tx-item,.student-row,.announce-item,.report-item,.task-item{
   border-bottom:1px solid var(--glass-border);
@@ -3357,6 +3476,7 @@ body.dark .row-time{
 .task-file:active,.announce-file:active{
   background:var(--primary);
 }
+
 /* Calendar */
 .cal-card{margin-top:12px;}
 .cal-nav-btn{
@@ -3383,6 +3503,7 @@ body.dark .cal-day.today{background:var(--color-blue-172554);}
 }
 .cal-dot{background:var(--primary);}
 .cal-day.selected .cal-dot{background:var(--color-white);}
+
 /* Day tabs / mode switch */
 .mode-switch{
   background:var(--glass-card);
@@ -3408,6 +3529,7 @@ body.dark .cal-day.today{background:var(--color-blue-172554);}
   background:var(--primary);
   border-color:var(--primary);
 }
+
 /* Announcements */
 .announce-title,.announce-title-btn{font-size:14px;}
 .announce-description{font-size:13px;line-height:1.55;}
@@ -3418,6 +3540,7 @@ body.dark .cal-day.today{background:var(--color-blue-172554);}
 .announce-pill.overdue{
   border-color:var(--color-violet-fecdd3);
 }
+
 /* Tasks */
 .checkbox{
   border:1.5px solid var(--color-accent-cbd5e1);
@@ -3436,6 +3559,7 @@ body.dark .pill-due{
   background:var(--color-rose-35131d);
   color:var(--color-rose-fda4af);
 }
+
 /* Roster */
 .toggle-btn{
   background:var(--glass-card);
@@ -3455,6 +3579,7 @@ body.dark .s-avatar{
   background:var(--color-blue-172554);
   color:var(--color-blue-93c5fd);
 }
+
 /* Buttons */
 .btn{
   border-radius: var(--radius-token-06);
@@ -3469,6 +3594,7 @@ body.dark .s-avatar{
   border-radius: var(--radius-token-06);
   min-height:46px;
 }
+
 /* Modal */
 .modal-bg{background:var(--color-alpha-042);backdrop-filter:blur(2px);}
 .modal{
@@ -3479,6 +3605,7 @@ body.dark .s-avatar{
   box-shadow: 0 -8px 30px var(--color-alpha-039);
 }
 body.dark .modal-bg{background:var(--color-alpha-043);}
+
 /* Toast */
 .toast{
   background:var(--glass-card);
@@ -3487,6 +3614,7 @@ body.dark .modal-bg{background:var(--color-alpha-043);}
   box-shadow: var(--shadow-token-57);
   border-radius: var(--radius-token-08);
 }
+
 /* Bottom navigation */
 .tabbar{
   background:var(--glass-card);
@@ -3496,6 +3624,7 @@ body.dark .modal-bg{background:var(--color-alpha-043);}
 }
 .tab{font-size:10.5px;}
 .tab.active{color:var(--primary);}
+
 /* Admin/user areas */
 .acc-row{border-bottom:1px solid var(--glass-border);}
 .acc-badge.superadmin,.acc-badge.admin{
@@ -3506,6 +3635,7 @@ body.dark .modal-bg{background:var(--color-alpha-043);}
   background:var(--color-neutral-ecfdf5);
   color:var(--color-green);
 }
+
 /* Piket / checklist surfaces */
 .piket-jadwal-row,
 .summary-box{
@@ -3518,6 +3648,7 @@ body.dark .modal-bg{background:var(--color-alpha-043);}
 }
 .roster-choice-btn.done.active{background:var(--teal);}
 .roster-choice-btn.undone.active{background:var(--rose);}
+
 /* Focus accessibility */
 button:focus-visible,
 input:focus-visible,
@@ -3526,9 +3657,13 @@ textarea:focus-visible{
   outline:2px solid var(--color-alpha-084);
   outline-offset:2px;
 }
+
 /* Keep borders crisp in both themes */
 *{border-color:var(--glass-border);}
+
+
 /* ---- Consolidated style block 21 ---- */
+
 /* =========================================================
    KELASKU LOGIN — PROFESSIONAL / RELEASE UI
    Scope: #login-overlay only. Does not alter app screens.
@@ -3725,6 +3860,7 @@ textarea:focus-visible{
 #login-overlay .login-cache-btn svg{width:16px;height:16px;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
 #login-overlay .login-cache-btn:hover{background:var(--color-neutral-f1f5f9);border-color:var(--color-accent-cbd5e1);color:var(--color-blue-334155);}
 #login-overlay .login-cache-btn:active{background:var(--color-neutral-e2e8f0);}
+
 body.dark #login-overlay{background:var(--color-blue-0b1220);}
 body.dark #login-overlay .login-logo{background:var(--color-ink-soft);border-color:var(--color-blue-1e293b);box-shadow: 0 10px 28px var(--color-alpha-010);}
 body.dark #login-overlay .login-hero-title{color:var(--color-neutral-f8fafc);}
@@ -3744,6 +3880,7 @@ body.dark #login-overlay .login-divider{color:var(--color-slate);}
 body.dark #login-overlay .login-divider span{background:var(--color-ink-soft);}
 body.dark #login-overlay .login-cache-btn{background:var(--color-ink);border-color:var(--color-blue-334155);color:var(--color-accent-cbd5e1);}
 body.dark #login-overlay .login-cache-btn:hover{background:var(--color-blue-172033);border-color:var(--color-blue-475569);color:var(--color-neutral-f8fafc);}
+
 @media (min-width:901px){
   #login-overlay{padding: var(--space-40) var(--space-24);}
   #login-overlay .login-shell{width:min(100%,470px);}
@@ -3763,12 +3900,20 @@ body.dark #login-overlay .login-cache-btn:hover{background:var(--color-blue-1720
   #login-overlay .login-footer-links{gap: var(--space-10);}
   #login-overlay .login-footer-links .section-link{font-size:11px;}
 }
+
 @media (prefers-reduced-motion:reduce){
   #login-overlay *{scroll-behavior:auto;transition:none;animation:none;}
 }
+
+
 /* ---- Consolidated style block 22 ---- */
+
 body.kelasku-authenticated #login-overlay { display: none ; }
+
+
 /* ---- Consolidated style block 23 ---- */
+
+
 body:not(.dark){--glass-card:var(--ui-surface);--glass-border:var(--ui-border);--text-main:var(--ui-text);--text-soft:var(--ui-muted);--text-muted:var(--ui-soft)}
 body.dark{--ui-bg:var(--color-blue-0b1220);--ui-surface:var(--color-ink-soft);--ui-sidebar:var(--color-ink);--ui-border:var(--color-blue-25334a);--ui-text:var(--color-neutral-f8fafc);--ui-muted:var(--color-blue-9fb0c8);--ui-soft:var(--color-blue-71829a);--ui-blue:var(--color-blue-60a5fa);--ui-blue-soft:var(--color-blue-13233d);--ui-green:var(--color-green-4ade80);--ui-green-soft:var(--color-green-0d2417);--ui-red:var(--color-rose-fb7185);--ui-red-soft:var(--color-rose-32131b);--ui-amber:var(--color-amber);--ui-amber-soft:var(--color-rose);--ui-purple:var(--color-blue-a78bfa);--ui-purple-soft:var(--color-blue-1e1635);--glass-card:var(--ui-surface);--glass-border:var(--ui-border);--text-main:var(--ui-text);--text-soft:var(--ui-muted);--text-muted:var(--ui-soft)}
 .view{max-width:1180px;margin: 0 auto;padding-bottom:28px}
@@ -3799,12 +3944,18 @@ body.dark .kas-pro-metric{box-shadow: 0 6px 18px var(--color-alpha-004)}
 @media(max-width:900px){.kas-pro-metrics{grid-template-columns:1fr 1fr}.task-board,.report-pro-top{grid-template-columns:1fr}}
 @media(max-width:620px){.kas-pro-metrics{grid-template-columns:1fr}.kas-pro-filters{min-width:0;width:100%}#hp-list,#piket-list{grid-template-columns:repeat(2,minmax(0,1fr))}.timeline:before{left:56px}.timeline-item{grid-template-columns:48px 1fr;gap: var(--space-12)}.task-board{grid-template-columns:1fr}.report-kpi-grid{grid-template-columns:1fr 1fr}.report-pro-top{gap: var(--space-10)}}
 @media(max-width:430px){.pagehead h1{font-size:22px}.hp-slot{min-height:126px;padding: var(--space-10)}.kas-pro-metric{padding: var(--space-14)}.kpm-value{font-size:21px}}
+
+
 /* ---- Consolidated style block 24 ---- */
+
 .task-pro-card[role="button"]{cursor:pointer;transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease}
 .task-pro-card[role="button"]:hover{transform:translateY(-1px)}
 .task-pro-card[role="button"]:focus-visible{outline:2px solid var(--ui-accent,var(--color-blue-bright));outline-offset:2px}
 .task-pro-actions button{position:relative;z-index:2}
+
+
 /* ---- Consolidated style block 25 ---- */
+
 /* KAS: nominal tetap jelas di mode gelap */
 body.dark .kas-pro-metric .kpm-value,
 body.dark #kas-pro-in,
@@ -3820,6 +3971,7 @@ body.dark .kas-pro-metric.kpm-out .kpm-value,
 body.dark #kas-pro-out { color: var(--color-rose-fb7185) ; }
 body.dark .kas-pro-metric.kpm-bal .kpm-value,
 body.dark #kas-pro-bal { color: var(--color-blue-60a5fa) ; }
+
 /* Rekap kas versi lama juga dibuat kontras */
 body.dark .balance-card .balance-value,
 body.dark .balance-card .bf-item b,
@@ -3830,9 +3982,15 @@ body.dark #kas-out {
   opacity: 1 ;
 }
 body.dark .balance-card .bf-item { color: var(--color-alpha-060) ; }
+
+
 /* ---- Consolidated style block 26 ---- */
+
 /* v18: tanggal kalender HP/Piket di-reset ke hari ini saat modul dibuka kembali. */
+
+
 /* ---- Consolidated style block 27 ---- */
+
 /* Jadwal: dark mode contrast fix */
 body.dark #view-jadwal .mode-switch {
   background:var(--color-ink-soft) ;
@@ -3913,7 +4071,10 @@ body.dark #view-jadwal .section-link {
   color:var(--color-muted) ;
   -webkit-text-fill-color:var(--color-muted) ;
 }
+
+
 /* ---- Consolidated style block 28 ---- */
+
 .hp-slot-name-button{
   border:0; background:transparent; padding: 0; margin: 0; color:inherit; font:inherit; font-weight:800; text-align:left; cursor:default; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
 }
@@ -3924,7 +4085,10 @@ body.dark .hp-slot-name-button:hover{text-decoration:none;text-decoration-line:n
 .hp-slot-edit:hover{background:var(--ui-soft-bg,var(--color-neutral-f8fafc));color:var(--ui-text,var(--color-ink));border-color:var(--color-blue-bfdbfe)}
 body.dark .hp-slot-edit{border-color:var(--color-blue-334155);color:var(--color-muted);background:var(--color-ink-soft)}
 body.dark .hp-slot-edit:hover{background:var(--color-blue-1e293b);color:var(--color-neutral-f8fafc);border-color:var(--color-blue-bright)}
+
+
 /* ---- Consolidated style block 29 ---- */
+
 .hp-slot-name-button{cursor:pointer;}
 .hp-slot-name-button:hover{text-decoration:none;text-decoration-line:none;}
 .hp-edit-modal{max-width:420px;}
@@ -3936,7 +4100,10 @@ body.dark .hp-edit-name-current{color:var(--color-muted);}
 body.dark .hp-edit-status-btn{background:var(--color-ink-soft);border-color:var(--color-blue-334155);color:var(--color-muted);}
 body.dark .hp-edit-status-btn.active{background:var(--color-blue-172554);border-color:var(--color-blue-bright);color:var(--color-blue-93c5fd);}
 @media(max-width:560px){.hp-edit-status-grid{grid-template-columns:1fr;}}
+
+
 /* ---- Consolidated style block 30 ---- */
+
 /* Nama siswa di Titip HP adalah area klik, bukan link. */
 .student-row .s-name,
 .student-row .s-name:hover,
@@ -3948,7 +4115,10 @@ body.dark .hp-edit-status-btn.active{background:var(--color-blue-172554);border-
   text-underline-offset: 0 ;
   -webkit-text-decoration-line: none ;
 }
+
+
 /* ---- Consolidated style block 31 ---- */
+
 /* Logout: make the action reliably clickable and visually stable. */
 #view-settings [onclick="logout()"],
 #view-settings button[onclick="logout()"] {
@@ -3957,6 +4127,7 @@ body.dark .hp-edit-status-btn.active{background:var(--color-blue-172554);border-
     pointer-events: auto ;
     cursor: pointer ;
 }
+
 /* Kas transaction typography: explicit dark-mode contrast. */
 body.dark #kas-list .tx-item,
 body.dark #kas-list .tx-item * {
@@ -3985,7 +4156,10 @@ body.dark #kas-list .tx-item .tx-sub span {
     color: var(--color-blue-93c5fd) ;
     -webkit-text-fill-color: var(--color-blue-93c5fd) ;
 }
+
+
 /* ---- Consolidated style block 32 ---- */
+
 /* Transaction text must remain readable in both themes. */
 #kas-list .tx-item .tx-title { color: var(--color-ink) ; }
 #kas-list .tx-item .tx-sub { color: var(--color-slate) ; }
@@ -3997,12 +4171,17 @@ body.dark #kas-list .tx-item .tx-amt.plus { color: var(--color-green-34d399) ; -
 body.dark #kas-list .tx-item .tx-amt.minus { color: var(--color-rose-fb7185) ; -webkit-text-fill-color: var(--color-rose-fb7185) ; }
 body.dark #kas-list .tx-item { background: transparent ; border-bottom-color: var(--color-blue-334155) ; }
 body.dark #kas-list .tx-item .tx-sub span { color: var(--color-blue-93c5fd) ; -webkit-text-fill-color: var(--color-blue-93c5fd) ; }
+
 /* Logout control stays above settings surfaces and is always interactive. */
 #view-settings button[onclick="logout()"] { position: relative ; z-index: 999 ; pointer-events: auto ; opacity: 1 ; visibility: visible ; }
+
+
 /* ---- Consolidated style block 33 ---- */
+
 /* ============================================================
    DASHBOARD / SAAS PROFESSIONAL V4
    ============================================================ */
+
 .dashboard-topbar{display:flex;align-items:center;justify-content:space-between;gap: var(--space-16);margin-bottom:20px;position:relative;z-index:30}
 .dashboard-search{position:relative;flex:1;max-width:640px;display:flex;align-items:center;background:var(--dash-surface);border:1px solid var(--dash-border);border-radius: var(--radius-token-08);height:44px;box-shadow: 0 1px 2px var(--color-alpha-030)}
 .dashboard-search:focus-within{border-color:var(--color-alpha-079);box-shadow: 0 0 0 3px var(--color-alpha-074)}
@@ -4041,7 +4220,7 @@ body.dark #kas-list .tx-item .tx-sub span { color: var(--color-blue-93c5fd) ; -w
 .dashboard-panel .section-head{margin-bottom:8px;align-items:flex-end}
 .section-kicker{font-size:9px;font-weight:800;letter-spacing:.11em;color:var(--color-muted);margin-bottom:2px}
 .dashboard-panel .section-title{font-size:14px;color:var(--dash-text);font-weight:750;letter-spacing:-.01em}
-.section-action{display:inline-flex;align-items:center;gap: var(--space-5);border:1px solid transparent;background:transparent;color:var(--dash-muted);padding: var(--space-6) var(--space-8);border-radius: var(--radius-token-26);font-size:10px;font-weight:700;cursor:pointer;transition:.15s ease}
+.section-action{display:inline-flex;align-items:center;gap: var(--space-5);border:1px solid transparent;background:transparent;color:var(--dash-muted);padding: var(--space-6) var(--space-8);border-radius: var(--radius-token-26);font-size:10px;font-weight:700;cursor:pointer;transition:.24s cubic-bezier(.22,1,.36,1)}
 .section-action:hover{background:var(--color-neutral-f8fafc);color:var(--dash-text);border-color:var(--dash-border)}
 .section-action svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
 .dashboard-card{background:var(--dash-surface);border:1px solid var(--dash-border);border-radius: var(--radius-token-09);box-shadow: var(--shadow-token-56);padding: var(--space-14);min-height:0}
@@ -4076,6 +4255,7 @@ body.dark #kas-list .tx-item .tx-sub span { color: var(--color-blue-93c5fd) ; -w
 .dashboard-card .task-meta{margin-top:5px;gap: var(--space-5)}
 .dashboard-card .pill{font-size:8.5px;padding: var(--space-4) var(--space-7);border:1px solid var(--color-neutral-e2e8f0);background:var(--color-neutral-f8fafc);color:var(--color-slate)}
 .dashboard-card .pill-due{background:var(--color-neutral-eff6ff);border-color:var(--color-accent-dbeafe);color:var(--color-blue-1d4ed8)}
+
 /* Desktop-first behavior while preserving the existing mobile app shell. */
 @media screen and (min-width:901px){
   .dashboard-topbar{margin-top:-2px}
@@ -4107,7 +4287,10 @@ body.dark #kas-list .tx-item .tx-sub span { color: var(--color-blue-93c5fd) ; -w
 @media (prefers-reduced-motion:reduce){
   .dashboard-stat-card,.section-action,.dashboard-search{transition:none}
 }
+
+
 /* ---- Consolidated style block 34 ---- */
+
 @media screen and (min-width:901px){
   .desktop-sidebar{background:var(--color-neutral-f8fafc);border-right:1px solid var(--color-neutral-e2e8f0);backdrop-filter:none;-webkit-backdrop-filter:none}
   .desktop-brand{padding: var(--space-20) var(--space-18);border-bottom:1px solid var(--color-neutral-e2e8f0)}
@@ -4122,7 +4305,10 @@ body.dark #kas-list .tx-item .tx-sub span { color: var(--color-blue-93c5fd) ; -w
 @media screen and (max-width:900px){
   .desktop-nav-item span svg{stroke-width:1.75}
 }
+
+
 /* ---- Consolidated style block 35 ---- */
+
 /* ============================================================
    DARK MODE FIX V5
    Keep the SaaS dashboard hierarchy, but remove light surfaces
@@ -4138,6 +4324,7 @@ body.dark{
   --dash-primary-soft:var(--color-blue-172554);
   --dash-shadow:0 1px 2px var(--color-alpha-010),0 10px 28px var(--color-alpha-005);
 }
+
 @media screen and (min-width:901px){
   body.dark .desktop-sidebar{
     background:var(--color-blue-0b1220);
@@ -4158,6 +4345,7 @@ body.dark{
     color:var(--color-blue-bfdbfe);
   }
 }
+
 body.dark .dashboard-topbar .dashboard-search{
   background:var(--color-ink-soft);
   border-color:var(--color-blue-334155);
@@ -4177,12 +4365,14 @@ body.dark .dashboard-user-avatar{
   background:var(--color-blue-1e293b);
   border:1px solid var(--color-blue-334155);
 }
+
 /* Hero stays prominent, but its shadow/border are tuned for dark mode. */
 body.dark .dashboard-hero{
   background:linear-gradient(135deg,var(--color-ink-soft) 0%,var(--color-blue-1d4ed8) 100%);
   border-color:var(--color-blue-29406b);
   box-shadow: 0 16px 34px var(--color-alpha-008);
 }
+
 body.dark .dashboard-stat-card,
 body.dark .dashboard-card{
   background:var(--color-ink-soft);
@@ -4196,6 +4386,7 @@ body.dark .dashboard-stat-card:hover{
 body.dark .dashboard-stat-card .stat-status{color:var(--color-slate);}
 body.dark .dashboard-stat-card .stat-label{color:var(--color-muted);}
 body.dark .dashboard-stat-card .stat-value{color:var(--color-neutral-f8fafc);}
+
 /* Stat icon surfaces */
 body.dark .dashboard-icon-blue{background:var(--color-blue-172554);color:var(--color-blue-60a5fa);}
 body.dark .dashboard-icon-violet{background:var(--color-blue-1e1b4b);color:var(--color-blue-a78bfa);}
@@ -4203,6 +4394,7 @@ body.dark .dashboard-icon-teal{background:var(--color-green-0b2a22);color:var(--
 body.dark .dashboard-icon-amber{background:var(--color-accent);color:var(--color-amber);}
 body.dark .dashboard-icon-rose{background:var(--color-rose-35131d);color:var(--color-rose-fb7185);}
 body.dark .dashboard-stat-card .stat-icon{background:var(--color-blue-172554);color:var(--color-blue-60a5fa);}
+
 body.dark .dashboard-panel .section-title{color:var(--color-neutral-f8fafc);}
 body.dark .section-kicker{color:var(--color-slate);}
 body.dark .section-action{color:var(--color-muted);}
@@ -4211,6 +4403,7 @@ body.dark .section-action:hover{
   color:var(--color-neutral-e2e8f0);
   border-color:var(--color-blue-334155);
 }
+
 body.dark .dashboard-notify-badge{
   background:var(--color-rose-35131d);
   color:var(--color-rose-fb7185);
@@ -4220,6 +4413,7 @@ body.dark .dashboard-notification-card .empty,
 body.dark .compact-list .empty{
   color:var(--color-muted);
 }
+
 /* Announcement / list rows */
 body.dark .dashboard-card .announce-item,
 body.dark .dashboard-card .row-item,
@@ -4273,6 +4467,7 @@ body.dark .dashboard-card .row-time{
   border-color:var(--color-blue-294b8a);
   color:var(--color-blue-93c5fd);
 }
+
 /* Prevent inline legacy white surfaces inside these dashboard cards. */
 body.dark .dashboard-card [style*="background:var(--color-white)"],
 body.dark .dashboard-card [style*="background: var(--color-white)"],
@@ -4280,6 +4475,7 @@ body.dark .dashboard-card [style*="background:var(--color-white)"],
 body.dark .dashboard-card [style*="background: var(--color-white)"]{
   background:var(--color-ink);
 }
+
 /* The main desktop content should not have a separate light shell. */
 body.dark .screen,
 body.dark .phone{
@@ -4289,8 +4485,12 @@ body.dark .statusbar{
   background:var(--color-ink);
   border-bottom-color:var(--color-blue-1f2a3b);
 }
+
 /* Keep login dark-mode styling untouched by the dashboard patch. */
+
+
 /* ---- Consolidated style block 36 ---- */
+
 /* ==========================================================
    MODULE DARK MODE — comprehensive contrast correction
    ========================================================== */
@@ -4347,6 +4547,7 @@ body.dark .view .settings-card *:not(svg) {
   color: var(--text-main) ;
   -webkit-text-fill-color: var(--text-main) ;
 }
+
 body.dark .view .pagehead p,
 body.dark .view .section-kicker,
 body.dark .view .section-link,
@@ -4361,6 +4562,7 @@ body.dark .view .empty {
   color: var(--color-muted) ;
   -webkit-text-fill-color: var(--color-muted) ;
 }
+
 body.dark .view .card,
 body.dark .view .section > .card,
 body.dark .view .task-column,
@@ -4380,6 +4582,7 @@ body.dark .view .search-box {
   border-color: var(--color-blue-334155) ;
   color: var(--color-neutral-f8fafc) ;
 }
+
 body.dark .view input,
 body.dark .view select,
 body.dark .view textarea {
@@ -4390,6 +4593,7 @@ body.dark .view textarea {
 }
 body.dark .view input::placeholder,
 body.dark .view textarea::placeholder { color: var(--color-slate) ; -webkit-text-fill-color:var(--color-slate) ; }
+
 body.dark .view button:not(.btn-primary):not(.login-submit),
 body.dark .view .task-filter-tab,
 body.dark .view .task-pro-actions button,
@@ -4413,6 +4617,7 @@ body.dark .view .report-action-btn.primary {
   border-color: var(--color-blue) ;
   -webkit-text-fill-color:var(--color-blue-93c5fd) ;
 }
+
 body.dark .view [style*="color:var(--color-black)"],
 body.dark .view [style*="color: var(--color-black)"],
 body.dark .view [style*="color:black"],
@@ -4424,6 +4629,7 @@ body.dark .view [style*="color: var(--color-ink)"] {
   color: var(--color-neutral-f8fafc) ;
   -webkit-text-fill-color: var(--color-neutral-f8fafc) ;
 }
+
 /* Tugas: the previous enhancement accidentally turned the first section into a grid,
    placing its heading on the left and the list on the right. Keep heading above list. */
 #view-tugas #task-board-shell { display:grid ; grid-template-columns:minmax(0,1fr) minmax(0,1fr) ; gap: var(--space-16) ; }
@@ -4435,11 +4641,13 @@ body.dark .view [style*="color: var(--color-ink)"] {
 @media (max-width: 900px){
   #view-tugas #task-board-shell { grid-template-columns:1fr ; }
 }
+
 /* Jadwal timeline keeps the line and cards readable in dark mode. */
 body.dark #view-jadwal .timeline:before { background:var(--color-blue-334155) ; }
 body.dark #view-jadwal .timeline-card { background:var(--color-ink-soft) ; border-color:var(--color-blue-334155) ; }
 body.dark #view-jadwal .timeline-card:before { background:var(--color-blue-60a5fa) ; box-shadow: 0 0 0 4px var(--color-blue-172554); }
 body.dark #view-jadwal .day-chip { background:var(--color-ink-soft) ; color:var(--color-accent-cbd5e1) ; border-color:var(--color-blue-334155) ; }
+
 /* Keep form controls and data rows legible regardless of inline styles. */
 body.dark #view-kas table,
 body.dark #view-kas th,
@@ -4447,10 +4655,12 @@ body.dark #view-kas td,
 body.dark #view-laporan table,
 body.dark #view-laporan th,
 body.dark #view-laporan td { color:var(--color-neutral-f8fafc) ; border-color:var(--color-blue-334155) ; }
+
 /* ============================================================
    FINAL UI POLISH — restrained SaaS / glass system
    ============================================================ */
 html { scroll-behavior: smooth; }
+
 button,
 input,
 select,
@@ -4458,6 +4668,7 @@ textarea,
 [role="button"] {
     -webkit-tap-highlight-color: transparent;
 }
+
 button:focus-visible,
 input:focus-visible,
 select:focus-visible,
@@ -4466,10 +4677,12 @@ textarea:focus-visible,
     outline: 3px solid color-mix(in srgb, var(--primary) 28%, transparent);
     outline-offset: 2px;
 }
+
 button:hover,
 [role="button"]:hover {
-    transition: transform .18s ease, background-color .18s ease, border-color .18s ease, box-shadow .18s ease, color .18s ease, opacity .18s ease;
+    transition: transform .24s cubic-bezier(.22,1,.36,1), background-color .24s ease, border-color .24s ease, box-shadow .24s ease, color .24s ease, opacity .24s ease;
 }
+
 .btn:hover,
 .fab-add:hover,
 .theme-btn:hover,
@@ -4481,6 +4694,7 @@ button:hover,
 .section-link:hover {
     transform: translateY(-1px);
 }
+
 .btn:active,
 .fab-add:active,
 .theme-btn:active,
@@ -4490,8 +4704,9 @@ button:hover,
 .roster-choice-btn:active,
 .mode-btn:active,
 .section-link:active {
-    transform: translateY(0) scale(.98);
+    transform: translateY(0) scale(.992);
 }
+
 .card,
 .stat-card,
 .balance-card,
@@ -4501,14 +4716,16 @@ button:hover,
 .summary-box,
 .piket-jadwal-row,
 .modal {
-    transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease, background-color .18s ease;
+    transition: border-color .24s ease, box-shadow .24s ease, transform .24s cubic-bezier(.22,1,.36,1), background-color .24s ease;
 }
+
 .card:hover,
 .stat-card:hover,
 .piket-jadwal-row:hover,
 .summary-box:hover {
     border-color: color-mix(in srgb, var(--primary) 20%, var(--glass-border));
 }
+
 .field input:hover,
 .field select:hover,
 .field textarea:hover,
@@ -4516,28 +4733,33 @@ button:hover,
 .search-box:hover {
     border-color: color-mix(in srgb, var(--primary) 24%, var(--glass-border));
 }
+
 .cal-month-click,
 .cal-year-click {
     cursor: pointer;
     user-select: none;
     -webkit-user-select: none;
 }
+
 .cal-month-click:hover,
 .cal-year-click:hover {
     color: var(--primary);
 }
+
 .cal-month-click:focus-visible,
 .cal-year-click:focus-visible {
     outline: 2px solid var(--primary);
     outline-offset: 3px;
 }
+
 .announce-item,
 .task-item,
 .student-row,
 .tx-item,
 .report-item {
-    transition: background-color .18s ease, transform .18s ease;
+    transition: background-color .24s ease, transform .24s cubic-bezier(.22,1,.36,1);
 }
+
 .announce-item:hover,
 .task-item:hover,
 .student-row:hover,
@@ -4545,6 +4767,7 @@ button:hover,
 .report-item:hover {
     background: color-mix(in srgb, var(--primary) 4%, transparent);
 }
+
 @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
@@ -4555,16 +4778,19 @@ button:hover,
         transition-duration: .01ms;
     }
 }
+
 @media (min-width: 901px) {
     .phone {
         border-radius: var(--radius-xl);
     }
 }
+
 @media (max-width: 480px) {
     .phone {
         border-radius: 0;
     }
 }
+
 </style>
 </head>
 <body>
@@ -4590,10 +4816,12 @@ button:hover,
         <div class="login-hero-sub">TJKT 1 — SMKN 1 SUNGAILIAT</div>
       </div>
     </div>
+
     <div class="login-card">
       <div class="login-welcome" id="auth-title">Selamat datang</div>
       <div class="login-sub" id="auth-sub">Masuk dengan email untuk mengakses dasbor kelas</div>
       <div class="login-error" id="login-error"></div>
+
       <div class="field" id="auth-nama-field" style="display:none;">
         <label for="auth-nama">NAMA LENGKAP</label>
         <div class="login-input-wrap">
@@ -4603,6 +4831,7 @@ button:hover,
           <input type="text" id="auth-nama" placeholder="Nama lengkap kamu">
         </div>
       </div>
+
       <div class="field">
         <label for="auth-email">EMAIL</label>
         <div class="login-input-wrap">
@@ -4612,6 +4841,7 @@ button:hover,
           <input type="email" id="auth-email" placeholder="nama@email.com" autocomplete="email">
         </div>
       </div>
+
       <div class="field">
         <label for="auth-password">PASSWORD</label>
         <div class="login-input-wrap">
@@ -4622,14 +4852,17 @@ button:hover,
         </div>
         <div class="field-hint" id="auth-password-hint" style="display:none;">Minimal 8 karakter + huruf kecil + huruf besar + angka + simbol.</div>
       </div>
+
       <button class="btn btn-primary btn-block login-submit" id="auth-submit-btn" onclick="doAuthSubmit()">
         <span>Masuk ke Kelas</span>
         <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h13"></path><path d="m13 6 6 6-6 6"></path></svg>
       </button>
+
       <div class="login-footer-links">
         <span class="section-link" onclick="toggleAuthMode()" id="auth-toggle-link">Belum punya akun? Daftar</span>
         <span class="section-link" onclick="doForgotPassword()">Lupa password?</span>
       </div>
+
       <div class="login-cache-area">
         <div class="login-divider"><span>Masalah akses?</span></div>
         <button class="btn btn-ghost cache-btn login-cache-btn btn-block" onclick="clearLocalData()">
@@ -4676,6 +4909,7 @@ button:hover,
           <div class="dashboard-user-avatar" id="dashboard-user-avatar">TJ</div>
         </div>
       </div>
+
       <div class="hero dashboard-hero">
         <div class="hero-top">
           <div>
@@ -4690,6 +4924,7 @@ button:hover,
           <span class="htag" id="tag-today">Jumat, 04 Sep</span>
         </div>
       </div>
+
       <div class="stat-grid dashboard-stat-grid">
         <div class="stat-card dashboard-stat-card">
           <div class="stat-top"><div class="stat-icon dashboard-icon-blue"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"></rect><path d="M3 10h18"></path><circle cx="16" cy="14" r="1.5"></circle></svg></div><div class="stat-status">Keuangan</div></div>
@@ -4712,6 +4947,7 @@ button:hover,
           <div class="stat-label">Laporan</div><div class="stat-value" id="home-reports">0</div>
         </div>
       </div>
+
       <div class="dashboard-main-grid">
         <section class="section dashboard-panel dashboard-panel-announcements">
           <div class="section-head">
@@ -4720,6 +4956,7 @@ button:hover,
           </div>
           <div class="card dashboard-card" id="pengumuman-list"></div>
         </section>
+
         <section class="section dashboard-panel dashboard-panel-notifications">
           <div class="section-head">
             <div><div class="section-kicker">PEMBARUAN</div><div class="section-title">Notifikasi <span id="home-notify-badge" class="dashboard-notify-badge" style="display:none;">0 baru</span></div></div>
@@ -4728,6 +4965,7 @@ button:hover,
           <div class="card dashboard-card dashboard-notification-card" id="home-notifications"></div>
         </section>
       </div>
+
       <div class="dashboard-secondary-grid">
         <section class="section dashboard-panel">
           <div class="section-head"><div><div class="section-kicker">HARI INI</div><div class="section-title">Jadwal Hari Ini</div></div><button class="section-action" type="button" onclick="goTo('jadwal')">Lihat semua</button></div>
@@ -5161,6 +5399,7 @@ let darkMode = localStorage.getItem('kelasku-theme') === 'dark';
 const KELASKU_PASSWORD_MIN_LENGTH = 8;
 const KELASKU_PASSWORD_REQUIRE_SPECIAL = true;
 let reauthResolver = null;
+
 function passwordPolicyMissing(password) {
     const missing = [];
     if (password.length < KELASKU_PASSWORD_MIN_LENGTH) missing.push('minimal 8 karakter');
@@ -5170,6 +5409,7 @@ function passwordPolicyMissing(password) {
     if (KELASKU_PASSWORD_REQUIRE_SPECIAL && !/[^A-Za-z0-9]/.test(password)) missing.push('simbol');
     return missing;
 }
+
 async function validateKelaskuPassword(password) {
     const localMissing = passwordPolicyMissing(password);
     if (localMissing.length) {
@@ -5178,6 +5418,7 @@ async function validateKelaskuPassword(password) {
             message: 'Password harus memenuhi: ' + localMissing.join(', ') + '.'
         };
     }
+
     if (typeof auth.validatePassword === 'function') {
         try {
             const status = await auth.validatePassword(password);
@@ -5192,9 +5433,12 @@ async function validateKelaskuPassword(password) {
             console.warn('Firebase password policy validation unavailable:', e);
         }
     }
+
     return { valid: true, message: '' };
 }
+
 function clearEmailVerificationBox() {}
+
 // ============================================================
 // AUTH STATE
 // ============================================================
@@ -5212,6 +5456,7 @@ auth.onAuthStateChanged(async (user) => {
         if (typeof stopSeparatedSync === 'function') stopSeparatedSync();
     }
 });
+
 async function loadUserProfile(user) {
     // Authentication sukses harus segera membuka aplikasi.
     // Sinkronisasi/rendering data adalah proses lanjutan dan tidak boleh
@@ -5219,6 +5464,7 @@ async function loadUserProfile(user) {
     try {
         const ref = db.collection(FS_PROFILES).doc(user.uid);
         let snap;
+
         try {
             snap = await ref.get();
         } catch (profileReadError) {
@@ -5229,6 +5475,7 @@ async function loadUserProfile(user) {
             }
             throw profileReadError;
         }
+
         // Pengguna baru selalu dibuat sebagai siswa.
         // Hanya Super Admin yang boleh mengubah role setelah profile dibuat.
         if (!snap.exists) {
@@ -5243,7 +5490,9 @@ async function loadUserProfile(user) {
             await ref.set(profile);
             snap = await ref.get();
         }
+
         const profile = snap.data() || {};
+
         if (profile.active === false) {
             document.getElementById('login-error').textContent = 'Akun ini telah dinonaktifkan. Hubungi Super Admin.';
             document.getElementById('login-error').style.display = 'block';
@@ -5251,33 +5500,40 @@ async function loadUserProfile(user) {
             await auth.signOut();
             return;
         }
+
         const role = VALID_ROLES.includes(profile.role) ? profile.role : 'siswa';
+
         currentUser = {
             uid: user.uid,
             email: profile.email || user.email,
             username: profile.username || (user.email ? user.email.split('@')[0] : 'Pengguna'),
             role
         };
+
         // Simpan role terakhir sebagai fallback UI saja. Otorisasi tetap
         // ditentukan oleh Firestore Rules, bukan oleh localStorage.
         try {
             localStorage.setItem('kelasku-last-role-' + user.uid, role);
         } catch (_) {}
+
         clearEmailVerificationBox();
         document.getElementById('auth-status').textContent = '✅ Login (' + user.email + ')';
         document.getElementById('auth-status').style.color = 'var(--teal)';
         applyRole(currentUser.role);
+
         // Auth + profile sudah valid: tampilkan aplikasi sekarang.
         // Proses Firestore/Drive berikutnya tidak boleh mengunci halaman login.
         hideLogin();
         applyTheme();
         document.body.classList.add('kelasku-authenticated');
+
         // Render awal harus selalu jalan walaupun Firestore sedang bermasalah.
         try {
             renderAll();
         } catch (renderError) {
             console.error('Initial render error:', renderError);
         }
+
         // Data server hanya inisialisasi tambahan. Error di sini tidak boleh
         // dianggap sebagai kegagalan login.
         try {
@@ -5286,11 +5542,13 @@ async function loadUserProfile(user) {
             console.warn('Initial state load skipped:', stateError);
             notifyFirestorePermissionOnce();
         }
+
         try {
             renderAll();
         } catch (renderError2) {
             console.error('Post-load render error:', renderError2);
         }
+
         try {
             watchLiveSync();
         } catch (syncError) {
@@ -5315,6 +5573,7 @@ function hideLogin() { document.getElementById('login-overlay').style.display = 
 // students are allowed to see. Sensitive/admin-only data is stored
 // separately. Reports are stored one document per report so a student
 // can never read another student's report through the shared state.
+
 const PUBLIC_STATE_KEYS = [
     'kas',
     'kasFolders',
@@ -5328,11 +5587,13 @@ const PUBLIC_STATE_KEYS = [
     'pengumuman',
     'notifications'
 ];
+
 const ADMIN_STATE_KEYS = [
     'autoCleanReportDays',
     'activityLog',
     'nameChangeLog'
 ];
+
 function pickStateKeys(source, keys) {
     const out = {};
     keys.forEach(key => {
@@ -5342,19 +5603,24 @@ function pickStateKeys(source, keys) {
     });
     return out;
 }
+
 function buildPublicState(source = state) {
     const out = pickStateKeys(source, PUBLIC_STATE_KEYS);
+
     // Staff and per-user notifications are never placed in the public
     // state. Student/global notifications are okay for all verified users.
     out.notifications = Array.isArray(source.notifications)
         ? source.notifications.filter(n => !n.targetUid && n.targetRole !== 'staff')
         : [];
+
     return out;
 }
+
 function buildAdminState(source = state) {
     const out = pickStateKeys(source, ADMIN_STATE_KEYS);
     return out;
 }
+
 function hydrateLocalUiState() {
     if (!state.reports) state.reports = [];
     if (state.autoCleanReportDays === undefined || state.autoCleanReportDays === null) {
@@ -5373,16 +5639,19 @@ function hydrateLocalUiState() {
     if (!state.nameChangeLog) state.nameChangeLog = [];
     if (!Array.isArray(state.notifications)) state.notifications = [];
     if (!Array.isArray(state.activityLog)) state.activityLog = [];
+
     DAY_NAMES.forEach(day => {
         if (!Array.isArray(state.jadwal[day])) state.jadwal[day] = [];
         if (!Array.isArray(state.piketJadwal[day])) state.piketJadwal[day] = [];
     });
+
     if (!state.hpSelectedDate) state.hpSelectedDate = todayKey();
     if (!state.piketSelectedDate) state.piketSelectedDate = todayKey();
     ensureRecord(state.hp, state.hpSelectedDate);
     ensureRecord(state.piket, state.piketSelectedDate);
     ensureAppFeatures();
 }
+
 async function readStateDocument(collectionName, docId, fallbackLocalKey = null) {
     try {
         const snap = await db.collection(collectionName).doc(docId).get();
@@ -5405,6 +5674,7 @@ async function readStateDocument(collectionName, docId, fallbackLocalKey = null)
         return null;
     }
 }
+
 async function writeStateDocument(collectionName, docId, value, localKey = null) {
     const payload = JSON.stringify(value);
     if (payload.length > 880000) {
@@ -5419,8 +5689,10 @@ async function writeStateDocument(collectionName, docId, value, localKey = null)
     }
     return { synced: true, collection: collectionName, bytes: payload.length };
 }
+
 async function migrateLegacyStateOnce() {
     if (!currentUser || !isAdmin() || _separatedMigrationDone) return;
+
     const metaRef = db.collection(FS_META).doc('security-v2');
     let meta = {};
     try {
@@ -5434,6 +5706,7 @@ async function migrateLegacyStateOnce() {
         }
         throw e;
     }
+
     // Once the migration has been completed successfully, do not rerun it on
     // every page load. Re-running against the legacy document is unnecessary
     // and can fail when the old state still contains large Base64 attachments.
@@ -5441,6 +5714,7 @@ async function migrateLegacyStateOnce() {
         _separatedMigrationDone = true;
         return;
     }
+
     // Always verify that the separated documents actually exist before
     // trusting the migration marker. A previous failed migration could have
     // written the marker while leaving empty/default data behind.
@@ -5460,6 +5734,7 @@ async function migrateLegacyStateOnce() {
     } catch (e) {
         console.warn('Separated state verification failed:', e);
     }
+
     // Do not trust the migration marker by itself. A previous migration can
     // have produced an empty separated document while still marking itself
     // complete. We therefore continue to inspect the legacy document and
@@ -5477,6 +5752,7 @@ async function migrateLegacyStateOnce() {
         // the app appearing empty until an Import was performed.
         if (!separatedPublic) return;
     }
+
     // If legacy data is unavailable, keep whatever separated data already
     // exists. Never overwrite server data with the small default state.
     if (!legacy || typeof legacy !== 'object') {
@@ -5486,22 +5762,26 @@ async function migrateLegacyStateOnce() {
         }
         return;
     }
+
     // Preserve all existing public class data.
     const publicState = buildPublicState(legacy);
     if (!Array.isArray(publicState.students)) publicState.students = [];
     if (!publicState.jadwal || typeof publicState.jadwal !== 'object') publicState.jadwal = {};
     if (!Array.isArray(publicState.tugas)) publicState.tugas = [];
     if (!Array.isArray(publicState.pengumuman)) publicState.pengumuman = [];
+
     // Preserve admin-only settings/logs separately.
     const adminState = buildAdminState(legacy);
     if (!Array.isArray(adminState.activityLog)) adminState.activityLog = [];
     if (!Array.isArray(adminState.nameChangeLog)) adminState.nameChangeLog = [];
+
     // Merge carefully so a previously-created empty/default separated state
     // can never overwrite richer legacy data. For arrays/objects, prefer the
     // non-empty separated value; otherwise recover the legacy value.
     function mergeRecoveredState(baseState, existingState) {
         const merged = Object.assign({}, baseState || {});
         if (!existingState || typeof existingState !== 'object') return merged;
+
         Object.keys(merged).forEach(key => {
             const incoming = existingState[key];
             const legacyValue = merged[key];
@@ -5518,16 +5798,20 @@ async function migrateLegacyStateOnce() {
                 merged[key] = incoming;
             }
         });
+
         // Preserve separated-only keys as well.
         Object.keys(existingState).forEach(key => {
             if (!Object.prototype.hasOwnProperty.call(merged, key)) merged[key] = existingState[key];
         });
         return merged;
     }
+
     const mergedPublicState = mergeRecoveredState(publicState, separatedPublic);
     const mergedAdminState = mergeRecoveredState(adminState, separatedAdmin);
+
     await writeStateDocument(FS_PUBLIC, PUBLIC_STATE_DOC, mergedPublicState, 'kelasku-public-state');
     await writeStateDocument(FS_ADMIN, ADMIN_STATE_DOC, mergedAdminState, null);
+
     // Migrate all legacy reports out of the shared state.
     const legacyReports = Array.isArray(legacy.reports) ? legacy.reports : [];
     if (legacyReports.length) {
@@ -5546,6 +5830,7 @@ async function migrateLegacyStateOnce() {
         }
         if (count) await batch.commit();
     }
+
     // Migrate sensitive per-user/staff notifications to a protected collection.
     const legacyNotifications = Array.isArray(legacy.notifications) ? legacy.notifications : [];
     if (legacyNotifications.length) {
@@ -5575,21 +5860,26 @@ async function migrateLegacyStateOnce() {
         }
         if (count) await batch.commit();
     }
+
     await metaRef.set({
         version: SECURITY_DATA_VERSION,
         migrated: true,
         migratedAt: firebase.firestore.FieldValue.serverTimestamp(),
         migratedByUid: currentUser.uid
     }, { merge: true });
+
     _separatedMigrationDone = true;
 }
+
 async function loadReportsForCurrentUser() {
     if (!currentUser) return;
+
     try {
         let query = db.collection(FS_REPORTS);
         if (!isAdmin()) {
             query = query.where('authorUid', '==', currentUser.uid);
         }
+
         const snap = await query.get();
         state.reports = snap.docs.map(doc => ({ id: Number(doc.id) || doc.id, ...doc.data() }));
         state.reports.sort((a, b) => Number(b.createdAt || b.id || 0) - Number(a.createdAt || a.id || 0));
@@ -5601,12 +5891,16 @@ async function loadReportsForCurrentUser() {
         _loadedReportIds = new Set();
     }
 }
+
 async function saveReportsForAdmin() {
     if (!isAdmin()) return;
+
     const currentIds = new Set(state.reports.map(r => String(r.id)));
     const oldIds = Array.from(_loadedReportIds);
+
     let batch = db.batch();
     let count = 0;
+
     for (const report of state.reports) {
         if (!report || report.id == null) continue;
         const ref = db.collection(FS_REPORTS).doc(String(report.id));
@@ -5618,6 +5912,7 @@ async function saveReportsForAdmin() {
             count = 0;
         }
     }
+
     for (const oldId of oldIds) {
         if (!currentIds.has(oldId)) {
             batch.delete(db.collection(FS_REPORTS).doc(oldId));
@@ -5629,15 +5924,20 @@ async function saveReportsForAdmin() {
             }
         }
     }
+
     if (count) await batch.commit();
     _loadedReportIds = currentIds;
 }
+
 async function saveTargetedNotifications() {
     if (!currentUser) return;
+
     const privateNotifications = (state.notifications || []).filter(n => n && (n.targetUid || n.targetRole === 'staff'));
     if (!privateNotifications.length) return;
+
     let batch = db.batch();
     let count = 0;
+
     for (const n of privateNotifications) {
         if (n.id == null) continue;
         const ref = db.collection(FS_NOTIFICATIONS).doc(String(n.id));
@@ -5658,10 +5958,13 @@ async function saveTargetedNotifications() {
             count = 0;
         }
     }
+
     if (count) await batch.commit();
 }
+
 async function loadTargetedNotifications() {
     if (!currentUser) return;
+
     try {
         let query = db.collection(FS_NOTIFICATIONS);
         if (isAdmin()) {
@@ -5679,20 +5982,24 @@ async function loadTargetedNotifications() {
         console.warn('Targeted notification load error:', e);
     }
 }
+
 // Use window-backed save state so the lock survives script ordering/cache quirks.
 window.__kelaskuSavePending = false;
 window.__kelaskuSaveAgain = false;
 window.__kelaskuSavePromise = null;
 window.__kelaskuLastSaveSyncFailedNotified = false;
+
 async function saveState() {
     window.__kelaskuSaveAgain = true;
     if (window.__kelaskuSavePromise) return window.__kelaskuSavePromise;
+
     window.__kelaskuSavePromise = (async () => {
         window.__kelaskuSavePending = true;
         let lastResult = { synced: true };
         try {
             while (window.__kelaskuSaveAgain) {
                 window.__kelaskuSaveAgain = false;
+
                 // Student devices only retain a local copy of PUBLIC data.
                 // They never write shared class state or admin/private data.
                 if (!currentUser || !isAdmin()) {
@@ -5702,9 +6009,11 @@ async function saveState() {
                     lastResult = { synced: true, localOnly: true };
                     continue;
                 }
+
                 const publicState = buildPublicState(state);
                 const adminState = buildAdminState(state);
                 const syncResults = [];
+
                 // Primary separated storage.
                 try {
                     await writeStateDocument(FS_PUBLIC, PUBLIC_STATE_DOC, publicState, 'kelasku-public-state');
@@ -5712,6 +6021,7 @@ async function saveState() {
                 } catch (e) {
                     handleFirestoreSyncError(e, 'Public state save');
                 }
+
                 // Compatibility snapshot for admins. Keep the complete admin
                 // state here as a fallback for older Rules / temporary Rules mismatch.
                 try {
@@ -5733,22 +6043,26 @@ async function saveState() {
                         throw e;
                     }
                 }
+
                 try {
                     await writeStateDocument(FS_ADMIN, ADMIN_STATE_DOC, adminState, null);
                     syncResults.push('admin');
                 } catch (e) {
                     handleFirestoreSyncError(e, 'Admin state save');
                 }
+
                 try {
                     await saveReportsForAdmin();
                 } catch (e) {
                     handleFirestoreSyncError(e, 'Reports save');
                 }
+
                 try {
                     await saveTargetedNotifications();
                 } catch (e) {
                     handleFirestoreSyncError(e, 'Notifications save');
                 }
+
                 window.__kelaskuLastSaveSyncFailedNotified = false;
                 const synced = syncResults.length > 0;
                 lastResult = { synced, partial: syncResults.length > 0 && syncResults.length < 5, sources: syncResults };
@@ -5764,13 +6078,16 @@ async function saveState() {
             window.__kelaskuSavePending = false;
         }
     })();
+
     try { return await window.__kelaskuSavePromise; }
     finally { window.__kelaskuSavePromise = null; }
 }
+
 async function loadState() {
     try {
         if (isAdmin()) {
             await migrateLegacyStateOnce();
+
             // Compatibility fallback: admin always keeps a readable legacy
             // snapshot as a second source. This prevents a temporary Rules
             // mismatch from blanking the app or removing admin-visible data.
@@ -5786,25 +6103,31 @@ async function loadState() {
                 handleFirestoreSyncError(e, 'Legacy compatibility read');
             }
         }
+
         const currentJadwal = (state.jadwal && typeof state.jadwal === 'object' && !Array.isArray(state.jadwal))
             ? JSON.parse(JSON.stringify(state.jadwal))
             : {};
+
         const publicState = await readStateDocument(
             FS_PUBLIC,
             PUBLIC_STATE_DOC,
             'kelasku-public-state'
         );
+
         if (publicState && typeof publicState === 'object') {
             const incomingJadwal = publicState.jadwal;
             const incomingHasJadwal = hasAnyJadwalItems(incomingJadwal);
             const currentHasJadwal = hasAnyJadwalItems(currentJadwal);
+
             state = Object.assign(state, publicState);
+
             // Jangan biarkan snapshot server yang kosong menghapus jadwal
             // yang masih ada di state saat ini.
             if (!incomingHasJadwal && currentHasJadwal) {
                 state.jadwal = currentJadwal;
             }
         }
+
         // Admin recovery safety: jika public state kosong/kurang lengkap,
         // ambil legacy sekali lagi. Jadwal ikut dipulihkan secara eksplisit.
         if (isAdmin()) {
@@ -5814,6 +6137,7 @@ async function loadState() {
                  (Array.isArray(publicState.tugas) && publicState.tugas.length === 0) &&
                  (Array.isArray(publicState.pengumuman) && publicState.pengumuman.length === 0) &&
                  (Array.isArray(publicState.kas) && publicState.kas.length === 0));
+
             if (publicLooksEmpty) {
                 try {
                     const legacySnap = await db.collection(FS_COLLECTION).doc(PUBLIC_STATE_DOC).get();
@@ -5821,11 +6145,13 @@ async function loadState() {
                         const recovered = JSON.parse(legacySnap.data().value);
                         if (recovered && typeof recovered === 'object') {
                             const recoveredPublic = buildPublicState(recovered);
+
                             // Kalau server public punya jadwal kosong, tetapi legacy
                             // masih punya isi, prioritaskan jadwal legacy.
                             if (!hasAnyJadwalItems(recoveredPublic.jadwal) && hasAnyJadwalItems(state.jadwal)) {
                                 recoveredPublic.jadwal = state.jadwal;
                             }
+
                             state = Object.assign(state, recoveredPublic);
                             await writeStateDocument(FS_PUBLIC, PUBLIC_STATE_DOC, recoveredPublic, 'kelasku-public-state');
                         }
@@ -5856,6 +6182,7 @@ async function loadState() {
                     }
                 }
             }
+
             const adminState = await readStateDocument(FS_ADMIN, ADMIN_STATE_DOC, null);
             if (adminState) state = Object.assign(state, adminState);
         } else {
@@ -5866,6 +6193,7 @@ async function loadState() {
             state.autoCleanReportDays = 7;
             localStorage.removeItem('kelasku-state');
         }
+
         await loadReportsForCurrentUser();
         await loadTargetedNotifications();
         hydrateLocalUiState();
@@ -5881,10 +6209,12 @@ async function loadState() {
         hydrateLocalUiState();
     }
 }
+
 function hasAnyJadwalItems(jadwal) {
     if (!jadwal || typeof jadwal !== 'object' || Array.isArray(jadwal)) return false;
     return DAY_NAMES.some(day => Array.isArray(jadwal[day]) && jadwal[day].length > 0);
 }
+
 // ============================================================
 // THEME
 // ============================================================
@@ -6017,8 +6347,10 @@ async function logout() {
         if (passwordEl) passwordEl.value = '';
         const errEl = document.getElementById('login-error');
         if (errEl) { errEl.textContent = ''; errEl.style.display = 'none'; }
+
         // Firebase Auth signOut clears its persisted auth session.
         if (auth.currentUser) await auth.signOut();
+
         if (statusEl) statusEl.textContent = 'Belum login';
         // Reload only after successful sign-out so every in-memory listener/state is reset.
         setTimeout(() => {
@@ -6067,22 +6399,27 @@ function guardAccountManagement() {
     }
     return false;
 }
+
 function requireRecentReauthentication(actionLabel) {
     if (!currentUser || !isAdmin()) {
         showNotification('Akses ditolak.', 'error');
         return Promise.resolve(false);
     }
+
     const user = auth.currentUser;
     if (!user || !user.email) {
         showNotification('Sesi login tidak tersedia.', 'error');
         return Promise.resolve(false);
     }
+
     const hasPasswordProvider = Array.isArray(user.providerData)
         && user.providerData.some(p => p.providerId === 'password');
+
     if (!hasPasswordProvider) {
         showNotification('Verifikasi ulang dengan password hanya tersedia untuk akun Email/Password.', 'warning', 5000);
         return Promise.resolve(false);
     }
+
     return new Promise(resolve => {
         reauthResolver = resolve;
         const actionText = document.getElementById('reauth-action-text');
@@ -6105,20 +6442,24 @@ function requireRecentReauthentication(actionLabel) {
         }, 50);
     });
 }
+
 function finishReauthentication(result) {
     const resolver = reauthResolver;
     reauthResolver = null;
     closeModal('reauth');
     if (resolver) resolver(result);
 }
+
 function cancelReauthentication() {
     finishReauthentication(false);
 }
+
 async function confirmReauthentication() {
     const errorEl = document.getElementById('reauth-error');
     const passwordEl = document.getElementById('reauth-password');
     const password = passwordEl ? passwordEl.value : '';
     const user = auth.currentUser;
+
     if (!user || !user.email) {
         if (errorEl) {
             errorEl.textContent = 'Sesi login tidak tersedia.';
@@ -6126,6 +6467,7 @@ async function confirmReauthentication() {
         }
         return;
     }
+
     if (!password) {
         if (errorEl) {
             errorEl.textContent = 'Masukkan password terlebih dahulu.';
@@ -6133,11 +6475,13 @@ async function confirmReauthentication() {
         }
         return;
     }
+
     try {
         const credential = firebase.auth.EmailAuthProvider.credential(
             user.email,
             password
         );
+
         await user.reauthenticateWithCredential(credential);
         await user.getIdToken(true);
         showNotification('Verifikasi keamanan berhasil.', 'success');
@@ -6226,6 +6570,7 @@ function handleFirestoreSyncError(error, label) {
     }
     console.warn(label + ':', error);
 }
+
 // ============================================================
 // WATCH LIVE SYNC
 // ============================================================
@@ -6295,6 +6640,7 @@ function watchNotificationsSync(){
 function watchLiveSync() {
     if (!authReady || liveSyncStarted || !currentUser) return;
     liveSyncStarted = true;
+
     const publicUnsub = db.collection(FS_PUBLIC).doc(PUBLIC_STATE_DOC).onSnapshot((snap) => {
         if (!snap.exists || !snap.data().value) return;
         try {
@@ -6303,6 +6649,7 @@ function watchLiveSync() {
         } catch (e) { handleFirestoreSyncError(e, 'Public sync parse error'); }
     }, (e)=>handleFirestoreSyncError(e, 'Public state sync error'));
     separatedSyncUnsubs.push(publicUnsub);
+
     if (isAdmin()) {
         const adminUnsub = db.collection(FS_ADMIN).doc(ADMIN_STATE_DOC).onSnapshot((snap) => {
             if (!snap.exists || !snap.data().value) return;
@@ -6313,11 +6660,13 @@ function watchLiveSync() {
         }, (e)=>console.warn('Admin state sync error:',e));
         separatedSyncUnsubs.push(adminUnsub);
     }
+
     watchReportsSync();
     watchNotificationsSync();
 }
 // ============================================================
 // FUNGSI UTILITY
+
 // ============================================================
 function todayKey() {
     const d = new Date();
@@ -6427,6 +6776,7 @@ async function markNotificationRead(id){
     if(!n||!currentUser)return;
     if(!Array.isArray(n.readBy))n.readBy=[];
     if(!n.readBy.includes(currentUser.uid))n.readBy.push(currentUser.uid);
+
     if(n.targetUid || n.targetRole === 'staff'){
         try{
             await db.collection(FS_NOTIFICATIONS).doc(String(n.id)).update({
@@ -6447,6 +6797,7 @@ async function markAllNotificationsRead(){
         if(!n.readBy.includes(currentUser.uid))n.readBy.push(currentUser.uid);
         if(n.targetUid || n.targetRole === 'staff') privateItems.push(n);
     });
+
     for(const n of privateItems){
         try{
             await db.collection(FS_NOTIFICATIONS).doc(String(n.id)).update({
@@ -6578,7 +6929,9 @@ function renderStorageUsage() {
     const hintEl = document.getElementById('storage-usage-hint');
     const statusEl = document.getElementById('drive-connection-status');
     if (!labelEl || !barEl) return;
+
     updateAttachmentHints();
+
     // Selalu tampilkan ukuran data aplikasi Firestore agar panel tidak kosong
     // ketika kapasitas Google Drive belum berhasil dibaca.
     let usedBytes = 0;
@@ -6587,10 +6940,12 @@ function renderStorageUsage() {
     } catch (e) {
         try { usedBytes = JSON.stringify(state).length; } catch (_) { usedBytes = 0; }
     }
+
     const percent = Math.min(100, Math.round((usedBytes / FIRESTORE_DOC_LIMIT_BYTES) * 100));
     labelEl.textContent = formatStorageBytes(usedBytes) + ' / 1 MB';
     percentEl.textContent = percent + '%';
     barEl.style.width = percent + '%';
+
     if (driveStorageEnabled()) {
         barEl.style.background = 'var(--teal)';
         percentEl.style.color = 'var(--teal)';
@@ -6603,6 +6958,7 @@ function renderStorageUsage() {
         }
         return;
     }
+
     let color = 'var(--teal)';
     let hint = 'Mode lama: lampiran dapat tersimpan sebagai Base64 di Firestore dan lebih cepat memenuhi batas dokumen.';
     if (percent >= 90) {
@@ -7131,11 +7487,13 @@ function submitStudent() {
     if (nama.length > 80) { showNotification('Nama siswa maksimal 80 karakter.', 'warning'); return; }
     const duplicate = (state.students || []).some(s => s.toLowerCase() === nama.toLowerCase() && s !== _editingStudentName);
     if (duplicate) { showNotification('Nama siswa sudah ada.', 'warning'); return; }
+
     if (_editingStudentName) {
         const oldName = _editingStudentName;
         const idx = state.students.indexOf(oldName);
         if (idx < 0) { _editingStudentName = null; closeModal('student'); return; }
         state.students[idx] = nama;
+
         // Pindahkan status Titip HP/Piket dari nama lama ke nama baru.
         [state.hp, state.piket].forEach(dict => {
             if (!dict || typeof dict !== 'object') return;
@@ -7161,6 +7519,7 @@ function submitStudent() {
         showNotification('Nama siswa berhasil diperbarui.', 'success');
         return;
     }
+
     if (!state.students.includes(nama)) { state.students.push(nama); addActivity('Menambahkan siswa', nama); }
     saveState(); renderHp(); renderPiket(); renderBeranda(); closeModal('student'); showNotification('Siswa berhasil ditambahkan.', 'success');
 }
@@ -7309,6 +7668,7 @@ function renderJadwalList() {
 }
 function openJadwalModal(id) {
     if (guardReadOnly()) return;
+
     document.getElementById('jadwal-hari').innerHTML = DAY_NAMES.map(d => `<option value="${d}">${d}</option>`).join('');
     if (id) {
         let found = null, foundDay = null;
@@ -7417,6 +7777,7 @@ function renderTugas() {
     const open = state.tugas.filter(t => !t.selesai);
     const done = state.tugas.filter(t => t.selesai);
     const readOnly = isReadOnly();
+
     document.getElementById('tugas-open-list').innerHTML = open.length ? open.map(t => `
         <div class="task-item">
             <div class="checkbox admin-only" onclick="event.stopPropagation(); toggleTugas(${t.id})"></div>
@@ -7429,6 +7790,7 @@ function renderTugas() {
             <button class="s-remove admin-only" onclick="event.stopPropagation(); deleteTugas(${t.id})">×</button>
         </div>
     `).join('') : `<div class="empty">Tidak ada tugas aktif 🎉</div>`;
+
     document.getElementById('tugas-done-list').innerHTML = done.length ? done.map(t => `
         <div class="task-item">
             <div class="checkbox checked admin-only" onclick="event.stopPropagation(); toggleTugas(${t.id})">✓</div>
@@ -7517,6 +7879,7 @@ async function onTugasFileSelected(input) {
 }
 function openTugasModal(id) {
     if (guardReadOnly()) return;
+
     const fileInput = document.getElementById('tugas-file');
     fileInput.value = '';
     if (id) {
@@ -7564,6 +7927,7 @@ function mimeTypeFromFilename(name) {
         jpeg:'image/jpeg',
         png:'image/png',
         webp:'image/webp',
+        
     })[ext] || 'application/octet-stream';
 }
 function isAllowedAttachmentHost(url) {
@@ -7728,6 +8092,7 @@ function validateAttachmentTypeClient(file) {
     if (expected[ext] !== mime) throw new Error('Ekstensi file tidak sesuai dengan tipe file yang dilaporkan browser.');
     return true;
 }
+
 async function prepareAttachment(file) {
     validateAttachmentTypeClient(file);
     let prepared = file, compressed = false;
@@ -7755,6 +8120,7 @@ async function submitTugas() {
     const deskripsi = document.getElementById('tugas-deskripsi').value.trim();
     const editId = document.getElementById('tugas-edit-id').value;
     if (!nama) { showNotification('Nama tugas wajib diisi.', 'warning'); return; }
+
     let files;
     try {
         files = [];
@@ -7778,6 +8144,7 @@ async function submitTugas() {
         showNotification('Gagal menyimpan lampiran tugas: ' + (e.message || 'error'), 'error', 5000);
         return;
     }
+
     if (editId) {
         const t = state.tugas.find(x => x.id === Number(editId));
         if (t) {
@@ -8070,10 +8437,12 @@ async function submitReport() {
     state.reports.push(newReport);
     fileInput.value = '';
     addActivity('Membuat laporan', reportCode(newReport) + ' · ' + judul);
+
     // Reports are no longer stored in kelasku-state. Student creates only
     // their own report document, which Rules also enforce by authorUid.
     try {
         await db.collection(FS_REPORTS).doc(String(reportId)).set(newReport);
+
         try {
             const staffNotification = addNotification(
                 'Laporan baru',
@@ -8089,6 +8458,7 @@ async function submitReport() {
             // report look like it failed. The report itself is the source of truth.
             console.warn('Staff notification save failed:', notificationError);
         }
+
         _loadedReportIds.add(String(reportId));
         renderReports();
         closeModal('report');
@@ -8297,6 +8667,7 @@ function openPengumumanModal(id) {
     const deleteEl = document.getElementById('pengumuman-delete-btn');
     const fileEl = document.getElementById('pengumuman-file');
     if (fileEl) fileEl.value = '';
+
     if (id) {
         const p = state.pengumuman.find(x => Number(x.id) === Number(id));
         if (!p) { showNotification('Pengumuman tidak ditemukan.', 'error'); return; }
@@ -8338,6 +8709,7 @@ async function submitPengumuman() {
         showNotification('Judul dan deskripsi wajib diisi.', 'warning');
         return;
     }
+
     const uploadedThisRound = [];
     let files;
     try {
@@ -8365,6 +8737,7 @@ async function submitPengumuman() {
         showNotification('Gagal menyimpan lampiran pengumuman: ' + (e.message || 'error'), 'error', 5000);
         return;
     }
+
     const nowText = new Date().toLocaleDateString('id-ID');
     if (editId) {
         const p = state.pengumuman.find(x => Number(x.id) === Number(editId));
@@ -8397,6 +8770,7 @@ async function submitPengumuman() {
         showNotification('Pengumuman berhasil diperbarui.', 'success');
         return;
     }
+
     state.pengumuman.push({
         id: Date.now(),
         judul,
@@ -8482,32 +8856,41 @@ function filterAccountList() {
 }
 async function addAccount() {
     if (guardAccountManagement()) return;
+
     const nama = document.getElementById('acc-nama').value.trim();
     const email = document.getElementById('acc-email').value.trim();
     const password = document.getElementById('acc-password').value;
     const role = document.getElementById('acc-role').value;
+
     if (!nama || !email || !password) {
         showNotification('Semua kolom wajib diisi.', 'warning');
         return;
     }
+
     const passwordPolicy = await validateKelaskuPassword(password);
     if (!passwordPolicy.valid) {
         showNotification(passwordPolicy.message, 'warning', 4500);
         return;
     }
+
     if (!VALID_ROLES.includes(role)) {
         showNotification('Role tidak valid.', 'error');
         return;
     }
+
     if (!(await requireRecentReauthentication('menambahkan akun baru'))) return;
+
     let createdUser = null;
+
     try {
         // Akun Auth dibuat melalui secondaryAuth agar sesi Super Admin utama tidak berubah.
         const cred = await secondaryAuth.createUserWithEmailAndPassword(email, password);
         createdUser = cred.user;
+
         try {
             await createdUser.updateProfile({ displayName: nama });
         } catch (e) {}
+
         await db.collection(FS_PROFILES).doc(createdUser.uid).set({
             email,
             username: nama,
@@ -8515,9 +8898,11 @@ async function addAccount() {
             active: true,
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
+
         document.getElementById('acc-nama').value = '';
         document.getElementById('acc-email').value = '';
         document.getElementById('acc-password').value = '';
+
         await secondaryAuth.signOut();
         renderAccountList();
         showNotification('Akun berhasil dibuat!', 'success');
@@ -8526,23 +8911,31 @@ async function addAccount() {
         showNotification(authErrorMessage(e.code), 'error');
     }
 }
+
 async function toggleAccountActiveFromModal() {
     if (guardAccountManagement()) return;
+
     const uid = document.getElementById('acc-edit-id').value;
+
     if (!uid || uid === currentUser.uid) {
         showNotification('Tidak dapat menonaktifkan akun sendiri.', 'warning');
         return;
     }
+
     const isActive = document.getElementById('acc-edit-active').value !== 'false';
     const makeActive = !isActive;
+
     if (!makeActive && !confirm('Nonaktifkan akun ini? Akun tidak akan bisa menggunakan Kelasku sampai diaktifkan kembali.')) {
         return;
     }
+
     if (!(await requireRecentReauthentication(makeActive ? 'mengaktifkan akun' : 'menonaktifkan akun'))) return;
+
     try {
         await db.collection(FS_PROFILES).doc(uid).update({
             active: makeActive
         });
+
         showNotification(makeActive ? 'Akun diaktifkan.' : 'Akun dinonaktifkan.', 'success');
         closeModal('account-edit');
         renderAccountList();
@@ -8550,49 +8943,64 @@ async function toggleAccountActiveFromModal() {
         showNotification('Gagal memperbarui status akun.', 'error');
     }
 }
+
 function openAccountEditModal(uid) {
     if (guardAccountManagement()) return;
+
     const u = _allAccounts.find(x => x.id === uid);
     if (!u) return;
+
     document.getElementById('acc-edit-nama').value = u.username || '';
     document.getElementById('acc-edit-email').value = u.email || '';
     document.getElementById('acc-edit-role').value = u.role || 'siswa';
     document.getElementById('acc-edit-id').value = uid;
+
     const isActive = u.active !== false;
     document.getElementById('acc-edit-active').value = isActive ? 'true' : 'false';
+
     const toggleBtn = document.getElementById('acc-edit-toggle-btn');
     toggleBtn.textContent = isActive ? '✕ Nonaktifkan Akun' : '✓ Aktifkan Akun';
     toggleBtn.style.display = (uid === currentUser.uid) ? 'none' : '';
+
     openModal('account-edit');
 }
+
 async function submitAccountEdit() {
     if (guardAccountManagement()) return;
+
     const uid = document.getElementById('acc-edit-id').value;
     const nama = document.getElementById('acc-edit-nama').value.trim();
     const role = document.getElementById('acc-edit-role').value;
+
     if (!nama) {
         showNotification('Nama tidak boleh kosong.', 'warning');
         return;
     }
+
     if (!VALID_ROLES.includes(role)) {
         showNotification('Role tidak valid.', 'error');
         return;
     }
+
     if (uid === currentUser.uid && role !== 'superadmin') {
         showNotification('Tidak dapat mengubah peran akun sendiri.', 'warning');
         return;
     }
+
     if (!(await requireRecentReauthentication('mengubah akun pengguna'))) return;
+
     try {
         await db.collection(FS_PROFILES).doc(uid).update({
             username: nama,
             role
         });
+
         if (uid === currentUser.uid) {
             currentUser.username = nama;
             currentUser.role = role;
             applyRole(role);
         }
+
         showNotification('Akun berhasil diperbarui.', 'success');
         closeModal('account-edit');
         renderAccountList();
@@ -8600,6 +9008,7 @@ async function submitAccountEdit() {
         showNotification('Gagal memperbarui akun.', 'error');
     }
 }
+
 // ===== EXPORT / IMPORT =====
 function exportBackup() {
     const payload = { exportedAt: new Date().toISOString(), state };
@@ -8636,6 +9045,7 @@ function countLegacyDriveAttachments() {
     });
     return { total, ready };
 }
+
 async function migrateAllAttachmentsToDrive() {
     if (guardReadOnly()) return;
     if (!driveStorageEnabled()) {
@@ -8650,6 +9060,7 @@ async function migrateAllAttachmentsToDrive() {
     }
     if (!(await requireRecentReauthentication('memigrasikan semua lampiran ke Google Drive'))) return;
     if (!confirm('Migrasikan ' + before.total + ' lampiran lama yang masih tersimpan sebagai Base64 ke Google Drive?\n\nFile yang sudah memiliki ID Google Drive tidak akan diupload ulang.')) return;
+
     let migrated = 0;
     let skipped = 0;
     try {
@@ -8672,6 +9083,7 @@ async function migrateAllAttachmentsToDrive() {
             task.files = newFiles;
             delete task.file; delete task.fileData;
         }
+
         for (const kas of state.kas || []) {
             if (kas.driveFileId || !kas.fileData) { if (kas.file) skipped++; continue; }
             const stored = await uploadPreparedAttachment({
@@ -8688,6 +9100,7 @@ async function migrateAllAttachmentsToDrive() {
             kas.fileData = '';
             migrated++;
         }
+
         for (const report of state.reports || []) {
             if (!report.fileData || report.driveFileId) { if (report.file) skipped++; continue; }
             const stored = await uploadPreparedAttachment({
@@ -8705,6 +9118,7 @@ async function migrateAllAttachmentsToDrive() {
             await db.collection(FS_REPORTS).doc(String(report.id)).set(report, { merge:true });
             migrated++;
         }
+
         await saveState();
         renderAll();
         await refreshDriveStorageUsage();
@@ -8723,6 +9137,7 @@ async function migrateAllAttachmentsToDrive() {
         showNotification('Migrasi berhenti: ' + (e.message || 'terjadi kesalahan').toString(), 'error', 6000);
     }
 }
+
 async function importBackup(file) {
     if (!file || guardReadOnly()) return;
     const inputEl = document.getElementById('import-file-input');
@@ -8734,14 +9149,17 @@ async function importBackup(file) {
         if (inputEl) inputEl.value = '';
         return;
     }
+
     const reader = new FileReader();
     reader.onload = async (e) => {
         try {
             const parsed = JSON.parse(e.target.result);
             const imported = parsed && parsed.state ? parsed.state : parsed;
             if (!imported || typeof imported !== 'object') throw new Error('Format backup tidak valid.');
+
             state = Object.assign(state, imported);
             hydrateLocalUiState();
+
             // Backup lama dapat berisi Base64 yang membuat dokumen Firestore
             // melewati batas ukuran. Karena Drive sudah terhubung, pindahkan
             // lampiran lama ke Drive terlebih dahulu, lalu simpan metadata saja.
@@ -8778,6 +9196,7 @@ async function importBackup(file) {
                     delete task.file;
                     delete task.fileData;
                 }
+
                 for (const kas of (state.kas || [])) {
                     if (!kas) continue;
                     if (kas.fileData && !kas.driveFileId) {
@@ -8799,6 +9218,7 @@ async function importBackup(file) {
                         kas.storage = 'google-drive';
                     }
                 }
+
                 for (const report of (state.reports || [])) {
                     if (!report) continue;
                     if (report.fileData && !report.driveFileId) {
@@ -8821,11 +9241,13 @@ async function importBackup(file) {
                     }
                 }
             }
+
             // Tunggu sampai semua write Firebase benar-benar selesai.
             const result = await saveState();
             if (result && result.synced === false) {
                 throw new Error('Firebase menolak penyimpanan data. Periksa Firestore Rules atau ukuran data.');
             }
+
             // Baca ulang dari Firebase agar yang tampil adalah data server,
             // bukan hanya state sementara di browser.
             await loadState();
@@ -8850,6 +9272,7 @@ async function importBackup(file) {
     };
     reader.readAsText(file);
 }
+
 // ============================================================
 // NAVIGATION
 // ============================================================
@@ -8861,6 +9284,7 @@ function autoOpenKasAndCalendarPanels(name) {
     if (!state.calMinimized || typeof state.calMinimized !== 'object') {
         state.calMinimized = { hp: false, piket: false };
     }
+
     // Kas: setiap kali menu Kas dibuka, semua folder kas siswa tampil terbuka.
     // Fitur minimize tetap tersedia setelahnya.
     if (name === 'kas') {
@@ -8871,6 +9295,7 @@ function autoOpenKasAndCalendarPanels(name) {
         });
         if (typeof renderKasSiswa === 'function') renderKasSiswa();
     }
+
     // Kalender HP: saat masuk kembali ke menu Pengumpulan HP, sinkronkan
     // pilihan tanggal ke hari ini. Jadi jika sebelumnya memilih tanggal kemarin
     // lalu pindah ke menu Kas, saat kembali ke HP kalender tidak tertinggal di hari lama.
@@ -8885,6 +9310,7 @@ function autoOpenKasAndCalendarPanels(name) {
         else if (typeof updateCalendarUI === 'function') updateCalendarUI('hp');
         renderHp();
     }
+
     // Kalender Piket: perilaku yang sama, selalu kembali ke hari ini saat
     // tampilan Piket dibuka kembali.
     if (name === 'jadwal' && state.jadwalMode === 'piket') {
@@ -8898,6 +9324,7 @@ function autoOpenKasAndCalendarPanels(name) {
         renderPiket();
     }
 }
+
 function goTo(name) {
     const target = document.getElementById('view-' + name);
     if (!target) return;
@@ -9029,6 +9456,8 @@ window.togglePiketJadwalStudent = togglePiketJadwalStudent;
 window.selectPiketJadwalDay = selectPiketJadwalDay;
 window.todayKey = todayKey;
 </script>
+
+
 <script id="kelasku-runtime-guards">
 (function(){
   // Jadwal: pastikan klik hari tetap terhubung setelah render ulang.
@@ -9043,6 +9472,7 @@ window.todayKey = todayKey;
     window.selectDay(day);
   }, true);
 })();
+
   // Laporan: reset posisi scroll modal saat dibuka.
 (function(){
   function resetReportScroll(){
@@ -9061,6 +9491,7 @@ window.todayKey = todayKey;
   });
   observer.observe(document.body, {subtree:true, attributes:true, attributeFilter:['class']});
 })();
+
   // Desktop: sinkronkan navigasi sidebar dengan tab aktif.
 (function(){
  const sync=()=>{
@@ -9074,11 +9505,13 @@ window.todayKey = todayKey;
 })();
 })();
 </script>
+
 <script id="kelasku-modules-v6-js">
 (function(){
   const esc = v => (typeof escapeHtml==='function' ? escapeHtml(v) : String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c])));
   const icon = (d) => `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${d}"></path></svg>`;
   const money = v => typeof rupiah==='function' ? rupiah(v) : 'Rp'+Number(v||0).toLocaleString('id-ID');
+
   function ensureKasEnhancements(){
     const v=document.getElementById('view-kas'); if(!v || v.dataset.proReady) return;
     const oldBalance=v.querySelector('.balance-card');
@@ -9096,6 +9529,7 @@ window.todayKey = todayKey;
     }
     v.dataset.proReady='1';
   }
+
   function kasDateOk(dateStr, period){
     if(period==='all' || !dateStr) return true;
     const d=new Date(dateStr+'T00:00:00'); if(Number.isNaN(d.getTime())) return true;
@@ -9103,6 +9537,7 @@ window.todayKey = todayKey;
     if(period==='month') return d.getFullYear()===now.getFullYear() && d.getMonth()===now.getMonth();
     const day=(now.getDay()+6)%7; const monday=new Date(now); monday.setHours(0,0,0,0); monday.setDate(now.getDate()-day); const sunday=new Date(monday); sunday.setDate(monday.getDate()+7); return d>=monday && d<sunday;
   }
+
   function professionalRenderKas(){
     ensureKasEnhancements();
     const data=Array.isArray(state.kas)?state.kas:[];
@@ -9117,6 +9552,7 @@ window.todayKey = todayKey;
     wrap.innerHTML=list.length?`<table><thead><tr><th>Tanggal</th><th>Keterangan</th><th>Jenis</th><th>Jumlah</th><th></th></tr></thead><tbody>${list.map(t=>`<tr onclick="openKasEditModal(${Number(t.id)})" style="cursor:pointer"><td>${esc(t.tanggal||'-')}</td><td><strong>${esc(t.ket||'Tanpa keterangan')}</strong>${t.file?`<div style="font-size:9px;color:var(--ui-muted);margin-top:3px">Lampiran: ${esc(t.file)}</div>`:''}</td><td><span class="kas-type-badge ${t.jenis==='masuk'?'kas-type-in':'kas-type-out'}">${t.jenis==='masuk'?'Pemasukan':'Pengeluaran'}</span></td><td class="${t.jenis==='masuk'?'kas-amt-in':'kas-amt-out'}">${t.jenis==='masuk'?'+':'-'}${money(t.jumlah)}</td><td style="text-align:right;color:var(--ui-soft)">›</td></tr>`).join('')}</tbody></table>`:`<div class="empty" style="padding:36px 18px;text-align:center"><div style="font-weight:800;margin-bottom:4px">Belum ada transaksi</div><div style="font-size:11px;color:var(--ui-muted)">Catat pemasukan atau pengeluaran pertama untuk memulai rekap kas.</div></div>`;
     const oldIn=document.getElementById('kas-in'), oldOut=document.getElementById('kas-out'), oldSaldo=document.getElementById('kas-saldo'); if(oldIn)oldIn.textContent=money(masuk); if(oldOut)oldOut.textContent=money(keluar); if(oldSaldo)oldSaldo.textContent=money(masuk-keluar);
   }
+
   function professionalRenderHp(){
     const date=state.hpSelectedDate||todayKey();
     const rec=ensureRecord(state.hp,date);
@@ -9153,15 +9589,18 @@ window.todayKey = todayKey;
     const pt=document.getElementById('hp-pro-progress-text'),pp=document.getElementById('hp-pro-progress-pct'),pb=document.getElementById('hp-pro-progress-bar');
     if(pt)pt.textContent=`${collected}/${names.length} HP Terkumpul`; if(pp)pp.textContent=pct+'%'; if(pb)pb.style.width=pct+'%';
   }
+
   function professionalRenderJadwalList(){
     const wrap=document.getElementById('jadwal-list'); if(!wrap)return; const items=Array.isArray(state.jadwal?.[state.selectedDay])?state.jadwal[state.selectedDay].slice().sort((a,b)=>String(a.jam).localeCompare(String(b.jam))):[]; const readOnly=isReadOnly(); wrap.innerHTML=items.length?`<div class="timeline">${items.map(j=>`<div class="timeline-item" ${readOnly?'':'onclick="openJadwalModal('+Number(j.id)+')"'} style="${readOnly?'':'cursor:pointer'}"><div class="timeline-time">${esc(j.jam||'-')}</div><div class="timeline-card"><div style="font-size:13px;font-weight:800">${esc(j.mapel||'-')}</div><div class="timeline-sub">${esc(j.guru||'Tanpa keterangan')}</div></div></div>`).join('')}</div>`:'<div class="empty" style="padding:35px">Tidak ada jadwal pelajaran untuk hari ini.</div>';
   }
+
   function professionalRenderPiket(){
     const date=state.piketSelectedDate||todayKey(), day=dayNameOf(date), assigned=Array.isArray(state.piketJadwal?.[day])?state.piketJadwal[day]:[], rec=ensureRecord(state.piket,date); const list=document.getElementById('piket-list'); if(!list)return;
     const query=(rosterUI.piket.search||'').trim().toLowerCase(); const people=query?assigned.filter(n=>n.toLowerCase().includes(query)):assigned;
     list.className='piket-pro-list card'; list.innerHTML=people.length?people.map(n=>{const done=rosterIsSudah(rec[n]);return `<div class="piket-person"><div class="mini-avatar">${esc(n.split(/\s+/).map(x=>x[0]||'').slice(0,2).join('').toUpperCase())}</div><div style="flex:1;min-width:0"><div class="mini-name">${esc(n)}</div><div style="font-size:9px;color:var(--ui-muted)">${done?'Tugas piket selesai':'Belum selesai'}</div></div>${isAdmin()?`<input type="checkbox" ${done?'checked':''} onchange="toggleRosterStudent('piket',${JSON.stringify(n).replace(/"/g,'&quot;')},this.checked)">`:''}</div>`}).join(''):'<div class="empty" style="width:100%;padding:28px">Belum ada siswa yang ditugaskan untuk piket.</div>';
     const pe=document.getElementById('piket-collected'),re=document.getElementById('piket-remaining');const done=assigned.filter(n=>rosterIsSudah(rec[n])).length;if(pe)pe.textContent=done;if(re)re.textContent=assigned.length-done;
   }
+
   let taskFilter='all';
   function injectTaskFilters(){const v=document.getElementById('view-tugas');if(!v||document.getElementById('task-filter-tabs'))return;const head=v.querySelector('.pagehead');const tabs=document.createElement('div');tabs.id='task-filter-tabs';tabs.className='task-filter-tabs';tabs.innerHTML=[['all','Semua'],['active','Aktif'],['soon','Mendekati Deadline'],['done','Selesai']].map(x=>`<button class="task-filter-tab ${x[0]==='all'?'active':''}" data-task-filter="${x[0]}">${x[1]}</button>`).join('');head.after(tabs);tabs.addEventListener('click',e=>{const b=e.target.closest('[data-task-filter]');if(!b)return;taskFilter=b.dataset.taskFilter;tabs.querySelectorAll('.task-filter-tab').forEach(x=>x.classList.toggle('active',x===b));professionalRenderTugas();});}
   function daysLeft(d){if(!d)return 999;const a=new Date();a.setHours(0,0,0,0);const b=new Date(d+'T00:00:00');return Math.ceil((b-a)/86400000)}
@@ -9181,9 +9620,12 @@ window.todayKey = todayKey;
       board.classList.add('task-board');
     }
   }
+
   function injectReportUI(){const v=document.getElementById('view-laporan');if(!v||document.getElementById('report-pro-top'))return;const first=v.querySelector('.section');const box=document.createElement('div');box.id='report-pro-top';box.className='report-pro-top';box.innerHTML='<div class="report-chart-card"><div class="section-kicker">RINGKASAN</div><div style="font-size:14px;font-weight:800">Status laporan</div><div id="report-bars" class="report-bars"></div></div><div class="report-kpi-card"><div class="report-kpi-grid"><div class="report-kpi"><div class="rk-label">Menunggu</div><div class="rk-value" id="rk-pending">0</div></div><div class="report-kpi"><div class="rk-label">Ditinjau</div><div class="rk-value" id="rk-reviewed">0</div></div><div class="report-kpi"><div class="rk-label">Selesai</div><div class="rk-value" id="rk-resolved">0</div></div><div class="report-kpi"><div class="rk-label">Ditolak</div><div class="rk-value" id="rk-rejected">0</div></div></div><div class="report-actions" style="margin-top:12px"><button class="report-action-btn primary" onclick="window.print()">Cetak / PDF</button><button class="report-action-btn" onclick="openExportModal()">Export Data</button></div></div>'; if(first)first.before(box);else v.appendChild(box);}
   function updateReportUI(list){injectReportUI();const c={pending:0,reviewed:0,resolved:0,rejected:0};(state.reports||[]).forEach(r=>{if(c[r.status]!=null)c[r.status]++});Object.keys(c).forEach(k=>{const e=document.getElementById('rk-'+k);if(e)e.textContent=c[k]});const max=Math.max(1,...Object.values(c));const bars=document.getElementById('report-bars');if(bars)bars.innerHTML=Object.entries(c).map(([k,v])=>`<div class="report-bar-col"><div class="report-bar" style="height:${Math.max(5,Math.round(v/max*72))}px"></div><div class="report-bar-label">${reportStatusLabel(k)}</div><strong style="font-size:10px">${v}</strong></div>`).join('');}
+
   function injectSettingsNav(){const v=document.getElementById('view-settings');if(!v||document.getElementById('settings-nav'))return;const head=v.querySelector('.pagehead');const nav=document.createElement('div');nav.id='settings-nav';nav.className='settings-nav';nav.innerHTML='<button class="active" data-cat="profile">Profil & Tampilan</button><button data-cat="members">Anggota & Siswa</button><button data-cat="security">Keamanan & Database</button>';head.after(nav);const all=[...v.querySelectorAll('.settings-section')];all.forEach((el,i)=>{if(!el.dataset.settingCat)el.dataset.settingCat=(i===0||i===1)?'members':(i===2||i===3||i===4)?'security':'profile'});nav.addEventListener('click',e=>{const b=e.target.closest('[data-cat]');if(!b)return;nav.querySelectorAll('button').forEach(x=>x.classList.toggle('active',x===b));const cat=b.dataset.cat;all.forEach(el=>el.classList.toggle('hidden-by-category',el.dataset.settingCat!==cat));});}
+
   const oldRenderKas=window.renderKas, oldRenderHp=window.renderHp, oldRenderPiket=window.renderPiket, oldRenderJadwal=window.renderJadwalList, oldRenderTugas=window.renderTugas, oldRenderReports=window.renderReports;
   window.renderKas=function(){ensureKasEnhancements();professionalRenderKas();if(typeof renderKasSiswa==='function')renderKasSiswa();};
   window.renderHp=function(){professionalRenderHp();};
@@ -9191,12 +9633,37 @@ window.todayKey = todayKey;
   window.renderJadwalList=function(){professionalRenderJadwalList();};
   window.renderTugas=function(){professionalRenderTugas();};
   window.renderReports=function(){if(typeof oldRenderReports==='function')oldRenderReports();updateReportUI();};
+
   function boot(){
     try{ensureKasEnhancements();injectTaskFilters();injectReportUI();injectSettingsNav();}catch(e){console.warn('Module V6 UI init',e)}
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
 </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </body>
+
 <!-- Kelasku compatibility patch: resilient Firestore sync + legacy fallback -->
 </html>
+
+
+
+
+
+
+
+
+
