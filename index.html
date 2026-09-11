@@ -3584,6 +3584,9 @@ body.dark #kas-out {
 }
 body.dark .balance-card .bf-item { color: rgba(255,255,255,.92) !important; }
 </style>
+<style id="calendar-date-sync-v18">
+/* v18: tanggal kalender HP/Piket di-reset ke hari ini saat modul dibuka kembali. */
+</style>
 </head>
 <body>
 <div class="ambient-mesh">
@@ -8088,18 +8091,32 @@ function autoOpenKasAndCalendarPanels(name) {
         if (typeof renderKasSiswa === 'function') renderKasSiswa();
     }
 
-    // Kalender HP: selalu terbuka saat menu Pengumpulan HP dibuka.
+    // Kalender HP: saat masuk kembali ke menu Pengumpulan HP, sinkronkan
+    // pilihan tanggal ke hari ini. Jadi jika sebelumnya memilih tanggal kemarin
+    // lalu pindah ke menu Kas, saat kembali ke HP kalender tidak tertinggal di hari lama.
     if (name === 'hp') {
         state.calMinimized.hp = false;
+        const now = new Date();
+        const today = todayKey();
+        state.hpSelectedDate = today;
+        calYear = now.getFullYear();
+        calMonth = now.getMonth();
         if (typeof renderHpCalendar === 'function') renderHpCalendar();
         else if (typeof updateCalendarUI === 'function') updateCalendarUI('hp');
+        renderHp();
     }
 
-    // Kalender Piket: tetap terbuka saat tampilan Jadwal dibuka dalam mode piket.
+    // Kalender Piket: perilaku yang sama, selalu kembali ke hari ini saat
+    // tampilan Piket dibuka kembali.
     if (name === 'jadwal' && state.jadwalMode === 'piket') {
         state.calMinimized.piket = false;
+        const now = new Date();
+        state.piketSelectedDate = todayKey();
+        piketCalYear = now.getFullYear();
+        piketCalMonth = now.getMonth();
         if (typeof renderPiketCalendar === 'function') renderPiketCalendar();
         else if (typeof updateCalendarUI === 'function') updateCalendarUI('piket');
+        renderPiket();
     }
 }
 
