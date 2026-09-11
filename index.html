@@ -5645,25 +5645,52 @@ function renderStorageUsage() {
     const hintEl = document.getElementById('storage-usage-hint');
     const statusEl = document.getElementById('drive-connection-status');
     if (!labelEl || !barEl) return;
+
     updateAttachmentHints();
-    if (driveStorageEnabled()) {
-        if (statusEl) { statusEl.textContent = '📁 Status Drive: terhubung (menunggu data kapasitas...)'; statusEl.style.color = 'var(--teal)'; }
-        return;
-    }
+
+    // Selalu tampilkan ukuran data aplikasi Firestore agar panel tidak kosong
+    // ketika kapasitas Google Drive belum berhasil dibaca.
     let usedBytes = 0;
-    try { usedBytes = new Blob([JSON.stringify(state)]).size; } catch (e) { usedBytes = JSON.stringify(state).length; }
+    try {
+        usedBytes = new Blob([JSON.stringify(state)]).size;
+    } catch (e) {
+        try { usedBytes = JSON.stringify(state).length; } catch (_) { usedBytes = 0; }
+    }
+
     const percent = Math.min(100, Math.round((usedBytes / FIRESTORE_DOC_LIMIT_BYTES) * 100));
     labelEl.textContent = formatStorageBytes(usedBytes) + ' / 1 MB';
     percentEl.textContent = percent + '%';
     barEl.style.width = percent + '%';
+
+    if (driveStorageEnabled()) {
+        barEl.style.background = 'var(--teal)';
+        percentEl.style.color = 'var(--teal)';
+        if (hintEl) {
+            hintEl.textContent = 'Google Drive aktif. Angka di atas menunjukkan ukuran data aplikasi Firestore; kapasitas Drive akan ditampilkan setelah berhasil diperiksa.';
+        }
+        if (statusEl) {
+            statusEl.textContent = 'Status Drive: terhubung — memeriksa kapasitas…';
+            statusEl.style.color = 'var(--teal)';
+        }
+        return;
+    }
+
     let color = 'var(--teal)';
     let hint = 'Mode lama: lampiran dapat tersimpan sebagai Base64 di Firestore dan lebih cepat memenuhi batas dokumen.';
-    if (percent >= 90) { color = 'var(--rose)'; hint = '⚠️ Firestore hampir penuh. Hubungkan Google Drive lalu migrasikan lampiran lama.'; }
-    else if (percent >= 70) { color = 'var(--amber)'; hint = '⚠️ Firestore mulai mendekati batas. Hubungkan Google Drive agar file besar tidak masuk ke dokumen.'; }
+    if (percent >= 90) {
+        color = 'var(--rose)';
+        hint = 'Firestore hampir penuh. Hubungkan Google Drive lalu migrasikan lampiran lama.';
+    } else if (percent >= 70) {
+        color = 'var(--amber)';
+        hint = 'Firestore mulai mendekati batas. Hubungkan Google Drive agar file besar tidak masuk ke dokumen.';
+    }
     barEl.style.background = color;
     percentEl.style.color = color;
     if (hintEl) hintEl.textContent = hint;
-    if (statusEl) { statusEl.textContent = 'Status Drive: belum dikonfigurasi'; statusEl.style.color = 'var(--amber)'; }
+    if (statusEl) {
+        statusEl.textContent = 'Status Drive: belum dikonfigurasi';
+        statusEl.style.color = 'var(--amber)';
+    }
 }
 async function driveApiRequest(payload) {
     if (!driveStorageEnabled()) throw new Error('Google Drive belum dikonfigurasi di index.html.');
@@ -5710,7 +5737,10 @@ async function refreshDriveStorageUsage() {
         if (statusEl) { statusEl.textContent = '📁 Status Drive: terhubung ✓'; statusEl.style.color = 'var(--teal)'; }
         updateAttachmentHints();
     } catch (e) {
-        if (statusEl) { statusEl.textContent = '📁 Status Drive: error — ' + (e.message || 'tidak dapat terhubung'); statusEl.style.color = 'var(--rose)'; }
+        // Pertahankan angka Firestore yang sudah tampil sebagai fallback.
+        if (statusEl) { statusEl.textContent = 'Status Drive: terhubung, tetapi kapasitas belum dapat dibaca'; statusEl.style.color = 'var(--amber)'; }
+        if (hintEl) hintEl.textContent = 'Data aplikasi tetap dihitung dari Firestore. Pemeriksaan kapasitas Google Drive gagal: ' + (e.message || 'tidak dapat terhubung') + '.';
+        renderStorageUsage();
     }
 }
 function setAutoCleanDays(value) {
