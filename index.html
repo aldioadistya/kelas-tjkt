@@ -8132,7 +8132,16 @@ window.todayKey = todayKey;
     injectTaskFilters(); autoCleanDoneTugas(); const all=(state.tugas||[]).filter(taskMatches); const open=all.filter(t=>!t.selesai),done=all.filter(t=>t.selesai); const hint=document.getElementById('tugas-autoclean-hint');if(hint)hint.textContent='';
     const renderCard=t=>{const left=daysLeft(t.tenggat);const dc=t.selesai?'deadline-safe':left<=1?'deadline-danger':left<=3?'deadline-soon':'deadline-safe';const dl=t.selesai?'Selesai':t.tenggat?(left<0?'Lewat deadline':left===0?'Hari ini':left===1?'H-1':`H-${left}`):'Tanpa deadline';return `<div class="task-pro-card"><div class="task-pro-top"><div class="task-pro-title">${esc(t.nama)}</div><span class="task-pro-deadline ${dc}">${dl}</span></div><div class="task-pro-meta"><span class="task-pro-tag">${esc(t.mapel||'Tanpa mapel')}</span>${t.tenggat?`<span class="task-pro-tag">${esc(t.tenggat)}</span>`:''}</div>${t.deskripsi?`<div class="task-pro-desc">${esc(t.deskripsi)}</div>`:''}${renderTaskFiles(t)}<div class="task-pro-actions">${isAdmin()?`<button class="primary" onclick="event.stopPropagation();openTugasModal(${Number(t.id)})">Edit</button>${t.selesai?`<button onclick="event.stopPropagation();toggleTugas(${Number(t.id)})">Buka lagi</button>`:`<button onclick="event.stopPropagation();toggleTugas(${Number(t.id)})">Tandai selesai</button>`}`:`<button onclick="event.stopPropagation();openTugasModal(${Number(t.id)})">Lihat</button>`}</div></div>`};
     const a=document.getElementById('tugas-open-list'),b=document.getElementById('tugas-done-list');if(a){a.className='task-column';a.innerHTML=`<div class="task-column-title">Aktif</div>${open.length?open.map(renderCard).join(''):'<div class="empty" style="padding:28px 12px">Tidak ada tugas aktif.</div>'}`;}if(b){b.className='task-column';b.innerHTML=`<div class="task-column-title">Selesai</div>${done.length?done.map(renderCard).join(''):'<div class="empty" style="padding:28px 12px">Belum ada tugas selesai.</div>'}`;}
-    const top=a?.parentElement;if(top&&!top.classList.contains('task-board')){top.classList.add('task-board');}
+    const openSection=a?.closest('.section'); const doneSection=b?.closest('.section');
+    if(openSection && doneSection){
+      let board=document.getElementById('task-board-shell');
+      if(!board){
+        board=document.createElement('div'); board.id='task-board-shell'; board.className='task-board-shell';
+        openSection.parentNode.insertBefore(board, openSection);
+        board.appendChild(openSection); board.appendChild(doneSection);
+      }
+      board.classList.add('task-board');
+    }
   }
 
   function injectReportUI(){const v=document.getElementById('view-laporan');if(!v||document.getElementById('report-pro-top'))return;const first=v.querySelector('.section');const box=document.createElement('div');box.id='report-pro-top';box.className='report-pro-top';box.innerHTML='<div class="report-chart-card"><div class="section-kicker">RINGKASAN</div><div style="font-size:14px;font-weight:800">Status laporan</div><div id="report-bars" class="report-bars"></div></div><div class="report-kpi-card"><div class="report-kpi-grid"><div class="report-kpi"><div class="rk-label">Menunggu</div><div class="rk-value" id="rk-pending">0</div></div><div class="report-kpi"><div class="rk-label">Ditinjau</div><div class="rk-value" id="rk-reviewed">0</div></div><div class="report-kpi"><div class="rk-label">Selesai</div><div class="rk-value" id="rk-resolved">0</div></div><div class="report-kpi"><div class="rk-label">Ditolak</div><div class="rk-value" id="rk-rejected">0</div></div></div><div class="report-actions" style="margin-top:12px"><button class="report-action-btn primary" onclick="window.print()">Cetak / PDF</button><button class="report-action-btn" onclick="openExportModal()">Export Data</button></div></div>'; if(first)first.before(box);else v.appendChild(box);}
@@ -8477,4 +8486,173 @@ body.dark .statusbar{
 }
 
 /* Keep login dark-mode styling untouched by the dashboard patch. */
+</style>
+
+
+<style id="kelasku-dark-module-fix-v7">
+/* ==========================================================
+   MODULE DARK MODE — comprehensive contrast correction
+   ========================================================== */
+body.dark .view .pagehead h1,
+body.dark .view .pagehead p,
+body.dark .view .section-title,
+body.dark .view .section-kicker,
+body.dark .view .section-link,
+body.dark .view .field label,
+body.dark .view .field-hint,
+body.dark .view .settings-label,
+body.dark .view .settings-desc,
+body.dark .view .empty,
+body.dark .view .search-box,
+body.dark .view .search-box input,
+body.dark .view .search-box input::placeholder,
+body.dark .view .student-row,
+body.dark .view .student-row *:not(svg),
+body.dark .view .kas-row,
+body.dark .view .kas-row *:not(svg),
+body.dark .view .report-item,
+body.dark .view .report-item *:not(svg),
+body.dark .view .notify-item,
+body.dark .view .notify-item *:not(svg),
+body.dark .view .acc-row,
+body.dark .view .acc-row *:not(svg),
+body.dark .view .tugas-item,
+body.dark .view .tugas-item *:not(svg),
+body.dark .view .jadwal-item,
+body.dark .view .jadwal-item *:not(svg),
+body.dark .view .timeline-time,
+body.dark .view .timeline-card,
+body.dark .view .timeline-card *,
+body.dark .view .piket-person,
+body.dark .view .piket-person *:not(svg),
+body.dark .view .task-column-title,
+body.dark .view .task-pro-title,
+body.dark .view .task-pro-desc,
+body.dark .view .task-pro-tag,
+body.dark .view .task-pro-actions button,
+body.dark .view .report-kpi,
+body.dark .view .report-kpi *,
+body.dark .view .report-chart-card,
+body.dark .view .report-chart-card *,
+body.dark .view .report-action-btn,
+body.dark .view .kas-pro-card,
+body.dark .view .kas-pro-card *,
+body.dark .view .hp-pro-card,
+body.dark .view .hp-pro-card *:not(svg),
+body.dark .view .calendar-card,
+body.dark .view .calendar-card *:not(svg),
+body.dark .view .settings-card,
+body.dark .view .settings-card *:not(svg) {
+  color: var(--text-main) !important;
+  -webkit-text-fill-color: var(--text-main) !important;
+}
+
+body.dark .view .pagehead p,
+body.dark .view .section-kicker,
+body.dark .view .section-link,
+body.dark .view .field-hint,
+body.dark .view .timeline-time,
+body.dark .view .timeline-sub,
+body.dark .view .task-pro-desc,
+body.dark .view .task-pro-tag,
+body.dark .view .report-kpi .rk-label,
+body.dark .view .settings-desc,
+body.dark .view .empty {
+  color: #94a3b8 !important;
+  -webkit-text-fill-color: #94a3b8 !important;
+}
+
+body.dark .view .card,
+body.dark .view .section > .card,
+body.dark .view .task-column,
+body.dark .view .task-pro-card,
+body.dark .view .timeline-card,
+body.dark .view .piket-person,
+body.dark .view .report-chart-card,
+body.dark .view .report-kpi,
+body.dark .view .report-kpi-card,
+body.dark .view .kas-pro-card,
+body.dark .view .hp-pro-card,
+body.dark .view .calendar-card,
+body.dark .view .settings-card,
+body.dark .view .field,
+body.dark .view .search-box {
+  background: #111827 !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+body.dark .view input,
+body.dark .view select,
+body.dark .view textarea {
+  background: #0f172a !important;
+  color: #f8fafc !important;
+  border-color: #334155 !important;
+  -webkit-text-fill-color: #f8fafc !important;
+}
+body.dark .view input::placeholder,
+body.dark .view textarea::placeholder { color: #64748b !important; -webkit-text-fill-color:#64748b !important; }
+
+body.dark .view button:not(.btn-primary):not(.login-submit),
+body.dark .view .task-filter-tab,
+body.dark .view .task-pro-actions button,
+body.dark .view .report-action-btn {
+  background: #111827 !important;
+  color: #cbd5e1 !important;
+  border-color: #334155 !important;
+  -webkit-text-fill-color:#cbd5e1 !important;
+}
+body.dark .view .task-filter-tab.active,
+body.dark .view .day-chip.active {
+  background: #172554 !important;
+  color: #93c5fd !important;
+  border-color: #3b82f6 !important;
+  -webkit-text-fill-color:#93c5fd !important;
+}
+body.dark .view .task-pro-actions button.primary,
+body.dark .view .report-action-btn.primary {
+  background: #172554 !important;
+  color: #93c5fd !important;
+  border-color: #2563eb !important;
+  -webkit-text-fill-color:#93c5fd !important;
+}
+
+body.dark .view [style*="color:#000"],
+body.dark .view [style*="color: #000"],
+body.dark .view [style*="color:black"],
+body.dark .view [style*="color: black"],
+body.dark .view [style*="color:#111"],
+body.dark .view [style*="color: #111"],
+body.dark .view [style*="color:#0f172a"],
+body.dark .view [style*="color: #0f172a"] {
+  color: #f8fafc !important;
+  -webkit-text-fill-color: #f8fafc !important;
+}
+
+/* Tugas: the previous enhancement accidentally turned the first section into a grid,
+   placing its heading on the left and the list on the right. Keep heading above list. */
+#view-tugas #task-board-shell { display:grid !important; grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important; gap:16px !important; }
+#view-tugas #task-board-shell > .section { min-width:0 !important; margin:0 !important; }
+#view-tugas #task-board-shell > .section > .section-head { display:flex !important; justify-content:space-between !important; align-items:center !important; margin-bottom:8px !important; }
+#view-tugas #task-board-shell > .section > .card,
+#view-tugas #task-board-shell > .section > #tugas-autoclean-hint { width:100% !important; }
+#view-tugas #task-board-shell .task-column { width:100% !important; }
+@media (max-width: 900px){
+  #view-tugas #task-board-shell { grid-template-columns:1fr !important; }
+}
+
+/* Jadwal timeline keeps the line and cards readable in dark mode. */
+body.dark #view-jadwal .timeline:before { background:#334155 !important; }
+body.dark #view-jadwal .timeline-card { background:#111827 !important; border-color:#334155 !important; }
+body.dark #view-jadwal .timeline-card:before { background:#60a5fa !important; box-shadow:0 0 0 4px #172554 !important; }
+body.dark #view-jadwal .day-chip { background:#111827 !important; color:#cbd5e1 !important; border-color:#334155 !important; }
+
+/* Keep form controls and data rows legible regardless of inline styles. */
+body.dark #view-kas table,
+body.dark #view-kas th,
+body.dark #view-kas td,
+body.dark #view-laporan table,
+body.dark #view-laporan th,
+body.dark #view-laporan td { color:#f8fafc !important; border-color:#334155 !important; }
+
 </style>
