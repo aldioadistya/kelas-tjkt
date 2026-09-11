@@ -4061,9 +4061,22 @@ body.dark .kas-deadline-badge{color:#fbbf24;background:rgba(251,191,36,.10);bord
                 <div><div class="notif-setting-title">Piket</div><div class="notif-setting-desc">Perubahan jadwal piket kelas</div></div>
                 <label class="notif-switch"><input type="checkbox" id="notif-pref-piket" onchange="setNotificationPreference('piket', this.checked)"><span></span></label>
               </div>
-              <div class="notif-setting-row">
-                <div><div class="notif-setting-title">Kas</div><div class="notif-setting-desc">Pemasukan, pengeluaran, dan perubahan saldo</div></div>
+              <div class="notif-setting-row notif-kas-row">
+                <div style="flex:1;min-width:0;"><div class="notif-setting-title">Kas</div><div class="notif-setting-desc">Tagihan untuk siswa yang belum bayar</div><div class="notif-kas-summary" id="notif-kas-summary">3 hari sebelum • 2 hari sebelum • 1 hari sebelum • hari H · 2x · 2 jam</div></div>
                 <label class="notif-switch"><input type="checkbox" id="notif-pref-kas" onchange="setNotificationPreference('kas', this.checked)"><span></span></label>
+              </div>
+              <div class="notif-kas-controls">
+                <div class="notif-control-title">Pengingat tagihan Kas</div>
+                <div class="notif-check-grid">
+                  <label><input type="checkbox" id="notif-kas-day-3" onchange="toggleKasNotificationDay(3,this.checked)"><span>3 hari sebelum</span></label>
+                  <label><input type="checkbox" id="notif-kas-day-2" onchange="toggleKasNotificationDay(2,this.checked)"><span>2 hari sebelum</span></label>
+                  <label><input type="checkbox" id="notif-kas-day-1" onchange="toggleKasNotificationDay(1,this.checked)"><span>1 hari sebelum</span></label>
+                  <label><input type="checkbox" id="notif-kas-day-0" onchange="toggleKasNotificationDay(0,this.checked)"><span>Hari H</span></label>
+                </div>
+                <div class="notif-number-grid">
+                  <label><span>Jarak</span><div><input id="notif-kas-interval" type="number" min="1" max="24" value="2" onchange="updateKasNotificationSetting('intervalHours',this.value)"><b>jam</b></div></label>
+                  <label><span>Maks. per periode</span><div><input id="notif-kas-max" type="number" min="1" max="10" value="2" onchange="updateKasNotificationSetting('maxPerPeriod',this.value)"><b>x</b></div></label>
+                </div>
               </div>
               <div class="notif-setting-row">
                 <div><div class="notif-setting-title">Laporan</div><div class="notif-setting-desc">Perubahan status dan tanggapan laporan</div></div>
@@ -4267,6 +4280,10 @@ let state = {
     reports: [],
     notifications: [],
     activityLog: [],
+    notificationSettings: {
+        enabled: {tugas:true,pengumuman:true,piket:true,kas:true,laporan:true,jadwal:true,hp:true,aktivitas:true,sistem:true},
+        kas: {days:[3,2,1,0], intervalHours:2, maxPerPeriod:2}
+    },
     jadwalMode: 'pelajaran',
     selectedDay: 'Senin',
     calMinimized: { hp: false, piket: false },
@@ -5594,6 +5611,15 @@ function ensureAppFeatures(){
     if(!Array.isArray(state.notifications))state.notifications=[];
     if(!Array.isArray(state.activityLog))state.activityLog=[];
     if(!Array.isArray(state.reports))state.reports=[];
+    if(!state.notificationSettings || typeof state.notificationSettings !== 'object') state.notificationSettings={};
+    const notifDefaults={tugas:true,pengumuman:true,piket:true,kas:true,laporan:true,jadwal:true,hp:true,aktivitas:true,sistem:true};
+    state.notificationSettings.enabled={...notifDefaults,...(state.notificationSettings.enabled||{})};
+    const kasDefaults={days:[3,2,1,0],intervalHours:2,maxPerPeriod:2};
+    state.notificationSettings.kas={...kasDefaults,...(state.notificationSettings.kas||{})};
+    state.notificationSettings.kas.days=(Array.isArray(state.notificationSettings.kas.days)?state.notificationSettings.kas.days:[3,2,1,0]).map(Number).filter(d=>[3,2,1,0].includes(d));
+    if(!state.notificationSettings.kas.days.length)state.notificationSettings.kas.days=[0];
+    state.notificationSettings.kas.intervalHours=Math.max(1,Math.min(24,Number(state.notificationSettings.kas.intervalHours)||2));
+    state.notificationSettings.kas.maxPerPeriod=Math.max(1,Math.min(10,Number(state.notificationSettings.kas.maxPerPeriod)||2));
     if(!Array.isArray(state.kasFolders))state.kasFolders=[];
     state.kasFolders.forEach(folder=>{
         if(!folder.id)folder.id=Date.now()+Math.random();
@@ -5670,6 +5696,11 @@ function renderNotificationPreferenceInputs(){
     const triggerCount=document.getElementById('notif-pref-trigger-count');
     if(summary)summary.textContent=active+' dari '+total+' aktif';
     if(triggerCount)triggerCount.textContent=active+'/'+total+' aktif';
+    const k=state.notificationSettings.kas;
+    ['3','2','1','0'].forEach(d=>{const el=document.getElementById('notif-kas-day-'+d);if(el)el.checked=(k.days||[]).includes(Number(d));});
+    const iv=document.getElementById('notif-kas-interval');if(iv)iv.value=String(k.intervalHours);
+    const mx=document.getElementById('notif-kas-max');if(mx)mx.value=String(k.maxPerPeriod);
+    const ks=document.getElementById('notif-kas-summary');if(ks)ks.textContent=(k.days||[]).map(d=>d===0?'hari H':d+' hari sebelum').join(' • ')+' · '+k.maxPerPeriod+'x · '+k.intervalHours+' jam';
 }
 function notificationCategory(title){
     const t=String(title||'').toLowerCase();
@@ -5794,12 +5825,12 @@ async function runKasPaymentReminders(forceCheck=false){
         const student = (folder.students||[]).find(st => String(st.name||'').trim().toLocaleLowerCase('id-ID') === String(myName).trim().toLocaleLowerCase('id-ID'));
         if(!student || student.status === 'sudah' || !folder.deadline) continue;
         const diff = kasDateDiff(folder.deadline);
-        if(![3,2,1,0].includes(diff)) continue;
+        if(!(nk.days||[3,2,1,0]).includes(diff)) continue;
         const stageKey = String(folder.id) + '|' + folder.deadline + '|' + diff;
         const rec = reminderState[stageKey] || {count:0,lastAt:0,variant:0};
         // Maximum 2 reminders for each stage, with at least 2 hours between them.
-        if(Number(rec.count||0) >= 2) continue;
-        if(!forceCheck && rec.lastAt && (now-Number(rec.lastAt)) < 2*60*60*1000) continue;
+        if(Number(rec.count||0) >= Number(nk.maxPerPeriod||2)) continue;
+        if(!forceCheck && rec.lastAt && (now-Number(rec.lastAt)) < Number(nk.intervalHours||2)*60*60*1000) continue;
         const notification = addNotification('Tagihan kas', buildKasReminderText(folder,diff,Number(rec.variant||0)), {uid:currentUser.uid});
         if(notification){
             rec.count = Number(rec.count||0)+1;
@@ -8505,6 +8536,9 @@ window.openGlobalSearchResult = openGlobalSearchResult;
 window.markNotificationRead = markNotificationRead;
 window.markAllNotificationsRead = markAllNotificationsRead;
 window.setNotificationPreference = setNotificationPreference;
+window.setAllNotificationPreferences = setAllNotificationPreferences;
+window.updateKasNotificationSetting = updateKasNotificationSetting;
+window.toggleKasNotificationDay = toggleKasNotificationDay;
 window.openAdminNotificationMenu = openAdminNotificationMenu;
 window.runKasPaymentReminders = runKasPaymentReminders;
 window.renderNotificationPreferenceInputs = renderNotificationPreferenceInputs;
@@ -9411,4 +9445,18 @@ body.dark #view-laporan table,
 body.dark #view-laporan th,
 body.dark #view-laporan td { color:#f8fafc !important; border-color:#334155 !important; }
 
+
+.notif-kas-summary{font-size:10px;color:var(--primary);font-weight:700;margin-top:5px;line-height:1.4}
+.notif-kas-controls{margin:0 0 10px;padding:11px 12px;background:rgba(99,102,241,.05);border:1px solid var(--glass-border);border-radius:12px}
+.notif-control-title{font-size:10px;font-weight:800;color:var(--text-main);margin-bottom:8px}
+.notif-check-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.notif-check-grid label{display:flex;align-items:center;gap:7px;font-size:10px;font-weight:700;color:var(--text-main);cursor:pointer}
+.notif-check-grid input{accent-color:var(--primary)}
+.notif-number-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.notif-number-grid label{font-size:9px;font-weight:700;color:var(--text-soft)}
+.notif-number-grid label>span{display:block;margin-bottom:4px}
+.notif-number-grid label>div{display:flex;align-items:center;gap:5px}
+.notif-number-grid input{width:72px;border:1px solid var(--glass-border);background:var(--input-bg);color:var(--text-main);border-radius:8px;padding:7px 8px;font-weight:800}
+.notif-number-grid b{font-size:9px;color:var(--text-soft)}
+body.dark .notif-kas-controls{background:rgba(129,140,248,.08)}
 </style>
