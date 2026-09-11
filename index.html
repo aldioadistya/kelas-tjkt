@@ -3607,26 +3607,6 @@ body.dark .balance-card .bf-item { color: rgba(255,255,255,.92) !important; }
 body.dark .kas-deadline-badge{color:#fbbf24;background:rgba(251,191,36,.10);border-color:rgba(251,191,36,.22);}
 </style>
 <style>
-/* v27 — Dedicated Notification Management Menu */
-#view-notifikasi{padding-bottom:18px;}
-#view-notifikasi .notification-menu-intro{margin-bottom:10px;}
-#view-notifikasi #notification-menu-host{display:flex;flex-direction:column;gap:10px;}
-#view-notifikasi .notification-settings-card,#view-notifikasi .notification-timing-card{width:100%;}
-.notification-quick-nav{display:flex;gap:6px;overflow-x:auto;padding:2px 1px 6px;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
-.notification-quick-nav::-webkit-scrollbar{display:none;}
-.notification-quick-btn{flex:0 0 auto;border:1px solid var(--glass-border);background:var(--glass-card);color:var(--text-main);border-radius:999px;padding:7px 10px;font-size:10px;font-weight:800;cursor:pointer;}
-.notification-quick-btn:hover{border-color:var(--primary);color:var(--primary);}
-body.dark .notification-quick-btn{background:#111827;border-color:#334155;color:#e2e8f0;}
-body.dark #view-notifikasi .notification-settings-card,
-body.dark #view-notifikasi .notification-timing-card{background:#111827;border-color:#334155;}
-@media(max-width:560px){#view-notifikasi .pagehead h1{font-size:19px}.notification-quick-btn{padding:6px 9px;font-size:9.5px}}
-
-.notif-timing-list{display:flex;flex-direction:column;gap:8px;}
-.notif-timing-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--glass-border);}
-.notif-timing-row:last-child{border-bottom:none;}
-.notif-timing-row>div:first-child{min-width:0;flex:1;}
-.notif-timing-row .notif-rule-grid{min-width:200px;}
-@media(max-width:560px){.notif-timing-row{align-items:flex-start;flex-direction:column}.notif-timing-row .notif-rule-grid{width:100%;min-width:0}}
 </style><style>
 .admin-only-view{display:none;}
 .is-admin .admin-only-view{display:none;}
@@ -3730,7 +3710,7 @@ body.dark #view-notifikasi .notification-timing-card{background:#111827;border-c
 <button class="desktop-nav-item" data-tab="jadwal" onclick="goTo('jadwal')"><span aria-hidden="true"><svg viewbox="0 0 24 24"><rect height="18" rx="2" width="18" x="3" y="4"></rect><line x1="3" x2="21" y1="9" y2="9"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="16" x2="16" y1="2" y2="6"></line></svg></span><b>Jadwal</b></button>
 <button class="desktop-nav-item" data-tab="tugas" onclick="goTo('tugas')"><span aria-hidden="true"><svg viewbox="0 0 24 24"><path d="M9 11l3 3 8-8"></path><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"></path></svg></span><b>Tugas</b></button>
 <button class="desktop-nav-item" data-tab="laporan" onclick="goTo('laporan')"><span aria-hidden="true"><svg viewbox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg></span><b>Laporan</b></button>
-<button class="desktop-nav-item admin-only" data-tab="notifikasi" onclick="goTo('notifikasi')"><span aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 00-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M10 21h4"></path></svg></span><b>Notifikasi</b></button><button class="desktop-nav-item" data-tab="settings" onclick="goTo('settings')"><span aria-hidden="true"><svg viewbox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06A1.65 1.65 0 0019.4 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"></path></svg></span><b>Setelan</b></button>
+<button class="desktop-nav-item" data-tab="settings" onclick="goTo('settings')"><span aria-hidden="true"><svg viewbox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06A1.65 1.65 0 0019.4 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"></path></svg></span><b>Setelan</b></button>
 </nav>
 </aside>
 <div class="screen">
@@ -3964,102 +3944,7 @@ body.dark #view-notifikasi .notification-timing-card{background:#111827;border-c
 <div class="card" id="report-list"></div>
 </div>
 </div>
-<div class="view admin-only-view" id="view-notifikasi">
-<div class="pagehead"><h1>Notifikasi</h1><p>Atur waktu notifikasi otomatis kelas.</p></div>
-<div class="section">
-<div class="notification-menu-intro card">
-<div class="notification-menu-intro-icon">
-<svg aria-hidden="true" viewbox="0 0 24 24"><path d="M18 8a6 6 0 00-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M10 21h4"></path></svg>
-</div>
-<div>
-<div class="notification-menu-intro-title">Pengaturan Notifikasi Kelas</div>
-<div class="notification-menu-intro-text">Notifikasi dibuat otomatis dari aktivitas kelas. Admin hanya mengatur kapan dan seberapa sering notifikasi ditampilkan.</div>
-</div>
-</div>
-<div id="notification-menu-host"><div class="notification-quick-nav" id="notification-quick-nav"><button class="notification-quick-btn" data-notif-jump="tugas" type="button">Tugas</button><button class="notification-quick-btn" data-notif-jump="pengumuman" type="button">Pengumuman</button><button class="notification-quick-btn" data-notif-jump="piket" type="button">Piket</button><button class="notification-quick-btn" data-notif-jump="kas" type="button">Kas</button><button class="notification-quick-btn" data-notif-jump="laporan" type="button">Laporan</button><button class="notification-quick-btn" data-notif-jump="jadwal" type="button">Jadwal</button><button class="notification-quick-btn" data-notif-jump="hp" type="button">Titip HP</button><button class="notification-quick-btn" data-notif-jump="aktivitas" type="button">Aktivitas</button><button class="notification-quick-btn" data-notif-jump="sistem" type="button">Sistem</button></div><div class="settings-section notification-settings-card admin-only">
-<div class="settings-label">Notifikasi</div>
-<div class="notification-settings-head">
-<div>
-<div class="field-hint" style="margin:-2px 0 0;">Atur notifikasi kelas tanpa memenuhi halaman.</div>
-<div class="notification-settings-summary" id="notif-pref-summary">9 dari 9 aktif</div>
-</div>
-<div class="notification-bulk-actions">
-<button class="notif-bulk-btn" onclick="setAllNotificationPreferences(true)" type="button">Semua ON</button>
-<button class="notif-bulk-btn muted" onclick="setAllNotificationPreferences(false)" type="button">Semua OFF</button>
-</div>
-</div>
-<button aria-expanded="false" class="notification-accordion-trigger" onclick="toggleNotificationSettings()" type="button">
-<span><span class="notification-trigger-dot"></span> Pengaturan per kategori</span>
-<span class="notification-trigger-meta"><span id="notif-pref-trigger-count">9/9 aktif</span><span id="notif-pref-chevron">⌄</span></span>
-</button>
-<div class="notification-accordion-panel" hidden="" id="notification-settings-panel">
-<div class="notif-setting-row">
-<div><div class="notif-setting-title">Tugas</div><div class="notif-setting-desc">Tugas baru dan perubahan tugas</div></div>
-<label class="notif-switch"><input id="notif-pref-tugas" onchange="setNotificationPreference('tugas', this.checked)" type="checkbox"/><span></span></label>
-</div>
-<div class="notif-setting-row">
-<div><div class="notif-setting-title">Pengumuman</div><div class="notif-setting-desc">Pengumuman baru dan perubahan pengumuman</div></div>
-<label class="notif-switch"><input id="notif-pref-pengumuman" onchange="setNotificationPreference('pengumuman', this.checked)" type="checkbox"/><span></span></label>
-</div>
-<div class="notif-setting-row">
-<div><div class="notif-setting-title">Piket</div><div class="notif-setting-desc">Perubahan jadwal piket kelas</div></div>
-<label class="notif-switch"><input id="notif-pref-piket" onchange="setNotificationPreference('piket', this.checked)" type="checkbox"/><span></span></label>
-</div>
-<div class="notif-setting-row notif-kas-row">
-<div style="flex:1;min-width:0;"><div class="notif-setting-title">Kas</div><div class="notif-setting-desc">Tagihan untuk siswa yang belum bayar</div><div class="notif-kas-summary" id="notif-kas-summary">3 hari sebelum • 2 hari sebelum • 1 hari sebelum • hari H · 2x · 2 jam</div></div>
-<label class="notif-switch"><input id="notif-pref-kas" onchange="setNotificationPreference('kas', this.checked)" type="checkbox"/><span></span></label>
-</div>
-<div class="notif-kas-controls">
-<div class="notif-control-title">Pengingat tagihan Kas</div>
-<div class="notif-check-grid">
-<label><input id="notif-kas-day-3" onchange="toggleKasNotificationDay(3,this.checked)" type="checkbox"/><span>3 hari sebelum</span></label>
-<label><input id="notif-kas-day-2" onchange="toggleKasNotificationDay(2,this.checked)" type="checkbox"/><span>2 hari sebelum</span></label>
-<label><input id="notif-kas-day-1" onchange="toggleKasNotificationDay(1,this.checked)" type="checkbox"/><span>1 hari sebelum</span></label>
-<label><input id="notif-kas-day-0" onchange="toggleKasNotificationDay(0,this.checked)" type="checkbox"/><span>Hari H</span></label>
-</div>
-<div class="notif-number-grid">
-<label><span>Jarak</span><div><input id="notif-kas-interval" max="24" min="1" onchange="updateKasNotificationSetting('intervalHours',this.value)" type="number" value="2"/><b>jam</b></div></label>
-<label><span>Maks. per periode</span><div><input id="notif-kas-max" max="10" min="1" onchange="updateKasNotificationSetting('maxPerPeriod',this.value)" type="number" value="2"/><b>x</b></div></label>
-</div>
-</div>
-<div class="notif-setting-row">
-<div><div class="notif-setting-title">Laporan</div><div class="notif-setting-desc">Perubahan status dan tanggapan laporan</div></div>
-<label class="notif-switch"><input id="notif-pref-laporan" onchange="setNotificationPreference('laporan', this.checked)" type="checkbox"/><span></span></label>
-</div>
-<div class="notif-setting-row">
-<div><div class="notif-setting-title">Jadwal Kelas</div><div class="notif-setting-desc">Jadwal pelajaran baru dan perubahan jadwal</div></div>
-<label class="notif-switch"><input id="notif-pref-jadwal" onchange="setNotificationPreference('jadwal', this.checked)" type="checkbox"/><span></span></label>
-</div>
-<div class="notif-setting-row">
-<div><div class="notif-setting-title">Titip HP</div><div class="notif-setting-desc">Pembaruan status penitipan HP</div></div>
-<label class="notif-switch"><input id="notif-pref-hp" onchange="setNotificationPreference('hp', this.checked)" type="checkbox"/><span></span></label>
-</div>
-<div class="notif-setting-row">
-<div><div class="notif-setting-title">Aktivitas</div><div class="notif-setting-desc">Pembaruan aktivitas penting di kelas</div></div>
-<label class="notif-switch"><input id="notif-pref-aktivitas" onchange="setNotificationPreference('aktivitas', this.checked)" type="checkbox"/><span></span></label>
-</div>
-<div class="notif-setting-row">
-<div><div class="notif-setting-title">Sistem</div><div class="notif-setting-desc">Pesan penting dari sistem Kelasku</div></div>
-<label class="notif-switch"><input id="notif-pref-sistem" onchange="setNotificationPreference('sistem', this.checked)" type="checkbox"/><span></span></label>
-</div>
-</div>
-</div><div class="settings-section notification-timing-card admin-only">
-<div class="settings-label">Pengaturan waktu otomatis</div>
-<div class="field-hint" style="margin:-3px 0 10px;">Atur interval dan jumlah kemunculan notifikasi. Isi pesan mengikuti aktivitas kelas secara otomatis.</div>
-<div class="notif-timing-list">
-<div class="notif-timing-row"><div><div class="notif-setting-title">Tugas</div><div class="notif-setting-desc">Tugas baru dan perubahan tugas</div></div><div class="notif-rule-grid"><label class="notif-rule-field"><span>Jarak</span><div class="notif-rule-number"><input id="notif-rule-interval-tugas" inputmode="numeric" max="1440" min="0" type="number"/><b>menit</b></div></label><label class="notif-rule-field"><span>Maks.</span><div class="notif-rule-number"><input id="notif-rule-max-tugas" inputmode="numeric" max="10" min="0" type="number"/><b>x</b></div></label></div></div>
-<div class="notif-timing-row"><div><div class="notif-setting-title">Pengumuman</div><div class="notif-setting-desc">Pengumuman baru dan perubahan</div></div><div class="notif-rule-grid"><label class="notif-rule-field"><span>Jarak</span><div class="notif-rule-number"><input id="notif-rule-interval-pengumuman" inputmode="numeric" max="1440" min="0" type="number"/><b>menit</b></div></label><label class="notif-rule-field"><span>Maks.</span><div class="notif-rule-number"><input id="notif-rule-max-pengumuman" inputmode="numeric" max="10" min="0" type="number"/><b>x</b></div></label></div></div>
-<div class="notif-timing-row"><div><div class="notif-setting-title">Piket</div><div class="notif-setting-desc">Perubahan jadwal piket kelas</div></div><div class="notif-rule-grid"><label class="notif-rule-field"><span>Jarak</span><div class="notif-rule-number"><input id="notif-rule-interval-piket" inputmode="numeric" max="1440" min="0" type="number"/><b>menit</b></div></label><label class="notif-rule-field"><span>Maks.</span><div class="notif-rule-number"><input id="notif-rule-max-piket" inputmode="numeric" max="10" min="0" type="number"/><b>x</b></div></label></div></div>
-<div class="notif-timing-row"><div><div class="notif-setting-title">Kas</div><div class="notif-setting-desc">Tagihan siswa yang belum bayar</div></div><div class="notif-rule-grid"><label class="notif-rule-field"><span>Jarak</span><div class="notif-rule-number"><input id="notif-rule-interval-kas" inputmode="numeric" max="1440" min="0" type="number"/><b>menit</b></div></label><label class="notif-rule-field"><span>Maks.</span><div class="notif-rule-number"><input id="notif-rule-max-kas" inputmode="numeric" max="10" min="0" type="number"/><b>x</b></div></label></div></div>
-<div class="notif-timing-row"><div><div class="notif-setting-title">Laporan</div><div class="notif-setting-desc">Perubahan status dan tanggapan</div></div><div class="notif-rule-grid"><label class="notif-rule-field"><span>Jarak</span><div class="notif-rule-number"><input id="notif-rule-interval-laporan" inputmode="numeric" max="1440" min="0" type="number"/><b>menit</b></div></label><label class="notif-rule-field"><span>Maks.</span><div class="notif-rule-number"><input id="notif-rule-max-laporan" inputmode="numeric" max="10" min="0" type="number"/><b>x</b></div></label></div></div>
-<div class="notif-timing-row"><div><div class="notif-setting-title">Jadwal Kelas</div><div class="notif-setting-desc">Jadwal baru dan perubahan</div></div><div class="notif-rule-grid"><label class="notif-rule-field"><span>Jarak</span><div class="notif-rule-number"><input id="notif-rule-interval-jadwal" inputmode="numeric" max="1440" min="0" type="number"/><b>menit</b></div></label><label class="notif-rule-field"><span>Maks.</span><div class="notif-rule-number"><input id="notif-rule-max-jadwal" inputmode="numeric" max="10" min="0" type="number"/><b>x</b></div></label></div></div>
-<div class="notif-timing-row"><div><div class="notif-setting-title">Titip HP</div><div class="notif-setting-desc">Pembaruan status penitipan HP</div></div><div class="notif-rule-grid"><label class="notif-rule-field"><span>Jarak</span><div class="notif-rule-number"><input id="notif-rule-interval-hp" inputmode="numeric" max="1440" min="0" type="number"/><b>menit</b></div></label><label class="notif-rule-field"><span>Maks.</span><div class="notif-rule-number"><input id="notif-rule-max-hp" inputmode="numeric" max="10" min="0" type="number"/><b>x</b></div></label></div></div>
-<div class="notif-timing-row"><div><div class="notif-setting-title">Aktivitas</div><div class="notif-setting-desc">Aktivitas penting di kelas</div></div><div class="notif-rule-grid"><label class="notif-rule-field"><span>Jarak</span><div class="notif-rule-number"><input id="notif-rule-interval-aktivitas" inputmode="numeric" max="1440" min="0" type="number"/><b>menit</b></div></label><label class="notif-rule-field"><span>Maks.</span><div class="notif-rule-number"><input id="notif-rule-max-aktivitas" inputmode="numeric" max="10" min="0" type="number"/><b>x</b></div></label></div></div>
-<div class="notif-timing-row"><div><div class="notif-setting-title">Sistem</div><div class="notif-setting-desc">Pesan penting sistem Kelasku</div></div><div class="notif-rule-grid"><label class="notif-rule-field"><span>Jarak</span><div class="notif-rule-number"><input id="notif-rule-interval-sistem" inputmode="numeric" max="1440" min="0" type="number"/><b>menit</b></div></label><label class="notif-rule-field"><span>Maks.</span><div class="notif-rule-number"><input id="notif-rule-max-sistem" inputmode="numeric" max="10" min="0" type="number"/><b>x</b></div></label></div></div>
-<button class="btn btn-primary btn-block" onclick="saveNotificationTimingSettings()" type="button">Simpan pengaturan waktu</button>
-</div>
-</div></div></div>
-</div>
+
 </div>
 <div class="view" id="view-settings">
 <div class="pagehead"><h1>Pengaturan</h1><p>Atur preferensi &amp; akses sistem</p></div>
@@ -4190,9 +4075,6 @@ body.dark #view-notifikasi .notification-timing-card{background:#111827;border-c
     </button>
 <button class="tab" data-tab="laporan" onclick="goTo('laporan')">
 <svg viewbox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg>Laporan
-    </button>
-<button class="tab admin-only" data-tab="notifikasi" id="bottom-admin-notif-tab" onclick="goTo('notifikasi')" type="button">
-<svg viewbox="0 0 24 24"><path d="M18 8a6 6 0 00-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M10 21h4"></path></svg>Notifikasi
     </button>
 <button class="tab" data-tab="settings" onclick="goTo('settings')">
 <svg viewbox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06A1.65 1.65 0 0019.4 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"></path></svg>Setelan
@@ -8620,40 +8502,9 @@ function autoOpenKasAndCalendarPanels(name) {
     }
 }
 
-function ensureNotificationMenuView() {
-    // v27: notification editor is permanently rendered in its own menu.
-    // Kept as a compatibility hook for older onclick handlers.
-    return true;
-}
-
-function openAdminNotificationMenu() {
-    if (typeof isAdmin === 'function' && !isAdmin()) return;
-    goTo('notifikasi');
-    if (typeof renderNotificationPreferenceInputs === 'function') renderNotificationPreferenceInputs();
-    
-    const view = document.getElementById('view-notifikasi');
-    if (view) view.scrollTop = 0;
-}
-
-
-document.addEventListener('click', function(e){
-    const btn=e.target.closest('[data-notif-jump]');
-    if(!btn) return;
-    const key=btn.getAttribute('data-notif-jump');
-    const select=document.getElementById('notif-rule-category');
-    const editor=document.querySelector('#view-notifikasi .notification-rule-editor');
-    if(select && editor){
-        select.value=key;
-        
-        editor.scrollIntoView({behavior:'smooth',block:'start'});
-    }
-});
-
 function goTo(name) {
-    if (name === 'notifikasi') ensureNotificationMenuView();
     const target = document.getElementById('view-' + name);
     if (!target) return;
-    if (name === 'notifikasi' && typeof isAdmin === 'function' && !isAdmin()) return;
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
     target.classList.add('active');
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -8665,7 +8516,7 @@ function goTo(name) {
     const content = document.querySelector('.content');
     if (content) content.scrollTop = 0;
     if (name === 'settings' && typeof renderAccountList === 'function') renderAccountList();
-        if ((name === 'settings' || name === 'notifikasi') && typeof renderNotificationPreferenceInputs === 'function') renderNotificationPreferenceInputs();
+        if (name === 'settings' && typeof renderNotificationPreferenceInputs === 'function') renderNotificationPreferenceInputs();
     if (name === 'jadwal') {
         const mode = state && state.jadwalMode === 'piket' ? 'piket' : 'pelajaran';
         try {
@@ -8757,7 +8608,6 @@ window.setNotificationPreference = setNotificationPreference;
 window.setAllNotificationPreferences = setAllNotificationPreferences;
 window.updateKasNotificationSetting = updateKasNotificationSetting;
 window.toggleKasNotificationDay = toggleKasNotificationDay;
-window.openAdminNotificationMenu = openAdminNotificationMenu;
 window.runKasPaymentReminders = runKasPaymentReminders;
 window.renderNotificationPreferenceInputs = renderNotificationPreferenceInputs;
 window.saveNotificationTimingSettings = saveNotificationTimingSettings;
@@ -9681,28 +9531,4 @@ body.dark #view-laporan td { color:#f8fafc !important; border-color:#334155 !imp
 .notif-number-grid b{font-size:9px;color:var(--text-soft)}
 body.dark .notif-kas-controls{background:rgba(129,140,248,.08)}
 
-/* Dedicated Notifikasi menu */
-.notification-menu-intro{display:flex;align-items:center;gap:12px;margin-bottom:10px;padding:14px 15px;}
-.notification-menu-intro-icon{width:40px;height:40px;flex:0 0 40px;border-radius:12px;background:var(--violet-glass);color:var(--primary);display:flex;align-items:center;justify-content:center;}
-.notification-menu-intro-icon svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
-.notification-menu-intro-title{font-family:'Sora',sans-serif;font-size:13px;font-weight:800;color:var(--text-main);}
-.notification-menu-intro-text{margin-top:2px;font-size:10.5px;line-height:1.45;color:var(--text-soft);}
-#view-notifikasi .notification-settings-card,#view-notifikasi .notification-timing-card{display:block!important;margin-top:10px;}
-#view-notifikasi .notification-settings-card{background:var(--glass-card);}
-#view-notifikasi .notification-timing-card{background:var(--glass-card);}
-body.dark #view-notifikasi .notification-menu-intro{border-color:rgba(255,255,255,.08);}
-@media(max-width:560px){.notification-menu-intro{align-items:flex-start;padding:12px;}.notification-menu-intro-icon{width:36px;height:36px;flex-basis:36px}.notification-menu-intro-icon svg{width:19px;height:19px;}}
-/* v25 notification rule editor */
-.notif-rule-select,.notif-rule-field input,.notif-rule-field textarea{width:100%;border:1px solid var(--glass-border);background:var(--input-bg);color:var(--text-main);border-radius:12px;padding:10px 12px;font-size:12px;outline:none;}
-.notif-rule-select{margin-bottom:10px;font-weight:700;}
-.notif-rule-field{display:block;margin:8px 0;}
-.notif-rule-field>span{display:block;font-size:10px;color:var(--text-soft);font-weight:800;margin-bottom:5px;text-transform:uppercase;letter-spacing:.25px;}
-.notif-rule-field textarea{resize:vertical;line-height:1.45;}
-.notif-rule-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.notif-rule-number{display:flex;align-items:center;gap:6px;}
-.notif-rule-number input{flex:1;min-width:0;}
-.notif-rule-number b{font-size:10px;color:var(--text-soft);} 
-.notif-rule-help{margin:7px 0 10px;line-height:1.5;}
-.notif-rule-toggle{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;color:var(--text-main);margin:10px 0 12px;}
-.notif-rule-toggle input{accent-color:var(--primary);}
 </style>
