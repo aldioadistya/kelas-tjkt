@@ -3555,6 +3555,35 @@ body.dark .kas-pro-metric{box-shadow:0 6px 18px rgba(0,0,0,.16)}
 .task-pro-card[role="button"]:focus-visible{outline:2px solid var(--ui-accent,#3b82f6);outline-offset:2px}
 .task-pro-actions button{position:relative;z-index:2}
 </style>
+
+<style id="kas-dark-nominal-fix-v17">
+/* KAS: nominal tetap jelas di mode gelap */
+body.dark .kas-pro-metric .kpm-value,
+body.dark #kas-pro-in,
+body.dark #kas-pro-out,
+body.dark #kas-pro-bal {
+  color: #f8fafc !important;
+  text-shadow: none !important;
+  opacity: 1 !important;
+}
+body.dark .kas-pro-metric.kpm-in .kpm-value,
+body.dark #kas-pro-in { color: #4ade80 !important; }
+body.dark .kas-pro-metric.kpm-out .kpm-value,
+body.dark #kas-pro-out { color: #fb7185 !important; }
+body.dark .kas-pro-metric.kpm-bal .kpm-value,
+body.dark #kas-pro-bal { color: #60a5fa !important; }
+
+/* Rekap kas versi lama juga dibuat kontras */
+body.dark .balance-card .balance-value,
+body.dark .balance-card .bf-item b,
+body.dark #kas-saldo,
+body.dark #kas-in,
+body.dark #kas-out {
+  color: #ffffff !important;
+  opacity: 1 !important;
+}
+body.dark .balance-card .bf-item { color: rgba(255,255,255,.92) !important; }
+</style>
 </head>
 <body>
 <div class="ambient-mesh">
