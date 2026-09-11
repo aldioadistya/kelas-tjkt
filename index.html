@@ -3508,6 +3508,47 @@ body.dark #login-overlay .login-cache-btn:hover{background:#172033!important;bor
 <style id="kelasku-login-transition-fix">
 body.kelasku-authenticated #login-overlay { display: none !important; }
 </style>
+
+<style id="kelasku-modules-v6">
+:root{
+  --ui-bg:#f6f8fb; --ui-surface:#fff; --ui-sidebar:#f8fafc; --ui-border:#e2e8f0;
+  --ui-text:#0f172a; --ui-muted:#64748b; --ui-soft:#94a3b8; --ui-blue:#2563eb;
+  --ui-blue-soft:#eff6ff; --ui-green:#15803d; --ui-green-soft:#f0fdf4;
+  --ui-red:#dc2626; --ui-red-soft:#fef2f2; --ui-amber:#b45309; --ui-amber-soft:#fffbeb;
+  --ui-purple:#6d28d9; --ui-purple-soft:#f5f3ff; --ui-radius:16px;
+}
+body:not(.dark){--glass-card:var(--ui-surface);--glass-border:var(--ui-border);--text-main:var(--ui-text);--text-soft:var(--ui-muted);--text-muted:var(--ui-soft)}
+body.dark{--ui-bg:#0b1220;--ui-surface:#111827;--ui-sidebar:#0f172a;--ui-border:#25334a;--ui-text:#f8fafc;--ui-muted:#9fb0c8;--ui-soft:#71829a;--ui-blue:#60a5fa;--ui-blue-soft:#13233d;--ui-green:#4ade80;--ui-green-soft:#0d2417;--ui-red:#fb7185;--ui-red-soft:#32131b;--ui-amber:#fbbf24;--ui-amber-soft:#2c2008;--ui-purple:#a78bfa;--ui-purple-soft:#1e1635;--glass-card:var(--ui-surface);--glass-border:var(--ui-border);--text-main:var(--ui-text);--text-soft:var(--ui-muted);--text-muted:var(--ui-soft)}
+.view{max-width:1180px;margin:0 auto;padding-bottom:28px}
+.pagehead h1{font-size:28px;letter-spacing:-.025em;margin-bottom:4px}.pagehead p{font-size:13px;color:var(--ui-muted)}
+.section{margin-top:22px}.section-head{margin-bottom:10px}.section-title{font-size:15px;font-weight:800;letter-spacing:-.015em}.section-kicker{font-size:10px;font-weight:800;letter-spacing:.1em;color:var(--ui-soft);margin-bottom:3px}
+.btn,.fab-add,.section-action,.mode-btn,.day-chip{transition:transform .16s ease,background .16s ease,border-color .16s ease,box-shadow .16s ease,color .16s ease}.btn:hover,.fab-add:hover,.section-action:hover,.mode-btn:hover,.day-chip:hover{transform:translateY(-1px)}
+/* KAS */
+.kas-pro-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
+.kas-pro-metric{background:var(--ui-surface);border:1px solid var(--ui-border);border-radius:16px;padding:18px;box-shadow:0 4px 14px rgba(15,23,42,.05)}
+body.dark .kas-pro-metric{box-shadow:0 6px 18px rgba(0,0,0,.16)}
+.kas-pro-metric .kpm-top{display:flex;justify-content:space-between;align-items:center;gap:8px}.kpm-label{font-size:11px;color:var(--ui-muted);font-weight:700}.kpm-value{font-size:24px;font-weight:800;letter-spacing:-.03em;margin-top:7px}.kpm-note{font-size:10px;margin-top:7px;font-weight:700}.kpm-in .kpm-note{color:var(--ui-green)}.kpm-out .kpm-note{color:var(--ui-red)}.kpm-bal .kpm-note{color:var(--ui-blue)}
+.kpm-icon{width:30px;height:30px;border-radius:9px;display:grid;place-items:center}.kpm-icon svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8}.kpm-in .kpm-icon{background:var(--ui-green-soft);color:var(--ui-green)}.kpm-out .kpm-icon{background:var(--ui-red-soft);color:var(--ui-red)}.kpm-bal .kpm-icon{background:var(--ui-blue-soft);color:var(--ui-blue)}
+.kas-pro-toolbar{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}.kas-pro-filters{display:flex;gap:8px;flex:1;min-width:280px}.kas-pro-filters input,.kas-pro-filters select{height:38px;border:1px solid var(--ui-border);background:var(--ui-surface);color:var(--ui-text);border-radius:10px;padding:0 11px;font-size:12px;outline:none}.kas-pro-filters input{flex:1}.kas-pro-filters input:focus,.kas-pro-filters select:focus{border-color:var(--ui-blue);box-shadow:0 0 0 3px var(--ui-blue-soft)}
+.kas-pro-table{overflow:auto;border:1px solid var(--ui-border);border-radius:14px;background:var(--ui-surface)}.kas-pro-table table{width:100%;border-collapse:collapse;min-width:650px}.kas-pro-table th,.kas-pro-table td{padding:12px 14px;border-bottom:1px solid var(--ui-border);text-align:left;font-size:12px}.kas-pro-table th{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--ui-soft);background:rgba(148,163,184,.06)}.kas-pro-table tr:last-child td{border-bottom:0}.kas-pro-table tbody tr:hover{background:rgba(37,99,235,.035)}.kas-amt-in{color:var(--ui-green);font-weight:800}.kas-amt-out{color:var(--ui-red);font-weight:800}.kas-type-badge{display:inline-flex;align-items:center;padding:4px 8px;border-radius:999px;font-size:10px;font-weight:800}.kas-type-in{background:var(--ui-green-soft);color:var(--ui-green)}.kas-type-out{background:var(--ui-red-soft);color:var(--ui-red)}
+.kas-folder{background:var(--ui-surface)!important;border:1px solid var(--ui-border)!important;box-shadow:none!important;border-radius:14px!important;margin-bottom:10px}.kas-folder-head{padding:13px 14px!important;border-bottom:1px solid var(--ui-border)}.kas-folder-name{font-weight:800}.kas-folder-note{color:var(--ui-muted)!important}.kas-summary-paid,.kas-summary-unpaid,.kas-summary-nominal{font-size:10px!important;border:1px solid var(--ui-border);padding:5px 8px;border-radius:999px}
+/* HP */
+.hp-pro-summary{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-top:16px}.hp-progress-wrap{flex:1;min-width:220px}.hp-progress-meta{display:flex;justify-content:space-between;gap:8px;font-size:11px;color:var(--ui-muted);font-weight:700;margin-bottom:7px}.hp-progress{height:8px;background:var(--ui-border);border-radius:999px;overflow:hidden}.hp-progress>span{display:block;height:100%;background:var(--ui-blue);border-radius:inherit;transition:width .25s ease}
+#hp-list,#piket-list{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding:10px!important;background:transparent!important;border:0!important}
+.hp-slot{min-height:132px;border:1px solid var(--ui-border);border-radius:14px;background:var(--ui-surface);padding:12px;display:flex;flex-direction:column;gap:8px;position:relative;box-shadow:0 3px 10px rgba(15,23,42,.04)}.hp-slot:hover{border-color:rgba(37,99,235,.35);transform:translateY(-1px)}.hp-slot.empty-slot{border-style:dashed;background:transparent;box-shadow:none;align-items:center;justify-content:center;color:var(--ui-soft)}.hp-slot-head{display:flex;justify-content:space-between;align-items:center;font-size:10px;color:var(--ui-soft);font-weight:800}.hp-avatar{width:34px;height:34px;border-radius:10px;background:var(--ui-blue-soft);color:var(--ui-blue);display:grid;place-items:center;font-size:11px;font-weight:800}.hp-slot-name{font-size:12px;font-weight:800;color:var(--ui-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.hp-slot-time{font-size:10px;color:var(--ui-muted)}.hp-slot-status{font-size:9px;font-weight:800;padding:4px 7px;border-radius:999px;align-self:flex-start}.hp-slot-status.done{color:var(--ui-green);background:var(--ui-green-soft)}.hp-slot-status.todo{color:var(--ui-muted);background:rgba(148,163,184,.08)}.hp-empty-add{border:1px dashed var(--ui-border);background:transparent;color:var(--ui-blue);padding:7px 10px;border-radius:9px;font-size:10px;font-weight:800;cursor:pointer}
+/* JADWAL */
+.day-tabs{display:flex;gap:6px;overflow:auto;padding:4px 2px 6px}.day-chip{border:1px solid var(--ui-border)!important;background:var(--ui-surface)!important;color:var(--ui-muted)!important;border-radius:999px!important;padding:8px 14px!important;font-weight:700}.day-chip.active{background:var(--ui-blue-soft)!important;border-color:#bfdbfe!important;color:var(--ui-blue)!important}.timeline{position:relative;padding:6px 0}.timeline:before{content:"";position:absolute;left:74px;top:14px;bottom:14px;width:1px;background:var(--ui-border)}.timeline-item{display:grid;grid-template-columns:66px 1fr;gap:16px;position:relative;padding:9px 0}.timeline-time{font-size:11px;color:var(--ui-muted);font-weight:800;text-align:right}.timeline-card{background:var(--ui-surface);border:1px solid var(--ui-border);border-radius:14px;padding:13px 14px;position:relative}.timeline-card:before{content:"";position:absolute;left:-22px;top:16px;width:8px;height:8px;border-radius:50%;background:var(--ui-blue);box-shadow:0 0 0 4px var(--ui-blue-soft)}.timeline-sub{font-size:10px;color:var(--ui-muted);margin-top:3px}.piket-pro-list{display:flex;flex-wrap:wrap;gap:8px;padding:8px 0}.piket-person{display:flex;align-items:center;gap:8px;border:1px solid var(--ui-border);border-radius:12px;padding:8px 10px;background:var(--ui-surface)}.piket-person .mini-avatar{width:28px;height:28px;border-radius:9px;background:var(--ui-blue-soft);color:var(--ui-blue);display:grid;place-items:center;font-size:10px;font-weight:800}.piket-person .mini-name{font-size:11px;font-weight:800}.piket-person input{accent-color:var(--ui-blue)}
+/* TUGAS */
+.task-filter-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:15px 0 14px}.task-filter-tab{border:1px solid var(--ui-border);background:var(--ui-surface);color:var(--ui-muted);border-radius:999px;padding:7px 11px;font-size:11px;font-weight:800;cursor:pointer}.task-filter-tab.active{background:var(--ui-blue-soft);border-color:#bfdbfe;color:var(--ui-blue)}.task-board{display:grid;grid-template-columns:1fr 1fr;gap:16px}.task-column{border:1px solid var(--ui-border);background:var(--ui-bg);border-radius:16px;padding:12px}.task-column-title{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--ui-soft);font-weight:800;margin-bottom:8px}.task-pro-card{background:var(--ui-surface);border:1px solid var(--ui-border);border-radius:14px;padding:14px;margin-bottom:9px;box-shadow:0 3px 10px rgba(15,23,42,.035)}.task-pro-card:hover{border-color:rgba(37,99,235,.35)}.task-pro-top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.task-pro-title{font-size:13px;font-weight:800;line-height:1.35}.task-pro-deadline{font-size:9px;font-weight:800;padding:4px 7px;border-radius:999px;white-space:nowrap}.deadline-safe{background:var(--ui-green-soft);color:var(--ui-green)}.deadline-soon{background:var(--ui-amber-soft);color:var(--ui-amber)}.deadline-danger{background:var(--ui-red-soft);color:var(--ui-red)}.task-pro-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.task-pro-tag{font-size:9px;border:1px solid var(--ui-border);color:var(--ui-muted);padding:4px 7px;border-radius:999px}.task-pro-desc{font-size:10.5px;color:var(--ui-muted);line-height:1.45;margin-top:8px}.task-pro-actions{display:flex;gap:6px;margin-top:10px}.task-pro-actions button{border:1px solid var(--ui-border);background:transparent;color:var(--ui-muted);border-radius:8px;padding:6px 8px;font-size:10px;cursor:pointer}.task-pro-actions button.primary{color:var(--ui-blue);background:var(--ui-blue-soft);border-color:#bfdbfe}
+/* LAPORAN */
+.report-pro-top{display:grid;grid-template-columns:1.2fr .8fr;gap:14px;margin:16px 0}.report-chart-card,.report-kpi-card{background:var(--ui-surface);border:1px solid var(--ui-border);border-radius:16px;padding:16px}.report-kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.report-kpi{border:1px solid var(--ui-border);border-radius:12px;padding:11px}.report-kpi .rk-label{font-size:9px;color:var(--ui-soft);font-weight:800;text-transform:uppercase;letter-spacing:.05em}.report-kpi .rk-value{font-size:20px;font-weight:800;margin-top:5px}.report-bars{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;align-items:end;height:112px;margin-top:10px}.report-bar-col{display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:end}.report-bar{width:100%;max-width:36px;background:var(--ui-blue);border-radius:8px 8px 4px 4px;min-height:4px}.report-bar-label{font-size:9px;color:var(--ui-soft)}.report-actions{display:flex;gap:7px;flex-wrap:wrap}.report-action-btn{border:1px solid var(--ui-border);background:var(--ui-surface);color:var(--ui-muted);border-radius:10px;padding:8px 10px;font-size:10px;font-weight:800;cursor:pointer}.report-action-btn.primary{background:var(--ui-blue);color:#fff;border-color:var(--ui-blue)}
+/* SETTINGS */
+.settings-nav{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0}.settings-nav button{border:1px solid var(--ui-border);background:var(--ui-surface);color:var(--ui-muted);border-radius:999px;padding:8px 12px;font-size:10px;font-weight:800;cursor:pointer}.settings-nav button.active{background:var(--ui-blue-soft);color:var(--ui-blue);border-color:#bfdbfe}.settings-section{border-top:1px solid var(--ui-border);padding-top:14px}.settings-label{font-size:10px!important;letter-spacing:.08em;text-transform:uppercase;font-weight:800!important;color:var(--ui-soft)!important;margin-bottom:7px}.settings-profile-card{border:1px solid var(--ui-border);background:var(--ui-surface);border-radius:16px;padding:14px}.settings-section.hidden-by-category{display:none!important}
+@media(max-width:900px){.kas-pro-metrics{grid-template-columns:1fr 1fr}.task-board,.report-pro-top{grid-template-columns:1fr}}
+@media(max-width:620px){.kas-pro-metrics{grid-template-columns:1fr}.kas-pro-filters{min-width:0;width:100%}#hp-list,#piket-list{grid-template-columns:repeat(2,minmax(0,1fr))}.timeline:before{left:56px}.timeline-item{grid-template-columns:48px 1fr;gap:12px}.task-board{grid-template-columns:1fr}.report-kpi-grid{grid-template-columns:1fr 1fr}.report-pro-top{gap:10px}}
+@media(max-width:430px){.pagehead h1{font-size:22px}.hp-slot{min-height:126px;padding:10px}.kas-pro-metric{padding:14px}.kpm-value{font-size:21px}}
+</style>
+
 </head>
 <body>
 <div class="ambient-mesh">
@@ -3708,12 +3749,12 @@ body.kelasku-authenticated #login-overlay { display: none !important; }
         </div>
       </div>
       <div class="section" style="margin-top:12px;">
-        <button class="fab-add admin-only" onclick="openKasAddModal()">＋ Tambah Transaksi Kas</button>
+        <button class="fab-add admin-only" onclick="openKasAddModal()">+ Catat Transaksi</button>
       </div>
       <div class="section kas-siswa-section">
         <div class="section-head">
           <div>
-            <div class="section-title">👥 Kas Siswa</div>
+            <div class="section-title">Kas Siswa</div>
             <div class="field-hint" style="margin-top:3px;">Catatan pembayaran kas per anak. Siswa hanya dapat melihat.</div>
           </div>
           <button class="btn btn-primary admin-only" style="padding:8px 11px;font-size:11px;" onclick="openKasFolderModal()">＋ Folder</button>
@@ -3723,7 +3764,7 @@ body.kelasku-authenticated #login-overlay { display: none !important; }
       <div class="section">
         <div class="section-head">
           <div class="section-title">Riwayat Transaksi</div>
-          <div class="section-link" onclick="openExportModal()">📤 Export</div>
+          <div class="section-link" onclick="openExportModal()">Export</div>
         </div>
         <div class="card" id="kas-list"></div>
       </div>
@@ -3750,7 +3791,7 @@ body.kelasku-authenticated #login-overlay { display: none !important; }
         <div class="section-head">
           <div class="date-label" id="hp-date-label">Hari Ini</div>
           <div style="display:flex;gap:8px;align-items:center;">
-            <div class="section-link" onclick="openStatsModal('hp')">📊 Statistik</div>
+            <div class="section-link" onclick="openStatsModal('hp')">Statistik</div>
             <div class="section-link admin-only" onclick="resetRoster('hp')">Reset</div>
             <button class="bulk-all-btn admin-only" type="button" onclick="toggleAllRoster('hp')">☐ Semua Sudah</button>
           </div>
@@ -3763,8 +3804,8 @@ body.kelasku-authenticated #login-overlay { display: none !important; }
     <div class="view" id="view-jadwal">
       <div class="pagehead"><h1>Jadwal Kelas</h1><p>Jadwal pelajaran &amp; daftar piket kebersihan</p></div>
       <div class="mode-switch">
-        <button class="mode-btn active" id="mode-pelajaran" onclick="setJadwalMode('pelajaran')">📘 Pelajaran</button>
-        <button class="mode-btn" id="mode-piket" onclick="setJadwalMode('piket')">🧹 Piket</button>
+        <button class="mode-btn active" id="mode-pelajaran" onclick="setJadwalMode('pelajaran')">Pelajaran</button>
+        <button class="mode-btn" id="mode-piket" onclick="setJadwalMode('piket')">Piket</button>
       </div>
       <div id="jadwal-mode-pelajaran">
         <div class="day-tabs" id="day-tabs" aria-label="Pilih hari">
@@ -3799,7 +3840,7 @@ body.kelasku-authenticated #login-overlay { display: none !important; }
           <div class="section-head">
             <div class="date-label" id="piket-date-label">Hari Ini</div>
             <div style="display:flex;gap:8px;align-items:center;">
-              <div class="section-link" onclick="openStatsModal('piket')">📊 Statistik</div>
+              <div class="section-link" onclick="openStatsModal('piket')">Statistik</div>
               <div class="section-link admin-only" onclick="resetRoster('piket')">Reset</div>
               <button class="bulk-all-btn admin-only" type="button" onclick="toggleAllRoster('piket')">☐ Semua Sudah</button>
             </div>
@@ -3824,7 +3865,7 @@ body.kelasku-authenticated #login-overlay { display: none !important; }
       </div>
     </div>
     <div class="view" id="view-laporan">
-      <div class="pagehead"><h1>📋 Laporan Siswa</h1><p>Sampaikan aspirasi atau aduan secara aman</p></div>
+      <div class="pagehead"><h1>Laporan Siswa</h1><p>Sampaikan aspirasi atau aduan secara aman</p></div>
       <div class="section"><button class="fab-add" onclick="openReportModal()">＋ Buat Laporan</button></div>
       <div class="section">
         <div class="section-head">
@@ -3845,7 +3886,7 @@ body.kelasku-authenticated #login-overlay { display: none !important; }
       </div>
     </div>
     <div class="view" id="view-settings">
-      <div class="pagehead"><h1>⚙️ Pengaturan</h1><p>Atur preferensi &amp; akses sistem</p></div>
+      <div class="pagehead"><h1>Pengaturan</h1><p>Atur preferensi &amp; akses sistem</p></div>
       <div class="section">
         <div class="card">
           <div class="acc-row" style="margin-bottom:10px;">
@@ -3857,11 +3898,11 @@ body.kelasku-authenticated #login-overlay { display: none !important; }
           </div>
           <div class="acc-row" style="border-bottom:1px solid var(--glass-border); padding-bottom:10px; margin-bottom:10px;">
             <span style="font-weight:700; color:var(--text-main);">Mode Tampilan</span>
-            <button class="btn btn-ghost" style="padding:4px 10px; font-size:10px;" onclick="toggleTheme()"><span id="theme-label-setting">☀️ Terang</span></button>
+            <button class="btn btn-ghost" style="padding:4px 10px; font-size:10px;" onclick="toggleTheme()"><span id="theme-label-setting">Terang</span></button>
           </div>
           <div id="account-manage-wrap" class="superadmin-only settings-section" style="margin-top:12px;">
             <details class="manage-details">
-              <summary class="manage-toggle">👥 Manajemen Pengguna<span class="role-count" id="account-total-badge">0</span></summary>
+              <summary class="manage-toggle">Manajemen Pengguna<span class="role-count" id="account-total-badge">0</span></summary>
               <div style="padding-top:10px;">
                 <input type="text" id="account-search" placeholder="🔍 Cari nama atau email..." oninput="filterAccountList()" style="width:100%; border:1px solid var(--glass-border); border-radius:var(--radius-md); padding:9px 12px; font-size:12.5px; background:var(--input-bg); color:var(--text-main); outline:none; margin-bottom:10px;">
                 <div id="account-list" style="max-height:280px; overflow-y:auto; padding-right:2px;"></div>
@@ -3916,7 +3957,7 @@ body.kelasku-authenticated #login-overlay { display: none !important; }
               <div id="storage-usage-bar" style="height:100%; width:0%; border-radius:99px; transition:width 0.3s, background 0.3s;"></div>
             </div>
             <div class="field-hint" id="storage-usage-hint">Google Drive belum dihubungkan. Lampiran masih memakai penyimpanan lama sampai URL Apps Script diisi.</div>
-            <div id="drive-connection-status" class="field-hint" style="margin-top:6px; font-weight:700;">📁 Status Drive: belum dikonfigurasi</div>
+            <div id="drive-connection-status" class="field-hint" style="margin-top:6px; font-weight:700;">Status Drive: belum dikonfigurasi</div>
             <button id="drive-migrate-btn" class="btn btn-ghost" style="width:100%; margin-top:8px; padding:8px; font-size:10px;" onclick="migrateAllAttachmentsToDrive()">☁️ Migrasikan lampiran lama ke Drive</button>
             <div id="drive-migration-status" class="field-hint" style="margin-top:6px;">Belum dicek.</div>
           </div>
@@ -3929,17 +3970,17 @@ body.kelasku-authenticated #login-overlay { display: none !important; }
             <input type="file" id="import-file-input" accept="application/json" style="display:none;" onchange="importBackup(this.files[0])">
           </div>
           <div class="superadmin-only settings-section">
-            <div class="settings-label danger">⚠️ Zona Berbahaya</div>
+            <div class="settings-label danger">Zona Berbahaya</div>
             <button class="btn btn-danger btn-block" style="padding:9px; font-size:11px;" onclick="resetData()">🔄 Reset Semua Data Kelas</button>
             <div class="field-hint">Menghapus semua data (kas, siswa, tugas, piket, dll) dan mengembalikan ke pengaturan awal. Tidak bisa dibatalkan.</div>
           </div>
           <div class="settings-section admin-only">
-            <div class="settings-label">🧾 Riwayat Aktivitas</div>
+            <div class="settings-label">Riwayat Aktivitas</div>
             <div class="field-hint" style="margin:-4px 0 8px;">Perubahan penting di aplikasi dicatat agar mudah dilacak.</div>
             <div class="card" id="activity-log-list" style="max-height:240px;overflow-y:auto;"></div>
           </div>
           <div class="settings-section">
-            <div class="settings-label">🔐 Keamanan Hak Akses</div>
+            <div class="settings-label">Keamanan Hak Akses</div>
             <div class="field-hint">Siswa hanya dapat melihat data dan membuat laporan. Admin dapat mengelola data kelas. Super Admin juga dapat mengelola akun pengguna.</div>
           </div>
           <div class="settings-section">
@@ -3985,7 +4026,7 @@ body.kelasku-authenticated #login-overlay { display: none !important; }
   <div class="modal-bg" id="modal-piket-jadwal"><div class="modal"><h3>Atur Jadwal Piket</h3><div class="field-hint" style="margin:-6px 0 10px;">Pilih hari, lalu centang siswa yang bertugas piket pada hari itu. Kosongkan semua centang = tidak ada piket hari itu.</div><div class="day-tabs" id="piket-jadwal-day-tabs" style="flex-wrap:wrap;"></div><div id="piket-jadwal-summary" class="piket-jadwal-summary"></div><div id="piket-jadwal-checklist" style="max-height:280px; overflow-y:auto; margin-top:4px;"></div><div class="modal-actions"><button class="btn btn-primary" onclick="closeModal('piket-jadwal')">Selesai</button></div></div></div>
   <div class="modal-bg" id="modal-pengumuman"><div class="modal"><h3 id="pengumuman-modal-title">Tambah Pengumuman</h3><div class="field"><label>Judul</label><input id="pengumuman-judul" type="text" placeholder="Contoh: Rapat Kelas Hari Jumat"></div><div class="field"><label style="font-size:12px;">Deskripsi</label><textarea id="pengumuman-deskripsi" placeholder="Tulis informasi untuk kelas..." style="font-size:14px; min-height:120px; line-height:1.5;"></textarea></div><div class="field"><label style="font-size:12px;">Deadline (opsional)</label><input id="pengumuman-deadline" type="date" style="font-size:14px; min-height:44px;"></div><div class="field"><label>Lampiran (opsional, bisa lebih dari 1)</label><div id="pengumuman-file-chips" style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px;"></div><input type="file" id="pengumuman-file" accept=".pdf,.doc,.docx,.xlsx,.jpg,.jpeg,.png,.webp,.zip" multiple onchange="onPengumumanFileSelected(this)"><div id="pengumuman-file-hint" class="field-hint">Maks 3 file. Batas 10MB/file saat Google Drive aktif.</div></div><input type="hidden" id="pengumuman-edit-id"><div class="modal-actions"><button class="btn btn-danger admin-only" id="pengumuman-delete-btn" style="display:none;" onclick="deletePengumumanCurrent()">Hapus</button><button class="btn btn-ghost" onclick="closeModal('pengumuman')">Batal</button><button class="btn btn-primary admin-only" id="pengumuman-submit-btn" onclick="submitPengumuman()">Publikasikan</button></div></div></div>
   <div class="modal-bg" id="modal-jadwal"><div class="modal"><h3 id="jadwal-modal-title">Atur Jam Pelajaran</h3><div class="field"><label>Hari</label><select id="jadwal-hari"><option value="Senin">Senin</option><option value="Selasa">Selasa</option><option value="Rabu">Rabu</option><option value="Kamis">Kamis</option><option value="Jumat">Jumat</option></select></div><div class="field"><label>Jam Mulai</label><input id="jadwal-mulai" type="time"></div><div class="field"><label>Jam Selesai</label><input id="jadwal-selesai" type="time"></div><div class="field"><label>Mata Pelajaran</label><input id="jadwal-mapel" type="text" placeholder="Mata Pelajaran"></div><div class="field"><label>Guru</label><input id="jadwal-guru" type="text" placeholder="Nama Guru"></div><input type="hidden" id="jadwal-edit-id"><div class="modal-actions"><button class="btn btn-danger admin-only" id="jadwal-delete-btn" style="display:none;" onclick="deleteJadwalCurrent()">Hapus</button><button class="btn btn-ghost" onclick="closeModal('jadwal')">Batal</button><button class="btn btn-primary admin-only" onclick="submitJadwal()">Simpan</button></div></div></div>
-  <div class="modal-bg" id="modal-stats"><div class="modal"><h3 id="stats-title">📊 Statistik</h3><div id="stats-content" style="max-height:300px; overflow-y:auto;"></div><div class="modal-actions"><button class="btn btn-primary btn-block" onclick="closeModal('stats')">Tutup</button></div></div></div>
+  <div class="modal-bg" id="modal-stats"><div class="modal"><h3 id="stats-title">Statistik</h3><div id="stats-content" style="max-height:300px; overflow-y:auto;"></div><div class="modal-actions"><button class="btn btn-primary btn-block" onclick="closeModal('stats')">Tutup</button></div></div></div>
   <div class="modal-bg" id="modal-export"><div class="modal"><h3>Rekap Kas</h3><div class="field"><textarea id="export-text" readonly style="height:160px; font-family:monospace; font-size:11px;"></textarea></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('export')">Tutup</button><button class="btn btn-primary" onclick="copyExportText()">📋 Salin</button></div></div></div>
   <div class="modal-bg" id="modal-report"><div class="modal"><h3 id="report-modal-title">Buat Laporan</h3><div id="report-code-label" class="field-hint" style="margin:-4px 0 8px; font-weight:700;"></div><div class="field"><label>Kategori</label><select id="report-kategori"><option value="Kekerasan/Berantem">Kekerasan</option><option value="Bullying">Bullying</option><option value="Kerusakan Fasilitas">Kerusakan</option><option value="Pencurian">Pencurian</option><option value="Pelanggaran Tata Tertib">Pelanggaran</option><option value="Lainnya">Lainnya</option></select></div><div class="field"><label>Judul</label><input id="report-judul" type="text" placeholder="Ringkasan singkat"></div><div class="field"><label>Deskripsi</label><textarea id="report-deskripsi" placeholder="Jelaskan kronologi..."></textarea></div><div class="field"><label>Tanggal Kejadian</label><input id="report-tanggal" type="date"></div><div class="field"><label>Urgensi</label><select id="report-urgensi"><option value="rendah">Rendah</option><option value="sedang" selected>Sedang</option><option value="tinggi">Tinggi</option><option value="darurat">Darurat 🚨</option></select></div><div class="field"><label>Lampiran (opsional)</label><input type="file" id="report-file" accept=".pdf,.doc,.docx,.xlsx,.jpg,.png,.jpeg,.webp"><div id="report-file-hint" class="field-hint">Maks 10MB saat Google Drive aktif.</div></div><input type="hidden" id="report-edit-id"><div id="report-status-field" style="display:none;" class="admin-only"><div class="field"><label>Status</label><select id="report-status"><option value="pending">Menunggu</option><option value="reviewed">Ditinjau</option><option value="resolved">Selesai</option><option value="rejected">Ditolak</option></select></div><div class="field"><label>Tanggapan Admin (opsional)</label><textarea id="report-tanggapan" placeholder="Tulis tanggapan untuk siswa..."></textarea></div><div id="report-history" class="field-hint" style="max-height:120px; overflow:auto; white-space:normal;"></div></div><div id="report-student-response" style="display:none;" class="field"><label>Tanggapan Admin</label><div id="report-student-response-text" style="padding:9px 10px; border:1px solid var(--glass-border); border-radius:8px; background:var(--glass-card); font-size:11px; white-space:pre-wrap;"></div></div><div class="modal-actions"><button class="btn btn-danger admin-only" id="report-delete-btn" style="display:none!important;" onclick="deleteReport()">Hapus</button><button class="btn btn-ghost" onclick="closeModal('report')">Batal</button><button class="btn btn-primary" id="report-submit-btn" onclick="submitReport()">Kirim</button></div></div></div>
   <div class="modal-bg" id="modal-account-edit"><div class="modal"><h3>Edit Akun</h3><div class="field"><label>Nama Lengkap</label><input id="acc-edit-nama" type="text" placeholder="Nama lengkap"></div><div class="field"><label>Email</label><input id="acc-edit-email" type="text" disabled style="opacity:0.6;"></div><div class="field"><label>Peran</label><select id="acc-edit-role"><option value="siswa">Siswa</option><option value="admin">Admin</option><option value="superadmin">Super Admin</option></select></div><input type="hidden" id="acc-edit-id"><input type="hidden" id="acc-edit-active" value="true"><div class="modal-actions"><button class="btn btn-danger" id="acc-edit-toggle-btn" onclick="toggleAccountActiveFromModal()">✕ Nonaktifkan Akun</button><button class="btn btn-ghost" onclick="closeModal('account-edit')">Batal</button><button class="btn btn-primary" onclick="submitAccountEdit()">Simpan</button></div></div></div>
@@ -4943,7 +4984,7 @@ function applyTheme() {
     document.body.classList.toggle('dark', darkMode);
     document.getElementById('theme-btn-small').textContent = darkMode ? '☀️' : '🌙';
     const label = document.getElementById('theme-label-setting');
-    if (label) label.textContent = darkMode ? '☀️ Terang' : '🌙 Gelap';
+    if (label) label.textContent = darkMode ? 'Terang' : '🌙 Gelap';
 }
 applyTheme();
 // ============================================================
@@ -5616,7 +5657,7 @@ function renderStorageUsage() {
     barEl.style.background = color;
     percentEl.style.color = color;
     if (hintEl) hintEl.textContent = hint;
-    if (statusEl) { statusEl.textContent = '📁 Status Drive: belum dikonfigurasi'; statusEl.style.color = 'var(--amber)'; }
+    if (statusEl) { statusEl.textContent = 'Status Drive: belum dikonfigurasi'; statusEl.style.color = 'var(--amber)'; }
 }
 async function driveApiRequest(payload) {
     if (!driveStorageEnabled()) throw new Error('Google Drive belum dikonfigurasi di index.html.');
@@ -6091,7 +6132,7 @@ function changePickerYear(type,delta,evt){ if(evt)evt.stopPropagation(); if(type
 function choosePickerMonth(type,month,evt){ if(evt)evt.stopPropagation(); if(type==='hp'){calMonth=month;renderHpCalendar();}else{piketCalMonth=month;renderPiketCalendar();} const picker=document.getElementById(type+'-month-picker'); if(picker){picker.classList.remove('open');picker.innerHTML='';} saveState(); if(type==='hp')renderHp();else renderPiket(); }
 function openStatsModal(type) {
     const dict = type === 'hp' ? state.hp : state.piket;
-    document.getElementById('stats-title').textContent = type === 'hp' ? '📊 Statistik Kumpul HP' : '📊 Statistik Piket';
+    document.getElementById('stats-title').textContent = type === 'hp' ? 'Statistik Kumpul HP' : 'Statistik Piket';
     const dates = Object.keys(dict).filter(k => k <= todayKey());
     const totals = {}, trues = {};
     state.students.forEach(s => { totals[s] = 0; trues[s] = 0; });
@@ -8012,6 +8053,108 @@ window.todayKey = todayKey;
 })();
 })();
 </script>
+
+<script id="kelasku-modules-v6-js">
+(function(){
+  const esc = v => (typeof escapeHtml==='function' ? escapeHtml(v) : String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c])));
+  const icon = (d) => `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${d}"></path></svg>`;
+  const money = v => typeof rupiah==='function' ? rupiah(v) : 'Rp'+Number(v||0).toLocaleString('id-ID');
+
+  function ensureKasEnhancements(){
+    const v=document.getElementById('view-kas'); if(!v || v.dataset.proReady) return;
+    const oldBalance=v.querySelector('.balance-card');
+    const metrics=document.createElement('div'); metrics.className='kas-pro-metrics'; metrics.id='kas-pro-metrics';
+    metrics.innerHTML=`<div class="kas-pro-metric kpm-in"><div class="kpm-top"><div class="kpm-label">Total Kas Masuk</div><div class="kpm-icon">${icon('M12 5v14M7 10l5-5 5 5')}</div></div><div class="kpm-value" id="kas-pro-in">Rp 0</div><div class="kpm-note">Pemasukan tercatat</div></div><div class="kas-pro-metric kpm-out"><div class="kpm-top"><div class="kpm-label">Total Pengeluaran</div><div class="kpm-icon">${icon('M12 19V5M7 14l5 5 5-5')}</div></div><div class="kpm-value" id="kas-pro-out">Rp 0</div><div class="kpm-note">Pengeluaran tercatat</div></div><div class="kas-pro-metric kpm-bal"><div class="kpm-top"><div class="kpm-label">Sisa Saldo</div><div class="kpm-icon">${icon('M4 7h16v10H4zM7 11h4')}</div></div><div class="kpm-value" id="kas-pro-bal">Rp 0</div><div class="kpm-note">Saldo berjalan</div></div>`;
+    if(oldBalance) oldBalance.replaceWith(metrics); else v.insertBefore(metrics,v.firstChild.nextSibling);
+    const txSection=[...v.querySelectorAll('.section')].find(x=>x.querySelector('#kas-list'));
+    if(txSection && !document.getElementById('kas-pro-toolbar')){
+      const head=txSection.querySelector('.section-head');
+      if(head){
+        const toolbar=document.createElement('div'); toolbar.className='kas-pro-toolbar'; toolbar.id='kas-pro-toolbar';
+        toolbar.innerHTML=`<div class="kas-pro-filters"><input id="kas-pro-search" type="search" placeholder="Cari transaksi..." oninput="renderKas()"><select id="kas-pro-filter"><option value="all">Semua jenis</option><option value="masuk">Pemasukan</option><option value="keluar">Pengeluaran</option></select><select id="kas-pro-period"><option value="all">Semua waktu</option><option value="week">Minggu ini</option><option value="month">Bulan ini</option></select></div>`;
+        head.insertAdjacentElement('afterend',toolbar);
+      }
+    }
+    v.dataset.proReady='1';
+  }
+
+  function kasDateOk(dateStr, period){
+    if(period==='all' || !dateStr) return true;
+    const d=new Date(dateStr+'T00:00:00'); if(Number.isNaN(d.getTime())) return true;
+    const now=new Date();
+    if(period==='month') return d.getFullYear()===now.getFullYear() && d.getMonth()===now.getMonth();
+    const day=(now.getDay()+6)%7; const monday=new Date(now); monday.setHours(0,0,0,0); monday.setDate(now.getDate()-day); const sunday=new Date(monday); sunday.setDate(monday.getDate()+7); return d>=monday && d<sunday;
+  }
+
+  function professionalRenderKas(){
+    ensureKasEnhancements();
+    const data=Array.isArray(state.kas)?state.kas:[];
+    const masuk=data.filter(t=>t.jenis==='masuk').reduce((a,t)=>a+Number(t.jumlah||0),0);
+    const keluar=data.filter(t=>t.jenis==='keluar').reduce((a,t)=>a+Number(t.jumlah||0),0);
+    const set=(id,val)=>{const e=document.getElementById(id);if(e)e.textContent=money(val)};
+    set('kas-pro-in',masuk); set('kas-pro-out',keluar); set('kas-pro-bal',masuk-keluar);
+    const q=(document.getElementById('kas-pro-search')?.value||'').trim().toLowerCase(); const filter=document.getElementById('kas-pro-filter')?.value||'all'; const period=document.getElementById('kas-pro-period')?.value||'all';
+    let list=data.filter(t=>(filter==='all'||t.jenis===filter)&&kasDateOk(t.tanggal,period)&&(!q||[t.ket,t.tanggal,t.jenis,t.jumlah].join(' ').toLowerCase().includes(q))).slice().sort((a,b)=>new Date(b.tanggal||0)-new Date(a.tanggal||0));
+    const wrap=document.getElementById('kas-list'); if(!wrap)return;
+    wrap.className='kas-pro-table';
+    wrap.innerHTML=list.length?`<table><thead><tr><th>Tanggal</th><th>Keterangan</th><th>Jenis</th><th>Jumlah</th><th></th></tr></thead><tbody>${list.map(t=>`<tr onclick="openKasEditModal(${Number(t.id)})" style="cursor:pointer"><td>${esc(t.tanggal||'-')}</td><td><strong>${esc(t.ket||'Tanpa keterangan')}</strong>${t.file?`<div style="font-size:9px;color:var(--ui-muted);margin-top:3px">Lampiran: ${esc(t.file)}</div>`:''}</td><td><span class="kas-type-badge ${t.jenis==='masuk'?'kas-type-in':'kas-type-out'}">${t.jenis==='masuk'?'Pemasukan':'Pengeluaran'}</span></td><td class="${t.jenis==='masuk'?'kas-amt-in':'kas-amt-out'}">${t.jenis==='masuk'?'+':'-'}${money(t.jumlah)}</td><td style="text-align:right;color:var(--ui-soft)">›</td></tr>`).join('')}</tbody></table>`:`<div class="empty" style="padding:36px 18px;text-align:center"><div style="font-weight:800;margin-bottom:4px">Belum ada transaksi</div><div style="font-size:11px;color:var(--ui-muted)">Catat pemasukan atau pengeluaran pertama untuk memulai rekap kas.</div></div>`;
+    const oldIn=document.getElementById('kas-in'), oldOut=document.getElementById('kas-out'), oldSaldo=document.getElementById('kas-saldo'); if(oldIn)oldIn.textContent=money(masuk); if(oldOut)oldOut.textContent=money(keluar); if(oldSaldo)oldSaldo.textContent=money(masuk-keluar);
+  }
+
+  function professionalRenderHp(){
+    const date=state.hpSelectedDate||todayKey(); const rec=ensureRecord(state.hp,date); const names=Array.isArray(state.students)?state.students:[]; const collected=names.filter(n=>rosterIsSudah(rec[n])).length;
+    const pe=document.getElementById('hp-collected'), re=document.getElementById('hp-remaining'); if(pe)pe.textContent=collected;if(re)re.textContent=names.length-collected;
+    const list=document.getElementById('hp-list'); if(!list)return;
+    const query=(rosterUI.hp.search||'').trim().toLowerCase(); const filtered=query?names.filter(n=>n.toLowerCase().includes(query)):names;
+    let html=''; filtered.slice(0,36).forEach((n,i)=>{const st=rosterStatusOf(rec[n]); html+=`<div class="hp-slot ${st&&st.status==='sudah'?'':'empty-slot'}"><div class="hp-slot-head"><span>Slot ${i+1}</span><span>${st&&st.status==='sudah'?'Tersimpan':'Kosong'}</span></div><div style="display:flex;gap:9px;align-items:center">${st&&st.status==='sudah'?`<div class="hp-avatar">${esc(n.split(/\s+/).map(x=>x[0]||'').slice(0,2).join('').toUpperCase())}</div><div style="min-width:0"><div class="hp-slot-name">${esc(n)}</div><div class="hp-slot-time">${st.waktu?esc(st.waktu):'Hari ini'}</div></div>`:`<button class="hp-empty-add" onclick="openRosterStatusModal('hp',${JSON.stringify(n).replace(/"/g,'&quot;')})">+ Titip</button>`}</div><span class="hp-slot-status ${st&&st.status==='sudah'?'done':'todo'}">${st&&st.status==='sudah'?'Sudah Titip':'Belum Titip'}</span>${st&&st.status==='sudah'&&isAdmin()?`<label style="position:absolute;right:10px;bottom:9px;font-size:9px"><input type="checkbox" checked onchange="toggleRosterStudent('hp',${JSON.stringify(n).replace(/"/g,'&quot;')},this.checked)"> selesai</label>`:''}</div>`});
+    list.innerHTML=html||'<div class="empty" style="grid-column:1/-1;padding:32px">Tidak ada siswa yang cocok dengan pencarian.</div>';
+    const section=document.getElementById('hp-list')?.closest('.section');
+    if(section && !document.getElementById('hp-pro-summary')){const s=document.createElement('div');s.id='hp-pro-summary';s.className='hp-pro-summary';s.innerHTML='<div class="hp-progress-wrap"><div class="hp-progress-meta"><span id="hp-pro-progress-text">0/0 HP Terkumpul</span><span id="hp-pro-progress-pct">0%</span></div><div class="hp-progress"><span id="hp-pro-progress-bar" style="width:0%"></span></div></div><div style="font-size:10px;color:var(--ui-muted)">Maksimal 36 slot</div>';const sb=section.querySelector('.search-box');if(sb)sb.before(s);else section.prepend(s)}
+    const pct=names.length?Math.round(collected/names.length*100):0; const pt=document.getElementById('hp-pro-progress-text'),pp=document.getElementById('hp-pro-progress-pct'),pb=document.getElementById('hp-pro-progress-bar');if(pt)pt.textContent=`${collected}/${names.length} HP Terkumpul`;if(pp)pp.textContent=pct+'%';if(pb)pb.style.width=pct+'%';
+  }
+
+  function professionalRenderJadwalList(){
+    const wrap=document.getElementById('jadwal-list'); if(!wrap)return; const items=Array.isArray(state.jadwal?.[state.selectedDay])?state.jadwal[state.selectedDay].slice().sort((a,b)=>String(a.jam).localeCompare(String(b.jam))):[]; const readOnly=isReadOnly(); wrap.innerHTML=items.length?`<div class="timeline">${items.map(j=>`<div class="timeline-item" ${readOnly?'':'onclick="openJadwalModal('+Number(j.id)+')"'} style="${readOnly?'':'cursor:pointer'}"><div class="timeline-time">${esc(j.jam||'-')}</div><div class="timeline-card"><div style="font-size:13px;font-weight:800">${esc(j.mapel||'-')}</div><div class="timeline-sub">${esc(j.guru||'Tanpa keterangan')}</div></div></div>`).join('')}</div>`:'<div class="empty" style="padding:35px">Tidak ada jadwal pelajaran untuk hari ini.</div>';
+  }
+
+  function professionalRenderPiket(){
+    const date=state.piketSelectedDate||todayKey(), day=dayNameOf(date), assigned=Array.isArray(state.piketJadwal?.[day])?state.piketJadwal[day]:[], rec=ensureRecord(state.piket,date); const list=document.getElementById('piket-list'); if(!list)return;
+    const query=(rosterUI.piket.search||'').trim().toLowerCase(); const people=query?assigned.filter(n=>n.toLowerCase().includes(query)):assigned;
+    list.className='piket-pro-list card'; list.innerHTML=people.length?people.map(n=>{const done=rosterIsSudah(rec[n]);return `<div class="piket-person"><div class="mini-avatar">${esc(n.split(/\s+/).map(x=>x[0]||'').slice(0,2).join('').toUpperCase())}</div><div style="flex:1;min-width:0"><div class="mini-name">${esc(n)}</div><div style="font-size:9px;color:var(--ui-muted)">${done?'Tugas piket selesai':'Belum selesai'}</div></div>${isAdmin()?`<input type="checkbox" ${done?'checked':''} onchange="toggleRosterStudent('piket',${JSON.stringify(n).replace(/"/g,'&quot;')},this.checked)">`:''}</div>`}).join(''):'<div class="empty" style="width:100%;padding:28px">Belum ada siswa yang ditugaskan untuk piket.</div>';
+    const pe=document.getElementById('piket-collected'),re=document.getElementById('piket-remaining');const done=assigned.filter(n=>rosterIsSudah(rec[n])).length;if(pe)pe.textContent=done;if(re)re.textContent=assigned.length-done;
+  }
+
+  let taskFilter='all';
+  function injectTaskFilters(){const v=document.getElementById('view-tugas');if(!v||document.getElementById('task-filter-tabs'))return;const head=v.querySelector('.pagehead');const tabs=document.createElement('div');tabs.id='task-filter-tabs';tabs.className='task-filter-tabs';tabs.innerHTML=[['all','Semua'],['active','Aktif'],['soon','Mendekati Deadline'],['done','Selesai']].map(x=>`<button class="task-filter-tab ${x[0]==='all'?'active':''}" data-task-filter="${x[0]}">${x[1]}</button>`).join('');head.after(tabs);tabs.addEventListener('click',e=>{const b=e.target.closest('[data-task-filter]');if(!b)return;taskFilter=b.dataset.taskFilter;tabs.querySelectorAll('.task-filter-tab').forEach(x=>x.classList.toggle('active',x===b));professionalRenderTugas();});}
+  function daysLeft(d){if(!d)return 999;const a=new Date();a.setHours(0,0,0,0);const b=new Date(d+'T00:00:00');return Math.ceil((b-a)/86400000)}
+  function taskMatches(t){const left=daysLeft(t.tenggat);if(taskFilter==='done')return !!t.selesai;if(taskFilter==='active')return !t.selesai;if(taskFilter==='soon')return !t.selesai&&left<=3;return true}
+  function professionalRenderTugas(){
+    injectTaskFilters(); autoCleanDoneTugas(); const all=(state.tugas||[]).filter(taskMatches); const open=all.filter(t=>!t.selesai),done=all.filter(t=>t.selesai); const hint=document.getElementById('tugas-autoclean-hint');if(hint)hint.textContent='';
+    const renderCard=t=>{const left=daysLeft(t.tenggat);const dc=t.selesai?'deadline-safe':left<=1?'deadline-danger':left<=3?'deadline-soon':'deadline-safe';const dl=t.selesai?'Selesai':t.tenggat?(left<0?'Lewat deadline':left===0?'Hari ini':left===1?'H-1':`H-${left}`):'Tanpa deadline';return `<div class="task-pro-card"><div class="task-pro-top"><div class="task-pro-title">${esc(t.nama)}</div><span class="task-pro-deadline ${dc}">${dl}</span></div><div class="task-pro-meta"><span class="task-pro-tag">${esc(t.mapel||'Tanpa mapel')}</span>${t.tenggat?`<span class="task-pro-tag">${esc(t.tenggat)}</span>`:''}</div>${t.deskripsi?`<div class="task-pro-desc">${esc(t.deskripsi)}</div>`:''}${renderTaskFiles(t)}<div class="task-pro-actions">${isAdmin()?`<button class="primary" onclick="event.stopPropagation();openTugasModal(${Number(t.id)})">Edit</button>${t.selesai?`<button onclick="event.stopPropagation();toggleTugas(${Number(t.id)})">Buka lagi</button>`:`<button onclick="event.stopPropagation();toggleTugas(${Number(t.id)})">Tandai selesai</button>`}`:`<button onclick="event.stopPropagation();openTugasModal(${Number(t.id)})">Lihat</button>`}</div></div>`};
+    const a=document.getElementById('tugas-open-list'),b=document.getElementById('tugas-done-list');if(a){a.className='task-column';a.innerHTML=`<div class="task-column-title">Aktif</div>${open.length?open.map(renderCard).join(''):'<div class="empty" style="padding:28px 12px">Tidak ada tugas aktif.</div>'}`;}if(b){b.className='task-column';b.innerHTML=`<div class="task-column-title">Selesai</div>${done.length?done.map(renderCard).join(''):'<div class="empty" style="padding:28px 12px">Belum ada tugas selesai.</div>'}`;}
+    const top=a?.parentElement;if(top&&!top.classList.contains('task-board')){top.classList.add('task-board');}
+  }
+
+  function injectReportUI(){const v=document.getElementById('view-laporan');if(!v||document.getElementById('report-pro-top'))return;const first=v.querySelector('.section');const box=document.createElement('div');box.id='report-pro-top';box.className='report-pro-top';box.innerHTML='<div class="report-chart-card"><div class="section-kicker">RINGKASAN</div><div style="font-size:14px;font-weight:800">Status laporan</div><div id="report-bars" class="report-bars"></div></div><div class="report-kpi-card"><div class="report-kpi-grid"><div class="report-kpi"><div class="rk-label">Menunggu</div><div class="rk-value" id="rk-pending">0</div></div><div class="report-kpi"><div class="rk-label">Ditinjau</div><div class="rk-value" id="rk-reviewed">0</div></div><div class="report-kpi"><div class="rk-label">Selesai</div><div class="rk-value" id="rk-resolved">0</div></div><div class="report-kpi"><div class="rk-label">Ditolak</div><div class="rk-value" id="rk-rejected">0</div></div></div><div class="report-actions" style="margin-top:12px"><button class="report-action-btn primary" onclick="window.print()">Cetak / PDF</button><button class="report-action-btn" onclick="openExportModal()">Export Data</button></div></div>'; if(first)first.before(box);else v.appendChild(box);}
+  function updateReportUI(list){injectReportUI();const c={pending:0,reviewed:0,resolved:0,rejected:0};(state.reports||[]).forEach(r=>{if(c[r.status]!=null)c[r.status]++});Object.keys(c).forEach(k=>{const e=document.getElementById('rk-'+k);if(e)e.textContent=c[k]});const max=Math.max(1,...Object.values(c));const bars=document.getElementById('report-bars');if(bars)bars.innerHTML=Object.entries(c).map(([k,v])=>`<div class="report-bar-col"><div class="report-bar" style="height:${Math.max(5,Math.round(v/max*72))}px"></div><div class="report-bar-label">${reportStatusLabel(k)}</div><strong style="font-size:10px">${v}</strong></div>`).join('');}
+
+  function injectSettingsNav(){const v=document.getElementById('view-settings');if(!v||document.getElementById('settings-nav'))return;const head=v.querySelector('.pagehead');const nav=document.createElement('div');nav.id='settings-nav';nav.className='settings-nav';nav.innerHTML='<button class="active" data-cat="profile">Profil & Tampilan</button><button data-cat="members">Anggota & Siswa</button><button data-cat="security">Keamanan & Database</button>';head.after(nav);const all=[...v.querySelectorAll('.settings-section')];all.forEach((el,i)=>{if(!el.dataset.settingCat)el.dataset.settingCat=(i===0||i===1)?'members':(i===2||i===3||i===4)?'security':'profile'});nav.addEventListener('click',e=>{const b=e.target.closest('[data-cat]');if(!b)return;nav.querySelectorAll('button').forEach(x=>x.classList.toggle('active',x===b));const cat=b.dataset.cat;all.forEach(el=>el.classList.toggle('hidden-by-category',el.dataset.settingCat!==cat));});}
+
+  const oldRenderKas=window.renderKas, oldRenderHp=window.renderHp, oldRenderPiket=window.renderPiket, oldRenderJadwal=window.renderJadwalList, oldRenderTugas=window.renderTugas, oldRenderReports=window.renderReports;
+  window.renderKas=function(){ensureKasEnhancements();professionalRenderKas();if(typeof renderKasSiswa==='function')renderKasSiswa();};
+  window.renderHp=function(){professionalRenderHp();};
+  window.renderPiket=function(){professionalRenderPiket();};
+  window.renderJadwalList=function(){professionalRenderJadwalList();};
+  window.renderTugas=function(){professionalRenderTugas();};
+  window.renderReports=function(){if(typeof oldRenderReports==='function')oldRenderReports();updateReportUI();};
+
+  function boot(){
+    try{ensureKasEnhancements();injectTaskFilters();injectReportUI();injectSettingsNav();}catch(e){console.warn('Module V6 UI init',e)}
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+})();
+</script>
+
 </body>
 
 <!-- Kelasku compatibility patch: resilient Firestore sync + legacy fallback -->
