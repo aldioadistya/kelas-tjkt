@@ -4021,7 +4021,7 @@ body.dark .kas-pro-metric{box-shadow:0 6px 18px rgba(0,0,0,.16)}
   <div class="modal-bg" id="modal-kas-folder"><div class="modal"><h3>Tambah Folder Kas Siswa</h3><div class="field"><label>Nama Folder</label><input id="kas-folder-name" type="text" placeholder="Contoh: Kas September 2026"></div><div class="field"><label>Nominal Kas per Anak (Rp)</label><input id="kas-folder-nominal" type="number" min="0" placeholder="Contoh: 10000"></div><div class="field"><label>Keterangan (opsional)</label><input id="kas-folder-note" type="text" placeholder="Contoh: Kas bulanan"></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('kas-folder')">Batal</button><button class="btn btn-primary" onclick="submitKasFolder()">Buat Folder</button></div></div></div>
   <div class="modal-bg" id="modal-kas-student"><div class="modal"><h3 id="kas-student-modal-title">Pembayaran Kas Siswa</h3><input type="hidden" id="kas-student-folder-id"><input type="hidden" id="kas-student-name"><div class="field"><label>Nama Siswa</label><input id="kas-student-display" type="text" readonly></div><div class="field"><label>Status Pembayaran</label><select id="kas-student-status"><option value="belum">Belum Bayar</option><option value="sudah">Sudah Bayar</option></select></div><div class="field"><label>Jumlah Dibayar (Rp)</label><input id="kas-student-jumlah" type="number" min="0" placeholder="0"></div><div class="field"><label>Tanggal Bayar</label><input id="kas-student-tanggal" type="date"></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('kas-student')">Batal</button><button class="btn btn-primary admin-only" onclick="submitKasStudent()">Simpan</button></div></div></div>
   <div class="modal-bg" id="modal-tugas"><div class="modal"><h3 id="tugas-modal-title">Tambah Tugas</h3><div class="field"><label>Nama Tugas</label><input id="tugas-nama" type="text" placeholder="Contoh: Laporan Jaringan"></div><div class="field"><label>Mata Pelajaran</label><input id="tugas-mapel" type="text" placeholder="Contoh: Administrasi Jaringan"></div><div class="field"><label>Deadline</label><input id="tugas-tenggat" type="date"></div><div class="field"><label>Deskripsi</label><textarea id="tugas-deskripsi" placeholder="Deskripsi tugas..."></textarea></div><div class="field"><label>Lampiran (opsional, bisa lebih dari 1)</label><div id="tugas-file-chips" style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px;"></div><input type="file" id="tugas-file" accept=".pdf,.doc,.docx,.xlsx,.jpg,.png,.jpeg,.webp" multiple onchange="onTugasFileSelected(this)"><div id="tugas-file-hint" class="field-hint">Maks 3 file. Batas 10MB/file saat Google Drive aktif.</div></div><input type="hidden" id="tugas-edit-id"><div class="modal-actions"><button class="btn btn-danger admin-only" id="tugas-delete-btn" style="display:none;" onclick="deleteTugasCurrent()">Hapus</button><button class="btn btn-ghost" onclick="closeModal('tugas')">Batal</button><button class="btn btn-primary admin-only" onclick="submitTugas()">Simpan</button></div></div></div>
-  <div class="modal-bg" id="modal-student"><div class="modal"><h3>Tambah Siswa</h3><div class="field"><label>Nama Lengkap</label><input id="student-nama" type="text" placeholder="Contoh: Muhammad Rizky"></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('student')">Batal</button><button class="btn btn-primary" onclick="submitStudent()">Tambah</button></div></div></div>
+  <div class="modal-bg" id="modal-student"><div class="modal"><h3>Tambah Siswa</h3><div class="field"><label>Nama Lengkap</label><input id="student-nama" type="text" placeholder="Contoh: Muhammad Rizky"></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('student')">Batal</button><button class="btn btn-primary" onclick="submitStudent()">Tambah</button></div></div></div><div class="modal-bg" id="modal-hp-edit"><div class="modal hp-edit-modal"><h3>Edit Titip HP</h3><div class="hp-edit-name-current" id="hp-edit-current-name">-</div><div class="field"><label>Nama Siswa</label><input id="hp-edit-name" type="text" maxlength="80" placeholder="Nama lengkap siswa"></div><div class="field"><label>Status</label><div class="hp-edit-status-grid"><button type="button" class="hp-edit-status-btn" id="hp-edit-sudah-btn" onclick="setHpEditStatus('sudah')">Sudah Terkumpul</button><button type="button" class="hp-edit-status-btn" id="hp-edit-belum-btn" onclick="setHpEditStatus('belum')">Belum Terkumpul</button></div><input type="hidden" id="hp-edit-status"></div><div class="field" id="hp-edit-reason-field" style="display:none"><label>Alasan belum terkumpul</label><textarea id="hp-edit-reason" rows="3" maxlength="200" placeholder="Contoh: Tidak membawa HP / izin / terlambat"></textarea></div><div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('hp-edit')">Batal</button><button class="btn btn-primary" onclick="submitHpEdit()">Simpan Perubahan</button></div></div></div>
   <div class="modal-bg" id="modal-roster-status"><div class="modal"><h3 id="roster-status-title">Tandai Status</h3><div class="field-hint" style="margin:-6px 0 12px;">Tandai status <b id="roster-status-name" style="color:var(--text-main);"></b> untuk hari ini.</div><div class="roster-status-choices"><button class="roster-choice-btn done" id="roster-status-sudah-btn" onclick="setRosterStatusChoice('sudah')">✓ Sudah</button><button class="roster-choice-btn undone" id="roster-status-belum-btn" onclick="setRosterStatusChoice('belum')">✕ Belum</button></div><input type="hidden" id="roster-status-choice"><div class="field" id="roster-status-alasan-field" style="display:none;"><label>Keterangan</label><textarea id="roster-status-alasan" placeholder="Contoh: keterangan piket, catatan, dll." style="min-height:60px;"></textarea></div><div class="modal-actions"><button class="btn btn-ghost" id="roster-status-clear-btn" onclick="clearRosterStatus()" title="Kembalikan ke netral">↺ Reset</button><button class="btn btn-ghost" onclick="closeModal('roster-status')">Batal</button><button class="btn btn-primary" onclick="submitRosterStatus()">Simpan</button></div></div></div>
   <div class="modal-bg" id="modal-piket-jadwal"><div class="modal"><h3>Atur Jadwal Piket</h3><div class="field-hint" style="margin:-6px 0 10px;">Pilih hari, lalu centang siswa yang bertugas piket pada hari itu. Kosongkan semua centang = tidak ada piket hari itu.</div><div class="day-tabs" id="piket-jadwal-day-tabs" style="flex-wrap:wrap;"></div><div id="piket-jadwal-summary" class="piket-jadwal-summary"></div><div id="piket-jadwal-checklist" style="max-height:280px; overflow-y:auto; margin-top:4px;"></div><div class="modal-actions"><button class="btn btn-primary" onclick="closeModal('piket-jadwal')">Selesai</button></div></div></div>
   <div class="modal-bg" id="modal-pengumuman"><div class="modal"><h3 id="pengumuman-modal-title">Tambah Pengumuman</h3><div class="field"><label>Judul</label><input id="pengumuman-judul" type="text" placeholder="Contoh: Rapat Kelas Hari Jumat"></div><div class="field"><label style="font-size:12px;">Deskripsi</label><textarea id="pengumuman-deskripsi" placeholder="Tulis informasi untuk kelas..." style="font-size:14px; min-height:120px; line-height:1.5;"></textarea></div><div class="field"><label style="font-size:12px;">Deadline (opsional)</label><input id="pengumuman-deadline" type="date" style="font-size:14px; min-height:44px;"></div><div class="field"><label>Lampiran (opsional, bisa lebih dari 1)</label><div id="pengumuman-file-chips" style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px;"></div><input type="file" id="pengumuman-file" accept=".pdf,.doc,.docx,.xlsx,.jpg,.jpeg,.png,.webp,.zip" multiple onchange="onPengumumanFileSelected(this)"><div id="pengumuman-file-hint" class="field-hint">Maks 3 file. Batas 10MB/file saat Google Drive aktif.</div></div><input type="hidden" id="pengumuman-edit-id"><div class="modal-actions"><button class="btn btn-danger admin-only" id="pengumuman-delete-btn" style="display:none;" onclick="deletePengumumanCurrent()">Hapus</button><button class="btn btn-ghost" onclick="closeModal('pengumuman')">Batal</button><button class="btn btn-primary admin-only" id="pengumuman-submit-btn" onclick="submitPengumuman()">Publikasikan</button></div></div></div>
@@ -6081,6 +6081,62 @@ function removeStudent(name) {
     saveState(); renderHp(); renderPiket(); renderBeranda();
 }
 let _editingStudentName = null;
+let _hpEditCtx = { name: null, date: null };
+function openHpEditModal(name){
+    if(!isAdmin()) return;
+    const current=String(name||'').trim();
+    if(!current) return;
+    const date=state.hpSelectedDate||todayKey();
+    const rec=ensureRecord(state.hp,date);
+    const st=rosterStatusOf(rec[current]);
+    _hpEditCtx={name:current,date};
+    document.getElementById('hp-edit-current-name').textContent='Sedang mengedit: '+current;
+    document.getElementById('hp-edit-name').value=current;
+    document.getElementById('hp-edit-reason').value=(st&&st.alasan)||'';
+    setHpEditStatus(st&&st.status==='sudah'?'sudah':'belum');
+    openModal('hp-edit');
+    setTimeout(()=>document.getElementById('hp-edit-name')?.focus(),40);
+}
+function setHpEditStatus(status){
+    document.getElementById('hp-edit-status').value=status;
+    document.getElementById('hp-edit-sudah-btn').classList.toggle('active',status==='sudah');
+    document.getElementById('hp-edit-belum-btn').classList.toggle('active',status==='belum');
+    document.getElementById('hp-edit-reason-field').style.display=status==='belum'?'':'none';
+}
+function submitHpEdit(){
+    if(!isAdmin()) return;
+    const oldName=_hpEditCtx.name;
+    const date=_hpEditCtx.date||state.hpSelectedDate||todayKey();
+    const newName=document.getElementById('hp-edit-name').value.trim().replace(/\s+/g,' ');
+    const status=document.getElementById('hp-edit-status').value;
+    const reason=document.getElementById('hp-edit-reason').value.trim();
+    if(!oldName||!newName){showNotification('Nama siswa wajib diisi.','warning');return;}
+    if(newName.length>80){showNotification('Nama siswa maksimal 80 karakter.','warning');return;}
+    if(!status){showNotification('Pilih status Sudah Terkumpul atau Belum Terkumpul.','warning');return;}
+    if(status==='belum' && !reason){showNotification('Isi alasan jika HP belum terkumpul.','warning');return;}
+    const duplicate=(state.students||[]).some(n=>n.toLowerCase()===newName.toLowerCase() && n!==oldName);
+    if(duplicate){showNotification('Nama siswa sudah ada.','warning');return;}
+    const idx=state.students.indexOf(oldName);
+    if(idx<0){closeModal('hp-edit');return;}
+    state.students[idx]=newName;
+    const rec=ensureRecord(state.hp,date);
+    if(newName!==oldName){
+        if(Object.prototype.hasOwnProperty.call(rec,oldName)) delete rec[oldName];
+    }
+    rec[newName]=status==='sudah'?{status:'sudah',alasan:'',waktu:(rosterStatusOf(rec[oldName])?.waktu||new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}))}:{status:'belum',alasan:reason};
+    // Perbarui nama pada semua data terkait agar konsisten.
+    if(state.piket && typeof state.piket==='object' && newName!==oldName){
+        Object.keys(state.piket).forEach(k=>{if(state.piket[k]&&Object.prototype.hasOwnProperty.call(state.piket[k],oldName)){state.piket[k][newName]=state.piket[k][oldName];delete state.piket[k][oldName];}});
+    }
+    if(state.piketJadwal && typeof state.piketJadwal==='object' && newName!==oldName){
+        Object.keys(state.piketJadwal).forEach(day=>{if(Array.isArray(state.piketJadwal[day])) state.piketJadwal[day]=state.piketJadwal[day].map(n=>n===oldName?newName:n);});
+    }
+    saveState();
+    closeModal('hp-edit');
+    renderHp(); renderBeranda(); renderPiket();
+    showNotification('Data Titip HP berhasil diperbarui.','success');
+    _hpEditCtx={name:null,date:null};
+}
 function openStudentModal() {
     if (guardReadOnly()) return;
     _editingStudentName = null;
@@ -8055,6 +8111,9 @@ window.selectHpDate = selectHpDate;
 window.selectPiketDate = selectPiketDate;
 window.selectDay = selectDay;
 window.openRosterStatusModal = openRosterStatusModal;
+window.openHpEditModal = openHpEditModal;
+window.setHpEditStatus = setHpEditStatus;
+window.submitHpEdit = submitHpEdit;
 window.setRosterStatusChoice = setRosterStatusChoice;
 window.submitRosterStatus = submitRosterStatus;
 window.clearRosterStatus = clearRosterStatus;
@@ -8175,11 +8234,11 @@ window.todayKey = todayKey;
       const st=rosterStatusOf(rec[n]);
       const safeName=JSON.stringify(String(n)).replace(/"/g,'&quot;');
       const initials=esc(String(n).split(/\s+/).map(x=>x[0]||'').slice(0,2).join('').toUpperCase());
-      const editButton=isAdmin()?`<button type="button" class="hp-slot-edit admin-only" onclick="event.stopPropagation();openStudentEditModal(${safeName})" aria-label="Edit nama siswa" title="Edit nama">Edit</button>`:'';
+      const editButton='';
       html+=`<div class="hp-slot ${st&&st.status==='sudah'?'':'empty-slot'}">
         <div class="hp-slot-head"><span>Slot ${i+1}</span><span>${st&&st.status==='sudah'?'Tersimpan':'Kosong'}</span></div>
         <div style="display:flex;gap:9px;align-items:center;min-width:0">
-          ${st&&st.status==='sudah'?`<div class="hp-avatar">${initials}</div><div style="min-width:0;flex:1"><button type="button" class="hp-slot-name hp-slot-name-button" ${isAdmin()?`onclick="event.stopPropagation();openStudentEditModal(${safeName})"`:''} title="${isAdmin()?'Klik untuk mengedit nama':''}">${esc(n)}</button><div class="hp-slot-time">${st.waktu?esc(st.waktu):'Hari ini'}</div></div>${editButton}`:`<div style="flex:1"><button class="hp-empty-add" onclick="openRosterStatusModal('hp',${safeName})">+ Titip</button></div>${editButton}`}
+          ${st&&st.status==='sudah'?`<div class="hp-avatar">${initials}</div><div style="min-width:0;flex:1"><button type="button" class="hp-slot-name hp-slot-name-button" ${isAdmin()?`onclick="event.stopPropagation();openHpEditModal(${safeName})"`:''} title="${isAdmin()?'Klik untuk mengedit nama':''}">${esc(n)}</button><div class="hp-slot-time">${st.waktu?esc(st.waktu):'Hari ini'}</div></div>`:`<div style="flex:1"><button class="hp-empty-add" onclick="openRosterStatusModal('hp',${safeName})">+ Titip</button></div>`}
         </div>
         <span class="hp-slot-status ${st&&st.status==='sudah'?'done':'todo'}">${st&&st.status==='sudah'?'Sudah Titip':'Belum Titip'}</span>
         ${st&&st.status==='sudah'&&isAdmin()?`<label style="position:absolute;right:10px;bottom:9px;font-size:9px"><input type="checkbox" checked onchange="toggleRosterStudent('hp',${safeName},this.checked)"> selesai</label>`:''}
@@ -8343,6 +8402,20 @@ body.dark .hp-slot-name-button:hover{text-decoration:underline;text-underline-of
 .hp-slot-edit:hover{background:var(--ui-soft-bg,#f8fafc);color:var(--ui-text,#0f172a);border-color:#bfdbfe}
 body.dark .hp-slot-edit{border-color:#334155;color:#94a3b8;background:#111827}
 body.dark .hp-slot-edit:hover{background:#1e293b;color:#f8fafc;border-color:#3b82f6}
+</style>
+
+<style id="hp-edit-combined-fix">
+.hp-slot-name-button{cursor:pointer!important;}
+.hp-slot-name-button:hover{text-decoration:underline;text-underline-offset:3px;}
+.hp-edit-modal{max-width:420px;}
+.hp-edit-name-current{font-size:11px;color:var(--ui-muted,#64748b);margin:-4px 0 14px;}
+.hp-edit-status-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.hp-edit-status-btn{min-height:40px;border:1px solid var(--ui-border,#dbe3ee);border-radius:10px;background:var(--ui-card,#fff);color:var(--ui-muted,#64748b);font-size:11px;font-weight:800;cursor:pointer;}
+.hp-edit-status-btn.active{border-color:#3b82f6;background:#eff6ff;color:#2563eb;}
+body.dark .hp-edit-name-current{color:#94a3b8;}
+body.dark .hp-edit-status-btn{background:#111827;border-color:#334155;color:#94a3b8;}
+body.dark .hp-edit-status-btn.active{background:#172554;border-color:#3b82f6;color:#93c5fd;}
+@media(max-width:560px){.hp-edit-status-grid{grid-template-columns:1fr;}}
 </style>
 </body>
 
