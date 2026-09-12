@@ -5254,10 +5254,6 @@ body:not(.dark) #view-settings .card{
 #view-kas .kas-history-toggle:active{
   transform:scale(.98);
 }
-#view-kas .kas-history-chevron{
-  font-size:14px;
-  line-height:1;
-}
 #view-kas .kas-history-body{
   display:grid;
   grid-template-rows:1fr;
@@ -5776,7 +5772,6 @@ X TJKT 1
       <div class="section-link" onclick="openExportModal()">Export</div>
       <button type="button" class="kas-history-toggle" onclick="window.toggleKasHistory()"
         aria-expanded="true" aria-controls="kas-history-body">
-        <span class="kas-history-chevron">⌄</span>
         <span class="kas-history-toggle-text">Minimalkan</span>
       </button>
     </div>
@@ -11433,13 +11428,11 @@ Setelan
     const body=document.getElementById('kas-history-body');
     const btn=document.querySelector('#view-kas .kas-history-toggle');
     const text=btn && btn.querySelector('.kas-history-toggle-text');
-    const chev=btn && btn.querySelector('.kas-history-chevron');
     const minimized=getHistoryState();
 
     if(body) body.classList.toggle('collapsed', minimized);
     if(btn) btn.setAttribute('aria-expanded', minimized ? 'false' : 'true');
     if(text) text.textContent=minimized ? 'Buka' : 'Minimalkan';
-    if(chev) chev.textContent=minimized ? '›' : '⌄';
   };
 
   window.syncKasHistoryState = function(){
@@ -11450,9 +11443,7 @@ Setelan
     body.classList.toggle('collapsed', minimized);
     btn.setAttribute('aria-expanded', minimized ? 'false' : 'true');
     const text=btn.querySelector('.kas-history-toggle-text');
-    const chev=btn.querySelector('.kas-history-chevron');
     if(text) text.textContent=minimized ? 'Buka' : 'Minimalkan';
-    if(chev) chev.textContent=minimized ? '›' : '⌄';
   };
 })();
 </script>
