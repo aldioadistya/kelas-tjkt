@@ -4893,91 +4893,327 @@
 @media(max-width:620px){.kas-pro-action{width:60px}.kas-edit-btn{padding:6px 7px}}
 </style>
 
-<style id="kelasku-professional-ui">
-:root{
-  --ui-surface-1: rgba(255,255,255,.72);
-  --ui-surface-2: rgba(255,255,255,.86);
-  --ui-border: rgba(15,23,42,.10);
-  --ui-border-strong: rgba(15,23,42,.16);
-  --ui-shadow: 0 8px 28px rgba(15,23,42,.07);
-  --ui-shadow-hover: 0 12px 34px rgba(15,23,42,.10);
-  --ui-text: #0f172a;
-  --ui-text-soft: #475569;
-  --ui-text-muted: #64748b;
-  --ui-control-bg: rgba(248,250,252,.92);
+<style id="kelasku-all-menu-polish">
+/* =========================================================
+   KELASKU — SHARED PROFESSIONAL UI
+   Kas menjadi acuan kualitas visual untuk semua menu.
+   Tidak mengubah logic/data.
+   ========================================================= */
+
+/* Page header */
+#view-hp .pagehead,
+#view-jadwal .pagehead,
+#view-tugas .pagehead,
+#view-laporan .pagehead,
+#view-settings .pagehead{
+  margin-bottom:16px;
 }
-body.dark{
-  --ui-surface-1: rgba(18,27,44,.82);
-  --ui-surface-2: rgba(20,30,48,.94);
-  --ui-border: rgba(148,163,184,.16);
-  --ui-border-strong: rgba(148,163,184,.23);
-  --ui-shadow: 0 8px 28px rgba(0,0,0,.18);
-  --ui-shadow-hover: 0 12px 34px rgba(0,0,0,.25);
-  --ui-text: #f8fafc;
-  --ui-text-soft: #cbd5e1;
-  --ui-text-muted: #94a3b8;
-  --ui-control-bg: rgba(15,23,42,.62);
+#view-hp .pagehead h1,
+#view-jadwal .pagehead h1,
+#view-tugas .pagehead h1,
+#view-laporan .pagehead h1,
+#view-settings .pagehead h1{
+  letter-spacing:-.025em;
+}
+#view-hp .pagehead p,
+#view-jadwal .pagehead p,
+#view-tugas .pagehead p,
+#view-laporan .pagehead p,
+#view-settings .pagehead p{
+  color:var(--text-soft);
 }
 
-/* Surface & glass: tipis, bukan blur berlebihan */
-.card,.panel,.modal,.section,.stat-card,.task-card,.report-card,.schedule-card,
-.kas-card,.activity-card,.profile-card,.settings-card{
-  border-color: var(--ui-border);
-  box-shadow: var(--ui-shadow);
-  background: var(--ui-surface-1);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+/* Section rhythm */
+#view-hp .section,
+#view-jadwal .section,
+#view-tugas .section,
+#view-laporan .section,
+#view-settings .section{
+  margin-top:12px;
 }
-.card:hover,.panel:hover,.stat-card:hover,.task-card:hover,.report-card:hover,
-.schedule-card:hover,.kas-card:hover,.activity-card:hover{
-  border-color: var(--ui-border-strong);
-  box-shadow: var(--ui-shadow-hover);
+#view-hp .section:first-of-type,
+#view-jadwal .section:first-of-type,
+#view-tugas .section:first-of-type,
+#view-laporan .section:first-of-type,
+#view-settings .section:first-of-type{
+  margin-top:0;
 }
-
-/* Kontrol form konsisten */
-input,select,textarea{
-  color: var(--ui-text);
-  background: var(--ui-control-bg);
-  border-color: var(--ui-border-strong);
-}
-input::placeholder,textarea::placeholder{color:var(--ui-text-muted);opacity:.9}
-input:focus,select:focus,textarea:focus{
-  outline:none;
-  border-color: rgba(59,130,246,.55);
-  box-shadow: 0 0 0 3px rgba(59,130,246,.10);
+#view-hp .section-head,
+#view-jadwal .section-head,
+#view-tugas .section-head,
+#view-laporan .section-head,
+#view-settings .section-head{
+  min-height:30px;
+  margin-bottom:9px;
 }
 
-/* Tombol: tidak terlalu gelap di mobile/dark mode */
-button,.btn{
-  border-radius:10px;
-  transition:transform .16s ease,box-shadow .16s ease,background-color .16s ease,
-             border-color .16s ease,opacity .16s ease;
+/* Surface hierarchy: tipis seperti Kas */
+#view-hp .card,
+#view-hp .summary-box,
+#view-jadwal .card,
+#view-jadwal .mode-switch,
+#view-tugas .card,
+#view-laporan .card,
+#view-settings .card{
+  border:1px solid var(--glass-border);
+  box-shadow:var(--glass-shadow);
+  transition:border-color .18s ease, box-shadow .18s ease, transform .18s ease;
 }
-button:hover,.btn:hover{transform:translateY(-1px)}
-button:active,.btn:active{transform:translateY(0) scale(.98)}
-.btn:not(.btn-primary):not(.btn-danger){
-  background:var(--ui-surface-2);
-  color:var(--ui-text);
-  border-color:var(--ui-border-strong);
-}
-body.dark .btn:not(.btn-primary):not(.btn-danger){
-  background:rgba(30,41,59,.72);
-  color:#e2e8f0;
+#view-hp .card:hover,
+#view-hp .summary-box:hover,
+#view-jadwal .card:hover,
+#view-tugas .card:hover,
+#view-laporan .card:hover,
+#view-settings .card:hover{
+  border-color:rgba(59,130,246,.24);
 }
 
-/* Navigasi terasa ringan */
-.tab,.desktop-nav-btn,.desktop-nav-item{
+/* Calendar / control blocks */
+#view-hp .cal-card,
+#view-jadwal .cal-card{
+  overflow:hidden;
+}
+#view-hp .cal-head,
+#view-jadwal .cal-head{
+  min-height:48px;
+}
+#view-hp .summary-row{
+  gap:10px;
+  margin-top:10px;
+}
+#view-hp .summary-box{
+  border-radius:var(--radius-md);
+  padding:12px;
+}
+
+/* Jadwal */
+#view-jadwal .mode-switch{
+  padding:4px;
+  border-radius:12px;
+  background:var(--glass-card);
+}
+#view-jadwal .day-tabs{
+  gap:7px;
+}
+#view-jadwal .day-chip{
   transition:background-color .18s ease,color .18s ease,border-color .18s ease,
-             transform .18s ease;
+             transform .16s ease;
+}
+#view-jadwal .day-chip:active{
+  transform:scale(.98);
+}
+#view-jadwal .fab-add,
+#view-tugas .fab-add,
+#view-laporan .fab-add{
+  border-radius:10px;
 }
 
-/* Mobile: jangan biarkan elemen desktop melebar/terpotong */
-@media(max-width:620px){
-  .content,.view,.section,.card,.panel{max-width:100%;min-width:0}
-  .section-head{gap:10px}
-  .section-head>*{min-width:0}
-  .btn,button{min-height:40px}
-  input,select,textarea{max-width:100%;min-width:0}
+/* Tugas */
+#view-tugas .section-head .section-title,
+#view-laporan .section-head .section-title,
+#view-settings .section-head .section-title{
+  letter-spacing:-.01em;
+}
+#view-tugas .card,
+#view-laporan .card{
+  overflow:hidden;
+}
+
+/* Laporan — search/filter lebih natural dan tidak terlalu kecil */
+#view-laporan #report-search{
+  width:170px !important;
+  min-width:0;
+  min-height:36px;
+  padding:8px 10px !important;
+  border-radius:9px !important;
+}
+#view-laporan #report-filter{
+  min-height:36px;
+  border-radius:9px !important;
+}
+#view-laporan .section-head > div:last-child{
+  display:flex;
+  align-items:center;
+  gap:7px;
+}
+
+/* Setelan */
+#view-settings .acc-row{
+  min-height:42px;
+}
+#view-settings .settings-section{
+  border-radius:12px;
+}
+#view-settings .manage-toggle,
+#view-settings .role-group summary{
+  transition:background-color .18s ease,border-color .18s ease;
+}
+#view-settings input,
+#view-settings select,
+#view-settings textarea,
+#view-laporan input,
+#view-laporan select,
+#view-laporan textarea,
+#view-tugas input,
+#view-tugas select,
+#view-tugas textarea,
+#view-jadwal input,
+#view-jadwal select,
+#view-jadwal textarea,
+#view-hp input,
+#view-hp select,
+#view-hp textarea{
+  color:var(--text-main);
+}
+
+/* Focus yang halus */
+#view-hp input:focus,
+#view-hp select:focus,
+#view-jadwal input:focus,
+#view-jadwal select:focus,
+#view-tugas input:focus,
+#view-tugas select:focus,
+#view-tugas textarea:focus,
+#view-laporan input:focus,
+#view-laporan select:focus,
+#view-laporan textarea:focus,
+#view-settings input:focus,
+#view-settings select:focus,
+#view-settings textarea:focus{
+  outline:none;
+  box-shadow:0 0 0 3px rgba(59,130,246,.10);
+}
+
+/* Dark mode: surface dibedakan, tidak jadi hitam pekat */
+body.dark #view-hp .card,
+body.dark #view-hp .summary-box,
+body.dark #view-jadwal .card,
+body.dark #view-jadwal .mode-switch,
+body.dark #view-tugas .card,
+body.dark #view-laporan .card,
+body.dark #view-settings .card{
+  border-color:rgba(148,163,184,.16);
+  box-shadow:0 8px 24px rgba(0,0,0,.14);
+}
+body.dark #view-hp .card:hover,
+body.dark #view-jadwal .card:hover,
+body.dark #view-tugas .card:hover,
+body.dark #view-laporan .card:hover,
+body.dark #view-settings .card:hover{
+  border-color:rgba(96,165,250,.28);
+}
+
+/* Light mode: putih tidak menyilaukan, border tetap terbaca */
+body:not(.dark) #view-hp .card,
+body:not(.dark) #view-hp .summary-box,
+body:not(.dark) #view-jadwal .card,
+body:not(.dark) #view-jadwal .mode-switch,
+body:not(.dark) #view-tugas .card,
+body:not(.dark) #view-laporan .card,
+body:not(.dark) #view-settings .card{
+  border-color:rgba(15,23,42,.09);
+  box-shadow:0 1px 2px rgba(15,23,42,.03),0 8px 24px rgba(15,23,42,.045);
+}
+
+/* Mobile */
+@media (max-width:620px){
+  #view-hp .pagehead,
+  #view-jadwal .pagehead,
+  #view-tugas .pagehead,
+  #view-laporan .pagehead,
+  #view-settings .pagehead{
+    margin-bottom:12px;
+  }
+
+  #view-hp .section,
+  #view-jadwal .section,
+  #view-tugas .section,
+  #view-laporan .section,
+  #view-settings .section{
+    margin-top:10px;
+  }
+
+  #view-hp .section-head,
+  #view-jadwal .section-head,
+  #view-tugas .section-head,
+  #view-laporan .section-head,
+  #view-settings .section-head{
+    align-items:flex-start;
+    gap:8px;
+  }
+
+  #view-jadwal .mode-switch{
+    width:100%;
+    box-sizing:border-box;
+  }
+
+  #view-jadwal .day-tabs{
+    overflow-x:auto;
+    scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;
+    padding-bottom:2px;
+  }
+  #view-jadwal .day-tabs::-webkit-scrollbar{
+    display:none;
+  }
+
+  #view-laporan .section-head{
+    flex-wrap:wrap;
+  }
+  #view-laporan .section-head > div:last-child{
+    width:100%;
+    display:grid;
+    grid-template-columns:minmax(0,1fr) minmax(92px,.55fr);
+    gap:7px;
+  }
+  #view-laporan #report-search{
+    width:100% !important;
+  }
+  #view-laporan #report-filter{
+    width:100%;
+    min-width:0;
+  }
+
+  #view-hp .summary-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+  }
+  #view-hp .summary-box{
+    min-width:0;
+  }
+
+  #view-settings .acc-row{
+    gap:8px;
+  }
+
+  #view-hp .card,
+  #view-jadwal .card,
+  #view-tugas .card,
+  #view-laporan .card,
+  #view-settings .card{
+    max-width:100%;
+    min-width:0;
+    box-sizing:border-box;
+  }
+
+  #view-hp *,
+  #view-jadwal *,
+  #view-tugas *,
+  #view-laporan *,
+  #view-settings *{
+    min-width:0;
+  }
+}
+
+/* Landscape HP: manfaatkan ruang tanpa membuat komponen terlalu tinggi */
+@media (max-width:900px) and (orientation:landscape){
+  #view-hp .pagehead,
+  #view-jadwal .pagehead,
+  #view-tugas .pagehead,
+  #view-laporan .pagehead,
+  #view-settings .pagehead{
+    margin-bottom:10px;
+  }
 }
 </style>
 
