@@ -10914,47 +10914,59 @@ Setelan
   }
 </style>
 
-<style id="jadwal-time-spacing-fix">
-/* Jadwal: kolom waktu lebih lega dan dua baris jam tidak dempet */
-.timeline-item {
-  grid-template-columns: 56px 1fr;
-  gap: 14px;
-  padding: 11px 0;
+<style id="jadwal-professional-spacing">
+/* Jadwal Kelas — ruang antara jam dan kartu diperlebar.
+   Hanya mengubah layout timeline, tidak mengubah data/fungsi. */
+
+#view-jadwal .timeline {
+  padding: 8px 0;
 }
 
-.timeline-time {
-  min-width: 56px;
+#view-jadwal .timeline-item {
+  grid-template-columns: 140px minmax(0, 1fr);
+  gap: 28px;
+  padding: 9px 0;
+  align-items: start;
+}
+
+#view-jadwal .timeline-time {
+  min-width: 0;
   padding-top: 1px;
-  font-size: 10.5px;
   line-height: 1.45;
-  letter-spacing: .1px;
-  white-space: normal;
   text-align: right;
+  white-space: normal;
 }
 
-.timeline-card {
+#view-jadwal .timeline:before {
+  left: 136px;
+}
+
+#view-jadwal .timeline-card {
   min-width: 0;
 }
 
-/* Garis timeline mengikuti posisi kolom jam */
-.timeline:before {
-  left: 64px;
+/* Titik timeline tetap berada dekat garis, tidak menempel ke kartu */
+#view-jadwal .timeline-card:before {
+  left: -33px;
 }
 
 @media (max-width: 620px) {
-  .timeline-item {
-    grid-template-columns: 56px 1fr;
-    gap: 14px;
-    padding: 11px 0;
+  #view-jadwal .timeline-item {
+    grid-template-columns: 56px minmax(0, 1fr);
+    gap: 16px;
+    padding: 9px 0;
   }
 
-  .timeline-time {
-    min-width: 56px;
+  #view-jadwal .timeline-time {
     line-height: 1.45;
   }
 
-  .timeline:before {
-    left: 64px;
+  #view-jadwal .timeline:before {
+    left: 56px;
+  }
+
+  #view-jadwal .timeline-card:before {
+    left: -21px;
   }
 }
 </style>
