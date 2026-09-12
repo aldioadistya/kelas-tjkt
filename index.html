@@ -5217,6 +5217,79 @@ body:not(.dark) #view-settings .card{
 }
 </style>
 
+
+<style id="kelasku-kas-history-fix">
+/* Kas: Riwayat langsung setelah tombol Catat Transaksi */
+#view-kas .kas-history-section{
+  margin-top:12px;
+}
+#view-kas .kas-history-head{
+  align-items:center;
+}
+#view-kas .kas-history-actions{
+  display:flex;
+  align-items:center;
+  gap:7px;
+}
+#view-kas .kas-history-toggle{
+  appearance:none;
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  min-height:30px;
+  padding:5px 9px;
+  border:1px solid var(--glass-border);
+  border-radius:9px;
+  background:var(--glass-card);
+  color:var(--text-main);
+  font:inherit;
+  font-size:10px;
+  font-weight:800;
+  cursor:pointer;
+  box-shadow:none;
+}
+#view-kas .kas-history-toggle:hover{
+  border-color:rgba(59,130,246,.35);
+}
+#view-kas .kas-history-toggle:active{
+  transform:scale(.98);
+}
+#view-kas .kas-history-chevron{
+  font-size:14px;
+  line-height:1;
+}
+#view-kas .kas-history-body{
+  display:grid;
+  grid-template-rows:1fr;
+  opacity:1;
+  transition:grid-template-rows .22s ease,opacity .18s ease;
+}
+#view-kas .kas-history-body.collapsed{
+  grid-template-rows:0fr;
+  opacity:0;
+}
+#view-kas .kas-history-body > #kas-list{
+  min-height:0;
+  overflow:hidden;
+}
+
+/* Mobile: jangan sampai toolbar / tombol memotong layout */
+@media(max-width:620px){
+  #view-kas .kas-history-head{
+    align-items:flex-start;
+    gap:8px;
+  }
+  #view-kas .kas-history-actions{
+    flex-wrap:wrap;
+  }
+  #view-kas .kas-history-toggle,
+  #view-kas .kas-history-actions .section-link{
+    min-height:36px;
+    padding:7px 10px;
+  }
+}
+</style>
+
 </head>
 <body>
   <div class="ambient-mesh">
@@ -5696,6 +5769,22 @@ X TJKT 1
   <button class="fab-add admin-only" onclick="openKasAddModal()">+ Catat Transaksi
 </button>
 </div>
+<div class="section kas-history-section" id="kas-history-section">
+  <div class="section-head kas-history-head">
+    <div class="section-title">Riwayat Transaksi</div>
+    <div class="kas-history-actions">
+      <div class="section-link" onclick="openExportModal()">Export</div>
+      <button type="button" class="kas-history-toggle" onclick="window.toggleKasHistory()"
+        aria-expanded="true" aria-controls="kas-history-body">
+        <span class="kas-history-chevron">⌄</span>
+        <span class="kas-history-toggle-text">Minimalkan</span>
+      </button>
+    </div>
+  </div>
+  <div id="kas-history-body" class="kas-history-body">
+    <div class="card" id="kas-list"></div>
+  </div>
+</div>
 <div class="section kas-siswa-section">
   <div class="section-head">
     <div>
@@ -5712,18 +5801,10 @@ X TJKT 1
 <div id="kas-folder-list" class="kas-folder-list">
 </div>
 </div>
-<div class="section">
-  <div class="section-head">
-    <div class="section-title">
-      Riwayat Transaksi
-    </div>
-    <div class="section-link" onclick="openExportModal()">
-      Export
-    </div>
-  </div>
-  <div class="card" id="kas-list">
-  </div>
-</div>
+
+
+
+
 </div>
 <div class="view" id="view-hp">
   <div class="pagehead">
@@ -11058,6 +11139,7 @@ Setelan
       wrap.className='kas-pro-table';
       wrap.innerHTML=list.length?`<table><thead><tr><th>Tanggal</th><th>Keterangan</th><th>Jenis</th><th>Jumlah</th><th></th></tr></thead><tbody>${list.map(t=>`<tr onclick="openKasEditModal(${Number(t.id)})" style="cursor:pointer"><td>${esc(t.tanggal||'-')}</td><td><strong>${esc(t.ket||'Tanpa keterangan')}</strong>${t.file?`<div style="font-size:9px;color:var(--ui-muted);margin-top:3px">Lampiran: ${esc(t.file)}</div>`:''}</td><td><span class="kas-type-badge ${t.jenis==='masuk'?'kas-type-in':'kas-type-out'}">${t.jenis==='masuk'?'Pemasukan':'Pengeluaran'}</span></td><td class="${t.jenis==='masuk'?'kas-amt-in':'kas-amt-out'}">${t.jenis==='masuk'?'+':'-'}${money(t.jumlah)}</td><td class="kas-pro-action"><button type="button" class="kas-edit-btn admin-only" onclick="event.stopPropagation();openKasEditModal(${Number(t.id)})" aria-label="Edit transaksi">Edit</button></td></tr>`).join('')}</tbody></table>`:`<div class="empty" style="padding:36px 18px;text-align:center"><div style="font-weight:800;margin-bottom:4px">Belum ada transaksi</div><div style="font-size:11px;color:var(--ui-muted)">Catat pemasukan atau pengeluaran pertama untuk memulai rekap kas.</div></div>`;
       const oldIn=document.getElementById('kas-in'), oldOut=document.getElementById('kas-out'), oldSaldo=document.getElementById('kas-saldo'); if(oldIn)oldIn.textContent=money(masuk); if(oldOut)oldOut.textContent=money(keluar); if(oldSaldo)oldSaldo.textContent=money(masuk-keluar);
+      if(typeof window.syncKasHistoryState==='function') window.syncKasHistoryState();
     }
 
     function professionalRenderHp(){
@@ -11329,6 +11411,51 @@ Setelan
   }
 }
 </style>
+
+
+<script id="kelasku-kas-history-behavior">
+(function(){
+  function getHistoryState(){
+    try{
+      if(typeof state !== 'object' || !state) return false;
+      return state.kasHistoryMinimized === true;
+    }catch(e){ return false; }
+  }
+
+  window.toggleKasHistory = function(){
+    try{
+      if(typeof state === 'object' && state){
+        state.kasHistoryMinimized = !getHistoryState();
+        if(typeof saveState === 'function') saveState();
+      }
+    }catch(e){ console.warn('Kas history toggle:', e); }
+
+    const body=document.getElementById('kas-history-body');
+    const btn=document.querySelector('#view-kas .kas-history-toggle');
+    const text=btn && btn.querySelector('.kas-history-toggle-text');
+    const chev=btn && btn.querySelector('.kas-history-chevron');
+    const minimized=getHistoryState();
+
+    if(body) body.classList.toggle('collapsed', minimized);
+    if(btn) btn.setAttribute('aria-expanded', minimized ? 'false' : 'true');
+    if(text) text.textContent=minimized ? 'Buka' : 'Minimalkan';
+    if(chev) chev.textContent=minimized ? '›' : '⌄';
+  };
+
+  window.syncKasHistoryState = function(){
+    const body=document.getElementById('kas-history-body');
+    const btn=document.querySelector('#view-kas .kas-history-toggle');
+    if(!body || !btn) return;
+    const minimized=getHistoryState();
+    body.classList.toggle('collapsed', minimized);
+    btn.setAttribute('aria-expanded', minimized ? 'false' : 'true');
+    const text=btn.querySelector('.kas-history-toggle-text');
+    const chev=btn.querySelector('.kas-history-chevron');
+    if(text) text.textContent=minimized ? 'Buka' : 'Minimalkan';
+    if(chev) chev.textContent=minimized ? '›' : '⌄';
+  };
+})();
+</script>
 
 </body>
 <!-- Kelasku compatibility patch: resilient Firestore sync + legacy fallback -->
