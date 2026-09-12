@@ -11175,7 +11175,7 @@ Setelan
     }
 
     function professionalRenderJadwalList(){
-      const wrap=document.getElementById('jadwal-list'); if(!wrap)return; const items=Array.isArray(state.jadwal?.[state.selectedDay])?state.jadwal[state.selectedDay].slice().sort((a,b)=>String(a.jam).localeCompare(String(b.jam))):[]; const readOnly=isReadOnly(); wrap.innerHTML=items.length?`<div class="timeline">${items.map(j=>`<div class="timeline-item" ${readOnly?'':'onclick="openJadwalModal('+Number(j.id)+')"'} style="${readOnly?'':'cursor:pointer'}"><div class="timeline-time">${esc(j.jam||'-')}</div><div class="timeline-card"><div style="font-size:13px;font-weight:800">${esc(j.mapel||'-')}</div><div class="timeline-sub">${esc(j.guru||'Tanpa keterangan')}</div></div></div>`).join('')}</div>`:'<div class="empty" style="padding:35px">Tidak ada jadwal pelajaran untuk hari ini.</div>';
+      const wrap=document.getElementById('jadwal-list'); if(!wrap)return; const items=Array.isArray(state.jadwal?.[state.selectedDay])?state.jadwal[state.selectedDay].slice().sort((a,b)=>String(a.jam).localeCompare(String(b.jam))):[]; const readOnly=isReadOnly(); wrap.innerHTML=items.length?`<div class="timeline">${items.map(j=>`<div class="timeline-item" ${readOnly?'':'onclick="openJadwalModal('+Number(j.id)+')"'} style="${readOnly?'':'cursor:pointer'}"><div class="timeline-time"><span class="time-start">${esc((j.jam||'-').split('-')[0]||'-')}</span><span class="time-separator">—</span><span class="time-end">${esc((j.jam||'-').split('-')[1]||'-')}</span></div><div class="timeline-card"><div style="font-size:13px;font-weight:800">${esc(j.mapel||'-')}</div><div class="timeline-sub">${esc(j.guru||'Tanpa keterangan')}</div></div></div>`).join('')}</div>`:'<div class="empty" style="padding:35px">Tidak ada jadwal pelajaran untuk hari ini.</div>';
     }
 
     function professionalRenderPiket(){
@@ -11405,6 +11405,13 @@ Setelan
     left: -21px;
   }
 }
+
+/* Jadwal: jam disusun vertikal agar tidak bertabrakan dengan nama mapel */
+#view-jadwal .timeline-item{align-items:flex-start;gap:16px;}
+#view-jadwal .timeline-time{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-width:58px;line-height:1.1;white-space:normal;}
+#view-jadwal .timeline-time .time-start,#view-jadwal .timeline-time .time-end{display:block;white-space:nowrap;}
+#view-jadwal .timeline-time .time-separator{font-size:10px;opacity:.55;line-height:1;}
+@media (max-width:767px){#view-jadwal .timeline-item{gap:12px;}#view-jadwal .timeline-time{min-width:48px;font-size:10px;}}
 </style>
 
 
