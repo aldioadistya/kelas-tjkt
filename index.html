@@ -4791,115 +4791,6 @@ button:hover,
     }
 }
 
-
-/* =========================================================
-   FINAL GLASS POLISH
-   Efek kaca tipis, teks tetap kontras, border sangat halus.
-   Tidak mengubah struktur HTML/JavaScript.
-   ========================================================= */
-:root {
-    --glass-bg: rgba(248, 250, 252, 0.72);
-    --glass-card: rgba(255, 255, 255, 0.76);
-    --glass-border: rgba(148, 163, 184, 0.22);
-    --glass-shadow: 0 1px 2px rgba(15, 23, 42, 0.035),
-                    0 8px 24px rgba(15, 23, 42, 0.055);
-    --input-bg: rgba(255, 255, 255, 0.82);
-}
-
-body.dark {
-    --glass-bg: rgba(15, 23, 42, 0.48);
-    --glass-card: rgba(30, 41, 59, 0.56);
-    --glass-border: rgba(255, 255, 255, 0.10);
-    --glass-shadow: 0 1px 2px rgba(0, 0, 0, 0.16),
-                    0 10px 28px rgba(0, 0, 0, 0.16);
-    --input-bg: rgba(15, 23, 42, 0.42);
-}
-
-/* Kaca tipis: jangan terlalu putih/pekat */
-.phone,
-.login-overlay {
-    background: var(--glass-bg);
-    backdrop-filter: blur(14px) saturate(110%);
-    -webkit-backdrop-filter: blur(14px) saturate(110%);
-}
-
-.card,
-.stat-card,
-.login-card,
-.toast,
-.btn-ghost,
-.theme-btn {
-    background: var(--glass-card);
-    border-color: var(--glass-border);
-    box-shadow: var(--glass-shadow);
-}
-
-/* Border konten dibuat sangat tipis agar tidak terlihat kaku */
-.card,
-.stat-card,
-.login-card,
-.toast,
-.btn-ghost,
-.theme-btn,
-.login-card .field input {
-    border-width: 1px;
-    border-style: solid;
-}
-
-/* Teks utama tetap pekat dan mudah dibaca */
-.login-welcome,
-.pagehead h1,
-.section-title,
-.row-title,
-.tx-title,
-.stat-value,
-.login-card .field label,
-.verification-title {
-    color: var(--text-main);
-}
-
-/* Teks sekunder tetap jelas di atas permukaan kaca */
-.login-sub,
-.pagehead p,
-.row-sub,
-.tx-sub,
-.empty,
-.login-card .field-hint,
-.verification-copy,
-.stat-label {
-    color: var(--text-soft);
-}
-
-/* Interaksi halus, tanpa gerakan berlebihan */
-.card,
-.stat-card,
-.btn,
-.fab-add,
-.tab,
-.theme-btn,
-.cal-day,
-.tx-item {
-    transition:
-        transform 180ms cubic-bezier(.22, 1, .36, 1),
-        background-color 180ms ease,
-        border-color 180ms ease,
-        box-shadow 180ms ease,
-        color 180ms ease;
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .card,
-    .stat-card,
-    .btn,
-    .fab-add,
-    .tab,
-    .theme-btn,
-    .cal-day,
-    .tx-item {
-        transition: none;
-    }
-}
-
 </style>
 </head>
 <body>
@@ -9762,6 +9653,133 @@ window.todayKey = todayKey;
 
 
 
+
+
+<style id="kelasku-thin-glass">
+/* Thin Glass UI — hanya visual, tidak mengubah fungsi/JavaScript */
+:root {
+  --glass-bg: rgba(248, 250, 252, .78);
+  --glass-card: rgba(255, 255, 255, .72);
+  --glass-border: rgba(100, 116, 139, .16);
+  --glass-shadow: 0 1px 2px rgba(15,23,42,.025),
+                  0 8px 24px rgba(15,23,42,.045);
+  --input-bg: rgba(255,255,255,.76);
+}
+
+body.dark {
+  --glass-bg: rgba(15, 23, 42, .58);
+  --glass-card: rgba(30, 41, 59, .60);
+  --glass-border: rgba(255,255,255,.09);
+  --glass-shadow: 0 1px 2px rgba(0,0,0,.14),
+                  0 10px 28px rgba(0,0,0,.16);
+  --input-bg: rgba(15,23,42,.48);
+}
+
+/* Background kaca tipis */
+.phone,
+.login-overlay {
+  background: var(--glass-bg);
+  backdrop-filter: blur(14px) saturate(108%);
+  -webkit-backdrop-filter: blur(14px) saturate(108%);
+}
+
+/* Permukaan card/modal */
+.card,
+.stat-card,
+.login-card,
+.toast,
+.modal-content,
+.bottom-sheet,
+.panel,
+.theme-btn,
+.btn-ghost {
+  background: var(--glass-card);
+  border-color: var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+/* Border sangat halus — tetap 1px supaya tidak terlihat kaku */
+.card,
+.stat-card,
+.login-card,
+.toast,
+.modal-content,
+.bottom-sheet,
+.panel,
+.theme-btn,
+.btn-ghost,
+.login-card .field input {
+  border-width: 1px;
+  border-style: solid;
+}
+
+/* Input tetap transparan lembut, tetapi teks tidak pudar */
+.login-card .field input {
+  background: var(--input-bg);
+  color: var(--text-main);
+}
+
+/* Kontras teks */
+body,
+.pagehead h1,
+.section-title,
+.row-title,
+.tx-title,
+.stat-value,
+.login-welcome,
+.login-card .field label,
+.verification-title {
+  color: var(--text-main);
+}
+
+.pagehead p,
+.row-sub,
+.tx-sub,
+.stat-label,
+.login-sub,
+.login-card .field-hint,
+.verification-copy,
+.empty {
+  color: var(--text-soft);
+}
+
+/* Garis pemisah juga dibuat lembut */
+.row-item,
+.section-divider,
+.divider {
+  border-color: var(--glass-border);
+}
+
+/* Animasi ringan dan natural */
+.card,
+.stat-card,
+.btn,
+.fab-add,
+.tab,
+.theme-btn,
+.cal-day,
+.tx-item {
+  transition:
+    transform 180ms cubic-bezier(.22,1,.36,1),
+    background-color 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    color 180ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .stat-card,
+  .btn,
+  .fab-add,
+  .tab,
+  .theme-btn,
+  .cal-day,
+  .tx-item {
+    transition: none;
+  }
+}
+</style>
 
 </body>
 
