@@ -11008,3 +11008,112 @@ Setelan
 </body>
 <!-- Kelasku compatibility patch: resilient Firestore sync + legacy fallback -->
 </html>
+
+<style id="kelasku-button-finish">
+/* Final button polish — semua tombol sekunder dibuat lebih ringan di dark mode. */
+:root {
+  --button-soft-bg: rgba(255,255,255,.62);
+  --button-soft-border: rgba(100,116,139,.18);
+  --button-soft-text: #334155;
+}
+
+body.dark {
+  --button-soft-bg: rgba(36,49,70,.78);
+  --button-soft-border: rgba(148,163,184,.20);
+  --button-soft-text: #e2e8f0;
+}
+
+/* Tombol sekunder / utility */
+.btn-ghost,
+.bulk-all-btn,
+.kas-folder-toggle,
+.cal-nav-btn,
+.mode-btn,
+.day-chip,
+.toggle-btn,
+.section-action,
+.hp-slot-edit,
+.task-filter-tab,
+.task-pro-actions button:not(.primary),
+.report-action-btn:not(.primary) {
+  background: var(--button-soft-bg);
+  border-color: var(--button-soft-border);
+  color: var(--button-soft-text);
+  -webkit-text-fill-color: var(--button-soft-text);
+}
+
+/* Tombol pengaturan di Jadwal dan tombol utility lain yang tidak punya class khusus */
+body.dark .view button:not(.btn-primary):not(.btn-danger):not(.login-submit):not(.fab-add):not(.theme-btn) {
+  background: var(--button-soft-bg);
+  border-color: var(--button-soft-border);
+  color: var(--button-soft-text);
+  -webkit-text-fill-color: var(--button-soft-text);
+}
+
+/* State aktif tetap jelas, tetapi tidak terlalu menyala */
+body.dark .view .task-filter-tab.active,
+body.dark .view .day-chip.active,
+body.dark .view .mode-btn.active {
+  background: rgba(37,99,235,.24);
+  border-color: rgba(96,165,250,.55);
+  color: #bfdbfe;
+  -webkit-text-fill-color: #bfdbfe;
+}
+
+/* Hover / tekan: halus, tidak kaku */
+.btn-ghost:hover,
+.bulk-all-btn:hover,
+.kas-folder-toggle:hover,
+.cal-nav-btn:hover,
+.mode-btn:hover,
+.day-chip:hover,
+.toggle-btn:hover,
+.section-action:hover,
+.hp-slot-edit:hover,
+.task-filter-tab:hover,
+.task-pro-actions button:not(.primary):hover,
+.report-action-btn:not(.primary):hover {
+  transform: translateY(-1px);
+  border-color: rgba(96,165,250,.34);
+}
+
+.btn-ghost:active,
+.bulk-all-btn:active,
+.kas-folder-toggle:active,
+.cal-nav-btn:active,
+.mode-btn:active,
+.day-chip:active,
+.toggle-btn:active,
+.section-action:active,
+.hp-slot-edit:active,
+.task-filter-tab:active,
+.task-pro-actions button:active,
+.report-action-btn:active {
+  transform: translateY(0) scale(.98);
+}
+
+@media (max-width: 620px) {
+  /* Mobile: tombol tetap ringan dan mudah dibaca tanpa menjadi terlalu besar */
+  body.dark .view button:not(.btn-primary):not(.btn-danger):not(.login-submit):not(.fab-add):not(.theme-btn) {
+    background: rgba(39,52,73,.88);
+    border-color: rgba(148,163,184,.22);
+    color: #e5edf8;
+    -webkit-text-fill-color: #e5edf8;
+  }
+
+  .btn-ghost,
+  .bulk-all-btn,
+  .kas-folder-toggle,
+  .cal-nav-btn,
+  .mode-btn,
+  .day-chip,
+  .toggle-btn,
+  .section-action,
+  .hp-slot-edit,
+  .task-filter-tab,
+  .task-pro-actions button:not(.primary),
+  .report-action-btn:not(.primary) {
+    box-shadow: 0 1px 3px rgba(15,23,42,.08);
+  }
+}
+</style>
