@@ -5371,6 +5371,20 @@ X TJKT 1
   <button class="fab-add admin-only" onclick="openKasAddModal()">+ Catat Transaksi
 </button>
 </div>
+<div class="section">
+  <div class="section-head">
+    <div class="section-title">
+      Riwayat Transaksi
+    </div>
+    <div class="section-link" onclick="openExportModal()">
+      Export
+    </div>
+  </div>
+  <div class="card" id="kas-list">
+  </div>
+</div>
+</div>
+
 <div class="section kas-siswa-section">
   <div class="section-head">
     <div>
@@ -5387,19 +5401,8 @@ X TJKT 1
 <div id="kas-folder-list" class="kas-folder-list">
 </div>
 </div>
-<div class="section">
-  <div class="section-head">
-    <div class="section-title">
-      Riwayat Transaksi
-    </div>
-    <div class="section-link" onclick="openExportModal()">
-      Export
-    </div>
-  </div>
-  <div class="card" id="kas-list">
-  </div>
-</div>
-</div>
+
+
 <div class="view" id="view-hp">
   <div class="pagehead">
     <h1>
@@ -11001,6 +11004,47 @@ Setelan
 
   #view-jadwal .timeline-card:before {
     left: -21px;
+  }
+}
+</style>
+
+
+<style id="riwayat-transaksi-responsive-fix">
+/* Riwayat Transaksi: desktop tetap lega, mobile tidak terpotong */
+#view-kas .kas-history-section {
+  width: 100%;
+  min-width: 0;
+}
+
+#view-kas .kas-history-toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 8px;
+  width: 100%;
+}
+
+#view-kas .kas-history-toolbar > * {
+  min-width: 0;
+}
+
+@media (max-width: 620px) {
+  #view-kas .kas-history-toolbar {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #view-kas .kas-history-toolbar select,
+  #view-kas .kas-history-toolbar input,
+  #view-kas .kas-history-toolbar button {
+    width: 100%;
+    min-width: 0;
+  }
+
+  #view-kas .kas-history-section {
+    margin-top: 14px;
+  }
+
+  #view-kas .kas-history-section .card {
+    overflow: hidden;
   }
 }
 </style>
