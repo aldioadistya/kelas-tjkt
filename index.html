@@ -4892,6 +4892,95 @@
 .kas-edit-btn:active{transform:scale(.96)}
 @media(max-width:620px){.kas-pro-action{width:60px}.kas-edit-btn{padding:6px 7px}}
 </style>
+
+<style id="kelasku-professional-ui">
+:root{
+  --ui-surface-1: rgba(255,255,255,.72);
+  --ui-surface-2: rgba(255,255,255,.86);
+  --ui-border: rgba(15,23,42,.10);
+  --ui-border-strong: rgba(15,23,42,.16);
+  --ui-shadow: 0 8px 28px rgba(15,23,42,.07);
+  --ui-shadow-hover: 0 12px 34px rgba(15,23,42,.10);
+  --ui-text: #0f172a;
+  --ui-text-soft: #475569;
+  --ui-text-muted: #64748b;
+  --ui-control-bg: rgba(248,250,252,.92);
+}
+body.dark{
+  --ui-surface-1: rgba(18,27,44,.82);
+  --ui-surface-2: rgba(20,30,48,.94);
+  --ui-border: rgba(148,163,184,.16);
+  --ui-border-strong: rgba(148,163,184,.23);
+  --ui-shadow: 0 8px 28px rgba(0,0,0,.18);
+  --ui-shadow-hover: 0 12px 34px rgba(0,0,0,.25);
+  --ui-text: #f8fafc;
+  --ui-text-soft: #cbd5e1;
+  --ui-text-muted: #94a3b8;
+  --ui-control-bg: rgba(15,23,42,.62);
+}
+
+/* Surface & glass: tipis, bukan blur berlebihan */
+.card,.panel,.modal,.section,.stat-card,.task-card,.report-card,.schedule-card,
+.kas-card,.activity-card,.profile-card,.settings-card{
+  border-color: var(--ui-border);
+  box-shadow: var(--ui-shadow);
+  background: var(--ui-surface-1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.card:hover,.panel:hover,.stat-card:hover,.task-card:hover,.report-card:hover,
+.schedule-card:hover,.kas-card:hover,.activity-card:hover{
+  border-color: var(--ui-border-strong);
+  box-shadow: var(--ui-shadow-hover);
+}
+
+/* Kontrol form konsisten */
+input,select,textarea{
+  color: var(--ui-text);
+  background: var(--ui-control-bg);
+  border-color: var(--ui-border-strong);
+}
+input::placeholder,textarea::placeholder{color:var(--ui-text-muted);opacity:.9}
+input:focus,select:focus,textarea:focus{
+  outline:none;
+  border-color: rgba(59,130,246,.55);
+  box-shadow: 0 0 0 3px rgba(59,130,246,.10);
+}
+
+/* Tombol: tidak terlalu gelap di mobile/dark mode */
+button,.btn{
+  border-radius:10px;
+  transition:transform .16s ease,box-shadow .16s ease,background-color .16s ease,
+             border-color .16s ease,opacity .16s ease;
+}
+button:hover,.btn:hover{transform:translateY(-1px)}
+button:active,.btn:active{transform:translateY(0) scale(.98)}
+.btn:not(.btn-primary):not(.btn-danger){
+  background:var(--ui-surface-2);
+  color:var(--ui-text);
+  border-color:var(--ui-border-strong);
+}
+body.dark .btn:not(.btn-primary):not(.btn-danger){
+  background:rgba(30,41,59,.72);
+  color:#e2e8f0;
+}
+
+/* Navigasi terasa ringan */
+.tab,.desktop-nav-btn,.desktop-nav-item{
+  transition:background-color .18s ease,color .18s ease,border-color .18s ease,
+             transform .18s ease;
+}
+
+/* Mobile: jangan biarkan elemen desktop melebar/terpotong */
+@media(max-width:620px){
+  .content,.view,.section,.card,.panel{max-width:100%;min-width:0}
+  .section-head{gap:10px}
+  .section-head>*{min-width:0}
+  .btn,button{min-height:40px}
+  input,select,textarea{max-width:100%;min-width:0}
+}
+</style>
+
 </head>
 <body>
   <div class="ambient-mesh">
@@ -5371,20 +5460,6 @@ X TJKT 1
   <button class="fab-add admin-only" onclick="openKasAddModal()">+ Catat Transaksi
 </button>
 </div>
-<div class="section">
-  <div class="section-head">
-    <div class="section-title">
-      Riwayat Transaksi
-    </div>
-    <div class="section-link" onclick="openExportModal()">
-      Export
-    </div>
-  </div>
-  <div class="card" id="kas-list">
-  </div>
-</div>
-</div>
-
 <div class="section kas-siswa-section">
   <div class="section-head">
     <div>
@@ -5401,8 +5476,19 @@ X TJKT 1
 <div id="kas-folder-list" class="kas-folder-list">
 </div>
 </div>
-
-
+<div class="section">
+  <div class="section-head">
+    <div class="section-title">
+      Riwayat Transaksi
+    </div>
+    <div class="section-link" onclick="openExportModal()">
+      Export
+    </div>
+  </div>
+  <div class="card" id="kas-list">
+  </div>
+</div>
+</div>
 <div class="view" id="view-hp">
   <div class="pagehead">
     <h1>
@@ -11004,47 +11090,6 @@ Setelan
 
   #view-jadwal .timeline-card:before {
     left: -21px;
-  }
-}
-</style>
-
-
-<style id="riwayat-transaksi-responsive-fix">
-/* Riwayat Transaksi: desktop tetap lega, mobile tidak terpotong */
-#view-kas .kas-history-section {
-  width: 100%;
-  min-width: 0;
-}
-
-#view-kas .kas-history-toolbar {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto auto;
-  gap: 8px;
-  width: 100%;
-}
-
-#view-kas .kas-history-toolbar > * {
-  min-width: 0;
-}
-
-@media (max-width: 620px) {
-  #view-kas .kas-history-toolbar {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  #view-kas .kas-history-toolbar select,
-  #view-kas .kas-history-toolbar input,
-  #view-kas .kas-history-toolbar button {
-    width: 100%;
-    min-width: 0;
-  }
-
-  #view-kas .kas-history-section {
-    margin-top: 14px;
-  }
-
-  #view-kas .kas-history-section .card {
-    overflow: hidden;
   }
 }
 </style>
