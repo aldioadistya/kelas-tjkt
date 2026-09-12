@@ -1,7 +1,69 @@
 <!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Kelasku — X TJKT 1</title><link rel="manifest" href="manifest.json"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#0F172A"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet"><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <style>
 :root {
+--bg-gradient: linear-gradient(135deg, #e0e7ff 0%, #f1f5f9 50%, #fae8ff 100%);
+    --glass-bg: rgba(255, 255, 255, 0.5);
+    --glass-card: rgba(255, 255, 255, 0.6);
+    --glass-border: rgba(255, 255, 255, 0.3);
+    --glass-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    --text-main: #0f172a;
+    --text-soft: #64748b;
+    --text-muted: #94a3b8;
+    --primary: #4f46e5;
+    --primary-gradient: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+    --accent-gold: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    --teal: #10b981;
+    --teal-glass: rgba(16, 185, 129, 0.12);
+    --rose: #f43f5e;
+    --rose-glass: rgba(244, 63, 94, 0.12);
+    --violet: #8b5cf6;
+    --violet-glass: rgba(139, 92, 246, 0.12);
+    --amber: #f59e0b;
+    --amber-glass: rgba(245, 158, 11, 0.12);
+    --radius-xl: 24px;
+    --radius-lg: 16px;
+    --radius-md: 12px;
+    --radius-sm: 8px;
+    --input-bg: rgba(255, 255, 255, 0.08);
 --bg-gradient:#f8fafc;
   --glass-bg:#f8fafc;
   --glass-card:#ffffff;
@@ -355,6 +417,8 @@
     --shadow-token-56: var(--dash-shadow);
     --shadow-token-57: var(--glass-shadow);
 }
+
+/* ---- Consolidated style block 1 ---- */
 
 
 body.dark {
@@ -2223,8 +2287,14 @@ body.dark .s-name { color: var(--color-neutral-f1f5f9) ; }
     box-shadow: none;
 }
 
+
+/* ---- Consolidated style block 2 ---- */
+
 #report-stats span{border:1px solid var(--glass-border);}
 @media(max-width:520px){#view-laporan #report-search{width:140px;min-width:120px}.report-status{margin-left:0}}
+
+
+/* ---- Consolidated style block 3 ---- */
 
 #modal-report input:disabled,
 #modal-report textarea:disabled,
@@ -2236,7 +2306,13 @@ body.dark .s-name { color: var(--color-neutral-f1f5f9) ; }
     cursor: not-allowed;
 }
 
+
+/* ---- Consolidated style block 4 ---- */
+
 .home-search-wrap{position:relative}.home-search-input{width:100%;box-sizing:border-box;border:1px solid var(--glass-border);border-radius: var(--radius-token-06);padding: var(--space-10) var(--space-12);font-size:12px;background:var(--input-bg);color:var(--text-main);outline:none}.global-search-results{margin-top:7px;display:flex;flex-direction:column;gap: var(--space-5)}.global-search-item{display:flex;align-items:center;gap: var(--space-8);padding: var(--space-9) var(--space-10);border:1px solid var(--glass-border);border-radius: var(--radius-token-30);background:var(--glass-card);cursor:pointer}.global-search-item .gsi-main{flex:1;min-width:0}.global-search-item .gsi-title{font-size:11px;font-weight:800;color:var(--text-main);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.global-search-item .gsi-sub{font-size:9.5px;color:var(--text-soft);margin-top:2px}.notify-item{display:flex;gap: var(--space-9);padding: var(--space-9) var(--space-2);border-bottom:1px solid var(--glass-border);cursor:pointer}.notify-item:last-child{border-bottom:0}.notify-item.unread{background:var(--primary-glass);border-radius: var(--radius-token-26);padding-left:7px;padding-right:7px}.notify-dot{width:7px;height:7px;border-radius: var(--radius-token-21);background:var(--primary);margin-top:5px;flex:none}.notify-item.read .notify-dot{opacity:.25}.notify-title{font-size:11px;font-weight:800;color:var(--text-main)}.notify-text{font-size:10px;line-height:1.4;color:var(--text-soft);margin-top:2px}.notify-time{font-size:9px;color:var(--text-muted);margin-top:3px}.activity-row{padding: var(--space-8) 0;border-bottom:1px solid var(--glass-border)}.activity-row:last-child{border-bottom:0}.activity-main{font-size:10.5px;color:var(--text-main);line-height:1.4}.activity-meta{font-size:9px;color:var(--text-muted);margin-top:2px}.report-home-card{cursor:pointer}@media(max-width:520px){.home-search-input{font-size:11px}}
+
+
+/* ---- Consolidated style block 5 ---- */
 
 #modal-report .modal {
   color: var(--color-neutral-f8fafc) ;
@@ -2331,6 +2407,9 @@ body.dark .s-name { color: var(--color-neutral-f1f5f9) ; }
   background: transparent ;
 }
 
+
+/* ---- Consolidated style block 6 ---- */
+
 body:not(.dark) #modal-report .modal {
   color: var(--text-main) ;
   background: linear-gradient(145deg, var(--color-alpha-061), var(--color-alpha-048)) ;
@@ -2377,6 +2456,9 @@ body:not(.dark) #modal-report .modal #report-student-response-text {
 body:not(.dark) #modal-report .modal .modal-actions .btn-ghost {
   color: var(--color-blue-334155) ;
 }
+
+
+/* ---- Consolidated style block 7 ---- */
 
 #modal-report .modal {
   max-height: 82vh ;
@@ -2559,10 +2641,16 @@ body.dark #view-laporan #report-filter {
   }
 }
 
+
+/* ---- Consolidated style block 8 ---- */
+
 .screen {
   min-height: 0 ;
   flex: 1 1 auto ;
 }
+
+
+/* ---- Consolidated style block 9 ---- */
 
 #modal-report .modal {
   padding: var(--space-16) ;
@@ -2727,6 +2815,9 @@ body.dark .home-task-item .checkbox {
 }
 .home-task-item .task-file { margin-top: 1px; }
 
+
+/* ---- Consolidated style block 10 ---- */
+
 html, body {
   width: 100%;
   min-width: 0;
@@ -2788,6 +2879,9 @@ html, body {
   .section { margin-top: 10px; }
 }
 
+
+/* ---- Consolidated style block 11 ---- */
+
 .kas-siswa-section .section-head{align-items:flex-start;gap: var(--space-10);}
 .kas-folder-list{display:flex;flex-direction:column;gap: var(--space-10);}
 .kas-folder{background:var(--glass-card);border:1px solid var(--glass-border);border-radius: var(--radius-token-09);padding: var(--space-12) var(--space-14);box-shadow: var(--shadow-token-57);}
@@ -2819,12 +2913,20 @@ html, body {
  .kas-payment-badge{font-size:8px;padding: var(--space-4) var(--space-6);}
 }
 .my-progress-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap: var(--space-8)}.my-progress-item{padding: var(--space-10) var(--space-8);border:1px solid var(--glass-border);border-radius: var(--radius-token-07);background:var(--surface-2);text-align:center}.my-progress-value{font-size:16px;font-weight:900;color:var(--text-main);line-height:1.15}.my-progress-label{margin-top:4px;font-size:9px;font-weight:700;color:var(--text-soft);line-height:1.25}.my-progress-note{margin-top:9px;font-size:10px;color:var(--text-soft);line-height:1.45}.achievement-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap: var(--space-8)}.achievement-badge{min-height:104px;padding: var(--space-10) var(--space-7);border:1px solid var(--glass-border);border-radius: var(--radius-token-08);background:var(--surface-2);text-align:center;opacity:.48;filter:grayscale(1);transition:.2s ease}.achievement-badge.earned{opacity:1;filter:none;background:var(--teal-glass);border-color:var(--color-alpha-022)}.achievement-icon{font-size:23px;line-height:1}.achievement-name{margin-top:7px;font-size:10px;font-weight:900;color:var(--text-main);line-height:1.25}.achievement-status{margin-top:4px;font-size:8.5px;font-weight:700;color:var(--text-soft);line-height:1.3}.achievement-badge.earned .achievement-status{color:var(--teal)}@media(max-width:360px){.my-progress-grid,.achievement-grid{gap: var(--space-5)}.my-progress-item{padding: var(--space-8) var(--space-4)}.achievement-badge{padding: var(--space-8) var(--space-4)}}
+
+
+/* ---- Consolidated style block 12 ---- */
 .cal-month-click,.cal-year-click{cursor:pointer;border-radius: var(--radius-token-24);padding: var(--space-2) var(--space-4)}.cal-month-click:hover,.cal-year-click:hover{background:var(--glass-card-hover)}.cal-month-picker{display:none;margin: var(--space-neg-2) 0 var(--space-10);padding: var(--space-10);border:1px solid var(--glass-border);border-radius: var(--radius-token-08);background:var(--glass-card);box-shadow: 0 8px 24px var(--color-alpha-005)}.cal-month-picker.open{display:block}.cal-picker-year{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}.cal-picker-year button,.cal-picker-months button{border:1px solid var(--glass-border);background:var(--surface-2);color:var(--text-main);border-radius: var(--radius-token-26);cursor:pointer;font-weight:700}.cal-picker-year strong,.cal-year-click{color:var(--text-main)}.cal-picker-year button{width:30px;height:28px}.cal-picker-months{display:grid;grid-template-columns:repeat(4,1fr);gap: var(--space-6)}.cal-picker-months button{padding: var(--space-7) var(--space-4);font-size:10px}.cal-picker-months button.active{background:var(--primary);color:var(--color-white);border-color:var(--primary)}.bulk-all-btn{border:1px solid var(--glass-border);background:var(--glass-card);color:var(--text-main);border-radius: var(--radius-token-26);padding: var(--space-6) var(--space-9);font-size:10px;font-weight:800;cursor:pointer}.student-check{width:22px;height:22px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:0 0 auto}.student-check input{position:absolute;opacity:0;pointer-events:none}.student-check span{width:16px;height:16px;border:1px solid var(--glass-border);border-radius: var(--radius-token-22);background:var(--surface-2);position:relative}.student-check input:checked+span{background:var(--primary);border-color:var(--primary)}.student-check input:checked+span:after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--color-white);font-size:11px;font-weight:900}
+
+/* ---- Consolidated style block 13 ---- */
 
 .login-logo{width:64px;height:64px;border-radius: var(--radius-token-11);display:flex;align-items:center;justify-content:center;margin: 0 auto var(--space-10);overflow:hidden}.login-logo img{width:100%;height:100%;display:block;object-fit:cover;border-radius: var(--radius-token-11)}.login-hero-title{font-family:'Sora',sans-serif;font-size:22px;font-weight:800}.login-hero-sub{font-size:11px;opacity:.85;margin-top:2px;font-weight:600;letter-spacing:.5px;text-transform:uppercase}.login-logo img{box-shadow: none}
 a{
     -webkit-tap-highlight-color: transparent;
 }
+
+
+/* ---- Consolidated style block 14 ---- */
 
 .desktop-sidebar{display:none}
 @media screen and (min-width:901px){
@@ -2851,10 +2953,16 @@ a{
 }
 @media screen and (max-width:1200px) and (min-width:901px){.desktop-sidebar{width:225px}.phone{grid-template-columns:225px minmax(0,1fr)}.phone>.screen{padding: var(--space-24) var(--space-26) var(--space-30)}}
 
+
+/* ---- Consolidated style block 15 ---- */
+
 @media screen and (min-width:901px){
   .desktop-brand-logo{width:48px;height:48px;min-width:48px;min-height:48px;border-radius: var(--radius-token-09);overflow:hidden;display:flex;align-items:center;justify-content:center;background:transparent;}
   .desktop-brand-logo img{width:48px;height:48px;display:block;object-fit:cover;border-radius: var(--radius-token-09);box-shadow: none;}
 }
+
+
+/* ---- Consolidated style block 16 ---- */
 
 @media screen and (min-width:901px){
   .desktop-brand{gap: var(--space-12)}
@@ -2870,6 +2978,9 @@ a{
     box-shadow: none;
   }
 }
+
+
+/* ---- Consolidated style block 17 ---- */
 
 @media screen and (min-width: 901px) {
   .phone > .login-overlay {
@@ -2898,6 +3009,9 @@ a{
     cursor: pointer ;
   }
 }
+
+
+/* ---- Consolidated style block 18 ---- */
 
 /* Mobile UI: cleaner, calmer, more human-crafted */
 @media screen and (max-width:900px){
@@ -3002,6 +3116,9 @@ a{
   .login-card .login-actions span{font-size:11px;}
 }
 @keyframes mobileFade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+
+/* ---- Consolidated style block 19 ---- */
 
   /* Desktop login compact */
 @media screen and (min-width: 901px) {
@@ -3181,6 +3298,9 @@ body.dark .task-meta .pill:not(.pill-due) {
     background: var(--color-alpha-020) ;
     border-color: var(--color-alpha-021) ;
 }
+
+
+/* ---- Consolidated style block 20 ---- */
 
 /* ============================================================
    KELASKU — PROFESSIONAL / ELEGANT UI OVERRIDES
@@ -3541,6 +3661,9 @@ textarea:focus-visible{
 /* Keep borders crisp in both themes */
 *{border-color:var(--glass-border);}
 
+
+/* ---- Consolidated style block 21 ---- */
+
 /* =========================================================
    KELASKU LOGIN — PROFESSIONAL / RELEASE UI
    Scope: #login-overlay only. Does not alter app screens.
@@ -3782,7 +3905,13 @@ body.dark #login-overlay .login-cache-btn:hover{background:var(--color-blue-1720
   #login-overlay *{scroll-behavior:auto;transition:none;animation:none;}
 }
 
+
+/* ---- Consolidated style block 22 ---- */
+
 body.kelasku-authenticated #login-overlay { display: none ; }
+
+
+/* ---- Consolidated style block 23 ---- */
 
 
 body:not(.dark){--glass-card:var(--ui-surface);--glass-border:var(--ui-border);--text-main:var(--ui-text);--text-soft:var(--ui-muted);--text-muted:var(--ui-soft)}
@@ -3816,10 +3945,16 @@ body.dark .kas-pro-metric{box-shadow: 0 6px 18px var(--color-alpha-004)}
 @media(max-width:620px){.kas-pro-metrics{grid-template-columns:1fr}.kas-pro-filters{min-width:0;width:100%}#hp-list,#piket-list{grid-template-columns:repeat(2,minmax(0,1fr))}.timeline:before{left:56px}.timeline-item{grid-template-columns:48px 1fr;gap: var(--space-12)}.task-board{grid-template-columns:1fr}.report-kpi-grid{grid-template-columns:1fr 1fr}.report-pro-top{gap: var(--space-10)}}
 @media(max-width:430px){.pagehead h1{font-size:22px}.hp-slot{min-height:126px;padding: var(--space-10)}.kas-pro-metric{padding: var(--space-14)}.kpm-value{font-size:21px}}
 
+
+/* ---- Consolidated style block 24 ---- */
+
 .task-pro-card[role="button"]{cursor:pointer;transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease}
 .task-pro-card[role="button"]:hover{transform:translateY(-1px)}
 .task-pro-card[role="button"]:focus-visible{outline:2px solid var(--ui-accent,var(--color-blue-bright));outline-offset:2px}
 .task-pro-actions button{position:relative;z-index:2}
+
+
+/* ---- Consolidated style block 25 ---- */
 
 /* KAS: nominal tetap jelas di mode gelap */
 body.dark .kas-pro-metric .kpm-value,
@@ -3848,7 +3983,13 @@ body.dark #kas-out {
 }
 body.dark .balance-card .bf-item { color: var(--color-alpha-060) ; }
 
+
+/* ---- Consolidated style block 26 ---- */
+
 /* v18: tanggal kalender HP/Piket di-reset ke hari ini saat modul dibuka kembali. */
+
+
+/* ---- Consolidated style block 27 ---- */
 
 /* Jadwal: dark mode contrast fix */
 body.dark #view-jadwal .mode-switch {
@@ -3931,6 +4072,9 @@ body.dark #view-jadwal .section-link {
   -webkit-text-fill-color:var(--color-muted) ;
 }
 
+
+/* ---- Consolidated style block 28 ---- */
+
 .hp-slot-name-button{
   border:0; background:transparent; padding: 0; margin: 0; color:inherit; font:inherit; font-weight:800; text-align:left; cursor:default; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
 }
@@ -3941,6 +4085,9 @@ body.dark .hp-slot-name-button:hover{text-decoration:none;text-decoration-line:n
 .hp-slot-edit:hover{background:var(--ui-soft-bg,var(--color-neutral-f8fafc));color:var(--ui-text,var(--color-ink));border-color:var(--color-blue-bfdbfe)}
 body.dark .hp-slot-edit{border-color:var(--color-blue-334155);color:var(--color-muted);background:var(--color-ink-soft)}
 body.dark .hp-slot-edit:hover{background:var(--color-blue-1e293b);color:var(--color-neutral-f8fafc);border-color:var(--color-blue-bright)}
+
+
+/* ---- Consolidated style block 29 ---- */
 
 .hp-slot-name-button{cursor:pointer;}
 .hp-slot-name-button:hover{text-decoration:none;text-decoration-line:none;}
@@ -3954,6 +4101,9 @@ body.dark .hp-edit-status-btn{background:var(--color-ink-soft);border-color:var(
 body.dark .hp-edit-status-btn.active{background:var(--color-blue-172554);border-color:var(--color-blue-bright);color:var(--color-blue-93c5fd);}
 @media(max-width:560px){.hp-edit-status-grid{grid-template-columns:1fr;}}
 
+
+/* ---- Consolidated style block 30 ---- */
+
 /* Nama siswa di Titip HP adalah area klik, bukan link. */
 .student-row .s-name,
 .student-row .s-name:hover,
@@ -3965,6 +4115,9 @@ body.dark .hp-edit-status-btn.active{background:var(--color-blue-172554);border-
   text-underline-offset: 0 ;
   -webkit-text-decoration-line: none ;
 }
+
+
+/* ---- Consolidated style block 31 ---- */
 
 /* Logout: make the action reliably clickable and visually stable. */
 #view-settings [onclick="logout()"],
@@ -4004,6 +4157,9 @@ body.dark #kas-list .tx-item .tx-sub span {
     -webkit-text-fill-color: var(--color-blue-93c5fd) ;
 }
 
+
+/* ---- Consolidated style block 32 ---- */
+
 /* Transaction text must remain readable in both themes. */
 #kas-list .tx-item .tx-title { color: var(--color-ink) ; }
 #kas-list .tx-item .tx-sub { color: var(--color-slate) ; }
@@ -4018,6 +4174,9 @@ body.dark #kas-list .tx-item .tx-sub span { color: var(--color-blue-93c5fd) ; -w
 
 /* Logout control stays above settings surfaces and is always interactive. */
 #view-settings button[onclick="logout()"] { position: relative ; z-index: 999 ; pointer-events: auto ; opacity: 1 ; visibility: visible ; }
+
+
+/* ---- Consolidated style block 33 ---- */
 
 /* ============================================================
    DASHBOARD / SAAS PROFESSIONAL V4
@@ -4129,6 +4288,9 @@ body.dark #kas-list .tx-item .tx-sub span { color: var(--color-blue-93c5fd) ; -w
   .dashboard-stat-card,.section-action,.dashboard-search{transition:none}
 }
 
+
+/* ---- Consolidated style block 34 ---- */
+
 @media screen and (min-width:901px){
   .desktop-sidebar{background:var(--color-neutral-f8fafc);border-right:1px solid var(--color-neutral-e2e8f0);backdrop-filter:none;-webkit-backdrop-filter:none}
   .desktop-brand{padding: var(--space-20) var(--space-18);border-bottom:1px solid var(--color-neutral-e2e8f0)}
@@ -4143,6 +4305,9 @@ body.dark #kas-list .tx-item .tx-sub span { color: var(--color-blue-93c5fd) ; -w
 @media screen and (max-width:900px){
   .desktop-nav-item span svg{stroke-width:1.75}
 }
+
+
+/* ---- Consolidated style block 35 ---- */
 
 /* ============================================================
    DARK MODE FIX V5
@@ -4322,6 +4487,9 @@ body.dark .statusbar{
 }
 
 /* Keep login dark-mode styling untouched by the dashboard patch. */
+
+
+/* ---- Consolidated style block 36 ---- */
 
 /* ==========================================================
    MODULE DARK MODE — comprehensive contrast correction
@@ -4625,189 +4793,110 @@ button:hover,
 
 
 /* =========================================================
-   MOTION SYSTEM
-   Smooth, subtle, human-feeling interactions.
+   FINAL GLASS POLISH
+   Efek kaca tipis, teks tetap kontras, border sangat halus.
+   Tidak mengubah struktur HTML/JavaScript.
    ========================================================= */
-
 :root {
-    --motion-fast: 180ms;
-    --motion-base: 260ms;
-    --motion-slow: 360ms;
-    --motion-ease: cubic-bezier(.2, .75, .25, 1);
-    --motion-soft: cubic-bezier(.22, .61, .36, 1);
+    --glass-bg: rgba(248, 250, 252, 0.72);
+    --glass-card: rgba(255, 255, 255, 0.76);
+    --glass-border: rgba(148, 163, 184, 0.22);
+    --glass-shadow: 0 1px 2px rgba(15, 23, 42, 0.035),
+                    0 8px 24px rgba(15, 23, 42, 0.055);
+    --input-bg: rgba(255, 255, 255, 0.82);
 }
 
-html {
-    scroll-behavior: smooth;
+body.dark {
+    --glass-bg: rgba(15, 23, 42, 0.48);
+    --glass-card: rgba(30, 41, 59, 0.56);
+    --glass-border: rgba(255, 255, 255, 0.10);
+    --glass-shadow: 0 1px 2px rgba(0, 0, 0, 0.16),
+                    0 10px 28px rgba(0, 0, 0, 0.16);
+    --input-bg: rgba(15, 23, 42, 0.42);
 }
 
-button,
-[role="button"],
-.tab,
+/* Kaca tipis: jangan terlalu putih/pekat */
+.phone,
+.login-overlay {
+    background: var(--glass-bg);
+    backdrop-filter: blur(14px) saturate(110%);
+    -webkit-backdrop-filter: blur(14px) saturate(110%);
+}
+
 .card,
 .stat-card,
-.row-item,
-.tx-item,
-.student-row,
-.task-item,
-.announce-item,
-.report-item,
-.piket-jadwal-row,
-.search-box,
-.summary-box,
-.modal,
 .login-card,
-.field input,
-.field select,
-.field textarea {
-    transition-timing-function: var(--motion-ease);
+.toast,
+.btn-ghost,
+.theme-btn {
+    background: var(--glass-card);
+    border-color: var(--glass-border);
+    box-shadow: var(--glass-shadow);
 }
 
-/* Buttons: responsive without the "robotic" snap. */
+/* Border konten dibuat sangat tipis agar tidak terlihat kaku */
+.card,
+.stat-card,
+.login-card,
+.toast,
+.btn-ghost,
+.theme-btn,
+.login-card .field input {
+    border-width: 1px;
+    border-style: solid;
+}
+
+/* Teks utama tetap pekat dan mudah dibaca */
+.login-welcome,
+.pagehead h1,
+.section-title,
+.row-title,
+.tx-title,
+.stat-value,
+.login-card .field label,
+.verification-title {
+    color: var(--text-main);
+}
+
+/* Teks sekunder tetap jelas di atas permukaan kaca */
+.login-sub,
+.pagehead p,
+.row-sub,
+.tx-sub,
+.empty,
+.login-card .field-hint,
+.verification-copy,
+.stat-label {
+    color: var(--text-soft);
+}
+
+/* Interaksi halus, tanpa gerakan berlebihan */
+.card,
+.stat-card,
 .btn,
 .fab-add,
+.tab,
 .theme-btn,
-.cal-nav-btn,
-.day-chip,
-.toggle-btn,
-.roster-choice-btn,
-.mode-btn,
-.section-link {
+.cal-day,
+.tx-item {
     transition:
-        transform var(--motion-fast) var(--motion-ease),
-        background-color var(--motion-base) ease,
-        border-color var(--motion-base) ease,
-        box-shadow var(--motion-base) ease,
-        color var(--motion-base) ease,
-        opacity var(--motion-base) ease;
+        transform 180ms cubic-bezier(.22, 1, .36, 1),
+        background-color 180ms ease,
+        border-color 180ms ease,
+        box-shadow 180ms ease,
+        color 180ms ease;
 }
 
-@media (hover: hover) {
-    .btn:hover,
-    .fab-add:hover,
-    .theme-btn:hover,
-    .cal-nav-btn:hover,
-    .day-chip:hover,
-    .toggle-btn:hover,
-    .roster-choice-btn:hover,
-    .mode-btn:hover,
-    .section-link:hover {
-        transform: translateY(-1px) scale(1.005);
-    }
-
-    .card:hover,
-    .stat-card:hover,
-    .piket-jadwal-row:hover,
-    .summary-box:hover {
-        transform: translateY(-1px);
-        border-color: color-mix(in srgb, var(--primary) 18%, var(--glass-border));
-    }
-}
-
-.btn:active,
-.fab-add:active,
-.theme-btn:active,
-.cal-nav-btn:active,
-.day-chip:active,
-.toggle-btn:active,
-.roster-choice-btn:active,
-.mode-btn:active,
-.section-link:active {
-    transform: scale(.985);
-}
-
-/* Page switching: short and soft, with no harsh movement. */
-.view.active {
-    animation: viewEnter var(--motion-base) var(--motion-soft);
-}
-
-@keyframes viewEnter {
-    from {
-        opacity: 0;
-        transform: translateY(4px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Toasts: arrive gently instead of dropping from far below. */
-.toast {
-    animation: toastEnter 340ms var(--motion-soft);
-}
-
-@keyframes toastEnter {
-    from {
-        opacity: 0;
-        transform: translateY(18px) scale(.985);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
-.toast.hiding {
-    opacity: 0;
-    transform: translateY(8px) scale(.99);
-    transition:
-        opacity 220ms ease,
-        transform 260ms var(--motion-soft);
-}
-
-/* Login logo: replace the stiff wiggle with a barely noticeable float. */
-.login-logo {
-    animation: logoFloat 6s ease-in-out infinite;
-    transform: none;
-}
-
-@keyframes logoFloat {
-    0%, 100% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-3px);
-    }
-}
-
-/* Cards and list rows settle naturally. */
-.card,
-.stat-card,
-.summary-box,
-.piket-jadwal-row,
-.login-card,
-.modal {
-    transition:
-        transform var(--motion-base) var(--motion-ease),
-        border-color var(--motion-base) ease,
-        box-shadow var(--motion-base) ease,
-        background-color var(--motion-base) ease;
-}
-
-.announce-item,
-.task-item,
-.student-row,
-.tx-item,
-.report-item {
-    transition:
-        background-color var(--motion-base) ease,
-        transform var(--motion-base) var(--motion-ease);
-}
-
-/* Keep scrolling native; only the visual movement is softened. */
 @media (prefers-reduced-motion: reduce) {
-    html {
-        scroll-behavior: auto;
-    }
-
-    *,
-    *::before,
-    *::after {
-        animation-duration: .01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: .01ms !important;
-        scroll-behavior: auto !important;
+    .card,
+    .stat-card,
+    .btn,
+    .fab-add,
+    .tab,
+    .theme-btn,
+    .cal-day,
+    .tx-item {
+        transition: none;
     }
 }
 
@@ -9661,8 +9750,29 @@ window.todayKey = todayKey;
 })();
 </script>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 </body>
 
 <!-- Kelasku compatibility patch: resilient Firestore sync + legacy fallback -->
 </html>
+
+
+
+
+
+
+
+
 
