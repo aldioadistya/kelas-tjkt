@@ -5371,19 +5371,6 @@ X TJKT 1
   <button class="fab-add admin-only" onclick="openKasAddModal()">+ Catat Transaksi
 </button>
 </div>
-<div class="section">
-  <div class="section-head">
-    <div class="section-title">
-      Riwayat Transaksi
-    </div>
-    <div class="section-link" onclick="openExportModal()">
-      Export
-    </div>
-  </div>
-  <div class="card" id="kas-list">
-  </div>
-</div>
-</div>
 <div class="section kas-siswa-section">
   <div class="section-head">
     <div>
@@ -5400,7 +5387,19 @@ X TJKT 1
 <div id="kas-folder-list" class="kas-folder-list">
 </div>
 </div>
-
+<div class="section">
+  <div class="section-head">
+    <div class="section-title">
+      Riwayat Transaksi
+    </div>
+    <div class="section-link" onclick="openExportModal()">
+      Export
+    </div>
+  </div>
+  <div class="card" id="kas-list">
+  </div>
+</div>
+</div>
 <div class="view" id="view-hp">
   <div class="pagehead">
     <h1>
@@ -10488,17 +10487,41 @@ Setelan
   function goTo(name) {
       const target = document.getElementById('view-' + name);
       if (!target) return;
-      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+
+      // Reset SEMUA view secara eksplisit.
+      // Ini mencegah konten menu Kas (termasuk Kas Siswa)
+      // tertinggal ketika berpindah ke HP, Setelan, atau menu lain.
+      document.querySelectorAll('.view').forEach(v => {
+          v.classList.remove('active');
+          v.style.display = 'none';
+          v.setAttribute('aria-hidden', 'true');
+      });
+
+      // Hanya view tujuan yang boleh tampil.
       target.classList.add('active');
+      target.style.display = 'block';
+      target.removeAttribute('aria-hidden');
+
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
       const tab = document.querySelector('.tab[data-tab="' + name + '"]');
       if (tab) tab.classList.add('active');
-      document.querySelectorAll('.desktop-nav-btn, .desktop-nav-item').forEach(t => t.classList.remove('active'));
-      const desktopTab = document.querySelector('.desktop-nav-btn[data-desktop-tab="' + name + '"], .desktop-nav-item[data-tab="' + name + '"]');
+
+      document.querySelectorAll('.desktop-nav-btn, .desktop-nav-item')
+          .forEach(t => t.classList.remove('active'));
+
+      const desktopTab = document.querySelector(
+          '.desktop-nav-btn[data-desktop-tab="' + name + '"], ' +
+          '.desktop-nav-item[data-tab="' + name + '"]'
+      );
       if (desktopTab) desktopTab.classList.add('active');
+
       const content = document.querySelector('.content');
       if (content) content.scrollTop = 0;
-      if (name === 'settings' && typeof renderAccountList === 'function') renderAccountList();
+
+      if (name === 'settings' && typeof renderAccountList === 'function') {
+          renderAccountList();
+      }
+
       if (name === 'jadwal') {
           const mode = state && state.jadwalMode === 'piket' ? 'piket' : 'pelajaran';
           try {
@@ -10509,9 +10532,11 @@ Setelan
               renderJadwalList();
           }
       }
-      // Pastikan folder Kas dan kalender yang relevan tidak tersimpan dalam keadaan tertutup.
+
+      // Folder Kas dan kalender tetap memakai perilaku yang sudah ada.
       autoOpenKasAndCalendarPanels(name);
   }
+
   function openModal(name) { document.getElementById('modal-' + name).classList.add('open'); }
   function closeModal(name) { document.getElementById('modal-' + name).classList.remove('open'); }
   // ============================================================
