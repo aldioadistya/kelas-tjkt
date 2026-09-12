@@ -1,1406 +1,308 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Kelasku — X TJKT 1</title>
-    <link rel="manifest" href="manifest.json">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#0F172A">
-    
-    <!-- Typography & Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- Firebase SDK (Opsional jika ingin menghubungkan ke database online) -->
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-
-    <style>
-    /* ==========================================================================
-       1. DESIGN SYSTEM & TOKENS
-       ========================================================================== */
-    :root {
-        --bg-main: #f8fafc;
-        --bg-gradient: linear-gradient(135deg, #eef2ff 0%, #f8fafc 50%, #fae8ff 100%);
-        --text-main: #0f172a;
-        --text-soft: #64748b;
-        --text-muted: #94a3b8;
-        
-        --primary: #4f46e5;
-        --primary-gradient: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
-        --primary-soft: rgba(79, 70, 229, 0.1);
-        
-        --teal: #10b981;
-        --teal-soft: rgba(16, 185, 129, 0.12);
-        --rose: #f43f5e;
-        --rose-soft: rgba(244, 63, 94, 0.12);
-        --violet: #8b5cf6;
-        --violet-soft: rgba(139, 92, 246, 0.12);
-        --amber: #f59e0b;
-        --amber-soft: rgba(245, 158, 11, 0.12);
-
-        /* Glassmorphism Tokens */
-        --glass-bg: rgba(255, 255, 255, 0.72);
-        --glass-card: rgba(255, 255, 255, 0.82);
-        --glass-border: rgba(255, 255, 255, 0.6);
-        --glass-shadow: 0 8px 32px rgba(15, 23, 42, 0.05), 0 1px 3px rgba(15, 23, 42, 0.03);
-        --input-bg: rgba(255, 255, 255, 0.85);
-
-        /* Typography */
-        --font-sans: 'Plus Jakarta Sans', sans-serif;
-        --font-display: 'Sora', sans-serif;
-
-        /* Radius System */
-        --radius-xl: 24px;
-        --radius-lg: 18px;
-        --radius-md: 12px;
-        --radius-sm: 8px;
-        --radius-pill: 9999px;
-
-        /* Fluid Timing Curves */
-        --ease-out-fluid: cubic-bezier(0.16, 1, 0.3, 1);
-        --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-        --ease-standard: cubic-bezier(0.2, 0, 0, 1);
-        --transition-fast: 0.18s var(--ease-out-fluid);
-        --transition-normal: 0.32s var(--ease-out-fluid);
-        --transition-bounce: 0.42s var(--ease-spring);
-    }
-
-    body.dark {
-        --bg-main: #090d16;
-        --bg-gradient: linear-gradient(135deg, #090d16 0%, #0f172a 50%, #1e1035 100%);
-        --text-main: #f8fafc;
-        --text-soft: #94a3b8;
-        --text-muted: #64748b;
-        
-        --glass-bg: rgba(15, 23, 42, 0.75);
-        --glass-card: rgba(30, 41, 59, 0.65);
-        --glass-border: rgba(255, 255, 255, 0.08);
-        --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
-        --input-bg: rgba(15, 23, 42, 0.7);
-    }
-
-    /* ==========================================================================
-       2. BASE & RESET
-       ========================================================================== */
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-        -webkit-tap-highlight-color: transparent;
-        font-family: var(--font-sans);
-    }
-
-    html, body {
-        height: 100%;
-        overflow: hidden;
-        background: var(--bg-main);
-    }
-
-    body {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: var(--bg-gradient);
-        color: var(--text-main);
-        transition: background-color 0.4s var(--ease-standard);
-    }
-
-    /* Ambient Background Mesh */
-    .ambient-mesh {
-        position: fixed;
-        inset: 0;
-        z-index: 0;
-        pointer-events: none;
-        overflow: hidden;
-    }
-
-    .blob {
-        position: absolute;
-        border-radius: 50%;
-        filter: blur(80px);
-        opacity: 0.35;
-        animation: floatMesh 18s ease-in-out infinite alternate;
-        will-change: transform;
-    }
-
-    .blob-1 { top: -10%; left: -10%; width: 340px; height: 340px; background: #6366f1; }
-    .blob-2 { bottom: -10%; right: -10%; width: 380px; height: 380px; background: #a855f7; animation-delay: -6s; }
-    .blob-3 { top: 40%; left: 25%; width: 280px; height: 280px; background: #3b82f6; animation-delay: -12s; }
-
-    @keyframes floatMesh {
-        0% { transform: translate(0, 0) scale(1); }
-        50% { transform: translate(30px, -20px) scale(1.08); }
-        100% { transform: translate(-20px, 30px) scale(0.95); }
-    }
-
-    /* ==========================================================================
-       3. CONTAINER & LAYOUT
-       ========================================================================== */
-    .phone {
-        width: 100%;
-        max-width: 430px;
-        height: 100vh;
-        max-height: 920px;
-        background: var(--glass-bg);
-        backdrop-filter: blur(24px) saturate(180%);
-        -webkit-backdrop-filter: blur(24px) saturate(180%);
-        border: 1px solid var(--glass-border);
-        border-radius: var(--radius-xl);
-        box-shadow: var(--glass-shadow);
-        display: flex;
-        flex-direction: column;
-        position: relative;
-        z-index: 10;
-        overflow: hidden;
-        transition: border-color 0.3s ease, background 0.3s ease;
-    }
-
-    @media (max-width: 480px) {
-        .phone {
-            max-height: 100vh;
-            border-radius: 0;
-            border: none;
-            width: 100vw;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kelasku - Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            darkBg: '#090d16',
+            darkSidebar: '#0d1322',
+            darkCard: '#111827',
+            darkCardHover: '#161f33',
+            darkBorder: '#1f293d',
+            brandBlue: '#2563eb',
+          }
         }
+      }
     }
-
-    /* Statusbar Header */
-    .statusbar {
-        height: 52px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0 20px;
-        font-size: 13px;
-        font-weight: 700;
-        color: var(--text-main);
-        flex-shrink: 0;
-        z-index: 30;
-        background: rgba(255, 255, 255, 0.05);
-        border-bottom: 1px solid var(--glass-border);
-    }
-
-    .statusbar-right {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .theme-btn {
-        background: var(--glass-card);
-        border: 1px solid var(--glass-border);
-        width: 34px;
-        height: 34px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        font-size: 15px;
-        color: var(--text-main);
-        transition: transform var(--transition-bounce), background var(--transition-fast);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-    }
-
-    .theme-btn:active {
-        transform: scale(0.92);
-    }
-
-    /* Screen Body */
-    .screen {
-        flex: 1;
-        overflow-y: auto;
-        overflow-x: hidden;
-        padding: 14px 16px 24px;
-        scrollbar-width: thin;
-        scrollbar-color: var(--primary) transparent;
-        -webkit-overflow-scrolling: touch;
-        scroll-behavior: smooth;
-    }
-
-    .screen::-webkit-scrollbar {
-        width: 4px;
-    }
-    .screen::-webkit-scrollbar-thumb {
-        background: var(--primary);
-        border-radius: var(--radius-pill);
-    }
-
-    /* ==========================================================================
-       4. ANIMATED VIEWS & TRANSITIONS
-       ========================================================================== */
-    .view {
-        display: none;
-        opacity: 0;
-        transform: translate3d(0, 10px, 0) scale(0.985);
-        transition: opacity 0.32s var(--ease-out-fluid), transform 0.32s var(--ease-out-fluid);
-        will-change: opacity, transform;
-    }
-
-    .view.active {
-        display: block;
-        opacity: 1;
-        transform: translate3d(0, 0, 0) scale(1);
-    }
-
-    /* ==========================================================================
-       5. COMPONENTS & CARDS
-       ========================================================================== */
-    .card {
-        background: var(--glass-card);
-        border: 1px solid var(--glass-border);
-        border-radius: var(--radius-lg);
-        padding: 16px;
-        box-shadow: var(--glass-shadow);
-        transition: transform var(--transition-fast), box-shadow var(--transition-fast);
-        margin-bottom: 12px;
-    }
-
-    /* Hero Banner */
-    .hero {
-        background: var(--primary-gradient);
-        border-radius: var(--radius-xl);
-        padding: 22px 20px;
-        color: #ffffff;
-        position: relative;
-        overflow: hidden;
-        box-shadow: 0 12px 28px rgba(79, 70, 229, 0.3);
-        margin-bottom: 14px;
-    }
-
-    .hero::before {
-        content: '';
-        position: absolute;
-        top: -40%;
-        right: -20%;
-        width: 180px;
-        height: 180px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.15);
-        filter: blur(20px);
-        pointer-events: none;
-    }
-
-    .hero-top {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        position: relative;
-        z-index: 2;
-    }
-
-    .hero-eyebrow {
-        font-size: 11px;
-        opacity: 0.85;
-        font-weight: 600;
-        letter-spacing: 0.5px;
-        text-transform: uppercase;
-    }
-
-    .hero-name {
-        font-family: var(--font-display);
-        font-size: 20px;
-        font-weight: 800;
-        margin-top: 2px;
-    }
-
-    .avatar {
-        width: 44px;
-        height: 44px;
-        border-radius: var(--radius-md);
-        background: rgba(255, 255, 255, 0.2);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-family: var(--font-display);
-        font-weight: 800;
-        font-size: 15px;
-        color: #ffffff;
-        backdrop-filter: blur(8px);
-    }
-
-    .hero-tags {
-        display: flex;
-        gap: 6px;
-        margin-top: 16px;
-        flex-wrap: wrap;
-        position: relative;
-        z-index: 2;
-    }
-
-    .htag {
-        background: rgba(255, 255, 255, 0.18);
-        border: 1px solid rgba(255, 255, 255, 0.25);
-        padding: 5px 12px;
-        border-radius: var(--radius-pill);
-        font-size: 10.5px;
-        font-weight: 600;
-        color: #ffffff;
-        backdrop-filter: blur(4px);
-    }
-
-    /* Stat Grid */
-    .stat-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-        margin-bottom: 18px;
-    }
-
-    .stat-card {
-        background: var(--glass-card);
-        border: 1px solid var(--glass-border);
-        border-radius: var(--radius-lg);
-        padding: 14px;
-        box-shadow: var(--glass-shadow);
-        transition: transform var(--transition-fast);
-        cursor: pointer;
-    }
-
-    .stat-card:active {
-        transform: scale(0.97);
-    }
-
-    .stat-top {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .stat-icon {
-        width: 32px;
-        height: 32px;
-        border-radius: var(--radius-sm);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 15px;
-        flex-shrink: 0;
-    }
-
-    .stat-label {
-        font-size: 10px;
-        color: var(--text-soft);
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.4px;
-    }
-
-    .stat-value {
-        font-family: var(--font-display);
-        font-size: 16px;
-        font-weight: 800;
-        color: var(--text-main);
-        margin-top: 6px;
-    }
-
-    /* Section Headings */
-    .section {
-        margin-bottom: 20px;
-    }
-
-    .section-head {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 12px;
-        padding: 0 2px;
-    }
-
-    .section-title {
-        font-family: var(--font-display);
-        font-size: 15px;
-        font-weight: 800;
-        color: var(--text-main);
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .section-link {
-        font-size: 11px;
-        color: var(--primary);
-        font-weight: 700;
-        cursor: pointer;
-        padding: 4px 10px;
-        border-radius: var(--radius-pill);
-        background: var(--primary-soft);
-        transition: background var(--transition-fast);
-    }
-
-    .section-link:hover {
-        background: rgba(79, 70, 229, 0.18);
-    }
-
-    /* Day Chips Filter */
-    .chip-group {
-        display: flex;
-        gap: 8px;
-        overflow-x: auto;
-        padding-bottom: 8px;
-        margin-bottom: 14px;
-        scrollbar-width: none;
-    }
-
-    .chip-group::-webkit-scrollbar {
-        display: none;
-    }
-
-    .chip {
-        padding: 7px 16px;
-        border-radius: var(--radius-pill);
-        background: var(--glass-card);
-        border: 1px solid var(--glass-border);
-        font-size: 12px;
-        font-weight: 700;
-        color: var(--text-soft);
-        cursor: pointer;
-        white-space: nowrap;
-        transition: all var(--transition-fast);
-    }
-
-    .chip.active {
-        background: var(--primary);
-        color: #ffffff;
-        border-color: var(--primary);
-        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
-    }
-
-    /* Schedule Items */
-    .item-card {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 12px 14px;
-        background: var(--glass-card);
-        border: 1px solid var(--glass-border);
-        border-radius: var(--radius-md);
-        margin-bottom: 10px;
-        transition: transform var(--transition-fast);
-    }
-
-    .item-card:active {
-        transform: scale(0.98);
-    }
-
-    .item-left {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }
-
-    .item-time {
-        font-size: 11px;
-        font-weight: 700;
-        color: var(--primary);
-        background: var(--primary-soft);
-        padding: 4px 8px;
-        border-radius: var(--radius-sm);
-        white-space: nowrap;
-    }
-
-    .item-title {
-        font-size: 13px;
-        font-weight: 700;
-        color: var(--text-main);
-    }
-
-    .item-sub {
-        font-size: 11px;
-        color: var(--text-soft);
-        margin-top: 2px;
-    }
-
-    /* Task & Checklist Items */
-    .task-item {
-        display: flex;
-        align-items: flex-start;
-        gap: 12px;
-        padding: 14px;
-        background: var(--glass-card);
-        border: 1px solid var(--glass-border);
-        border-radius: var(--radius-md);
-        margin-bottom: 10px;
-        transition: background var(--transition-fast);
-    }
-
-    .task-checkbox {
-        width: 20px;
-        height: 20px;
-        border-radius: 6px;
-        border: 2px solid var(--text-muted);
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-top: 2px;
-        flex-shrink: 0;
-        transition: all var(--transition-bounce);
-    }
-
-    .task-item.done .task-checkbox {
-        background: var(--teal);
-        border-color: var(--teal);
-    }
-
-    .task-item.done .task-checkbox::after {
-        content: '✓';
-        color: #ffffff;
-        font-size: 12px;
-        font-weight: 800;
-    }
-
-    .task-item.done .task-title {
-        text-decoration: line-through;
-        color: var(--text-muted);
-    }
-
-    .task-title {
-        font-size: 13.5px;
-        font-weight: 700;
-        color: var(--text-main);
-    }
-
-    .task-meta {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin-top: 4px;
-    }
-
-    .badge {
-        font-size: 10px;
-        font-weight: 700;
-        padding: 2px 8px;
-        border-radius: var(--radius-pill);
-        text-transform: uppercase;
-    }
-
-    .badge-rose { background: var(--rose-soft); color: var(--rose); }
-    .badge-amber { background: var(--amber-soft); color: var(--amber); }
-    .badge-teal { background: var(--teal-soft); color: var(--teal); }
-
-    /* Interactive Buttons */
-    .btn {
-        border: none;
-        border-radius: var(--radius-md);
-        padding: 10px 18px;
-        font-weight: 700;
-        font-size: 13px;
-        cursor: pointer;
-        transition: transform var(--transition-bounce), box-shadow var(--transition-fast), background var(--transition-fast);
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        min-height: 42px;
-    }
-
-    .btn:active {
-        transform: scale(0.96);
-    }
-
-    .btn-primary {
-        background: var(--primary-gradient);
-        color: #ffffff;
-        box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
-    }
-
-    .btn-primary:hover {
-        box-shadow: 0 6px 18px rgba(79, 70, 229, 0.45);
-    }
-
-    .btn-ghost {
-        background: var(--glass-card);
-        border: 1px solid var(--glass-border);
-        color: var(--text-main);
-    }
-
-    /* Tab Bar Navigation */
-    .tabbar {
-        display: flex;
-        background: var(--glass-bg);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border-top: 1px solid var(--glass-border);
-        padding: 8px 6px 14px;
-        flex-shrink: 0;
-        z-index: 30;
-    }
-
-    .tab {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 4px;
-        background: none;
-        border: none;
-        cursor: pointer;
-        color: var(--text-soft);
-        font-size: 10.5px;
-        font-weight: 700;
-        padding: 6px 0;
-        transition: color var(--transition-fast);
-        position: relative;
-    }
-
-    .tab svg {
-        width: 22px;
-        height: 22px;
-        stroke: currentColor;
-        fill: none;
-        stroke-width: 2.2;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-        transition: transform var(--transition-bounce), stroke var(--transition-fast);
-    }
-
-    .tab.active {
-        color: var(--primary);
-    }
-
-    .tab.active svg {
-        transform: translateY(-2px) scale(1.1);
-    }
-
-    /* Modal Bottom Sheet */
-    .modal-bg {
-        position: absolute;
-        inset: 0;
-        background: rgba(15, 23, 42, 0.4);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-        display: none;
-        align-items: flex-end;
-        z-index: 100;
-        opacity: 0;
-        transition: opacity 0.28s var(--ease-out-fluid);
-    }
-
-    .modal-bg.open {
-        display: flex;
-        opacity: 1;
-    }
-
-    .modal {
-        background: var(--glass-card);
-        backdrop-filter: blur(24px);
-        -webkit-backdrop-filter: blur(24px);
-        border: 1px solid var(--glass-border);
-        width: 100%;
-        border-radius: 28px 28px 0 0;
-        padding: 16px 20px 28px;
-        transform: translate3d(0, 100%, 0);
-        transition: transform 0.38s var(--ease-out-fluid);
-        max-height: 85vh;
-        overflow-y: auto;
-        box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.15);
-    }
-
-    .modal-bg.open .modal {
-        transform: translate3d(0, 0, 0);
-    }
-
-    .modal-drag-handle {
-        width: 38px;
-        height: 4px;
-        border-radius: var(--radius-pill);
-        background: var(--text-muted);
-        opacity: 0.4;
-        margin: 0 auto 16px;
-    }
-
-    /* Input Fields */
-    .field {
-        margin-bottom: 14px;
-    }
-
-    .field label {
-        font-size: 11px;
-        font-weight: 800;
-        color: var(--text-soft);
-        display: block;
-        margin-bottom: 6px;
-        text-transform: uppercase;
-        letter-spacing: 0.4px;
-    }
-
-    .field input,
-    .field select,
-    .field textarea {
-        width: 100%;
-        border: 1px solid var(--glass-border);
-        border-radius: var(--radius-md);
-        padding: 12px 14px;
-        font-size: 13.5px;
-        background: var(--input-bg);
-        color: var(--text-main);
-        outline: none;
-        transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
-    }
-
-    .field input:focus,
-    .field select:focus,
-    .field textarea:focus {
-        border-color: var(--primary);
-        box-shadow: 0 0 0 3px var(--primary-soft);
-    }
-
-    /* Toast Notification */
-    .toast-container {
-        position: absolute;
-        bottom: 84px;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 120;
-        width: calc(100% - 32px);
-        max-width: 380px;
-        pointer-events: none;
-    }
-
-    .toast {
-        background: var(--glass-card);
-        backdrop-filter: blur(16px);
-        border: 1px solid var(--glass-border);
-        border-radius: var(--radius-lg);
-        padding: 12px 16px;
-        margin-bottom: 8px;
-        box-shadow: var(--glass-shadow);
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        font-size: 12.5px;
-        font-weight: 700;
-        pointer-events: auto;
-        animation: toastIn 0.42s var(--ease-spring);
-        transition: opacity 0.25s, transform 0.25s;
-        color: var(--text-main);
-    }
-
-    @keyframes toastIn {
-        from { opacity: 0; transform: translate3d(0, 20px, 0) scale(0.92); }
-        to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
-    }
-    </style>
+  </script>
 </head>
-<body>
+<body class="bg-darkBg text-slate-200 font-sans antialiased min-h-screen flex">
 
-    <!-- Ambient Floating Background Blobs -->
-    <div class="ambient-mesh">
-        <div class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
-        <div class="blob blob-3"></div>
-    </div>
-
-    <!-- Main Phone App Container -->
-    <div class="phone">
-        <!-- Status Bar -->
-        <header class="statusbar">
-            <span id="clock">00:00</span>
-            <div class="statusbar-right">
-                <button class="theme-btn" id="theme-toggle" aria-label="Toggle Theme">🌙</button>
-            </div>
-        </header>
-
-        <!-- Dynamic Screen Content -->
-        <main class="screen">
-            
-            <!-- VIEW 1: BERANDA -->
-            <section id="view-home" class="view active">
-                <div class="hero">
-                    <div class="hero-top">
-                        <div>
-                            <div class="hero-eyebrow">Selamat Datang 👋</div>
-                            <div class="hero-name">X TJKT 1</div>
-                        </div>
-                        <div class="avatar">10</div>
-                    </div>
-                    <div class="hero-tags">
-                        <span class="htag">Jaringan & Komputer</span>
-                        <span class="htag">2026/2027</span>
-                    </div>
-                </div>
-
-                <!-- Quick Stats Grid -->
-                <div class="stat-grid">
-                    <div class="stat-card" onclick="switchTab('view-jadwal')">
-                        <div class="stat-top">
-                            <div class="stat-icon" style="background: var(--violet-soft); color: var(--violet);">📅</div>
-                            <span class="stat-label">Jadwal</span>
-                        </div>
-                        <div class="stat-value" id="home-stat-jadwal">4 Mapel</div>
-                    </div>
-                    <div class="stat-card" onclick="switchTab('view-piket')">
-                        <div class="stat-top">
-                            <div class="stat-icon" style="background: var(--teal-soft); color: var(--teal);">🧹</div>
-                            <span class="stat-label">Piket Hari Ini</span>
-                        </div>
-                        <div class="stat-value" id="home-stat-piket">6 Siswa</div>
-                    </div>
-                    <div class="stat-card" onclick="switchTab('view-tugas')">
-                        <div class="stat-top">
-                            <div class="stat-icon" style="background: var(--rose-soft); color: var(--rose);">📝</div>
-                            <span class="stat-label">Tugas Pending</span>
-                        </div>
-                        <div class="stat-value" id="home-stat-tugas">2 Tugas</div>
-                    </div>
-                    <div class="stat-card" onclick="switchTab('view-kas')">
-                        <div class="stat-top">
-                            <div class="stat-icon" style="background: var(--amber-soft); color: var(--amber);">💰</div>
-                            <span class="stat-label">Saldo Kas</span>
-                        </div>
-                        <div class="stat-value" id="home-stat-kas">Rp 350.000</div>
-                    </div>
-                </div>
-
-                <!-- Announcements Section -->
-                <div class="section">
-                    <div class="section-head">
-                        <h2 class="section-title">📌 Pengumuman Kelas</h2>
-                        <span class="section-link" onclick="openAddAnnouncementModal()">+ Tambah</span>
-                    </div>
-                    <div id="announcement-list">
-                        <!-- Rendered by JS -->
-                    </div>
-                </div>
-            </section>
-
-            <!-- VIEW 2: JADWAL MAPEL -->
-            <section id="view-jadwal" class="view">
-                <div class="section-head">
-                    <h2 class="section-title">📅 Jadwal Pelajaran</h2>
-                </div>
-                <div class="chip-group" id="jadwal-chips">
-                    <div class="chip active" onclick="renderJadwal('Senin', this)">Senin</div>
-                    <div class="chip" onclick="renderJadwal('Selasa', this)">Selasa</div>
-                    <div class="chip" onclick="renderJadwal('Rabu', this)">Rabu</div>
-                    <div class="chip" onclick="renderJadwal('Kamis', this)">Kamis</div>
-                    <div class="chip" onclick="renderJadwal('Jumat', this)">Jumat</div>
-                </div>
-                <div id="jadwal-container">
-                    <!-- Rendered by JS -->
-                </div>
-            </section>
-
-            <!-- VIEW 3: PIKET -->
-            <section id="view-piket" class="view">
-                <div class="section-head">
-                    <h2 class="section-title">🧹 Jadwal Piket Kebersihan</h2>
-                </div>
-                <div class="chip-group" id="piket-chips">
-                    <div class="chip active" onclick="renderPiket('Senin', this)">Senin</div>
-                    <div class="chip" onclick="renderPiket('Selasa', this)">Selasa</div>
-                    <div class="chip" onclick="renderPiket('Rabu', this)">Rabu</div>
-                    <div class="chip" onclick="renderPiket('Kamis', this)">Kamis</div>
-                    <div class="chip" onclick="renderPiket('Jumat', this)">Jumat</div>
-                </div>
-                <div class="card" id="piket-container">
-                    <!-- Rendered by JS -->
-                </div>
-            </section>
-
-            <!-- VIEW 4: TUGAS -->
-            <section id="view-tugas" class="view">
-                <div class="section-head">
-                    <h2 class="section-title">📝 PR & Tugas Sekolah</h2>
-                    <span class="section-link" onclick="openAddTaskModal()">+ Tugas Baru</span>
-                </div>
-                <div id="tugas-container">
-                    <!-- Rendered by JS -->
-                </div>
-            </section>
-
-            <!-- VIEW 5: KAS KELAS -->
-            <section id="view-kas" class="view">
-                <div class="hero" style="background: linear-gradient(135deg, #059669 0%, #10b981 100%); margin-bottom: 16px;">
-                    <div class="hero-eyebrow">Total Kas Kelas</div>
-                    <div class="hero-name" id="kas-total-display" style="font-size: 26px;">Rp 350.000</div>
-                    <div style="margin-top: 12px; display: flex; gap: 10px;">
-                        <button class="btn btn-ghost" style="background: rgba(255,255,255,0.2); color: #fff; border: none; font-size: 11px; padding: 6px 12px;" onclick="openAddKasModal()">+ Catat Transaksi</button>
-                    </div>
-                </div>
-
-                <div class="section-head">
-                    <h2 class="section-title">📜 Riwayat Transaksi</h2>
-                </div>
-                <div id="kas-history-container">
-                    <!-- Rendered by JS -->
-                </div>
-            </section>
-
-        </main>
-
-        <!-- Bottom Navigation Bar -->
-        <nav class="tabbar">
-            <button class="tab active" data-target="view-home">
-                <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
-                <span>Beranda</span>
-            </button>
-            <button class="tab" data-target="view-jadwal">
-                <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                <span>Jadwal</span>
-            </button>
-            <button class="tab" data-target="view-piket">
-                <svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
-                <span>Piket</span>
-            </button>
-            <button class="tab" data-target="view-tugas">
-                <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
-                <span>Tugas</span>
-            </button>
-            <button class="tab" data-target="view-kas">
-                <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"></rect><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
-                <span>Kas</span>
-            </button>
-        </nav>
-    </div>
-
-    <!-- Interactive Bottom Sheet Modal -->
-    <div class="modal-bg" id="app-modal">
-        <div class="modal">
-            <div class="modal-drag-handle"></div>
-            <h3 id="modal-title" style="font-family: var(--font-display); font-size: 16px; font-weight: 800; margin-bottom: 14px;">Detail Informasi</h3>
-            <div id="modal-body">
-                <!-- Content dynamically injected here -->
-            </div>
-            <div style="margin-top: 18px; display: flex; gap: 10px;" id="modal-actions">
-                <button class="btn btn-ghost" style="flex:1;" onclick="closeModal()">Batal</button>
-                <button class="btn btn-primary" style="flex:1;" id="modal-submit-btn">Simpan</button>
-            </div>
+  <!-- Sidebar -->
+  <aside class="w-64 bg-darkSidebar border-r border-darkBorder flex flex-col justify-between p-4 shrink-0">
+    <div>
+      <!-- Logo -->
+      <div class="flex items-center gap-3 px-2 py-3 mb-6">
+        <div class="w-10 h-10 rounded-xl bg-blue-600/20 border border-blue-500/40 flex items-center justify-center font-bold text-blue-400 text-xs shadow-inner">
+          LKS
         </div>
+        <div>
+          <h1 class="font-bold text-white text-lg leading-tight">Kelasku</h1>
+          <p class="text-xs text-slate-400">X TJKT 1</p>
+        </div>
+      </div>
+
+      <!-- Nav Menu -->
+      <nav class="space-y-1">
+        <a href="#" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium bg-blue-600/20 text-blue-400 border border-blue-500/30">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 00-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+          Beranda
+        </a>
+        <a href="#" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          Kas
+        </a>
+        <a href="#" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+          HP
+        </a>
+        <a href="#" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          Jadwal
+        </a>
+        <a href="#" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          Tugas
+        </a>
+        <a href="#" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          Laporan
+        </a>
+        <a href="#" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          Setelan
+        </a>
+      </nav>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 overflow-y-auto p-6 space-y-6">
+
+    <!-- Header Section -->
+    <header class="flex items-center justify-between gap-4">
+      <!-- Search Input -->
+      <div class="relative flex-1 max-w-xl">
+        <svg class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <input type="text" placeholder="Cari di Kelasku..." class="w-full bg-darkCard border border-darkBorder rounded-xl pl-10 pr-12 py-2 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500" />
+        <div class="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1 bg-slate-800 text-slate-400 text-[10px] px-1.5 py-0.5 rounded border border-slate-700">
+          ⌘ K
+        </div>
+      </div>
+
+      <!-- User Info -->
+      <div class="flex items-center gap-3">
+        <div class="text-right">
+          <p class="text-sm font-semibold text-white leading-tight">Aldio adistya</p>
+          <p class="text-xs text-slate-400">Super Admin</p>
+        </div>
+        <div class="w-9 h-9 rounded-full bg-slate-800 border border-slate-700 text-slate-200 font-semibold text-xs flex items-center justify-center">
+          AA
+        </div>
+      </div>
+    </header>
+
+    <!-- Banner Hero -->
+    <div class="relative bg-gradient-to-r from-blue-700 to-blue-600 rounded-2xl p-6 text-white overflow-hidden shadow-lg flex justify-between items-center">
+      <div class="space-y-2 z-10">
+        <p class="text-xs uppercase tracking-wide text-blue-200 font-medium">Ringkasan kelas</p>
+        <h2 class="text-2xl font-bold">Halo, Aldio adistya</h2>
+        <p class="text-sm text-blue-100">Kelola aktivitas kelas dengan cepat dari satu tempat.</p>
+        <div class="flex items-center gap-2 pt-2">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-800/40 rounded-lg text-xs border border-blue-400/30">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 00-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+            X TJKT 1
+          </span>
+          <span class="px-3 py-1 bg-blue-800/40 rounded-lg text-xs border border-blue-400/30">
+            Sabtu, 12 Sep
+          </span>
+        </div>
+      </div>
+      <div class="w-20 h-20 rounded-2xl bg-blue-500/30 border border-blue-300/30 flex items-center justify-center text-white text-xl font-bold shadow-inner">
+        AA
+      </div>
     </div>
 
-    <!-- Toast Notification Overlay -->
-    <div class="toast-container" id="toast-box"></div>
+    <!-- Stat Cards (5 Grid Columns) -->
+    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+      <!-- Card 1 -->
+      <div class="bg-darkCard border border-darkBorder rounded-xl p-4 flex flex-col justify-between h-28">
+        <div class="flex items-center justify-between text-slate-400 text-xs">
+          <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          <span>Keuangan</span>
+        </div>
+        <div>
+          <p class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">SALDO KAS</p>
+          <p class="text-lg font-bold text-white">Rp 50.000.000</p>
+        </div>
+      </div>
 
-    <!-- JavaScript Application Logic -->
-    <script>
-        /* ==========================================================================
-           1. INITIAL STATE & LOCAL STORAGE DATABASE
-           ========================================================================== */
-        const defaultData = {
-            announcements: [
-                { id: 1, title: 'Praktikum Jaringan Kabel Cat6', date: 'Hari ini, 09:00', text: 'Membawa crimping tool dan kabel UTP masing-masing untuk lab komputer.' },
-                { id: 2, title: 'Pembayaran Kas Minggu Ke-4', date: 'Kemarin', text: 'Harap melunasi iuran kas sebesar Rp 5.000 ke bendahara kelas.' }
-            ],
-            jadwal: {
-                'Senin': [
-                    { time: '07:00 - 08:30', title: 'Dasar-Dasar TJKT', sub: 'Pak Budi — Lab Komputer 1' },
-                    { time: '08:30 - 10:00', title: 'Matematika', sub: 'Bu Siti — Ruang 10' },
-                    { time: '10:15 - 11:45', title: 'Bahasa Indonesia', sub: 'Pak Ahmad — Ruang 10' },
-                    { time: '12:30 - 14:00', title: 'Informatika', sub: 'Bu Rina — Lab Komputer 2' }
-                ],
-                'Selasa': [
-                    { time: '07:00 - 09:15', title: 'Jaringan Komputer Dasar', sub: 'Pak Budi — Lab TJKT' },
-                    { time: '09:30 - 11:45', title: 'Bahasa Inggris', sub: 'Mrs. Dian — Ruang 10' },
-                    { time: '12:30 - 14:00', title: 'Pendidikan Agama', sub: 'Pak Hasan — Ruang 10' }
-                ],
-                'Rabu': [
-                    { time: '07:00 - 08:30', title: 'Fisika Terapan', sub: 'Bu Maya — Ruang 10' },
-                    { time: '08:30 - 10:00', title: 'Sejarah Indonesia', sub: 'Pak Eko — Ruang 10' },
-                    { time: '10:15 - 12:00', title: 'Pancasila', sub: 'Bu Ningsih — Ruang 10' }
-                ],
-                'Kamis': [
-                    { time: '07:00 - 09:30', title: 'Sistem Operasi & Linux', sub: 'Pak Rendy — Lab Server' },
-                    { time: '09:45 - 11:45', title: 'PJOK', sub: 'Pak Doni — Lapangan' }
-                ],
-                'Jumat': [
-                    { time: '07:00 - 08:30', title: 'Seni Budaya', sub: 'Bu Dewi — Ruang 10' },
-                    { time: '08:30 - 10:00', title: 'Kewirausahaan', sub: 'Pak Heru — Ruang 10' }
-                ]
-            },
-            piket: {
-                'Senin': ['Andi Pratama', 'Budi Santoso', 'Citra Dewi', 'Deni Rayhan', 'Eka Rahma'],
-                'Selasa': ['Fajar Nugraha', 'Gita Gutawa', 'Hadi Wijaya', 'Indah Permata', 'Joko Susilo'],
-                'Rabu': ['Kiki Amalia', 'Lutfi Hakim', 'Maya Kartika', 'Naufal Azhar', 'Olive Putri'],
-                'Kamis': ['Panji Ahmad', 'Qori Rizky', 'Rian Hidayat', 'Salsa Bila', 'Taufik Hidayat'],
-                'Jumat': ['Utami Dewi', 'Vina Pandu', 'Wahyu Utama', 'Yusuf Mansur', 'Zahra Annisa']
-            },
-            tugas: [
-                { id: 1, title: 'Laporan Crimping Kabel RJ45', subject: 'TJKT', date: 'Besok, 23:59', done: false, badge: 'rose' },
-                { id: 2, title: 'Soal Matematika Hal 45 No 1-10', subject: 'Matematika', date: 'Kamis', done: true, badge: 'teal' }
-            ],
-            kas: {
-                balance: 350000,
-                history: [
-                    { id: 1, title: 'Iuran Kas Mingguan', amount: 150000, type: 'in', date: '12 Sep 2026' },
-                    { id: 2, title: 'Beli Sapu & Alat Kebersihan', amount: 4500, type: 'out', date: '10 Sep 2026' },
-                    { id: 3, title: 'Kas Awal Bulan', amount: 245000, type: 'in', date: '01 Sep 2026' }
-                ]
-            }
-        };
+      <!-- Card 2 -->
+      <div class="bg-darkCard border border-darkBorder rounded-xl p-4 flex flex-col justify-between h-28">
+        <div class="flex items-center justify-between text-slate-400 text-xs">
+          <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+          <span>Hari Ini</span>
+        </div>
+        <div>
+          <p class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">TITIP HP</p>
+          <p class="text-lg font-bold text-white">0/36</p>
+        </div>
+      </div>
 
-        // Load data dari LocalStorage atau inisialisasi awal
-        let appData = JSON.parse(localStorage.getItem('kelasku_db')) || defaultData;
+      <!-- Card 3 -->
+      <div class="bg-darkCard border border-darkBorder rounded-xl p-4 flex flex-col justify-between h-28">
+        <div class="flex items-center justify-between text-slate-400 text-xs">
+          <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+          <span>Hari ini</span>
+        </div>
+        <div>
+          <p class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">PIKET HARI INI</p>
+          <p class="text-lg font-bold text-white">0/0</p>
+        </div>
+      </div>
 
-        function saveData() {
-            localStorage.setItem('kelasku_db', JSON.stringify(appData));
-            updateHomeStats();
-        }
+      <!-- Card 4 -->
+      <div class="bg-darkCard border border-darkBorder rounded-xl p-4 flex flex-col justify-between h-28">
+        <div class="flex items-center justify-between text-slate-400 text-xs">
+          <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          <span>Aktif</span>
+        </div>
+        <div>
+          <p class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">TUGAS AKTIF</p>
+          <p class="text-lg font-bold text-white">7</p>
+        </div>
+      </div>
 
-        /* ==========================================================================
-           2. UI CONTROLLERS & RENDERING
-           ========================================================================== */
-        // Jam Real-time
-        function updateClock() {
-            const now = new Date();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const mins = String(now.getMinutes()).padStart(2, '0');
-            document.getElementById('clock').textContent = `${hours}:${mins}`;
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
+      <!-- Card 5 -->
+      <div class="bg-darkCard border border-darkBorder rounded-xl p-4 flex flex-col justify-between h-28">
+        <div class="flex items-center justify-between text-slate-400 text-xs">
+          <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          <span>Perlu ditinjau</span>
+        </div>
+        <div>
+          <p class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">LAPORAN</p>
+          <p class="text-lg font-bold text-white">0</p>
+        </div>
+      </div>
+    </div>
 
-        // Theme Switcher (Dark/Light)
-        const themeBtn = document.getElementById('theme-toggle');
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'dark') {
-            document.body.classList.add('dark');
-            themeBtn.textContent = '☀️';
-        }
+    <!-- Main Content Section: Pengumuman & Notifikasi -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
-        themeBtn.addEventListener('click', () => {
-            document.body.classList.toggle('dark');
-            const isDark = document.body.classList.contains('dark');
-            themeBtn.textContent = isDark ? '☀️' : '🌙';
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        });
+      <!-- Pengumuman (Col 7) -->
+      <div class="lg:col-span-7 space-y-3">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-[10px] uppercase font-bold text-slate-400">INFORMASI KELAS</p>
+            <h3 class="text-base font-bold text-white">Pengumuman</h3>
+          </div>
+          <button class="flex items-center gap-1 px-3 py-1 bg-darkCard border border-darkBorder rounded-lg text-xs font-medium text-slate-200 hover:bg-slate-800 transition">
+            + Tambah
+          </button>
+        </div>
 
-        // Tab Navigation System
-        const tabs = document.querySelectorAll('.tab');
-        const views = document.querySelectorAll('.view');
+        <div class="bg-darkCard border border-darkBorder rounded-xl p-4 space-y-3">
+          <!-- Item 1 -->
+          <div class="bg-slate-900/50 border border-slate-800 rounded-lg p-3.5 relative flex justify-between items-start">
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+                <h4 class="text-sm font-semibold text-white">Dasar TJKT</h4>
+              </div>
+              <p class="text-xs text-slate-400 pl-4">membawa laptop untuk presentasi tugas kelompok dasar2 tjkt</p>
+              <p class="text-[11px] text-slate-500 pl-4">10/9/2026</p>
+              <div class="pl-4 pt-1">
+                <span class="px-2 py-0.5 rounded bg-blue-900/40 border border-blue-600/40 text-blue-300 text-[10px] font-medium">
+                  Deadline 11 September 2026
+                </span>
+              </div>
+            </div>
+            <button class="text-slate-500 hover:text-slate-300 p-1 rounded-md border border-slate-700/50 hover:bg-slate-800">
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+          </div>
 
-        function switchTab(targetId) {
-            tabs.forEach(t => {
-                if (t.getAttribute('data-target') === targetId) {
-                    t.classList.add('active');
-                } else {
-                    t.classList.remove('active');
-                }
-            });
+          <!-- Item 2 -->
+          <div class="bg-slate-900/50 border border-slate-800 rounded-lg p-3.5 relative flex justify-between items-start">
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+                <h4 class="text-sm font-semibold text-white">Jumat tanggal 11 september 2026</h4>
+              </div>
+              <p class="text-xs text-slate-400 pl-4">membersihkan lingkungan sekolah</p>
+              <p class="text-[11px] text-slate-500 pl-4">10/9/2026</p>
+              <div class="pl-4 pt-1">
+                <span class="px-2 py-0.5 rounded bg-blue-900/40 border border-blue-600/40 text-blue-300 text-[10px] font-medium">
+                  Deadline 11 September 2026
+                </span>
+              </div>
+            </div>
+            <button class="text-slate-500 hover:text-slate-300 p-1 rounded-md border border-slate-700/50 hover:bg-slate-800">
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
 
-            views.forEach(view => {
-                if (view.id === targetId) {
-                    view.classList.add('active');
-                } else {
-                    view.classList.remove('active');
-                }
-            });
-        }
+      <!-- Notifikasi (Col 5) -->
+      <div class="lg:col-span-5 space-y-3">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-[10px] uppercase font-bold text-slate-400">PEMBARUAN</p>
+            <h3 class="text-base font-bold text-white">Notifikasi</h3>
+          </div>
+          <button class="px-3 py-1 bg-darkCard border border-darkBorder rounded-lg text-xs font-medium text-slate-200 hover:bg-slate-800 transition">
+            Tandai dibaca
+          </button>
+        </div>
 
-        tabs.forEach(tab => {
-            tab.addEventListener('click', () => switchTab(tab.getAttribute('data-target')));
-        });
+        <div class="bg-darkCard border border-darkBorder rounded-xl p-8 flex items-center justify-start min-h-[160px]">
+          <p class="text-xs text-slate-500">Belum ada notifikasi.</p>
+        </div>
+      </div>
 
-        // Render Pengumuman
-        function renderAnnouncements() {
-            const container = document.getElementById('announcement-list');
-            if (appData.announcements.length === 0) {
-                container.innerHTML = `<div class="card"><p style="font-size: 13px; color: var(--text-soft);">Belum ada pengumuman.</p></div>`;
-                return;
-            }
+    </div>
 
-            container.innerHTML = appData.announcements.map(item => `
-                <div class="card">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                        <span style="font-size: 13.5px; font-weight: 800; color: var(--text-main);">${item.title}</span>
-                        <span style="font-size: 10px; color: var(--text-soft);">${item.date}</span>
-                    </div>
-                    <p style="font-size: 12.5px; color: var(--text-soft); line-height: 1.4;">${item.text}</p>
-                </div>
-            `).join('');
-        }
+    <!-- Bottom Navigation Section Previews -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+      <!-- Jadwal -->
+      <div class="space-y-2">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-[10px] uppercase font-bold text-slate-400">HARI INI</p>
+            <h4 class="text-sm font-bold text-white">Jadwal Hari Ini</h4>
+          </div>
+          <button class="px-2.5 py-1 bg-darkCard border border-darkBorder rounded-lg text-[11px] text-slate-300 hover:bg-slate-800">
+            Lihat semua
+          </button>
+        </div>
+      </div>
 
-        // Render Jadwal Mapel
-        function renderJadwal(day, element) {
-            if (element) {
-                document.querySelectorAll('#jadwal-chips .chip').forEach(c => c.classList.remove('active'));
-                element.classList.add('active');
-            }
+      <!-- Kebersihan -->
+      <div class="space-y-2">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-[10px] uppercase font-bold text-slate-400">KEBERSIHAN</p>
+            <h4 class="text-sm font-bold text-white">Piket Hari Ini</h4>
+          </div>
+          <button class="px-2.5 py-1 bg-darkCard border border-darkBorder rounded-lg text-[11px] text-slate-300 hover:bg-slate-800">
+            Lihat semua
+          </button>
+        </div>
+      </div>
 
-            const container = document.getElementById('jadwal-container');
-            const list = appData.jadwal[day] || [];
+      <!-- Deadline -->
+      <div class="space-y-2">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-[10px] uppercase font-bold text-slate-400">DEADLINE</p>
+            <h4 class="text-sm font-bold text-white">Tugas Terdekat</h4>
+          </div>
+          <button class="px-2.5 py-1 bg-darkCard border border-darkBorder rounded-lg text-[11px] text-slate-300 hover:bg-slate-800">
+            Lihat semua
+          </button>
+        </div>
+      </div>
+    </div>
 
-            if (list.length === 0) {
-                container.innerHTML = `<div class="card"><p style="font-size: 13px; color: var(--text-soft);">Tidak ada jadwal pelajaran hari ini.</p></div>`;
-                return;
-            }
+  </main>
 
-            container.innerHTML = list.map(item => `
-                <div class="item-card">
-                    <div class="item-left">
-                        <span class="item-time">${item.time}</span>
-                        <div>
-                            <div class="item-title">${item.title}</div>
-                            <div class="item-sub">${item.sub}</div>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Render Jadwal Piket
-        function renderPiket(day, element) {
-            if (element) {
-                document.querySelectorAll('#piket-chips .chip').forEach(c => c.classList.remove('active'));
-                element.classList.add('active');
-            }
-
-            const container = document.getElementById('piket-container');
-            const list = appData.piket[day] || [];
-
-            container.innerHTML = `
-                <h4 style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--text-soft); margin-bottom: 12px;">Petugas Piket Hari ${day}</h4>
-                <div style="display: flex; flex-direction: column; gap: 8px;">
-                    ${list.map(name => `
-                        <div style="display:flex; align-items:center; gap:10px; font-size: 13px; font-weight: 700; color: var(--text-main);">
-                            <span style="color: var(--teal);">✔</span> ${name}
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-        }
-
-        // Render Daftar Tugas
-        function renderTugas() {
-            const container = document.getElementById('tugas-container');
-            if (appData.tugas.length === 0) {
-                container.innerHTML = `<div class="card"><p style="font-size: 13px; color: var(--text-soft);">Tidak ada tugas pending. Mantap! 🎉</p></div>`;
-                return;
-            }
-
-            container.innerHTML = appData.tugas.map(task => `
-                <div class="task-item ${task.done ? 'done' : ''}" onclick="toggleTask(${task.id})">
-                    <div class="task-checkbox"></div>
-                    <div style="flex: 1;">
-                        <div class="task-title">${task.title}</div>
-                        <div class="task-meta">
-                            <span class="badge badge-${task.badge}">${task.subject}</span>
-                            <span style="font-size: 10px; color: var(--text-soft);">⏰ ${task.date}</span>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function toggleTask(id) {
-            const task = appData.tugas.find(t => t.id === id);
-            if (task) {
-                task.done = !task.done;
-                saveData();
-                renderTugas();
-                showToast(task.done ? 'Tugas ditandai selesai! 🎉' : 'Tugas dikembalikan ke pending.');
-            }
-        }
-
-        // Render Kas Kelas
-        function renderKas() {
-            document.getElementById('kas-total-display').textContent = `Rp ${appData.kas.balance.toLocaleString('id-ID')}`;
-            const container = document.getElementById('kas-history-container');
-
-            container.innerHTML = appData.kas.history.map(item => `
-                <div class="item-card">
-                    <div class="item-left">
-                        <div class="stat-icon" style="background: ${item.type === 'in' ? 'var(--teal-soft)' : 'var(--rose-soft)'}; color: ${item.type === 'in' ? 'var(--teal)' : 'var(--rose)'};">
-                            ${item.type === 'in' ? '↙' : '↗'}
-                        </div>
-                        <div>
-                            <div class="item-title">${item.title}</div>
-                            <div class="item-sub">${item.date}</div>
-                        </div>
-                    </div>
-                    <div style="font-size: 13.5px; font-weight: 800; color: ${item.type === 'in' ? 'var(--teal)' : 'var(--rose)'};">
-                        ${item.type === 'in' ? '+' : '-'} Rp ${item.amount.toLocaleString('id-ID')}
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Update Ringkasan Beranda
-        function updateHomeStats() {
-            const pendingTugas = appData.tugas.filter(t => !t.done).length;
-            document.getElementById('home-stat-tugas').textContent = `${pendingTugas} Tugas`;
-            document.getElementById('home-stat-kas').textContent = `Rp ${appData.kas.balance.toLocaleString('id-ID')}`;
-        }
-
-        /* ==========================================================================
-           3. MODAL & FORM CONTROLLERS
-           ========================================================================== */
-        const modalBg = document.getElementById('app-modal');
-        const modalTitle = document.getElementById('modal-title');
-        const modalBody = document.getElementById('modal-body');
-        const modalSubmitBtn = document.getElementById('modal-submit-btn');
-
-        function openModal() {
-            modalBg.classList.add('open');
-        }
-
-        function closeModal() {
-            modalBg.classList.remove('open');
-        }
-
-        modalBg.addEventListener('click', (e) => {
-            if (e.target === modalBg) closeModal();
-        });
-
-        // Modal Tambah Tugas
-        function openAddTaskModal() {
-            modalTitle.textContent = 'Tambah Tugas Baru';
-            modalBody.innerHTML = `
-                <div class="field">
-                    <label>Judul Tugas</label>
-                    <input type="text" id="inp-task-title" placeholder="Contoh: PR Matematika Hal 50">
-                </div>
-                <div class="field">
-                    <label>Mata Pelajaran</label>
-                    <input type="text" id="inp-task-sub" placeholder="Contoh: Matematika">
-                </div>
-                <div class="field">
-                    <label>Deadline</label>
-                    <input type="text" id="inp-task-date" placeholder="Contoh: Besok, 23:59">
-                </div>
-            `;
-            modalSubmitBtn.onclick = () => {
-                const title = document.getElementById('inp-task-title').value.trim();
-                const subject = document.getElementById('inp-task-sub').value.trim();
-                const date = document.getElementById('inp-task-date').value.trim();
-
-                if (!title || !subject) return showToast('Harap isi judul dan mata pelajaran!', 'rose');
-
-                appData.tugas.unshift({
-                    id: Date.now(),
-                    title,
-                    subject,
-                    date: date || 'Hari ini',
-                    done: false,
-                    badge: 'rose'
-                });
-
-                saveData();
-                renderTugas();
-                closeModal();
-                showToast('Tugas berhasil ditambahkan!');
-            };
-            openModal();
-        }
-
-        // Modal Buat Pengumuman
-        function openAddAnnouncementModal() {
-            modalTitle.textContent = 'Buat Pengumuman Baru';
-            modalBody.innerHTML = `
-                <div class="field">
-                    <label>Judul Pengumuman</label>
-                    <input type="text" id="inp-ann-title" placeholder="Contoh: Jadwal Libur">
-                </div>
-                <div class="field">
-                    <label>Isi Pengumuman</label>
-                    <textarea id="inp-ann-text" rows="3" placeholder="Tulis rincian informasi..."></textarea>
-                </div>
-            `;
-            modalSubmitBtn.onclick = () => {
-                const title = document.getElementById('inp-ann-title').value.trim();
-                const text = document.getElementById('inp-ann-text').value.trim();
-
-                if (!title || !text) return showToast('Harap isi judul dan penjelasan!', 'rose');
-
-                appData.announcements.unshift({
-                    id: Date.now(),
-                    title,
-                    date: 'Baru saja',
-                    text
-                });
-
-                saveData();
-                renderAnnouncements();
-                closeModal();
-                showToast('Pengumuman dipublikasikan!');
-            };
-            openModal();
-        }
-
-        // Modal Catat Kas
-        function openAddKasModal() {
-            modalTitle.textContent = 'Catat Transaksi Kas';
-            modalBody.innerHTML = `
-                <div class="field">
-                    <label>Jenis Transaksi</label>
-                    <select id="inp-kas-type">
-                        <option value="in">Pemasukan (+)</option>
-                        <option value="out">Pengeluaran (-)</option>
-                    </select>
-                </div>
-                <div class="field">
-                    <label>Keterangan</label>
-                    <input type="text" id="inp-kas-title" placeholder="Contoh: Iuran Minggu Ini">
-                </div>
-                <div class="field">
-                    <label>Nominal (Rp)</label>
-                    <input type="number" id="inp-kas-amount" placeholder="Contoh: 5000">
-                </div>
-            `;
-            modalSubmitBtn.onclick = () => {
-                const type = document.getElementById('inp-kas-type').value;
-                const title = document.getElementById('inp-kas-title').value.trim();
-                const amount = parseInt(document.getElementById('inp-kas-amount').value, 10);
-
-                if (!title || isNaN(amount) || amount <= 0) return showToast('Nominal transaksi tidak valid!', 'rose');
-
-                if (type === 'in') {
-                    appData.kas.balance += amount;
-                } else {
-                    appData.kas.balance -= amount;
-                }
-
-                appData.kas.history.unshift({
-                    id: Date.now(),
-                    title,
-                    amount,
-                    type,
-                    date: 'Hari ini'
-                });
-
-                saveData();
-                renderKas();
-                closeModal();
-                showToast('Transaksi kas dicatat!');
-            };
-            openModal();
-        }
-
-        /* ==========================================================================
-           4. TOAST NOTIFICATION SYSTEM
-           ========================================================================== */
-        function showToast(message, type = 'teal') {
-            const container = document.getElementById('toast-box');
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.style.borderLeft = `4px solid var(--${type})`;
-            toast.innerHTML = `<span>ℹ️</span> <span>${message}</span>`;
-
-            container.appendChild(toast);
-
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translate3d(0, 10px, 0) scale(0.95)';
-                setTimeout(() => toast.remove(), 250);
-            }, 2500);
-        }
-
-        /* ==========================================================================
-           5. INITIALIZE APPLICATION
-           ========================================================================== */
-        renderAnnouncements();
-        renderJadwal('Senin');
-        renderPiket('Senin');
-        renderTugas();
-        renderKas();
-        updateHomeStats();
-    </script>
 </body>
 </html>
