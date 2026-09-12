@@ -4884,6 +4884,14 @@
       }
     }
   </style>
+
+<style id="kas-edit-action-fix">
+.kas-pro-action{width:72px;text-align:right!important;white-space:nowrap}
+.kas-edit-btn{border:1px solid var(--ui-border);background:var(--ui-surface-2);color:var(--ui-text);border-radius:8px;padding:6px 9px;font:inherit;font-size:10px;font-weight:800;cursor:pointer;transition:background .16s ease,border-color .16s ease,transform .12s ease}
+.kas-edit-btn:hover{border-color:var(--ui-accent);background:var(--ui-accent-soft)}
+.kas-edit-btn:active{transform:scale(.96)}
+@media(max-width:620px){.kas-pro-action{width:60px}.kas-edit-btn{padding:6px 7px}}
+</style>
 </head>
 <body>
   <div class="ambient-mesh">
@@ -10697,7 +10705,7 @@ Setelan
       let list=data.filter(t=>(filter==='all'||t.jenis===filter)&&kasDateOk(t.tanggal,period)&&(!q||[t.ket,t.tanggal,t.jenis,t.jumlah].join(' ').toLowerCase().includes(q))).slice().sort((a,b)=>new Date(b.tanggal||0)-new Date(a.tanggal||0));
       const wrap=document.getElementById('kas-list'); if(!wrap)return;
       wrap.className='kas-pro-table';
-      wrap.innerHTML=list.length?`<table><thead><tr><th>Tanggal</th><th>Keterangan</th><th>Jenis</th><th>Jumlah</th><th></th></tr></thead><tbody>${list.map(t=>`<tr onclick="openKasEditModal(${Number(t.id)})" style="cursor:pointer"><td>${esc(t.tanggal||'-')}</td><td><strong>${esc(t.ket||'Tanpa keterangan')}</strong>${t.file?`<div style="font-size:9px;color:var(--ui-muted);margin-top:3px">Lampiran: ${esc(t.file)}</div>`:''}</td><td><span class="kas-type-badge ${t.jenis==='masuk'?'kas-type-in':'kas-type-out'}">${t.jenis==='masuk'?'Pemasukan':'Pengeluaran'}</span></td><td class="${t.jenis==='masuk'?'kas-amt-in':'kas-amt-out'}">${t.jenis==='masuk'?'+':'-'}${money(t.jumlah)}</td><td class="kas-actions-cell"><button type="button" class="btn btn-ghost kas-edit-btn admin-only" onclick="event.stopPropagation();openKasEditModal(${Number(t.id)})">Edit</button></td></tr>`).join('')}</tbody></table>`:`<div class="empty" style="padding:36px 18px;text-align:center"><div style="font-weight:800;margin-bottom:4px">Belum ada transaksi</div><div style="font-size:11px;color:var(--ui-muted)">Catat pemasukan atau pengeluaran pertama untuk memulai rekap kas.</div></div>`;
+      wrap.innerHTML=list.length?`<table><thead><tr><th>Tanggal</th><th>Keterangan</th><th>Jenis</th><th>Jumlah</th><th></th></tr></thead><tbody>${list.map(t=>`<tr onclick="openKasEditModal(${Number(t.id)})" style="cursor:pointer"><td>${esc(t.tanggal||'-')}</td><td><strong>${esc(t.ket||'Tanpa keterangan')}</strong>${t.file?`<div style="font-size:9px;color:var(--ui-muted);margin-top:3px">Lampiran: ${esc(t.file)}</div>`:''}</td><td><span class="kas-type-badge ${t.jenis==='masuk'?'kas-type-in':'kas-type-out'}">${t.jenis==='masuk'?'Pemasukan':'Pengeluaran'}</span></td><td class="${t.jenis==='masuk'?'kas-amt-in':'kas-amt-out'}">${t.jenis==='masuk'?'+':'-'}${money(t.jumlah)}</td><td class="kas-pro-action"><button type="button" class="kas-edit-btn admin-only" onclick="event.stopPropagation();openKasEditModal(${Number(t.id)})" aria-label="Edit transaksi">Edit</button></td></tr>`).join('')}</tbody></table>`:`<div class="empty" style="padding:36px 18px;text-align:center"><div style="font-weight:800;margin-bottom:4px">Belum ada transaksi</div><div style="font-size:11px;color:var(--ui-muted)">Catat pemasukan atau pengeluaran pertama untuk memulai rekap kas.</div></div>`;
       const oldIn=document.getElementById('kas-in'), oldOut=document.getElementById('kas-out'), oldSaldo=document.getElementById('kas-saldo'); if(oldIn)oldIn.textContent=money(masuk); if(oldOut)oldOut.textContent=money(keluar); if(oldSaldo)oldSaldo.textContent=money(masuk-keluar);
     }
 
@@ -10971,6 +10979,6 @@ Setelan
 }
 </style>
 
-\n<style id="kas-edit-action-fix">\n/* Kas: tombol edit transaksi dibuat eksplisit agar mudah ditemukan dan dipakai. */\n.kas-actions-cell{\n  width:72px;\n  text-align:right;\n  white-space:nowrap;\n}\n.kas-edit-btn{\n  min-height:32px;\n  padding:6px 10px;\n  border-radius:9px;\n  font-size:10px;\n  font-weight:800;\n  cursor:pointer;\n}\n.kas-pro-table tbody tr{cursor:pointer;}\n.kas-pro-table tbody tr:hover{background:rgba(59,130,246,.035);}\n@media (max-width:620px){\n  .kas-actions-cell{width:60px;}\n  .kas-edit-btn{padding:5px 8px;font-size:9px;}\n}\n</style>\n</body>
+</body>
 <!-- Kelasku compatibility patch: resilient Firestore sync + legacy fallback -->
 </html>
