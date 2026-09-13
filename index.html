@@ -6463,6 +6463,236 @@ body:not(.dark) #view-kas .kas-summary-card:nth-child(3) .kas-summary-icon{
 }
 </style>
 
+
+<style id="kelasku-ui-consistency-polish">
+/* =========================================================
+   KELASKU — CONSISTENCY POLISH
+   Focus: small text, spacing, button height, radius,
+   alignment, and empty states.
+   No JS/data behavior is changed.
+   ========================================================= */
+
+/* --- Shared typography hierarchy --- */
+.view p,
+.view .subtext,
+.view .muted,
+.view .field-hint,
+.view small{
+  line-height:1.45;
+}
+
+.view .field-hint,
+.view .muted,
+.view .subtext{
+  font-size:12px;
+}
+
+.view small{
+  font-size:11px;
+}
+
+/* --- Consistent control height & tactile feel --- */
+.view button,
+.view select,
+.view input,
+.view textarea{
+  box-sizing:border-box;
+}
+
+.view button,
+.view .btn,
+.view .button,
+.view .section-link,
+.view .chip,
+.view .filter-chip,
+.view .tab,
+.view .day-chip{
+  min-height:38px;
+  border-radius:10px;
+}
+
+.view button,
+.view .btn,
+.view .button,
+.view .section-link,
+.view .chip,
+.view .filter-chip,
+.view .tab,
+.view .day-chip{
+  transition:
+    transform .17s cubic-bezier(.2,.8,.2,1),
+    background-color .18s cubic-bezier(.2,.8,.2,1),
+    border-color .18s cubic-bezier(.2,.8,.2,1),
+    color .18s cubic-bezier(.2,.8,.2,1);
+}
+
+.view button:active,
+.view .btn:active,
+.view .button:active,
+.view .section-link:active,
+.view .chip:active,
+.view .filter-chip:active,
+.view .tab:active,
+.view .day-chip:active{
+  transform:scale(.97);
+}
+
+/* --- Quiet, consistent borders/radius --- */
+.view input,
+.view select,
+.view textarea,
+.view .card,
+.view .section,
+.view .summary-box,
+.view .modal,
+.view .sheet{
+  border-radius:12px;
+}
+
+body:not(.dark) .view input,
+body:not(.dark) .view select,
+body:not(.dark) .view textarea{
+  border-color:rgba(15,23,42,.12);
+}
+
+body.dark .view input,
+body.dark .view select,
+body.dark .view textarea{
+  border-color:rgba(203,213,225,.17);
+}
+
+/* --- Alignment: don't let compact actions crowd headings --- */
+.view .section-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.view .section-head > *{
+  min-width:0;
+}
+
+.view .section-head .section-title,
+.view .section-head h2,
+.view .section-head h3{
+  margin:0;
+}
+
+.view .section-head button,
+.view .section-head .btn,
+.view .section-head .button,
+.view .section-head .section-link{
+  flex:0 0 auto;
+}
+
+/* --- Empty states: calm and intentional instead of looking broken --- */
+.view .empty-state,
+.view .empty,
+.view .no-data,
+.view .empty-message{
+  min-height:120px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:24px 18px;
+  box-sizing:border-box;
+}
+
+.view .empty-state strong,
+.view .empty-state h3,
+.view .empty strong,
+.view .empty h3,
+.view .no-data strong,
+.view .no-data h3,
+.view .empty-message strong,
+.view .empty-message h3{
+  margin:0 0 5px;
+  font-size:13px;
+  font-weight:750;
+}
+
+.view .empty-state p,
+.view .empty p,
+.view .no-data p,
+.view .empty-message p{
+  margin:0;
+  max-width:480px;
+  font-size:12px;
+  line-height:1.5;
+}
+
+/* --- Lists: slightly more breathing room, no heavy card stacking --- */
+.view .list-item,
+.view .task-item,
+.view .report-item,
+.view .activity-item,
+.view .timeline-item,
+.view .tx-item{
+  min-width:0;
+}
+
+.view .list-item > *,
+.view .task-item > *,
+.view .report-item > *,
+.view .activity-item > *,
+.view .timeline-item > *,
+.view .tx-item > *{
+  min-width:0;
+}
+
+@media(max-width:620px){
+  .view .field-hint,
+  .view .muted,
+  .view .subtext{
+    font-size:11.5px;
+  }
+
+  .view button,
+  .view .btn,
+  .view .button,
+  .view .section-link,
+  .view .chip,
+  .view .filter-chip,
+  .view .tab,
+  .view .day-chip{
+    min-height:36px;
+    border-radius:9px;
+  }
+
+  .view .section-head{
+    gap:9px;
+  }
+
+  .view .empty-state,
+  .view .empty,
+  .view .no-data,
+  .view .empty-message{
+    min-height:110px;
+    padding:20px 14px;
+  }
+
+  .view .empty-state p,
+  .view .empty p,
+  .view .no-data p,
+  .view .empty-message p{
+    font-size:11.5px;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .view *,
+  .view *::before,
+  .view *::after{
+    transition-duration:.01ms !important;
+    animation-duration:.01ms !important;
+    scroll-behavior:auto !important;
+  }
+}
+</style>
+
 </head>
 
 <body>
