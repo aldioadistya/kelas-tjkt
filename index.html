@@ -6693,6 +6693,14 @@ body.dark .view textarea{
 }
 </style>
 
+
+<style id="kas-calendar-collapsed-polish">
+/* Default behavior:
+   - Kas Siswa folders start collapsed.
+   - HP/Piket calendars start collapsed.
+   The existing click-to-open interaction remains intact. */
+</style>
+
 </head>
 
 <body>
@@ -8351,7 +8359,7 @@ Setelan
       activityLog: [],
       jadwalMode: 'pelajaran',
       selectedDay: 'Senin',
-      calMinimized: { hp: false, piket: false },
+      calMinimized: { hp: true, piket: true },
       kasFolderMinimized: {},
       hpSelectedDate: null,
       piketSelectedDate: null,
@@ -9681,7 +9689,7 @@ Setelan
           if(!folder.createdAt)folder.createdAt=Date.now();
           if(!folder.name)folder.name='Kas Siswa';
           if(!state.kasFolderMinimized || typeof state.kasFolderMinimized !== 'object')state.kasFolderMinimized={};
-          if(state.kasFolderMinimized[String(folder.id)]===undefined)state.kasFolderMinimized[String(folder.id)]=false;
+          if(state.kasFolderMinimized[String(folder.id)]===undefined)state.kasFolderMinimized[String(folder.id)]=true;
           state.students.forEach(name=>{
               if(!folder.students.some(x=>x.name===name))folder.students.push({name,status:'belum',jumlah:0,tanggal:''});
           });
@@ -12253,22 +12261,21 @@ Setelan
           state.calMinimized = { hp: false, piket: false };
       }
 
-      // Kas: setiap kali menu Kas dibuka, semua folder kas siswa tampil terbuka.
-      // Fitur minimize tetap tersedia setelahnya.
+      // Kas: setiap kali menu Kas dibuka, folder kas siswa tetap tertutup.
+      // Pengguna dapat membukanya sendiri dengan klik nama folder.
       if (name === 'kas') {
           (state.kasFolders || []).forEach(folder => {
               if (folder && folder.id != null) {
-                  state.kasFolderMinimized[String(folder.id)] = false;
+                  state.kasFolderMinimized[String(folder.id)] = true;
               }
           });
           if (typeof renderKasSiswa === 'function') renderKasSiswa();
       }
 
-      // Kalender HP: saat masuk kembali ke menu Pengumpulan HP, sinkronkan
-      // pilihan tanggal ke hari ini. Jadi jika sebelumnya memilih tanggal kemarin
-      // lalu pindah ke menu Kas, saat kembali ke HP kalender tidak tertinggal di hari lama.
+      // Kalender HP: saat masuk ke menu Pengumpulan HP, kalender tidak otomatis terbuka.
+      // Pilihan tanggal tetap kembali ke hari ini seperti sebelumnya.
       if (name === 'hp') {
-          state.calMinimized.hp = false;
+          state.calMinimized.hp = true;
           const now = new Date();
           const today = todayKey();
           state.hpSelectedDate = today;
@@ -12282,7 +12289,7 @@ Setelan
       // Kalender Piket: perilaku yang sama, selalu kembali ke hari ini saat
       // tampilan Piket dibuka kembali.
       if (name === 'jadwal' && state.jadwalMode === 'piket') {
-          state.calMinimized.piket = false;
+          state.calMinimized.piket = true;
           const now = new Date();
           state.piketSelectedDate = todayKey();
           piketCalYear = now.getFullYear();
