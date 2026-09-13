@@ -6822,6 +6822,150 @@ body.dark .view textarea{
 }
 </style>
 
+
+<style id="kelasku-button-final-polish">
+/* Final button polish:
+   - icons/text sit exactly in the visual center
+   - subtle but visible border in BOTH dark and light mode
+   - keeps the existing interaction and button colors
+*/
+.btn,
+.fab-add,
+.bulk-all-btn,
+.section-link,
+.theme-btn,
+.cal-nav-btn,
+.day-chip,
+.toggle-btn,
+.roster-choice-btn,
+.task-file,
+.announce-file{
+  box-sizing:border-box;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  vertical-align:middle;
+  text-align:center;
+  line-height:1;
+  white-space:nowrap;
+}
+
+/* Make the quiet buttons readable against both themes. */
+.section-link,
+.bulk-all-btn,
+.btn-ghost,
+.theme-btn,
+.cal-nav-btn,
+.day-chip,
+.toggle-btn{
+  border:1px solid rgba(148,163,184,.30) !important;
+}
+
+/* The dark theme needs a little more separation from the slate surface. */
+body.dark .section-link,
+body.dark .bulk-all-btn,
+body.dark .btn-ghost,
+body.dark .theme-btn,
+body.dark .cal-nav-btn,
+body.dark .day-chip,
+body.dark .toggle-btn{
+  border-color:rgba(148,163,184,.34) !important;
+}
+
+/* Light theme: keep it soft, but clearly visible. */
+body:not(.dark) .section-link,
+body:not(.dark) .bulk-all-btn,
+body:not(.dark) .btn-ghost,
+body:not(.dark) .theme-btn,
+body:not(.dark) .cal-nav-btn,
+body:not(.dark) .day-chip,
+body:not(.dark) .toggle-btn{
+  border-color:rgba(15,23,42,.16) !important;
+}
+
+/* Primary action bars/buttons also get a very fine edge,
+   so the shape doesn't disappear into the blue fill. */
+.btn-primary,
+.fab-add{
+  border:1px solid rgba(255,255,255,.14) !important;
+}
+
+body:not(.dark) .btn-primary,
+body:not(.dark) .fab-add{
+  border-color:rgba(255,255,255,.20) !important;
+}
+
+/* Prevent emoji/SVG/text from looking vertically off-center. */
+.btn svg,
+.fab-add svg,
+.bulk-all-btn svg,
+.section-link svg,
+.theme-btn svg,
+.cal-nav-btn svg,
+.day-chip svg,
+.toggle-btn svg,
+.roster-choice-btn svg{
+  flex:0 0 auto;
+  display:block;
+}
+
+.btn > span,
+.fab-add > span,
+.bulk-all-btn > span,
+.section-link > span,
+.theme-btn > span,
+.cal-nav-btn > span,
+.day-chip > span,
+.toggle-btn > span{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  line-height:1;
+}
+
+/* Emoji-only / emoji-leading controls should not sit on a text baseline. */
+.btn,
+.fab-add,
+.bulk-all-btn,
+.section-link{
+  font-variant-numeric:tabular-nums;
+}
+
+/* Keep the professional tactile interaction already used by the app. */
+.btn:active,
+.fab-add:active,
+.bulk-all-btn:active,
+.section-link:active,
+.theme-btn:active,
+.cal-nav-btn:active,
+.day-chip:active,
+.toggle-btn:active{
+  transform:scale(.97);
+}
+
+@media (max-width:620px){
+  .btn,
+  .fab-add,
+  .bulk-all-btn,
+  .section-link,
+  .theme-btn,
+  .cal-nav-btn,
+  .day-chip,
+  .toggle-btn{
+    line-height:1;
+  }
+
+  .section-link{
+    min-height:34px;
+    padding:7px 10px !important;
+  }
+
+  .bulk-all-btn{
+    min-height:36px;
+  }
+}
+</style>
+
 </head>
 
 <body>
