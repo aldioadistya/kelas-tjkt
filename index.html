@@ -6701,6 +6701,127 @@ body.dark .view textarea{
    The existing click-to-open interaction remains intact. */
 </style>
 
+
+<style id="kelasku-desktop-fullscreen-fix">
+/* =========================================================
+   DESKTOP FULLSCREEN FIX
+   Desktop gets the full available browser width.
+   The existing mobile layout remains untouched.
+   The pointer rule also keeps desktop mode when a desktop
+   browser window is temporarily narrow.
+   ========================================================= */
+
+@media (min-width: 768px), (hover: hover) and (pointer: fine) {
+  html,
+  body{
+    width:100%;
+    min-width:0;
+    height:100%;
+    margin:0;
+  }
+
+  body{
+    display:block;
+    overflow:hidden;
+  }
+
+  .phone{
+    position:relative;
+    width:100vw !important;
+    max-width:none !important;
+    min-width:0;
+    height:100vh !important;
+    height:100dvh !important;
+    max-height:none !important;
+    margin:0 !important;
+    border:0 !important;
+    border-radius:0 !important;
+    box-shadow:none !important;
+    display:grid !important;
+    grid-template-columns:255px minmax(0,1fr) !important;
+    grid-template-rows:100vh !important;
+    overflow:hidden;
+  }
+
+  .phone > .statusbar,
+  .phone > .tabbar{
+    display:none !important;
+  }
+
+  .desktop-sidebar{
+    display:flex !important;
+    grid-column:1;
+    grid-row:1;
+    width:255px;
+    min-width:255px;
+    height:100vh;
+    overflow-y:auto;
+    overflow-x:hidden;
+  }
+
+  .phone > .screen{
+    grid-column:2;
+    grid-row:1;
+    width:100%;
+    min-width:0;
+    height:100vh;
+    overflow-y:auto;
+    overflow-x:hidden;
+    box-sizing:border-box;
+  }
+
+  /* Content can use the desktop canvas naturally, but remains
+     comfortably readable on very wide monitors. */
+  .screen .view{
+    width:100%;
+    max-width:1180px;
+    margin-left:auto;
+    margin-right:auto;
+    box-sizing:border-box;
+  }
+}
+
+@media (min-width:768px) and (max-width:1200px),
+       (hover: hover) and (pointer: fine) and (max-width:1200px){
+  .phone{
+    grid-template-columns:225px minmax(0,1fr) !important;
+  }
+
+  .desktop-sidebar{
+    width:225px;
+    min-width:225px;
+  }
+
+  .phone > .screen{
+    padding-left:26px;
+    padding-right:26px;
+  }
+}
+
+/* Narrow desktop windows: keep desktop navigation usable
+   instead of reverting to the phone shell. */
+@media (min-width:768px) and (max-width:900px),
+       (hover: hover) and (pointer: fine) and (max-width:900px){
+  .phone{
+    grid-template-columns:210px minmax(0,1fr) !important;
+  }
+
+  .desktop-sidebar{
+    width:210px;
+    min-width:210px;
+  }
+
+  .phone > .screen{
+    padding:18px 18px 24px;
+  }
+
+  .desktop-nav-item{
+    padding-left:10px;
+    padding-right:10px;
+  }
+}
+</style>
+
 </head>
 
 <body>
