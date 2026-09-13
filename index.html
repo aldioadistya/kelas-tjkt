@@ -6966,6 +6966,151 @@ body:not(.dark) .fab-add{
 }
 </style>
 
+
+<style id="kelasku-dark-border-visibility-fix">
+/* =========================================================
+   DARK MODE — BORDER & DANGER ACTION VISIBILITY
+   Targeted only at the affected controls shown in the
+   screenshots. No layout or application logic is changed.
+   ========================================================= */
+
+/* Kas Siswa folder: outer and inner borders must separate
+   clearly from the dark surface without looking heavy. */
+body.dark #kas-folder-list .kas-folder{
+  border:1px solid rgba(148,163,184,.34) !important;
+  box-shadow:0 1px 2px rgba(0,0,0,.10);
+}
+
+body.dark #kas-folder-list .kas-folder-head{
+  border-bottom:1px solid rgba(148,163,184,.28) !important;
+}
+
+body.dark #kas-folder-list .kas-folder-summary span{
+  border-color:rgba(148,163,184,.32) !important;
+}
+
+/* Hapus on Kas Siswa: visible, restrained danger action. */
+body.dark #kas-folder-list .kas-folder-head .btn-danger{
+  background:rgba(244,63,94,.11) !important;
+  border:1px solid rgba(251,113,133,.58) !important;
+  color:#fb7185 !important;
+  -webkit-text-fill-color:#fb7185 !important;
+  box-shadow:none !important;
+}
+
+body.dark #kas-folder-list .kas-folder-head .btn-danger:hover{
+  background:rgba(244,63,94,.17) !important;
+  border-color:rgba(251,113,133,.78) !important;
+  color:#fecdd3 !important;
+  -webkit-text-fill-color:#fecdd3 !important;
+}
+
+/* Keluar in Setelan: keep it easy to see on the dark surface. */
+body.dark #view-settings button[onclick="logout()"]{
+  background:rgba(244,63,94,.10) !important;
+  border:1px solid rgba(251,113,133,.50) !important;
+  color:#fb7185 !important;
+  -webkit-text-fill-color:#fb7185 !important;
+  box-shadow:none !important;
+}
+
+body.dark #view-settings button[onclick="logout()"]:hover{
+  background:rgba(244,63,94,.16) !important;
+  border-color:rgba(251,113,133,.72) !important;
+  color:#fecdd3 !important;
+  -webkit-text-fill-color:#fecdd3 !important;
+}
+
+/* Light mode keeps the same hierarchy with a softer outline. */
+body:not(.dark) #kas-folder-list .kas-folder{
+  border-color:rgba(15,23,42,.14) !important;
+}
+
+body:not(.dark) #kas-folder-list .kas-folder-head{
+  border-bottom-color:rgba(15,23,42,.10) !important;
+}
+
+body:not(.dark) #kas-folder-list .kas-folder-head .btn-danger,
+body:not(.dark) #view-settings button[onclick="logout()"]{
+  border:1px solid rgba(225,29,72,.34) !important;
+}
+</style>
+
+
+<style id="kelasku-reset-clean-button-alignment">
+/* Button alignment polish
+   Reset / Bersihkan: text + icon are centered inside the border,
+   with a stable height so the controls don't look vertically shifted. */
+.btn-reset,
+.btn-clear,
+button[onclick*="reset"],
+button[onclick*="bersih"],
+button[onclick*="clear"],
+.reset-btn,
+.clear-btn{
+  box-sizing:border-box !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:6px !important;
+  min-height:38px !important;
+  padding:0 12px !important;
+  line-height:1 !important;
+  vertical-align:middle !important;
+  text-align:center !important;
+}
+
+.btn-reset svg,
+.btn-clear svg,
+button[onclick*="reset"] svg,
+button[onclick*="bersih"] svg,
+button[onclick*="clear"] svg,
+.reset-btn svg,
+.clear-btn svg{
+  display:block !important;
+  flex:0 0 auto !important;
+}
+
+/* If the controls use plain text/emoji, don't let the glyph baseline
+   push the label upward or downward. */
+.btn-reset > *,
+.btn-clear > *,
+button[onclick*="reset"] > *,
+button[onclick*="bersih"] > *,
+button[onclick*="clear"] > *,
+.reset-btn > *,
+.clear-btn > *{
+  line-height:1 !important;
+  vertical-align:middle !important;
+}
+
+/* Preserve a subtle, clearly visible outline in both themes. */
+.btn-reset,
+.btn-clear,
+button[onclick*="reset"],
+button[onclick*="bersih"],
+button[onclick*="clear"],
+.reset-btn,
+.clear-btn{
+  border-width:1px !important;
+  border-style:solid !important;
+}
+
+/* Mobile: slightly smaller but still centered and easy to tap. */
+@media (max-width:620px){
+  .btn-reset,
+  .btn-clear,
+  button[onclick*="reset"],
+  button[onclick*="bersih"],
+  button[onclick*="clear"],
+  .reset-btn,
+  .clear-btn{
+    min-height:36px !important;
+    padding:0 10px !important;
+  }
+}
+</style>
+
 </head>
 
 <body>
