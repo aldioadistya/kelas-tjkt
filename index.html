@@ -7219,6 +7219,201 @@ button[onclick*="clear"],
 }
 </style>
 
+
+<style id="kelasku-light-mode-visual-polish">
+/* =========================================================
+   LIGHT MODE VISUAL POLISH
+   Menyamakan kualitas visual light mode dengan dark mode.
+   ========================================================= */
+body:not(.dark){
+  --lm-bg:#f5f7fb;
+  --lm-surface:#ffffff;
+  --lm-surface-soft:#f8fafc;
+  --lm-border:#d7dee9;
+  --lm-border-soft:#e7ebf2;
+  --lm-text:#172033;
+  --lm-text-2:#42506a;
+  --lm-text-3:#66758f;
+  --lm-accent:#2563eb;
+  --lm-accent-soft:#edf4ff;
+}
+
+/* Background & typography */
+body:not(.dark),
+body.light{
+  background:var(--lm-bg) !important;
+  color:var(--lm-text) !important;
+}
+
+body:not(.dark) .app,
+body:not(.dark) main,
+body:not(.dark) .main-content{
+  color:var(--lm-text) !important;
+}
+
+/* Main surfaces: clean white instead of washed-out gray. */
+body:not(.dark) .card,
+body:not(.dark) .panel,
+body:not(.dark) .section-card,
+body:not(.dark) .content-card{
+  background:var(--lm-surface) !important;
+  border-color:var(--lm-border) !important;
+  box-shadow:0 1px 2px rgba(15,23,42,.035) !important;
+}
+
+/* Text hierarchy: secondary gray must remain readable. */
+body:not(.dark) .text-muted,
+body:not(.dark) .muted,
+body:not(.dark) .subtitle,
+body:not(.dark) small{
+  color:var(--lm-text-2) !important;
+}
+
+body:not(.dark) .label,
+body:not(.dark) .hint,
+body:not(.dark) .description{
+  color:var(--lm-text-3) !important;
+}
+
+/* Inputs/selects */
+body:not(.dark) input,
+body:not(.dark) select,
+body:not(.dark) textarea{
+  background:#fff !important;
+  color:var(--lm-text) !important;
+  border-color:var(--lm-border) !important;
+}
+
+body:not(.dark) input::placeholder,
+body:not(.dark) textarea::placeholder{
+  color:#7a879b !important;
+  opacity:1 !important;
+}
+
+body:not(.dark) input:focus,
+body:not(.dark) select:focus,
+body:not(.dark) textarea:focus{
+  border-color:rgba(37,99,235,.55) !important;
+  box-shadow:0 0 0 3px rgba(37,99,235,.09) !important;
+}
+
+/* Buttons: visible but refined, with the same tactile character. */
+body:not(.dark) button,
+body:not(.dark) .btn{
+  color:var(--lm-text) !important;
+  border-color:var(--lm-border) !important;
+}
+
+body:not(.dark) button:not(.btn-primary):not(.primary):not(.btn-danger),
+body:not(.dark) .btn:not(.btn-primary):not(.primary):not(.btn-danger){
+  background:#fff !important;
+}
+
+body:not(.dark) button:not(:disabled):active,
+body:not(.dark) .btn:not(:disabled):active{
+  transform:scale(.97);
+}
+
+body:not(.dark) .btn-primary,
+body:not(.dark) .primary,
+body:not(.dark) button.primary{
+  background:var(--lm-accent) !important;
+  border-color:#1d4ed8 !important;
+  color:#fff !important;
+}
+
+body:not(.dark) .btn-primary:hover,
+body:not(.dark) .primary:hover{
+  background:#1d4ed8 !important;
+}
+
+body:not(.dark) .btn-danger{
+  background:#fff5f6 !important;
+  border-color:#f0a0ae !important;
+  color:#c81e3a !important;
+}
+
+/* Thin separators should be visible, not disappear into the background. */
+body:not(.dark) hr,
+body:not(.dark) .divider{
+  border-color:var(--lm-border-soft) !important;
+}
+
+/* Kas folder/list rows */
+body:not(.dark) #kas-folder-list .kas-folder{
+  background:var(--lm-surface) !important;
+  border-color:var(--lm-border) !important;
+}
+
+body:not(.dark) #kas-folder-list .kas-folder-head{
+  border-bottom-color:var(--lm-border-soft) !important;
+}
+
+body:not(.dark) #kas-folder-list .kas-folder-summary span{
+  background:var(--lm-surface-soft) !important;
+  border-color:var(--lm-border) !important;
+}
+
+/* Schedule / task / report rows retain a subtle separation. */
+body:not(.dark) .task-item,
+body:not(.dark) .schedule-item,
+body:not(.dark) .report-item,
+body:not(.dark) .list-item,
+body:not(.dark) .history-item{
+  border-color:var(--lm-border-soft) !important;
+}
+
+/* Empty states: readable and calm. */
+body:not(.dark) .empty-state{
+  background:var(--lm-surface-soft) !important;
+  border-color:var(--lm-border) !important;
+  color:var(--lm-text-2) !important;
+}
+
+body:not(.dark) .empty-state strong,
+body:not(.dark) .empty-state h3{
+  color:var(--lm-text) !important;
+}
+
+/* Calendar */
+body:not(.dark) .calendar,
+body:not(.dark) .calendar-card{
+  background:var(--lm-surface) !important;
+  border-color:var(--lm-border) !important;
+}
+
+body:not(.dark) .calendar-day{
+  color:var(--lm-text-2) !important;
+}
+
+body:not(.dark) .calendar-day.active,
+body:not(.dark) .calendar-day.selected{
+  background:#eaf2ff !important;
+  border-color:#3b82f6 !important;
+  color:#1747a8 !important;
+}
+
+/* Mobile: preserve the desktop visual hierarchy while allowing content
+   to breathe and avoiding horizontal clipping. */
+@media (max-width:620px){
+  body:not(.dark){
+    --lm-bg:#f6f8fb;
+  }
+
+  body:not(.dark) .card,
+  body:not(.dark) .panel,
+  body:not(.dark) .section-card,
+  body:not(.dark) .content-card{
+    border-radius:14px !important;
+  }
+
+  body:not(.dark) button,
+  body:not(.dark) .btn{
+    min-height:36px;
+  }
+}
+</style>
+
 </head>
 
 <body>
