@@ -7111,6 +7111,119 @@ button[onclick*="clear"],
 }
 </style>
 
+
+<style id="kelasku-tugas-terdekat-final-fix">
+/* =========================================================
+   TUGAS TERDEKAT — CARD RHYTHM & OVERFLOW FIX
+   Targeted visual repair only. Existing task logic remains.
+   ========================================================= */
+
+/* Keep the section header comfortably separated from the cards. */
+#view-beranda .deadline-section,
+#view-beranda .tugas-terdekat,
+#view-beranda .upcoming-tasks,
+#view-beranda [class*="deadline"]{
+  box-sizing:border-box;
+}
+
+/* Header actions: vertically centered, not floating against the edge. */
+#view-beranda [class*="deadline"] > .section-head,
+#view-beranda .deadline-head,
+#view-beranda .section-head{
+  align-items:center;
+}
+
+/* Task list card: use comfortable rhythm without changing its position. */
+#view-beranda .deadline-list,
+#view-beranda .upcoming-task-list,
+#view-beranda [class*="deadline-list"]{
+  box-sizing:border-box;
+  overflow:hidden;
+}
+
+/* Individual task rows: preserve existing layout, only improve spacing. */
+#view-beranda .deadline-list > *,
+#view-beranda .upcoming-task-list > *,
+#view-beranda [class*="deadline-list"] > *{
+  min-width:0;
+  box-sizing:border-box;
+}
+
+/* Long attachment/title text must stay inside the card. */
+#view-beranda .deadline-list a,
+#view-beranda .upcoming-task-list a,
+#view-beranda [class*="deadline-list"] a{
+  max-width:100%;
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+/* Do not let task titles or metadata create horizontal overflow. */
+#view-beranda .deadline-list h1,
+#view-beranda .deadline-list h2,
+#view-beranda .deadline-list h3,
+#view-beranda .deadline-list p,
+#view-beranda .deadline-list span,
+#view-beranda .upcoming-task-list h1,
+#view-beranda .upcoming-task-list h2,
+#view-beranda .upcoming-task-list h3,
+#view-beranda .upcoming-task-list p,
+#view-beranda .upcoming-task-list span{
+  min-width:0;
+}
+
+/* Checkbox should remain a compact tactile control. */
+#view-beranda .deadline-list input[type="checkbox"],
+#view-beranda .upcoming-task-list input[type="checkbox"]{
+  flex:0 0 auto;
+}
+
+/* Remove accidental browser tooltip-style visual if a task control
+   uses a title attribute; native hover title is not part of the UI. */
+#view-beranda .deadline-list [title],
+#view-beranda .upcoming-task-list [title]{
+  /* Keep title semantics for accessibility; this rule does not hide
+     the native browser tooltip, it only prevents layout impact. */
+  max-width:100%;
+}
+
+/* Mobile: let the card breathe and never clip the task list horizontally. */
+@media (max-width:620px){
+  #view-beranda .deadline-list,
+  #view-beranda .upcoming-task-list,
+  #view-beranda [class*="deadline-list"]{
+    width:100%;
+    max-width:100%;
+    overflow-x:hidden;
+  }
+
+  #view-beranda .deadline-list a,
+  #view-beranda .upcoming-task-list a,
+  #view-beranda [class*="deadline-list"] a{
+    max-width:calc(100% - 4px);
+  }
+}
+</style>
+
+
+<style id="kelasku-task-action-isolation">
+/* Keep task-card actions compact; don't inherit oversized generic button sizing. */
+#view-beranda .deadline-list button,
+#view-beranda .upcoming-task-list button{
+  box-sizing:border-box;
+  max-width:100%;
+}
+
+@media (max-width:620px){
+  #view-beranda .deadline-list button,
+  #view-beranda .upcoming-task-list button{
+    min-height:32px;
+  }
+}
+</style>
+
 </head>
 
 <body>
