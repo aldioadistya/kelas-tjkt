@@ -6476,7 +6476,6 @@ body.dark .timeline-sub{
   color:var(--ds-text-secondary);
 }
 
-
 /* ============================================================
    FINAL COLOR SYSTEM
    One semantic text/surface palette for light + dark mode
@@ -6852,6 +6851,32 @@ body.dark .notify-text,
 body.dark .activity-meta{
   color:var(--app-text-2);
 }
+
+/* Status cards — clean edges and balanced light/dark contrast */
+.dashboard-stat-card{position:relative;overflow:hidden;isolation:isolate;border:1px solid var(--app-border);background:var(--app-surface);border-radius:16px;box-shadow:var(--ds-shadow-sm)}
+.dashboard-stat-card::before,.dashboard-stat-card::after{content:none}
+.dashboard-stat-card .stat-top{display:flex;align-items:center;justify-content:space-between;gap:12px;min-width:0}
+.dashboard-stat-card .stat-status{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;min-height:24px;max-width:48%;padding:5px 9px;border:1px solid var(--app-border);border-radius:999px;background:var(--app-surface-2);color:var(--app-text-3);font-size:10px;line-height:1.2;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dashboard-stat-card .stat-label{margin-top:14px;color:var(--app-text-2);font-size:12px;line-height:1.35;font-weight:600}
+.dashboard-stat-card .stat-value{margin-top:4px;color:var(--app-text);font-size:21px;line-height:1.15;font-weight:800;letter-spacing:-.02em}
+.dashboard-stat-card .stat-icon{flex:0 0 auto;width:32px;height:32px;border-radius:10px;display:grid;place-items:center;border:1px solid transparent}
+.dashboard-icon-blue{background:var(--app-primary-soft);color:var(--app-primary)}
+.dashboard-icon-violet{background:#f5f3ff;color:#6d28d9}
+.dashboard-icon-teal{background:#ecfeff;color:#0f766e}
+.dashboard-icon-amber{background:var(--app-warning-soft);color:var(--app-warning)}
+.dashboard-icon-rose{background:#fff1f2;color:#be123c}
+.dashboard-stat-card:hover{border-color:var(--app-border-strong);box-shadow:var(--ds-shadow-md);transform:translateY(-1px)}
+body.dark .dashboard-stat-card{background:var(--app-surface);border-color:var(--app-border)}
+body.dark .dashboard-stat-card:hover{border-color:var(--app-border-strong)}
+body.dark .dashboard-stat-card .stat-status{background:var(--app-surface-2);border-color:var(--app-border);color:var(--app-text-3)}
+body.dark .dashboard-stat-card .stat-label{color:var(--app-text-2)}
+body.dark .dashboard-stat-card .stat-value{color:var(--app-text)}
+body.dark .dashboard-icon-blue{background:#172554;color:#60a5fa;border-color:rgba(96,165,250,.12)}
+body.dark .dashboard-icon-violet{background:#1e1b4b;color:#a78bfa;border-color:rgba(167,139,250,.12)}
+body.dark .dashboard-icon-teal{background:#0d241f;color:#5eead4;border-color:rgba(94,234,212,.12)}
+body.dark .dashboard-icon-amber{background:#2b2113;color:#fbbf24;border-color:rgba(251,191,36,.12)}
+body.dark .dashboard-icon-rose{background:#32131b;color:#fb7185;border-color:rgba(251,113,133,.12)}
+@media(max-width:560px){.dashboard-stat-card .stat-status{max-width:52%;font-size:9.5px}.dashboard-stat-card .stat-label{font-size:11px}.dashboard-stat-card .stat-value{font-size:18px}}
 
 </style>
 </head>
