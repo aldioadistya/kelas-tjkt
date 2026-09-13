@@ -3829,7 +3829,7 @@
     .kas-pro-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap: var(--space-14);margin-top:18px}
     .kas-pro-metric{background:var(--ui-surface);border:1px solid var(--ui-border);border-radius: var(--radius-token-10);padding: var(--space-18);box-shadow: 0 4px 14px var(--color-alpha-033)}
     body.dark .kas-pro-metric{box-shadow: 0 6px 18px var(--color-alpha-004)}
-    .kas-pro-metric .kpm-top{display:flex;justify-content:space-between;align-items:center;gap:var(--space-8)}.kpm-label{font-size:11px;color:var(--ui-blue);font-weight:700}.kpm-value{font-size:24px;font-weight:800;letter-spacing:-.03em;margin-top:7px}.kpm-in .kpm-value{color:var(--ui-green)}.kpm-out .kpm-value{color:var(--ui-red)}.kpm-bal .kpm-value{color:var(--ui-blue)}.kpm-note{font-size:10px;margin-top:7px;font-weight:700}.kpm-in .kpm-note{color:var(--ui-green)}.kpm-out .kpm-note{color:var(--ui-red)}.kpm-bal .kpm-note{color:var(--ui-blue)}
+    .kas-pro-metric .kpm-top{display:flex;justify-content:space-between;align-items:center;gap: var(--space-8)}.kpm-label{font-size:11px;color:var(--ui-muted);font-weight:700}.kpm-value{font-size:24px;font-weight:800;letter-spacing:-.03em;margin-top:7px}.kpm-note{font-size:10px;margin-top:7px;font-weight:700}.kpm-in .kpm-note{color:var(--ui-green)}.kpm-out .kpm-note{color:var(--ui-red)}.kpm-bal .kpm-note{color:var(--ui-blue)}
     .kpm-icon{width:30px;height:30px;border-radius: var(--radius-token-30);display:grid;place-items:center}.kpm-icon svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8}.kpm-in .kpm-icon{background:var(--ui-green-soft);color:var(--ui-green)}.kpm-out .kpm-icon{background:var(--ui-red-soft);color:var(--ui-red)}.kpm-bal .kpm-icon{background:var(--ui-blue-soft);color:var(--ui-blue)}
     .kas-pro-toolbar{display:flex;justify-content:space-between;gap: var(--space-12);align-items:center;flex-wrap:wrap}.kas-pro-filters{display:flex;gap: var(--space-8);flex:1;min-width:280px}.kas-pro-filters input,.kas-pro-filters select{height:38px;border:1px solid var(--ui-border);background:var(--ui-surface);color:var(--ui-text);border-radius: var(--radius-token-06);padding: 0 var(--space-11);font-size:12px;outline:none}.kas-pro-filters input{flex:1}.kas-pro-filters input:focus,.kas-pro-filters select:focus{border-color:var(--ui-blue);box-shadow: var(--shadow-token-09)}
     .kas-pro-table{overflow:auto;border:1px solid var(--ui-border);border-radius: var(--radius-token-09);background:var(--ui-surface)}.kas-pro-table table{width:100%;border-collapse:collapse;min-width:650px}.kas-pro-table th,.kas-pro-table td{padding: var(--space-12) var(--space-14);border-bottom:1px solid var(--ui-border);text-align:left;font-size:12px}.kas-pro-table th{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--ui-soft);background:var(--color-alpha-025)}.kas-pro-table tr:last-child td{border-bottom:0}.kas-pro-table tbody tr:hover{background:var(--color-alpha-073)}.kas-amt-in{color:var(--ui-green);font-weight:800}.kas-amt-out{color:var(--ui-red);font-weight:800}.kas-type-badge{display:inline-flex;align-items:center;padding: var(--space-4) var(--space-8);border-radius: var(--radius-token-28);font-size:10px;font-weight:800}.kas-type-in{background:var(--ui-green-soft);color:var(--ui-green)}.kas-type-out{background:var(--ui-red-soft);color:var(--ui-red)}
@@ -5962,54 +5962,50 @@ body.is-superadmin div.superadmin-only{display:block}
 
 
 
-/* Dark mode readability: stronger hierarchy for task cards */
-body.dark .view .task-pro-title{
-  color:#f8fafc;
-  font-size:15px;
-  font-weight:800;
-  line-height:1.4;
-}
-body.dark .view .task-pro-desc{
-  color:#cbd5e1;
-  -webkit-text-fill-color:#cbd5e1;
-  font-size:13px;
-  line-height:1.5;
-}
-body.dark .view .task-pro-tag{
-  color:#cbd5e1;
-  -webkit-text-fill-color:#cbd5e1;
-  font-size:11px;
-  background:#172033;
-  border-color:#334155;
-}
-body.dark .view .task-pro-deadline{
-  font-size:10.5px;
-}
-body.dark .view .task-pro-actions button{
-  color:#cbd5e1;
-  -webkit-text-fill-color:#cbd5e1;
-  font-size:11px;
-}
-body.dark .view .task-title{
-  color:#f8fafc;
-  -webkit-text-fill-color:#f8fafc;
-  font-size:14px;
-}
-body.dark .view .task-meta .pill{
-  color:#cbd5e1;
-  -webkit-text-fill-color:#cbd5e1;
-  font-size:11px;
-}
-body.dark .view .task-meta .pill-due{
-  color:#93c5fd;
-  -webkit-text-fill-color:#93c5fd;
-}
-body.dark .view .task-desc{
-  color:#cbd5e1;
-  -webkit-text-fill-color:#cbd5e1;
-  font-size:13px;
-  line-height:1.5;
-}
+    /* Task cards: readable secondary information in both themes */
+    .task-pro-title{
+      font-size:14px;
+      line-height:1.4;
+      font-weight:800;
+      color:var(--text-main);
+    }
+    .task-pro-desc{
+      margin-top:10px;
+      font-size:13px;
+      line-height:1.55;
+      color:var(--text-soft);
+    }
+    .task-pro-tag{
+      font-size:11px;
+      line-height:1.35;
+      color:var(--text-soft);
+      background:var(--glass-card);
+      border-color:var(--glass-border);
+      padding:6px 9px;
+    }
+    .task-pro-actions button{
+      font-size:11px;
+      font-weight:700;
+      min-height:34px;
+      padding:7px 10px;
+      color:var(--text-main);
+    }
+    body.dark .view .task-pro-desc{
+      color:#cbd5e1;
+      -webkit-text-fill-color:#cbd5e1;
+    }
+    body.dark .view .task-pro-tag{
+      color:#cbd5e1;
+      -webkit-text-fill-color:#cbd5e1;
+      background:#172033;
+      border-color:#334155;
+    }
+    body.dark .view .task-pro-actions button{
+      color:#e2e8f0;
+      -webkit-text-fill-color:#e2e8f0;
+      background:#172033;
+      border-color:#334155;
+    }
 </style>
 </head>
 
