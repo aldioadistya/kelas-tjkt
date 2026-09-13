@@ -6079,6 +6079,234 @@ body.dark .view .tx-sub{
 }
 </style>
 
+
+<style id="kelasku-human-centered-final">
+/* =========================================================
+   KELASKU — HUMAN-CENTERED UI POLISH
+   Warm, calm, tactile. Kas menjadi referensi kualitas.
+   ========================================================= */
+:root{
+  --kc-accent:#2563EB;
+  --kc-accent-soft:rgba(37,99,235,.09);
+  --kc-warm-bg:#F8F7F4;
+  --kc-warm-surface:#FFFFFF;
+  --kc-border-light:rgba(15,23,42,.10);
+  --kc-border-dark:rgba(203,213,225,.16);
+  --kc-text-light:#172033;
+  --kc-muted-light:#526174;
+  --kc-text-dark:#F1F5F9;
+  --kc-muted-dark:#CBD5E1;
+  --kc-ease:cubic-bezier(.2,.8,.2,1);
+}
+
+/* Warm, readable surfaces */
+body:not(.dark){
+  background:var(--kc-warm-bg);
+}
+body.dark{
+  background:#0F172A;
+}
+
+/* Keep text hierarchy strong without making secondary text harsh. */
+body:not(.dark) .view{
+  color:var(--kc-text-light);
+}
+body:not(.dark) .view .text-muted,
+body:not(.dark) .view .muted,
+body:not(.dark) .view .subtext,
+body:not(.dark) .view .field-hint{
+  color:var(--kc-muted-light);
+}
+body.dark .view .text-muted,
+body.dark .view .muted,
+body.dark .view .subtext,
+body.dark .view .field-hint{
+  color:var(--kc-muted-dark);
+}
+
+/* Natural hierarchy: main surface first, compact secondary controls. */
+.view .section{
+  border-radius:14px;
+}
+.view .section-head{
+  gap:10px;
+}
+.view .section-title{
+  font-weight:800;
+}
+.view .section-link{
+  transition:background-color .18s var(--kc-ease),
+             border-color .18s var(--kc-ease),
+             color .18s var(--kc-ease),
+             transform .16s var(--kc-ease);
+}
+.view .section-link:active{
+  transform:scale(.97);
+}
+
+/* Gentle glass: thin border, restrained blur, no neon glow. */
+.glass,
+.card,
+.summary-box,
+.balance-card,
+.modal,
+.sheet,
+.toast,
+.view .section{
+  border-color:var(--kc-border-light);
+}
+body.dark .glass,
+body.dark .card,
+body.dark .summary-box,
+body.dark .balance-card,
+body.dark .modal,
+body.dark .sheet,
+body.dark .toast,
+body.dark .view .section{
+  border-color:var(--kc-border-dark);
+}
+body:not(.dark) .glass,
+body:not(.dark) .card,
+body:not(.dark) .summary-box,
+body:not(.dark) .balance-card{
+  background:rgba(255,255,255,.82);
+  box-shadow:0 1px 2px rgba(15,23,42,.03),
+             0 10px 28px rgba(15,23,42,.045);
+}
+body.dark .glass,
+body.dark .card,
+body.dark .summary-box,
+body.dark .balance-card{
+  background:rgba(30,41,59,.72);
+  box-shadow:0 10px 28px rgba(0,0,0,.16);
+}
+
+/* Compact chip-like controls */
+.view .chip,
+.view .filter-chip,
+.view .tab,
+.view .day-chip,
+.view .mode-chip{
+  transition:background-color .18s var(--kc-ease),
+             border-color .18s var(--kc-ease),
+             color .18s var(--kc-ease),
+             transform .16s var(--kc-ease);
+}
+.view .chip:active,
+.view .filter-chip:active,
+.view .tab:active,
+.view .day-chip:active,
+.view .mode-chip:active{
+  transform:scale(.97);
+}
+
+/* Every obvious interactive control gets a tactile press state. */
+.view button,
+.view [role="button"],
+.view .btn,
+.view .button,
+.view .fab,
+.view .fab-add,
+.view .manage-toggle,
+.view .icon-btn{
+  transition:transform .17s var(--kc-ease),
+             background-color .18s var(--kc-ease),
+             border-color .18s var(--kc-ease),
+             box-shadow .18s var(--kc-ease),
+             color .18s var(--kc-ease);
+}
+.view button:active,
+.view [role="button"]:active,
+.view .btn:active,
+.view .button:active,
+.view .fab:active,
+.view .fab-add:active,
+.view .manage-toggle:active,
+.view .icon-btn:active{
+  transform:scale(.97);
+}
+
+/* Inputs: calm focus instead of heavy glow. */
+.view input,
+.view select,
+.view textarea{
+  transition:border-color .18s var(--kc-ease),
+             box-shadow .18s var(--kc-ease),
+             background-color .18s var(--kc-ease);
+}
+.view input:focus,
+.view select:focus,
+.view textarea:focus{
+  outline:none;
+  border-color:rgba(37,99,235,.52);
+  box-shadow:0 0 0 3px rgba(37,99,235,.10);
+}
+
+/* Keep list content breathable and readable. */
+.view .list,
+.view .list-item,
+.view .task-item,
+.view .report-item,
+.view .activity-item,
+.view .timeline-item,
+.view .tx-item{
+  transition:background-color .18s var(--kc-ease),
+             border-color .18s var(--kc-ease);
+}
+.view .list-item:active,
+.view .task-item:active,
+.view .report-item:active,
+.view .activity-item:active,
+.view .timeline-item:active,
+.view .tx-item:active{
+  transform:scale(.99);
+}
+
+/* Avoid the generic "box inside box" feeling on common sections. */
+@media(min-width:621px){
+  #view-hp .section,
+  #view-jadwal .section,
+  #view-tugas .section,
+  #view-laporan .section,
+  #view-settings .section{
+    margin-bottom:16px;
+  }
+}
+
+/* Mobile: preserve breathing room without wasting vertical space. */
+@media(max-width:620px){
+  .view .section{
+    border-radius:13px;
+  }
+  .view .section-head{
+    gap:8px;
+  }
+  .view button,
+  .view [role="button"],
+  .view .btn,
+  .view .button{
+    min-height:36px;
+  }
+  .view .section-link{
+    min-height:34px;
+    display:inline-flex;
+    align-items:center;
+  }
+}
+
+/* Respect reduced-motion accessibility preference. */
+@media(prefers-reduced-motion:reduce){
+  .view *,
+  .view *::before,
+  .view *::after{
+    transition-duration:.01ms !important;
+    animation-duration:.01ms !important;
+    animation-iteration-count:1 !important;
+    scroll-behavior:auto !important;
+  }
+}
+</style>
+
 </head>
 
 <body>
