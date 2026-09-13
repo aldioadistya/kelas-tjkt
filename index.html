@@ -6007,6 +6007,48 @@ body.is-superadmin div.superadmin-only{display:block}
       border-color:#334155;
     }
 </style>
+
+<style id="kelasku-dark-secondary-contrast-fix">
+/* Dark mode: teks sekunder tetap abu-abu, tetapi cukup terang untuk terbaca. */
+body.dark .view .pagehead p,
+body.dark .view .section-kicker,
+body.dark .view .field-hint,
+body.dark .view .timeline-time,
+body.dark .view .timeline-sub,
+body.dark .view .task-pro-desc,
+body.dark .view .task-pro-tag,
+body.dark .view .report-kpi .rk-label,
+body.dark .view .settings-desc,
+body.dark .view .empty,
+body.dark .view .acc-row .acc-info .acc-email,
+body.dark .view .student-row .student-sub,
+body.dark .view .kas-row .kas-sub,
+body.dark .view .report-item .report-meta,
+body.dark .view .notify-item .notify-sub,
+body.dark .view .jadwal-item .jadwal-sub,
+body.dark .view .task-item .task-sub {
+  color:#c1ccdc !important;
+  -webkit-text-fill-color:#c1ccdc !important;
+}
+
+/* Placeholder tetap lembut, tetapi tidak tenggelam di background gelap. */
+body.dark .view input::placeholder,
+body.dark .view textarea::placeholder,
+body.dark .view .search-box input::placeholder {
+  color:#9eacc0 !important;
+  -webkit-text-fill-color:#9eacc0 !important;
+  opacity:1 !important;
+}
+
+/* Teks kecil yang memakai opacity tidak boleh terlalu redup di dark mode. */
+body.dark .view .text-muted,
+body.dark .view .muted,
+body.dark .view .subtle,
+body.dark .view small {
+  color:#b4c0d2 !important;
+  -webkit-text-fill-color:#b4c0d2 !important;
+}
+</style>
 </head>
 
 <body>
