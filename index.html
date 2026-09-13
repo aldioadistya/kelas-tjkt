@@ -6476,6 +6476,383 @@ body.dark .timeline-sub{
   color:var(--ds-text-secondary);
 }
 
+
+/* ============================================================
+   FINAL COLOR SYSTEM
+   One semantic text/surface palette for light + dark mode
+   ============================================================ */
+:root{
+  --app-bg:#f4f7fb;
+  --app-surface:#ffffff;
+  --app-surface-2:#f8fafc;
+  --app-surface-3:#eef2f7;
+  --app-border:#e2e8f0;
+  --app-border-strong:#cbd5e1;
+  --app-text:#0f172a;
+  --app-text-2:#475569;
+  --app-text-3:#64748b;
+  --app-text-4:#94a3b8;
+  --app-primary:#2563eb;
+  --app-primary-soft:#eff6ff;
+  --app-success:#15803d;
+  --app-success-soft:#f0fdf4;
+  --app-warning:#b45309;
+  --app-warning-soft:#fffbeb;
+  --app-danger:#dc2626;
+  --app-danger-soft:#fef2f2;
+
+  /* Legacy aliases used by older feature blocks */
+  --elite-bg:var(--app-bg);
+  --elite-surface:var(--app-surface);
+  --elite-surface-2:var(--app-surface-2);
+  --elite-border:var(--app-border);
+  --elite-border-strong:var(--app-border-strong);
+  --elite-text:var(--app-text);
+  --elite-text-2:var(--app-text-2);
+  --elite-text-3:var(--app-text-3);
+  --elite-primary:var(--app-primary);
+  --elite-primary-soft:var(--app-primary-soft);
+  --elite-danger:var(--app-danger);
+  --elite-danger-soft:var(--app-danger-soft);
+
+  --text-main:var(--app-text);
+  --text-soft:var(--app-text-2);
+  --text-muted:var(--app-text-3);
+  --ui-text:var(--app-text);
+  --ui-muted:var(--app-text-2);
+  --ui-soft:var(--app-text-3);
+  --dash-text:var(--app-text);
+  --dash-muted:var(--app-text-2);
+}
+
+body.dark{
+  --app-bg:#090d16;
+  --app-surface:#101826;
+  --app-surface-2:#151f2f;
+  --app-surface-3:#1b283b;
+  --app-border:rgba(255,255,255,.09);
+  --app-border-strong:rgba(255,255,255,.16);
+  --app-text:#f8fafc;
+  --app-text-2:#cbd5e1;
+  --app-text-3:#94a3b8;
+  --app-text-4:#64748b;
+  --app-primary:#60a5fa;
+  --app-primary-soft:#172554;
+  --app-success:#34d399;
+  --app-success-soft:#0d2417;
+  --app-warning:#fbbf24;
+  --app-warning-soft:#2b2113;
+  --app-danger:#fb7185;
+  --app-danger-soft:#32131b;
+
+  --elite-bg:var(--app-bg);
+  --elite-surface:var(--app-surface);
+  --elite-surface-2:var(--app-surface-2);
+  --elite-border:var(--app-border);
+  --elite-border-strong:var(--app-border-strong);
+  --elite-text:var(--app-text);
+  --elite-text-2:var(--app-text-2);
+  --elite-text-3:var(--app-text-3);
+  --elite-primary:var(--app-primary);
+  --elite-primary-soft:var(--app-primary-soft);
+  --elite-danger:var(--app-danger);
+  --elite-danger-soft:var(--app-danger-soft);
+
+  --text-main:var(--app-text);
+  --text-soft:var(--app-text-2);
+  --text-muted:var(--app-text-3);
+  --ui-text:var(--app-text);
+  --ui-muted:var(--app-text-2);
+  --ui-soft:var(--app-text-3);
+  --dash-text:var(--app-text);
+  --dash-muted:var(--app-text-2);
+}
+
+/* Global text hierarchy */
+body,
+.phone,
+.screen,
+.view,
+.card,
+.stat-card,
+.dashboard-panel,
+.dashboard-card,
+.panel,
+.modal,
+.bottom-sheet,
+.toast,
+.login-card,
+.search-box,
+.field,
+.table-wrap{
+  color:var(--app-text);
+}
+
+.pagehead h1,
+.section-title,
+.row-title,
+.tx-title,
+.task-title,
+.report-title,
+.announce-title,
+.announce-title-btn,
+.stat-value,
+.modal h3,
+.login-welcome,
+.timeline-card strong,
+.dashboard-user-meta strong{
+  color:var(--app-text);
+}
+
+.pagehead p,
+.row-sub,
+.tx-sub,
+.task-desc,
+.report-meta,
+.announce-date,
+.announce-description,
+.field-hint,
+.empty,
+.timeline-sub,
+.dashboard-user-meta span,
+.dashboard-stat-card .stat-label,
+.dashboard-stat-card .stat-status,
+.desktop-brand-sub,
+.section-kicker,
+.search-box input::placeholder,
+.field input::placeholder,
+.field textarea::placeholder{
+  color:var(--app-text-2);
+}
+
+/* Small text must not become too tiny or too faint */
+.row-sub,
+.tx-sub,
+.task-desc,
+.announce-description,
+.timeline-sub,
+.field-hint,
+.report-meta{
+  font-size:13px;
+  line-height:1.5;
+}
+
+.desktop-brand-sub,
+.dashboard-user-meta span,
+.dashboard-stat-card .stat-label,
+.dashboard-stat-card .stat-status,
+.section-kicker{
+  font-size:11px;
+  line-height:1.4;
+  color:var(--app-text-3);
+}
+
+/* Tags / pills */
+.pill,
+.announce-pill,
+.acc-badge,
+.report-status,
+.day-chip,
+.mode-btn{
+  color:var(--app-text-2);
+}
+
+.pill-due,
+.report-status.rejected,
+.announce-pill.overdue{
+  color:var(--app-danger);
+  background:var(--app-danger-soft);
+}
+
+.report-status.pending{
+  color:var(--app-warning);
+  background:var(--app-warning-soft);
+}
+
+.report-status.reviewed{
+  color:var(--app-primary);
+  background:var(--app-primary-soft);
+}
+
+.report-status.resolved{
+  color:var(--app-success);
+  background:var(--app-success-soft);
+}
+
+/* Navigation / controls */
+.desktop-nav-item,
+.btn-ghost,
+.cal-nav-btn,
+.day-chip,
+.mode-btn{
+  color:var(--app-text-2);
+}
+
+.desktop-nav-item:hover,
+.btn-ghost:hover,
+.cal-nav-btn:hover,
+.day-chip:hover,
+.mode-btn:hover{
+  color:var(--app-text);
+}
+
+.desktop-nav-item.active,
+.day-chip.active{
+  color:#fff;
+}
+
+/* Inputs */
+input,
+select,
+textarea{
+  color:var(--app-text);
+}
+
+input::placeholder,
+textarea::placeholder{
+  color:var(--app-text-3);
+}
+
+body.dark input::placeholder,
+body.dark textarea::placeholder{
+  color:var(--app-text-3);
+}
+
+/* Timeline schedule */
+#view-jadwal .timeline-time{
+  color:var(--app-primary);
+  background:var(--app-primary-soft);
+}
+
+#view-jadwal .timeline-card{
+  color:var(--app-text);
+  background:var(--app-surface);
+}
+
+#view-jadwal .timeline-sub{
+  color:var(--app-text-2);
+}
+
+/* Calendar */
+.cal-dow{
+  color:var(--app-text-3);
+}
+
+.cal-day{
+  color:var(--app-text);
+}
+
+.cal-day.future{
+  color:var(--app-text-4);
+}
+
+/* Dark mode explicit overrides for legacy fixed-color components */
+body.dark .desktop-brand-title,
+body.dark .desktop-nav-item,
+body.dark .pagehead h1,
+body.dark .pagehead p,
+body.dark .section-title,
+body.dark .row-title,
+body.dark .row-sub,
+body.dark .tx-title,
+body.dark .tx-sub,
+body.dark .task-title,
+body.dark .task-desc,
+body.dark .report-title,
+body.dark .report-meta,
+body.dark .announce-title,
+body.dark .announce-description,
+body.dark .announce-date,
+body.dark .field-hint,
+body.dark .empty,
+body.dark .timeline-time,
+body.dark .timeline-sub,
+body.dark .cal-day,
+body.dark .cal-dow,
+body.dark .modal h3,
+body.dark .login-welcome,
+body.dark .login-sub,
+body.dark .dashboard-user-meta strong,
+body.dark .dashboard-user-meta span{
+  color:var(--app-text);
+}
+
+body.dark .pagehead p,
+body.dark .row-sub,
+body.dark .tx-sub,
+body.dark .task-desc,
+body.dark .report-meta,
+body.dark .announce-description,
+body.dark .announce-date,
+body.dark .field-hint,
+body.dark .empty,
+body.dark .timeline-sub,
+body.dark .dashboard-user-meta span,
+body.dark .desktop-brand-sub,
+body.dark .dashboard-stat-card .stat-label,
+body.dark .dashboard-stat-card .stat-status{
+  color:var(--app-text-2);
+}
+
+/* Restore semantic colors after generic dark text overrides */
+body.dark .timeline-time{
+  color:var(--app-primary);
+}
+
+body.dark .pill-due,
+body.dark .report-status.rejected,
+body.dark .announce-pill.overdue{
+  color:var(--app-danger);
+}
+
+body.dark .report-status.pending{
+  color:var(--app-warning);
+}
+
+body.dark .report-status.reviewed{
+  color:var(--app-primary);
+}
+
+body.dark .report-status.resolved{
+  color:var(--app-success);
+}
+
+body.dark .desktop-nav-item.active{
+  color:var(--app-primary);
+}
+
+body.dark .day-chip.active{
+  color:#fff;
+}
+
+/* Remove washed-out utility text from common feature blocks */
+body.dark [style*="color:var(--text-muted)"],
+body.dark [style*="color:var(--text-soft)"],
+body.dark [style*="color:var(--color-slate)"]{
+  color:var(--app-text-2);
+}
+
+/* Feature text hierarchy */
+.task-pro-desc,
+.task-pro-tag,
+.my-progress-note,
+.achievement-status,
+.notify-text,
+.activity-meta{
+  color:var(--app-text-2);
+  font-size:13px;
+  line-height:1.5;
+}
+
+body.dark .task-pro-desc,
+body.dark .task-pro-tag,
+body.dark .my-progress-note,
+body.dark .achievement-status,
+body.dark .notify-text,
+body.dark .activity-meta{
+  color:var(--app-text-2);
+}
+
 </style>
 </head>
 
