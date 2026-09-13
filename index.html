@@ -6008,47 +6008,77 @@ body.is-superadmin div.superadmin-only{display:block}
     }
 </style>
 
-<style id="kelasku-dark-secondary-contrast-fix">
-/* Dark mode: teks sekunder tetap abu-abu, tetapi cukup terang untuk terbaca. */
-body.dark .view .pagehead p,
-body.dark .view .section-kicker,
+<style id="kelasku-dark-text-contrast">
+/* =========================================================
+   DARK MODE — teks sekunder / abu-abu tetap nyaman dibaca.
+   Tidak mengubah warna teks utama atau layout.
+   ========================================================= */
+body.dark .view .activity-meta,
+body.dark .view .announce-meta,
 body.dark .view .field-hint,
-body.dark .view .timeline-time,
-body.dark .view .timeline-sub,
-body.dark .view .task-pro-desc,
-body.dark .view .task-pro-tag,
-body.dark .view .report-kpi .rk-label,
-body.dark .view .settings-desc,
+body.dark .view .gsi-sub,
+body.dark .view .hp-progress-meta,
+body.dark .view .kpm-label,
+body.dark .view .report-meta,
+body.dark .view .row-sub,
 body.dark .view .empty,
-body.dark .view .acc-row .acc-info .acc-email,
-body.dark .view .student-row .student-sub,
-body.dark .view .kas-row .kas-sub,
-body.dark .view .report-item .report-meta,
-body.dark .view .notify-item .notify-sub,
-body.dark .view .jadwal-item .jadwal-sub,
-body.dark .view .task-item .task-sub {
-  color:#c1ccdc !important;
-  -webkit-text-fill-color:#c1ccdc !important;
+body.dark .view .settings-label,
+body.dark .view .stat-label,
+body.dark .view .task-desc,
+body.dark .view .task-pro-desc,
+body.dark .view .task-pro-meta,
+body.dark .view .task-meta,
+body.dark .view .timeline-sub,
+body.dark .view .tx-sub,
+body.dark .view .balance-label{
+  color:#CBD5E1 !important;
+  -webkit-text-fill-color:#CBD5E1 !important;
 }
 
-/* Placeholder tetap lembut, tetapi tidak tenggelam di background gelap. */
+/* Label yang memang lebih kecil dibuat sedikit lebih terang,
+   tanpa menjadikannya seterang heading. */
+body.dark .view .activity-meta,
+body.dark .view .announce-meta,
+body.dark .view .gsi-sub,
+body.dark .view .hp-progress-meta,
+body.dark .view .report-meta,
+body.dark .view .task-pro-meta,
+body.dark .view .timeline-sub,
+body.dark .view .tx-sub{
+  color:#B8C4D5 !important;
+  -webkit-text-fill-color:#B8C4D5 !important;
+}
+
+/* Placeholder jangan sampai terlalu redup di dark mode. */
 body.dark .view input::placeholder,
-body.dark .view textarea::placeholder,
-body.dark .view .search-box input::placeholder {
-  color:#9eacc0 !important;
-  -webkit-text-fill-color:#9eacc0 !important;
+body.dark .view textarea::placeholder{
+  color:#AEBBCB !important;
+  -webkit-text-fill-color:#AEBBCB !important;
   opacity:1 !important;
 }
 
-/* Teks kecil yang memakai opacity tidak boleh terlalu redup di dark mode. */
-body.dark .view .text-muted,
-body.dark .view .muted,
-body.dark .view .subtle,
-body.dark .view small {
-  color:#b4c0d2 !important;
-  -webkit-text-fill-color:#b4c0d2 !important;
+/* Teks sekunder yang memakai token lama tetap ikut terbaca. */
+body.dark .view [style*="color:var(--text-soft)"],
+body.dark .view [style*="color: var(--text-soft)"],
+body.dark .view [style*="color:var(--text-muted)"],
+body.dark .view [style*="color: var(--text-muted)"],
+body.dark .view [style*="color:var(--ui-muted)"],
+body.dark .view [style*="color: var(--ui-muted)"]{
+  color:#CBD5E1 !important;
+  -webkit-text-fill-color:#CBD5E1 !important;
+}
+
+/* Jangan biarkan opacity inline membuat teks sekunder terlalu gelap. */
+body.dark .view .field-hint,
+body.dark .view .row-sub,
+body.dark .view .task-desc,
+body.dark .view .task-pro-desc,
+body.dark .view .timeline-sub,
+body.dark .view .tx-sub{
+  opacity:1;
 }
 </style>
+
 </head>
 
 <body>
