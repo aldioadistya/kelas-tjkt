@@ -13559,6 +13559,558 @@ button:active,
 }
 </style>
 
+
+<style id="kelasku-final-lightmode-surface-fix">
+/* FINAL LIGHT MODE FIX
+   Selector dibuat sengaja lebih spesifik dan diletakkan PALING AKHIR,
+   supaya style lama tidak mengembalikan kartu/tombol menjadi abu-abu gelap.
+*/
+body:not(.dark){
+  --lm-page:#f6f7f9;
+  --lm-surface:#ffffff;
+  --lm-surface-soft:#f8fafc;
+  --lm-border:#cbd5e1;
+  --lm-border-soft:#dbe2ea;
+  --lm-text:#172033;
+  --lm-text-secondary:#475569;
+  --lm-text-muted:#64748b;
+  --lm-blue:#2563eb;
+  --lm-blue-hover:#1d4ed8;
+}
+
+/* Page / shell */
+body:not(.dark),
+body:not(.dark) .phone,
+body:not(.dark) .screen,
+body:not(.dark) .main-content,
+body:not(.dark) .app{
+  background:var(--lm-page) !important;
+  color:var(--lm-text) !important;
+}
+
+body:not(.dark) .statusbar,
+body:not(.dark) .desktop-sidebar{
+  background:#ffffff !important;
+  color:var(--lm-text) !important;
+  border-color:var(--lm-border-soft) !important;
+}
+
+/* Main cards — termasuk Ringkasan Kelas, Kas, HP, Jadwal, Tugas,
+   Laporan dan Setelan. */
+body:not(.dark) .card,
+body:not(.dark) .stat-card,
+body:not(.dark) .balance-card,
+body:not(.dark) .panel,
+body:not(.dark) .content-card,
+body:not(.dark) .section-card,
+body:not(.dark) .task-column,
+body:not(.dark) .task-pro-card,
+body:not(.dark) .report-chart-card,
+body:not(.dark) .report-kpi-card,
+body:not(.dark) .report-kpi,
+body:not(.dark) .settings-profile-card,
+body:not(.dark) .timeline-card,
+body:not(.dark) .piket-person,
+body:not(.dark) .hp-slot,
+body:not(.dark) .kas-folder,
+body:not(.dark) .kas-pro-metric,
+body:not(.dark) .kas-pro-table,
+body:not(.dark) .calendar-card,
+body:not(.dark) .cal-card,
+body:not(.dark) .search-box,
+body:not(.dark) .modal,
+body:not(.dark) .modal-content{
+  background:var(--lm-surface) !important;
+  color:var(--lm-text) !important;
+  border-color:var(--lm-border) !important;
+  box-shadow:0 1px 2px rgba(15,23,42,.04),0 6px 18px rgba(15,23,42,.035) !important;
+}
+
+/* Beranda hero tetap memakai aksen biru, bukan abu-abu. */
+body:not(.dark) .hero{
+  background:var(--primary-gradient) !important;
+  color:#ffffff !important;
+  border-color:rgba(37,99,235,.35) !important;
+}
+body:not(.dark) .hero *{color:inherit;}
+
+/* Teks abu-abu dibuat sedikit lebih gelap agar terbaca di layar HP. */
+body:not(.dark) .pagehead p,
+body:not(.dark) .section-kicker,
+body:not(.dark) .field-hint,
+body:not(.dark) .task-pro-desc,
+body:not(.dark) .task-pro-meta,
+body:not(.dark) .task-pro-tag,
+body:not(.dark) .report-bar-label,
+body:not(.dark) .kas-folder-note,
+body:not(.dark) .kas-pro-note,
+body:not(.dark) .kpm-note,
+body:not(.dark) .timeline-time,
+body:not(.dark) .timeline-sub,
+body:not(.dark) .hp-slot-time,
+body:not(.dark) .empty,
+body:not(.dark) .empty div:last-child,
+body:not(.dark) .muted,
+body:not(.dark) .text-muted,
+body:not(.dark) .subtext,
+body:not(.dark) .hint,
+body:not(.dark) .help-text,
+body:not(.dark) small{
+  color:var(--lm-text-secondary) !important;
+  -webkit-text-fill-color:var(--lm-text-secondary) !important;
+}
+
+body:not(.dark) .section-title,
+body:not(.dark) .pagehead h1,
+body:not(.dark) .stat-label,
+body:not(.dark) .stat-status,
+body:not(.dark) .task-pro-card h3,
+body:not(.dark) .report-kpi .rk-label,
+body:not(.dark) .settings-label,
+body:not(.dark) .settings-section h3,
+body:not(.dark) label{
+  color:var(--lm-text) !important;
+  -webkit-text-fill-color:var(--lm-text) !important;
+}
+
+/* Semua kontrol netral: putih, border jelas, tidak lagi abu-abu pekat. */
+body:not(.dark) .btn-ghost,
+body:not(.dark) .theme-btn,
+body:not(.dark) .cal-nav-btn,
+body:not(.dark) .day-chip,
+body:not(.dark) .toggle-btn,
+body:not(.dark) .bulk-all-btn,
+body:not(.dark) .section-link,
+body:not(.dark) .section-action,
+body:not(.dark) .kas-history-toggle,
+body:not(.dark) .task-filter-tab,
+body:not(.dark) .report-action-btn,
+body:not(.dark) .settings-nav button,
+body:not(.dark) .mode-btn,
+body:not(.dark) .hp-slot-edit,
+body:not(.dark) .kas-edit-btn{
+  background:#ffffff !important;
+  color:#334155 !important;
+  border:1px solid #cbd5e1 !important;
+  box-shadow:0 1px 2px rgba(15,23,42,.04) !important;
+}
+
+/* Tombol aksi utama tetap biru agar hierarchy jelas. */
+body:not(.dark) .btn-primary,
+body:not(.dark) .btn.btn-primary,
+body:not(.dark) .primary,
+body:not(.dark) .fab-add,
+body:not(.dark) .section-action.primary,
+body:not(.dark) button.primary{
+  background:var(--lm-blue) !important;
+  color:#ffffff !important;
+  border-color:#1d4ed8 !important;
+  box-shadow:0 3px 10px rgba(37,99,235,.18) !important;
+}
+body:not(.dark) .btn-primary:hover,
+body:not(.dark) .primary:hover,
+body:not(.dark) .fab-add:hover,
+body:not(.dark) .section-action.primary:hover{
+  background:var(--lm-blue-hover) !important;
+}
+
+/* Danger tetap merah, bukan abu-abu. */
+body:not(.dark) .btn-danger,
+body:not(.dark) .danger,
+body:not(.dark) .kas-delete-btn{
+  background:#fff1f2 !important;
+  color:#be123c !important;
+  border-color:#fda4af !important;
+}
+
+/* Input & select */
+body:not(.dark) input,
+body:not(.dark) select,
+body:not(.dark) textarea{
+  background:#ffffff !important;
+  color:var(--lm-text) !important;
+  border-color:#cbd5e1 !important;
+  -webkit-text-fill-color:var(--lm-text) !important;
+}
+body:not(.dark) input::placeholder,
+body:not(.dark) textarea::placeholder{
+  color:#64748b !important;
+  opacity:1 !important;
+}
+body:not(.dark) input:focus,
+body:not(.dark) select:focus,
+body:not(.dark) textarea:focus{
+  border-color:#60a5fa !important;
+  box-shadow:0 0 0 3px rgba(37,99,235,.10) !important;
+}
+
+/* Garis pemisah / row */
+body:not(.dark) hr,
+body:not(.dark) .divider,
+body:not(.dark) .section-divider,
+body:not(.dark) .row-item,
+body:not(.dark) .tx-item,
+body:not(.dark) .task-item,
+body:not(.dark) .report-item,
+body:not(.dark) .student-row,
+body:not(.dark) .kas-folder-head{
+  border-color:var(--lm-border-soft) !important;
+}
+
+/* Status chips tetap punya warna semantik. */
+body:not(.dark) .kas-summary-paid{color:#15803d !important;background:#f0fdf4 !important;border-color:#86efac !important;}
+body:not(.dark) .kas-summary-unpaid{color:#be123c !important;background:#fff1f2 !important;border-color:#fda4af !important;}
+body:not(.dark) .kas-summary-nominal{color:#334155 !important;background:#f8fafc !important;border-color:#cbd5e1 !important;}
+
+/* Micro-interaction */
+body:not(.dark) button,
+body:not(.dark) [role="button"]{
+  transition:background-color 180ms ease,border-color 180ms ease,color 180ms ease,box-shadow 180ms ease,transform 180ms ease !important;
+}
+body:not(.dark) button:active,
+body:not(.dark) [role="button"]:active{
+  transform:scale(.97) !important;
+}
+
+/* Mobile: tidak ada elemen yang memaksa lebar desktop. */
+@media(max-width:620px){
+  body:not(.dark) .view,
+  body:not(.dark) .section,
+  body:not(.dark) .card,
+  body:not(.dark) .stat-card,
+  body:not(.dark) .search-box,
+  body:not(.dark) .task-column,
+  body:not(.dark) .report-chart-card,
+  body:not(.dark) .report-kpi-card,
+  body:not(.dark) .settings-profile-card{
+    max-width:100% !important;
+    min-width:0 !important;
+  }
+}
+</style>
+
+<style id="kelasku-final-both-theme-surface-v4">
+/* =========================================================
+   FINAL THEME SURFACE PASS v4
+   Menyamakan kualitas visual DARK + LIGHT.
+   Fokus: background, card, border, tombol, input, teks sekunder.
+   Tidak mengubah fungsi atau warna status/aksi utama.
+   ========================================================= */
+
+/* ---------- DARK ---------- */
+body.dark{
+  --v4-bg:#0f172a;
+  --v4-surface:#111c2f;
+  --v4-surface-2:#162238;
+  --v4-border:#34445d;
+  --v4-border-soft:#2b3a51;
+  --v4-text:#f8fafc;
+  --v4-text-2:#cbd5e1;
+  --v4-text-3:#9fb0c7;
+}
+body.dark,
+body.dark .phone,
+body.dark .screen,
+body.dark .main-content,
+body.dark .app{
+  background:var(--v4-bg) !important;
+  color:var(--v4-text) !important;
+}
+body.dark .card,
+body.dark .stat-card,
+body.dark .balance-card,
+body.dark .panel,
+body.dark .content-card,
+body.dark .section-card,
+body.dark .task-column,
+body.dark .task-pro-card,
+body.dark .report-chart-card,
+body.dark .report-kpi-card,
+body.dark .report-kpi,
+body.dark .settings-profile-card,
+body.dark .timeline-card,
+body.dark .piket-person,
+body.dark .hp-slot,
+body.dark .kas-folder,
+body.dark .kas-pro-metric,
+body.dark .kas-pro-table,
+body.dark .calendar-card,
+body.dark .cal-card,
+body.dark .search-box,
+body.dark .modal,
+body.dark .modal-content{
+  background:var(--v4-surface) !important;
+  color:var(--v4-text) !important;
+  border-color:var(--v4-border) !important;
+  box-shadow:0 1px 2px rgba(0,0,0,.18),0 8px 24px rgba(0,0,0,.10) !important;
+}
+body.dark .pagehead p,
+body.dark .section-kicker,
+body.dark .field-hint,
+body.dark .task-pro-desc,
+body.dark .task-pro-meta,
+body.dark .task-pro-tag,
+body.dark .report-bar-label,
+body.dark .kas-folder-note,
+body.dark .kas-pro-note,
+body.dark .kpm-note,
+body.dark .timeline-time,
+body.dark .timeline-sub,
+body.dark .hp-slot-time,
+body.dark .empty,
+body.dark .muted,
+body.dark .text-muted,
+body.dark .subtext,
+body.dark .hint,
+body.dark .help-text,
+body.dark small{
+  color:var(--v4-text-3) !important;
+  -webkit-text-fill-color:var(--v4-text-3) !important;
+}
+body.dark .section-title,
+body.dark .pagehead h1,
+body.dark .stat-label,
+body.dark .stat-status,
+body.dark .task-pro-card h3,
+body.dark .report-kpi .rk-label,
+body.dark .settings-label,
+body.dark .settings-section h3,
+body.dark label{
+  color:var(--v4-text) !important;
+  -webkit-text-fill-color:var(--v4-text) !important;
+}
+body.dark input,
+body.dark select,
+body.dark textarea{
+  background:#0f1a2c !important;
+  color:var(--v4-text) !important;
+  border-color:var(--v4-border) !important;
+  -webkit-text-fill-color:var(--v4-text) !important;
+}
+body.dark input::placeholder,
+body.dark textarea::placeholder{
+  color:#8fa1ba !important;
+  opacity:1 !important;
+}
+body.dark .btn-ghost,
+body.dark .theme-btn,
+body.dark .cal-nav-btn,
+body.dark .day-chip,
+body.dark .toggle-btn,
+body.dark .bulk-all-btn,
+body.dark .section-link,
+body.dark .section-action:not(.primary),
+body.dark .kas-history-toggle,
+body.dark .task-filter-tab,
+body.dark .report-action-btn:not(.primary),
+body.dark .settings-nav button:not(.active),
+body.dark .mode-btn:not(.active),
+body.dark .hp-slot-edit,
+body.dark .kas-edit-btn{
+  background:#17243a !important;
+  color:#e2e8f0 !important;
+  border-color:#40516b !important;
+}
+body.dark .btn-ghost:hover,
+body.dark .theme-btn:hover,
+body.dark .cal-nav-btn:hover,
+body.dark .day-chip:hover,
+body.dark .toggle-btn:hover,
+body.dark .bulk-all-btn:hover,
+body.dark .section-link:hover,
+body.dark .section-action:not(.primary):hover,
+body.dark .kas-history-toggle:hover,
+body.dark .task-filter-tab:hover,
+body.dark .report-action-btn:not(.primary):hover,
+body.dark .settings-nav button:not(.active):hover,
+body.dark .mode-btn:not(.active):hover,
+body.dark .hp-slot-edit:hover,
+body.dark .kas-edit-btn:hover{
+  background:#1d2c44 !important;
+  border-color:#526782 !important;
+}
+body.dark hr,
+body.dark .divider,
+body.dark .section-divider,
+body.dark .row-item,
+body.dark .tx-item,
+body.dark .task-item,
+body.dark .report-item,
+body.dark .student-row,
+body.dark .kas-folder-head{
+  border-color:var(--v4-border-soft) !important;
+}
+
+/* ---------- LIGHT ---------- */
+body:not(.dark){
+  --v4-bg:#f4f6f8;
+  --v4-surface:#ffffff;
+  --v4-surface-2:#f8fafc;
+  --v4-border:#c8d2df;
+  --v4-border-soft:#d8e0e9;
+  --v4-text:#172033;
+  --v4-text-2:#3f4d61;
+  --v4-text-3:#5d6b7e;
+}
+body:not(.dark),
+body:not(.dark) .phone,
+body:not(.dark) .screen,
+body:not(.dark) .main-content,
+body:not(.dark) .app{
+  background:var(--v4-bg) !important;
+  color:var(--v4-text) !important;
+}
+body:not(.dark) .card,
+body:not(.dark) .stat-card,
+body:not(.dark) .balance-card,
+body:not(.dark) .panel,
+body:not(.dark) .content-card,
+body:not(.dark) .section-card,
+body:not(.dark) .task-column,
+body:not(.dark) .task-pro-card,
+body:not(.dark) .report-chart-card,
+body:not(.dark) .report-kpi-card,
+body:not(.dark) .report-kpi,
+body:not(.dark) .settings-profile-card,
+body:not(.dark) .timeline-card,
+body:not(.dark) .piket-person,
+body:not(.dark) .hp-slot,
+body:not(.dark) .kas-folder,
+body:not(.dark) .kas-pro-metric,
+body:not(.dark) .kas-pro-table,
+body:not(.dark) .calendar-card,
+body:not(.dark) .cal-card,
+body:not(.dark) .search-box,
+body:not(.dark) .modal,
+body:not(.dark) .modal-content{
+  background:var(--v4-surface) !important;
+  color:var(--v4-text) !important;
+  border-color:var(--v4-border) !important;
+  box-shadow:0 1px 2px rgba(15,23,42,.04),0 8px 24px rgba(15,23,42,.035) !important;
+}
+body:not(.dark) .pagehead p,
+body:not(.dark) .section-kicker,
+body:not(.dark) .field-hint,
+body:not(.dark) .task-pro-desc,
+body:not(.dark) .task-pro-meta,
+body:not(.dark) .task-pro-tag,
+body:not(.dark) .report-bar-label,
+body:not(.dark) .kas-folder-note,
+body:not(.dark) .kas-pro-note,
+body:not(.dark) .kpm-note,
+body:not(.dark) .timeline-time,
+body:not(.dark) .timeline-sub,
+body:not(.dark) .hp-slot-time,
+body:not(.dark) .empty,
+body:not(.dark) .muted,
+body:not(.dark) .text-muted,
+body:not(.dark) .subtext,
+body:not(.dark) .hint,
+body:not(.dark) .help-text,
+body:not(.dark) small{
+  color:var(--v4-text-3) !important;
+  -webkit-text-fill-color:var(--v4-text-3) !important;
+}
+body:not(.dark) .section-title,
+body:not(.dark) .pagehead h1,
+body:not(.dark) .stat-label,
+body:not(.dark) .stat-status,
+body:not(.dark) .task-pro-card h3,
+body:not(.dark) .report-kpi .rk-label,
+body:not(.dark) .settings-label,
+body:not(.dark) .settings-section h3,
+body:not(.dark) label{
+  color:var(--v4-text) !important;
+  -webkit-text-fill-color:var(--v4-text) !important;
+}
+body:not(.dark) input,
+body:not(.dark) select,
+body:not(.dark) textarea{
+  background:#ffffff !important;
+  color:var(--v4-text) !important;
+  border-color:var(--v4-border) !important;
+  -webkit-text-fill-color:var(--v4-text) !important;
+}
+body:not(.dark) input::placeholder,
+body:not(.dark) textarea::placeholder{
+  color:#64748b !important;
+  opacity:1 !important;
+}
+body:not(.dark) .btn-ghost,
+body:not(.dark) .theme-btn,
+body:not(.dark) .cal-nav-btn,
+body:not(.dark) .day-chip,
+body:not(.dark) .toggle-btn,
+body:not(.dark) .bulk-all-btn,
+body:not(.dark) .section-link,
+body:not(.dark) .section-action:not(.primary),
+body:not(.dark) .kas-history-toggle,
+body:not(.dark) .task-filter-tab,
+body:not(.dark) .report-action-btn:not(.primary),
+body:not(.dark) .settings-nav button:not(.active),
+body:not(.dark) .mode-btn:not(.active),
+body:not(.dark) .hp-slot-edit,
+body:not(.dark) .kas-edit-btn{
+  background:#ffffff !important;
+  color:#334155 !important;
+  border-color:#c8d2df !important;
+}
+body:not(.dark) .btn-ghost:hover,
+body:not(.dark) .theme-btn:hover,
+body:not(.dark) .cal-nav-btn:hover,
+body:not(.dark) .day-chip:hover,
+body:not(.dark) .toggle-btn:hover,
+body:not(.dark) .bulk-all-btn:hover,
+body:not(.dark) .section-link:hover,
+body:not(.dark) .section-action:not(.primary):hover,
+body:not(.dark) .kas-history-toggle:hover,
+body:not(.dark) .task-filter-tab:hover,
+body:not(.dark) .report-action-btn:not(.primary):hover,
+body:not(.dark) .settings-nav button:not(.active):hover,
+body:not(.dark) .mode-btn:not(.active):hover,
+body:not(.dark) .hp-slot-edit:hover,
+body:not(.dark) .kas-edit-btn:hover{
+  background:#f1f5f9 !important;
+  border-color:#94a3b8 !important;
+}
+body:not(.dark) hr,
+body:not(.dark) .divider,
+body:not(.dark) .section-divider,
+body:not(.dark) .row-item,
+body:not(.dark) .tx-item,
+body:not(.dark) .task-item,
+body:not(.dark) .report-item,
+body:not(.dark) .student-row,
+body:not(.dark) .kas-folder-head{
+  border-color:var(--v4-border-soft) !important;
+}
+
+/* Primary actions remain blue; danger remains red. */
+body:not(.dark) .btn-primary,
+body:not(.dark) .btn.btn-primary,
+body:not(.dark) .primary,
+body:not(.dark) .fab-add,
+body:not(.dark) button.primary{
+  background:#2563eb !important;
+  color:#fff !important;
+  border-color:#1d4ed8 !important;
+}
+body:not(.dark) .btn-danger,
+body:not(.dark) .danger,
+body:not(.dark) .kas-delete-btn{
+  background:#fff1f2 !important;
+  color:#be123c !important;
+  border-color:#fda4af !important;
+}
+
+/* Consistent tactile feedback in both themes. */
+body.dark button:active,
+body.dark [role="button"]:active,
+body:not(.dark) button:active,
+body:not(.dark) [role="button"]:active{
+  transform:scale(.97) !important;
+}
+</style>
 </body>
 <!-- Kelasku compatibility patch: resilient Firestore sync + legacy fallback -->
 </html>
