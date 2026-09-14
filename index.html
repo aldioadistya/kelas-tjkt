@@ -13376,6 +13376,189 @@ Setelan
 })();
 </script>
 
+
+<style id="kelasku-final-readable-neutral-ui">
+/* =========================================================
+   FINAL NEUTRAL UI POLISH
+   Tujuan: abu-abu tidak kusam / tidak terlalu redup.
+   Dark & light dibuat satu keluarga visual, tanpa mengubah
+   fungsi, layout, atau warna status (success/danger/warning).
+   ========================================================= */
+
+/* ---------- Shared readable text hierarchy ---------- */
+:root{
+  --ui-muted:#526277;
+  --ui-soft:#64748b;
+  --text-muted:#64748b;
+  --text-soft:#475569;
+  --ds-text-secondary:#475569;
+  --ds-text-muted:#526277;
+  --ds-text-faint:#64748b;
+}
+
+body.dark{
+  --ui-muted:#aebbd0;
+  --ui-soft:#93a3ba;
+  --text-muted:#aebbd0;
+  --text-soft:#cbd5e1;
+  --ds-text-secondary:#cbd5e1;
+  --ds-text-muted:#aebbd0;
+  --ds-text-faint:#93a3ba;
+}
+
+/* Existing inline muted text also follows the improved contrast. */
+body:not(.dark) .muted,
+body:not(.dark) .text-muted,
+body:not(.dark) .subtext,
+body:not(.dark) .hint,
+body:not(.dark) .help-text,
+body:not(.dark) .section-subtitle,
+body:not(.dark) .page-subtitle{
+  color:#526277 !important;
+}
+
+body.dark .muted,
+body.dark .text-muted,
+body.dark .subtext,
+body.dark .hint,
+body.dark .help-text,
+body.dark .section-subtitle,
+body.dark .page-subtitle{
+  color:#aebbd0 !important;
+}
+
+/* ---------- Neutral buttons: slate instead of muddy gray ---------- */
+body:not(.dark) .btn-ghost,
+body:not(.dark) .theme-btn,
+body:not(.dark) .cal-nav-btn,
+body:not(.dark) .day-chip,
+body:not(.dark) .toggle-btn,
+body:not(.dark) .bulk-all-btn,
+body:not(.dark) .section-link,
+body:not(.dark) .kas-history-toggle,
+body:not(.dark) .task-filter-tab,
+body:not(.dark) .report-action-btn:not(.primary),
+body:not(.dark) .settings-nav button:not(.active){
+  background:#ffffff !important;
+  color:#334155 !important;
+  border-color:#cbd5e1 !important;
+  box-shadow:0 1px 2px rgba(15,23,42,.04) !important;
+}
+
+body.dark .btn-ghost,
+body.dark .theme-btn,
+body.dark .cal-nav-btn,
+body.dark .day-chip,
+body.dark .toggle-btn,
+body.dark .bulk-all-btn,
+body.dark .section-link,
+body.dark .kas-history-toggle,
+body.dark .task-filter-tab,
+body.dark .report-action-btn:not(.primary),
+body.dark .settings-nav button:not(.active){
+  background:#172033 !important;
+  color:#dbe5f1 !important;
+  border-color:#3a4a61 !important;
+  box-shadow:0 1px 2px rgba(0,0,0,.14) !important;
+}
+
+body:not(.dark) .btn-ghost:hover,
+body:not(.dark) .theme-btn:hover,
+body:not(.dark) .cal-nav-btn:hover,
+body:not(.dark) .day-chip:hover,
+body:not(.dark) .toggle-btn:hover,
+body:not(.dark) .bulk-all-btn:hover,
+body:not(.dark) .section-link:hover,
+body:not(.dark) .kas-history-toggle:hover,
+body:not(.dark) .task-filter-tab:hover,
+body:not(.dark) .report-action-btn:not(.primary):hover,
+body:not(.dark) .settings-nav button:not(.active):hover{
+  background:#f1f5f9 !important;
+  border-color:#94a3b8 !important;
+}
+
+body.dark .btn-ghost:hover,
+body.dark .theme-btn:hover,
+body.dark .cal-nav-btn:hover,
+body.dark .day-chip:hover,
+body.dark .toggle-btn:hover,
+body.dark .bulk-all-btn:hover,
+body.dark .section-link:hover,
+body.dark .kas-history-toggle:hover,
+body.dark .task-filter-tab:hover,
+body.dark .report-action-btn:not(.primary):hover,
+body.dark .settings-nav button:not(.active):hover{
+  background:#1e293b !important;
+  border-color:#52657e !important;
+  color:#f1f5f9 !important;
+}
+
+/* Keep active/primary states strong; only neutral inactive controls are changed. */
+body:not(.dark) .task-filter-tab.active,
+body:not(.dark) .settings-nav button.active{
+  color:#ffffff !important;
+}
+body.dark .task-filter-tab.active,
+body.dark .settings-nav button.active{
+  color:#ffffff !important;
+}
+
+/* ---------- Inputs / selects: readable placeholder + neutral surface ---------- */
+body:not(.dark) input::placeholder,
+body:not(.dark) textarea::placeholder{
+  color:#64748b !important;
+  opacity:1 !important;
+}
+body.dark input::placeholder,
+body.dark textarea::placeholder{
+  color:#93a3ba !important;
+  opacity:1 !important;
+}
+
+body:not(.dark) input,
+body:not(.dark) select,
+body:not(.dark) textarea{
+  color:#0f172a;
+}
+body.dark input,
+body.dark select,
+body.dark textarea{
+  color:#f1f5f9;
+}
+
+/* ---------- Small supporting text / metadata ---------- */
+body:not(.dark) .task-pro-desc,
+body:not(.dark) .task-pro-meta,
+body:not(.dark) .hp-slot-time,
+body:not(.dark) .mini-name + div,
+body:not(.dark) .kas-pro-note,
+body:not(.dark) .kpm-note,
+body:not(.dark) .report-bar-label,
+body:not(.dark) .empty div:last-child{
+  color:#526277 !important;
+}
+body.dark .task-pro-desc,
+body.dark .task-pro-meta,
+body.dark .hp-slot-time,
+body.dark .mini-name + div,
+body.dark .kas-pro-note,
+body.dark .kpm-note,
+body.dark .report-bar-label,
+body.dark .empty div:last-child{
+  color:#aebbd0 !important;
+}
+
+/* Keep the app's tactile response consistent. */
+button,
+[role="button"]{
+  transition:background-color 180ms ease,border-color 180ms ease,color 180ms ease,transform 180ms ease,box-shadow 180ms ease;
+}
+button:active,
+[role="button"]:active{
+  transform:scale(.97);
+}
+</style>
+
 </body>
 <!-- Kelasku compatibility patch: resilient Firestore sync + legacy fallback -->
 </html>
