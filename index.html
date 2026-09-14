@@ -7414,6 +7414,92 @@ body:not(.dark) .calendar-day.selected{
 }
 </style>
 
+
+<style id="kelasku-dark-desktop-source-mobile-match-v6">
+/* DARK THEME: desktop is the visual source of truth.
+   Mobile keeps responsive geometry but uses the same visual language. */
+@media (max-width:767px){
+  body.dark, body.dark-mode, html.dark body{
+    --bg:#0f172a !important;
+    --surface:#202124 !important;
+    --surface-2:#292b2f !important;
+    --surface-3:#303238 !important;
+    --border:#3b3f46 !important;
+    --border-soft:#32353b !important;
+    --text:#f5f7fa !important;
+    --text-2:#c7ccd4 !important;
+    --text-3:#aeb5c0 !important;
+    --accent:#3b82f6 !important;
+    background:#0f172a !important;
+    color:#f5f7fa !important;
+  }
+
+  body.dark .card, body.dark .panel, body.dark .section-card,
+  body.dark .content-card, body.dark .summary-card,
+  body.dark .class-summary, body.dark .ringkasan-kelas,
+  body.dark .task-column, body.dark .stat-card,
+  body.dark .report-kpi, body.dark .settings-profile-card,
+  body.dark .history-card{
+    background:#202124 !important;
+    border-color:#3b3f46 !important;
+    box-shadow:0 1px 2px rgba(0,0,0,.18) !important;
+  }
+
+  body.dark input, body.dark select, body.dark textarea{
+    background:#202124 !important;
+    color:#f5f7fa !important;
+    border-color:#3b3f46 !important;
+  }
+
+  body.dark input::placeholder, body.dark textarea::placeholder{
+    color:#aeb5c0 !important;
+    opacity:1 !important;
+  }
+
+  body.dark button:not(.btn-primary):not(.primary):not(.btn-danger),
+  body.dark .btn:not(.btn-primary):not(.primary):not(.btn-danger){
+    background:#292b2f !important;
+    color:#f5f7fa !important;
+    border-color:#3b3f46 !important;
+  }
+
+  body.dark .btn-primary, body.dark .primary{
+    background:#3b82f6 !important;
+    border-color:#4a8df7 !important;
+    color:#fff !important;
+  }
+
+  body.dark .btn-danger{
+    background:#3a2227 !important;
+    border-color:#7f3945 !important;
+    color:#ffb7c0 !important;
+  }
+
+  body.dark .text-muted, body.dark .muted, body.dark .subtitle,
+  body.dark small, body.dark .hint, body.dark .description,
+  body.dark .label{
+    color:#aeb5c0 !important;
+  }
+
+  body.dark hr, body.dark .divider, body.dark .list-item,
+  body.dark .task-item, body.dark .schedule-item,
+  body.dark .report-item, body.dark .history-item{
+    border-color:#32353b !important;
+  }
+
+  body.dark .empty-state{
+    background:#292b2f !important;
+    border-color:#3b3f46 !important;
+    color:#c7ccd4 !important;
+  }
+
+  body.dark button:not(:disabled):active,
+  body.dark .btn:not(:disabled):active{
+    transform:scale(.97) !important;
+  }
+}
+</style>
+
 </head>
 
 <body>
@@ -14109,6 +14195,278 @@ body.dark [role="button"]:active,
 body:not(.dark) button:active,
 body:not(.dark) [role="button"]:active{
   transform:scale(.97) !important;
+}
+</style>
+
+<style id="kelasku-android-dark-sync">
+/* =========================================================
+   ANDROID DARK THEME SYNC
+   Desktop dark mode intentionally follows the visual language
+   of the Android app: charcoal surfaces, visible neutral borders,
+   soft secondary buttons, blue as the main accent.
+   ========================================================= */
+body.dark {
+  --bg-gradient: #1d1e21;
+  --glass-bg: #1d1e21;
+  --glass-card: #202124;
+  --glass-border: #4b4d52;
+  --glass-shadow: 0 1px 2px rgba(0,0,0,.18), 0 8px 24px rgba(0,0,0,.10);
+  --text-main: #f4f5f7;
+  --text-soft: #aeb4c0;
+  --text-muted: #8f96a3;
+  --primary: #3b82f6;
+  --primary-gradient: #2563eb;
+  --input-bg: #202124;
+
+  --ui-bg: #1d1e21;
+  --ui-surface: #202124;
+  --ui-sidebar: #191a1d;
+  --ui-border: #4b4d52;
+  --ui-text: #f4f5f7;
+  --ui-muted: #aeb4c0;
+  --ui-soft: #8f96a3;
+  --ui-blue: #60a5fa;
+  --ui-blue-soft: #172554;
+  --dash-surface: #202124;
+  --dash-surface-soft: #242528;
+  --dash-border: #4b4d52;
+  --dash-text: #f4f5f7;
+  --dash-muted: #aeb4c0;
+  --dash-primary: #3b82f6;
+  --dash-primary-soft: #172554;
+  --dash-shadow: 0 1px 2px rgba(0,0,0,.18), 0 8px 24px rgba(0,0,0,.10);
+}
+
+body.dark,
+body.dark #app,
+body.dark .app-shell,
+body.dark .main-content,
+body.dark .content-area {
+  background: #1d1e21 !important;
+  color: #f4f5f7;
+}
+
+/* Main surfaces */
+body.dark .card,
+body.dark .panel,
+body.dark .section-card,
+body.dark .stat-card,
+body.dark .task-column,
+body.dark .report-kpi,
+body.dark .settings-card,
+body.dark .settings-profile-card,
+body.dark .kas-card,
+body.dark .kas-folder,
+body.dark .history-card,
+body.dark .transaction-history,
+body.dark .hp-card,
+body.dark .schedule-card,
+body.dark .task-card,
+body.dark .report-card,
+body.dark .empty-state,
+body.dark .modal-content,
+body.dark .calendar-card,
+body.dark .search-card,
+body.dark .student-list-card,
+body.dark .announcement-card {
+  background: #202124 !important;
+  border-color: #4b4d52 !important;
+  box-shadow: 0 1px 2px rgba(0,0,0,.14) !important;
+}
+
+/* Nested cards: keep separation subtle, like Android */
+body.dark .card .card,
+body.dark .panel .panel,
+body.dark .task-card .task-card,
+body.dark .report-card .report-card,
+body.dark .settings-card .settings-card {
+  background: #242528 !important;
+  border-color: #4b4d52 !important;
+}
+
+/* Typography */
+body.dark h1,
+body.dark h2,
+body.dark h3,
+body.dark h4,
+body.dark h5,
+body.dark h6,
+body.dark .title,
+body.dark .section-title,
+body.dark .card-title,
+body.dark strong,
+body.dark b {
+  color: #f4f5f7 !important;
+}
+
+body.dark p,
+body.dark .subtitle,
+body.dark .description,
+body.dark .muted,
+body.dark .text-muted,
+body.dark .helper-text,
+body.dark .stat-status,
+body.dark .settings-description,
+body.dark .settings-label,
+body.dark label,
+body.dark small {
+  color: #aeb4c0 !important;
+}
+
+/* Inputs / selects */
+body.dark input,
+body.dark select,
+body.dark textarea,
+body.dark .search-input,
+body.dark .form-control {
+  background: #202124 !important;
+  color: #f4f5f7 !important;
+  border-color: #4b4d52 !important;
+  -webkit-text-fill-color: #f4f5f7 !important;
+}
+body.dark input::placeholder,
+body.dark textarea::placeholder {
+  color: #8f96a3 !important;
+  opacity: 1 !important;
+}
+
+/* Secondary controls — same soft charcoal treatment as Android */
+body.dark .btn-ghost,
+body.dark .theme-btn,
+body.dark .cal-nav-btn,
+body.dark .day-chip,
+body.dark .toggle-btn,
+body.dark .bulk-all-btn,
+body.dark .section-link,
+body.dark .section-action:not(.primary),
+body.dark .kas-history-toggle,
+body.dark .task-filter-tab,
+body.dark .report-action-btn:not(.primary),
+body.dark .settings-nav button:not(.active),
+body.dark .mode-btn:not(.active),
+body.dark .hp-slot-edit,
+body.dark .kas-edit-btn,
+body.dark .secondary,
+body.dark button:not(.primary):not(.danger):not(.btn-danger),
+body.dark .btn:not(.btn-primary):not(.danger):not(.btn-danger) {
+  background: #3f4043 !important;
+  color: #eef0f4 !important;
+  border-color: #5a5c61 !important;
+  box-shadow: none !important;
+}
+
+body.dark .btn-ghost:hover,
+body.dark .theme-btn:hover,
+body.dark .cal-nav-btn:hover,
+body.dark .day-chip:hover,
+body.dark .toggle-btn:hover,
+body.dark .bulk-all-btn:hover,
+body.dark .section-link:hover,
+body.dark .section-action:not(.primary):hover,
+body.dark .kas-history-toggle:hover,
+body.dark .task-filter-tab:hover,
+body.dark .report-action-btn:not(.primary):hover,
+body.dark .settings-nav button:not(.active):hover,
+body.dark .mode-btn:not(.active):hover,
+body.dark .hp-slot-edit:hover,
+body.dark .kas-edit-btn:hover,
+body.dark .secondary:hover {
+  background: #4a4b4f !important;
+  border-color: #686a70 !important;
+}
+
+/* Primary blue actions */
+body.dark .btn-primary,
+body.dark .btn.btn-primary,
+body.dark .primary,
+body.dark .fab-add,
+body.dark button.primary {
+  background: #2563eb !important;
+  color: #ffffff !important;
+  border-color: #3b82f6 !important;
+}
+body.dark .btn-primary:hover,
+body.dark .primary:hover,
+body.dark .fab-add:hover,
+body.dark button.primary:hover {
+  background: #1d4ed8 !important;
+}
+
+/* Danger actions */
+body.dark .btn-danger,
+body.dark .danger,
+body.dark .kas-delete-btn {
+  background: #4b3034 !important;
+  color: #ff9aa8 !important;
+  border-color: #70424a !important;
+}
+
+/* Borders throughout the app — visible but not harsh */
+body.dark hr,
+body.dark .divider,
+body.dark .section-divider,
+body.dark .row-item,
+body.dark .tx-item,
+body.dark .task-item,
+body.dark .report-item,
+body.dark .student-row,
+body.dark .kas-folder-head,
+body.dark .settings-row,
+body.dark .schedule-row {
+  border-color: #3f4146 !important;
+}
+
+/* Status colors stay meaningful */
+body.dark .text-success,
+body.dark .success,
+body.dark .stat-value.income,
+body.dark .income,
+body.dark .kas-paid {
+  color: #5ee58b !important;
+}
+body.dark .text-danger,
+body.dark .error,
+body.dark .expense,
+body.dark .kas-unpaid {
+  color: #ff6b7a !important;
+}
+body.dark .text-primary,
+body.dark .link,
+body.dark a {
+  color: #60a5fa;
+}
+
+/* No purple/neon glow */
+body.dark .blob,
+body.dark .glow,
+body.dark [class*="glow"] {
+  opacity: .08 !important;
+  filter: blur(80px) !important;
+}
+
+/* Tactile interaction */
+body.dark button:active,
+body.dark [role="button"]:active,
+body.dark .clickable:active {
+  transform: scale(.97) !important;
+}
+
+/* Desktop: same charcoal visual language, without changing layout */
+@media (min-width: 769px) {
+  body.dark .sidebar,
+  body.dark .side-nav,
+  body.dark .desktop-sidebar,
+  body.dark nav {
+    background: #191a1d !important;
+    border-color: #3f4146 !important;
+  }
+
+  body.dark .topbar,
+  body.dark .header,
+  body.dark .desktop-header {
+    background: #1d1e21 !important;
+    border-color: #3f4146 !important;
+  }
 }
 </style>
 </body>
