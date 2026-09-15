@@ -14719,6 +14719,119 @@ body:not(.dark) [role="button"]:active{
 }
 </style>
 
+
+<style id="kelasku-hp-dark-all-white-v12">
+/* =========================================================
+   PENGUMPULAN HP — MODE GELAP
+   Semua teks dibuat putih agar konsisten dengan desktop.
+   Warna status hijau/merah tetap dipertahankan sebagai penanda.
+   ========================================================= */
+@media (max-width:900px){
+  body.dark #view-hp,
+  body.dark #view-hp *{
+    -webkit-text-fill-color:#ffffff;
+  }
+
+  /* Header dan seluruh teks modul HP */
+  body.dark #view-hp .pagehead h1,
+  body.dark #view-hp .pagehead p,
+  body.dark #view-hp .section-title,
+  body.dark #view-hp .section-kicker,
+  body.dark #view-hp .section-head *,
+  body.dark #view-hp .cal-month,
+  body.dark #view-hp .cal-month-click,
+  body.dark #view-hp .cal-year-click,
+  body.dark #view-hp .cal-nav-btn,
+  body.dark #view-hp .date-label,
+  body.dark #view-hp .summary-box *,
+  body.dark #view-hp .summary-row *,
+  body.dark #view-hp .hp-progress-meta *,
+  body.dark #view-hp .hp-slot *,
+  body.dark #view-hp .search-box *,
+  body.dark #view-hp .search-icon,
+  body.dark #view-hp .section-link,
+  body.dark #view-hp .fab-add,
+  body.dark #view-hp .bulk-all-btn{
+    color:#ffffff !important;
+    -webkit-text-fill-color:#ffffff !important;
+    opacity:1 !important;
+  }
+
+  /* Nama siswa: ini yang sebelumnya masih terlihat abu-abu.
+     Paksa button nama menjadi putih, termasuk teks yang terpotong. */
+  body.dark #view-hp .hp-slot-name,
+  body.dark #view-hp .hp-slot-name-button{
+    color:#ffffff !important;
+    -webkit-text-fill-color:#ffffff !important;
+    opacity:1 !important;
+    font-weight:800 !important;
+  }
+
+  /* Waktu dan status umum juga putih. */
+  body.dark #view-hp .hp-slot-time,
+  body.dark #view-hp .hp-slot-head,
+  body.dark #view-hp .hp-slot-head span,
+  body.dark #view-hp .hp-slot-status.todo{
+    color:#ffffff !important;
+    -webkit-text-fill-color:#ffffff !important;
+    opacity:1 !important;
+  }
+
+  /* Status berhasil tetap hijau supaya maknanya cepat terbaca. */
+  body.dark #view-hp .hp-slot-status.done{
+    color:#86efac !important;
+    -webkit-text-fill-color:#86efac !important;
+    background:rgba(34,197,94,.14) !important;
+    opacity:1 !important;
+  }
+
+  /* Label checkbox "selesai" putih. */
+  body.dark #view-hp .hp-slot label,
+  body.dark #view-hp .hp-slot label *{
+    color:#ffffff !important;
+    -webkit-text-fill-color:#ffffff !important;
+    opacity:1 !important;
+  }
+
+  /* Input pencarian */
+  body.dark #view-hp #hp-search{
+    color:#ffffff !important;
+    -webkit-text-fill-color:#ffffff !important;
+    background:#0f1a2c !important;
+    border-color:#34445d !important;
+  }
+
+  body.dark #view-hp #hp-search::placeholder{
+    color:#ffffff !important;
+    -webkit-text-fill-color:#ffffff !important;
+    opacity:.72 !important;
+  }
+
+  /* Tombol netral putih, tetapi tetap navy agar tidak menjadi abu-abu. */
+  body.dark #view-hp .section-link,
+  body.dark #view-hp .bulk-all-btn,
+  body.dark #view-hp .cal-nav-btn{
+    background:#17243a !important;
+    border-color:#40516b !important;
+    color:#ffffff !important;
+    -webkit-text-fill-color:#ffffff !important;
+  }
+
+  body.dark #view-hp .fab-add{
+    background:#2563eb !important;
+    border-color:#3b82f6 !important;
+    color:#ffffff !important;
+    -webkit-text-fill-color:#ffffff !important;
+  }
+
+  /* Avatar/inisial putih */
+  body.dark #view-hp .hp-avatar{
+    color:#ffffff !important;
+    -webkit-text-fill-color:#ffffff !important;
+  }
+}
+</style>
+
 </body>
 <!-- Kelasku compatibility patch: resilient Firestore sync + legacy fallback -->
 </html>
