@@ -14660,6 +14660,65 @@ body:not(.dark) [role="button"]:active{
 }
 </style>
 
+
+<style id="kelasku-dark-task-pure-white-v11">
+/* FINAL: Teks Tugas mode gelap = putih penuh.
+   Tidak memakai opacity/abu-abu pada deskripsi atau metadata. */
+@media (max-width:900px){
+  body.dark #view-tugas .pagehead h1,
+  body.dark #view-tugas .pagehead p,
+  body.dark #view-tugas .section-title,
+  body.dark #view-tugas .task-column-title,
+  body.dark #view-tugas .task-pro-title,
+  body.dark #view-tugas .task-pro-desc,
+  body.dark #view-tugas .task-pro-meta,
+  body.dark #view-tugas .task-pro-tag,
+  body.dark #view-tugas .task-filter-tab,
+  body.dark #view-tugas .task-pro-actions button,
+  body.dark #view-tugas .field-hint,
+  body.dark #view-tugas .empty,
+  body.dark #view-tugas label,
+  body.dark #view-tugas p,
+  body.dark #view-tugas span,
+  body.dark #view-tugas small,
+  body.dark #view-tugas strong,
+  body.dark #view-tugas b{
+    color:#ffffff !important;
+    -webkit-text-fill-color:#ffffff !important;
+    opacity:1 !important;
+    text-shadow:none !important;
+  }
+
+  /* Deskripsi tugas — putih penuh, bukan abu-abu. */
+  body.dark #view-tugas .task-pro-card .task-pro-desc,
+  body.dark #view-tugas .task-pro-card .task-pro-desc *{
+    color:#ffffff !important;
+    -webkit-text-fill-color:#ffffff !important;
+    opacity:1 !important;
+  }
+
+  /* Metadata mapel/tanggal juga putih. */
+  body.dark #view-tugas .task-pro-card .task-pro-meta,
+  body.dark #view-tugas .task-pro-card .task-pro-meta *{
+    color:#ffffff !important;
+    -webkit-text-fill-color:#ffffff !important;
+    opacity:1 !important;
+  }
+
+  body.dark #view-tugas .task-pro-card{
+    color:#ffffff !important;
+  }
+
+  /* Placeholder tetap putih, sedikit transparan hanya saat belum diisi. */
+  body.dark #view-tugas input::placeholder,
+  body.dark #view-tugas textarea::placeholder{
+    color:#ffffff !important;
+    -webkit-text-fill-color:#ffffff !important;
+    opacity:.7 !important;
+  }
+}
+</style>
+
 </body>
 <!-- Kelasku compatibility patch: resilient Firestore sync + legacy fallback -->
 </html>
