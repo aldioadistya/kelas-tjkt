@@ -15784,6 +15784,28 @@ body:not(.dark) .section-divider{
 })();
 </script>
 
+
+<style>
+/* FIX: label "Zona Berbahaya" bukan tombol danger.
+   Jangan beri background/border merah pada judul section. */
+.settings-label.danger{
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+  padding:0 !important;
+  color:var(--rose) !important;
+}
+body:not(.dark) .settings-label.danger{
+  background:transparent !important;
+  border:0 !important;
+  color:#be123c !important;
+}
+body.dark .settings-label.danger{
+  background:transparent !important;
+  border:0 !important;
+  color:#fb7185 !important;
+}
+</style>
 </body>
 <!-- Kelasku compatibility patch: resilient Firestore sync + legacy fallback -->
 </html>
