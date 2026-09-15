@@ -14443,6 +14443,130 @@ body:not(.dark) [role="button"]:active{
 }
 </style>
 
+
+<style id="kelasku-tugas-dark-readable-v9">
+/* TUGAS MOBILE — dark desktop palette + readable contrast.
+   Fixes dim/gray text caused by older mobile dark overrides. */
+@media (max-width:900px){
+  body.dark #view-tugas{
+    color:#f8fafc !important;
+  }
+
+  body.dark #view-tugas .pagehead h1,
+  body.dark #view-tugas .section-title,
+  body.dark #view-tugas .task-column-title,
+  body.dark #view-tugas .task-pro-title{
+    color:#f8fafc !important;
+    -webkit-text-fill-color:#f8fafc !important;
+    opacity:1 !important;
+  }
+
+  body.dark #view-tugas .pagehead p{
+    color:#cbd5e1 !important;
+    -webkit-text-fill-color:#cbd5e1 !important;
+    opacity:1 !important;
+  }
+
+  body.dark #view-tugas .task-filter-tab{
+    background:#17243a !important;
+    color:#e2e8f0 !important;
+    -webkit-text-fill-color:#e2e8f0 !important;
+    border-color:#40516b !important;
+    opacity:1 !important;
+  }
+
+  body.dark #view-tugas .task-filter-tab.active{
+    background:#203b72 !important;
+    color:#ffffff !important;
+    -webkit-text-fill-color:#ffffff !important;
+    border-color:#3b82f6 !important;
+  }
+
+  body.dark #view-tugas .fab-add{
+    background:#2563eb !important;
+    color:#ffffff !important;
+    -webkit-text-fill-color:#ffffff !important;
+    border-color:#3b82f6 !important;
+    opacity:1 !important;
+  }
+
+  body.dark #view-tugas .task-column{
+    background:#111c2f !important;
+    color:#f8fafc !important;
+    border-color:#34445d !important;
+  }
+
+  body.dark #view-tugas .task-pro-card{
+    background:#111c2f !important;
+    color:#f8fafc !important;
+    border-color:#34445d !important;
+    opacity:1 !important;
+  }
+
+  /* Make task-card text readable first, then restore semantic badge colors. */
+  body.dark #view-tugas .task-pro-card *{
+    opacity:1 !important;
+  }
+
+  body.dark #view-tugas .task-pro-card .task-pro-title{
+    color:#f8fafc !important;
+    -webkit-text-fill-color:#f8fafc !important;
+  }
+
+  body.dark #view-tugas .task-pro-card .task-pro-tag{
+    background:#17243a !important;
+    color:#cbd5e1 !important;
+    -webkit-text-fill-color:#cbd5e1 !important;
+    border-color:#40516b !important;
+  }
+
+  body.dark #view-tugas .task-pro-card .task-pro-desc{
+    color:#cbd5e1 !important;
+    -webkit-text-fill-color:#cbd5e1 !important;
+  }
+
+  body.dark #view-tugas .task-pro-actions button{
+    background:#17243a !important;
+    color:#f8fafc !important;
+    -webkit-text-fill-color:#f8fafc !important;
+    border-color:#40516b !important;
+    opacity:1 !important;
+  }
+
+  body.dark #view-tugas .task-pro-actions button.primary{
+    background:#203b72 !important;
+    color:#ffffff !important;
+    -webkit-text-fill-color:#ffffff !important;
+    border-color:#3b82f6 !important;
+  }
+
+  body.dark #view-tugas .deadline-safe{
+    background:rgba(34,197,94,.14) !important;
+    color:#86efac !important;
+    -webkit-text-fill-color:#86efac !important;
+  }
+
+  body.dark #view-tugas .deadline-soon{
+    background:rgba(245,158,11,.14) !important;
+    color:#fbbf24 !important;
+    -webkit-text-fill-color:#fbbf24 !important;
+  }
+
+  body.dark #view-tugas .deadline-danger{
+    background:rgba(244,63,94,.14) !important;
+    color:#fb7185 !important;
+    -webkit-text-fill-color:#fb7185 !important;
+  }
+
+  body.dark #view-tugas .empty,
+  body.dark #view-tugas .field-hint{
+    color:#cbd5e1 !important;
+    -webkit-text-fill-color:#cbd5e1 !important;
+    opacity:1 !important;
+  }
+}
+</style>
+
 </body>
 <!-- Kelasku compatibility patch: resilient Firestore sync + legacy fallback -->
 </html>
