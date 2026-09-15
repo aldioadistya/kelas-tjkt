@@ -8558,7 +8558,7 @@ X TJKT 1
   Belum dicek.
 </div>
 </div>
-<div class="settings-section">
+<div class="settings-section admin-only">
   <div class="settings-label">
     Backup &amp; Pemulihan
   </div>
@@ -12918,15 +12918,19 @@ Setelan
   }
 
   // ===== EXPORT / IMPORT =====
-  function exportBackup() {
+  async function exportBackup() {
+      if (guardReadOnly()) return;
+      if (!(await requireRecentReauthentication('mengunduh backup data kelas'))) return;
       const payload = { exportedAt: new Date().toISOString(), state };
       const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
       a.download = 'kelasku-backup-' + todayKey() + '.json';
+      document.body.appendChild(a);
       a.click();
-      URL.revokeObjectURL(url);
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
       showNotification('Backup berhasil diunduh!', 'success');
   }
   function countLegacyDriveAttachments() {
@@ -13560,28 +13564,62 @@ Setelan
   if(!v||document.getElementById('settings-nav'))return;
   const head=v.querySelector('.pagehead');
   if(!head)return;
+
   const nav=document.createElement('div');
   nav.id='settings-nav';
   nav.className='settings-nav';
-  nav.innerHTML='<button type="button" data-cat="profile">Profil & Tampilan</button><button type="button" data-cat="members">Anggota & Siswa</button><button type="button" data-cat="security">Keamanan & Database</button>';
+  nav.setAttribute('role','tablist');
+  nav.innerHTML=
+    '<button type="button" role="tab" data-cat="profile" aria-selected="true">Profil & Tampilan</button>'+
+    '<button type="button" role="tab" data-cat="members" aria-selected="false">Anggota & Siswa</button>'+
+    '<button type="button" role="tab" data-cat="security" aria-selected="false">Keamanan & Database</button>';
   head.after(nav);
+
+  const profileCard=v.querySelector('.section > .card');
+  if(profileCard) profileCard.dataset.settingCat='profile';
+
   const all=[...v.querySelectorAll('.settings-section')];
+  if(profileCard) all.unshift(profileCard);
+
   all.forEach(el=>{
     if(el.dataset.settingCat)return;
-    const label=(el.querySelector('.settings-label')?.textContent||'').trim().toLowerCase();
-    if(el.id==='account-manage-wrap') el.dataset.settingCat='members';
-    else if(/tugas|laporan|ruang penyimpanan|backup|zona berbahaya|riwayat aktivitas|keamanan hak akses|keamanan firebase/.test(label)) el.dataset.settingCat='security';
-    else el.dataset.settingCat='profile';
+    const label=(el.querySelector('.settings-label')?.textContent||'').trim().toLowerCase().replace(/\s+/g,' ');
+    if(el.id==='account-manage-wrap' || el.classList.contains('account-management')){
+      el.dataset.settingCat='members';
+    }else if(/^(tugas|laporan|ruang penyimpanan|backup & pemulihan|zona berbahaya|riwayat aktivitas|keamanan hak akses|keamanan firebase)/.test(label)){
+      el.dataset.settingCat='security';
+    }else{
+      el.dataset.settingCat='profile';
+    }
   });
+
   function apply(cat){
-    nav.querySelectorAll('button').forEach(x=>{
-      const active=x.dataset.cat===cat;
-      x.classList.toggle('active',active);
-      x.setAttribute('aria-selected',active?'true':'false');
+    nav.querySelectorAll('[data-cat]').forEach(btn=>{
+      const active=btn.dataset.cat===cat;
+      btn.classList.toggle('active',active);
+      btn.setAttribute('aria-selected',active?'true':'false');
     });
     all.forEach(el=>el.classList.toggle('hidden-by-category',el.dataset.settingCat!==cat));
   }
-  nav.addEventListener('click',e=>{const b=e.target.closest('[data-cat]');if(b)apply(b.dataset.cat);});
+
+  nav.addEventListener('click',e=>{
+    const btn=e.target.closest('[data-cat]');
+    if(btn) apply(btn.dataset.cat);
+  });
+
+  nav.addEventListener('keydown',e=>{
+    const tabs=[...nav.querySelectorAll('[data-cat]')];
+    const index=tabs.indexOf(e.target);
+    if(index<0)return;
+    let next=index;
+    if(e.key==='ArrowRight') next=(index+1)%tabs.length;
+    else if(e.key==='ArrowLeft') next=(index-1+tabs.length)%tabs.length;
+    else return;
+    e.preventDefault();
+    tabs[next].focus();
+    apply(tabs[next].dataset.cat);
+  });
+
   apply('profile');
 }
 
@@ -15871,6 +15909,19 @@ body:not(.dark) #view-hp .hp-slot-name.hp-slot-name-button{
   -webkit-text-fill-color:#172033 !important;
 }
 </style>
+
+<style id="kelasku-settings-tabs-final-fix">
+/* Final Settings tabs: no blank tab, clear hierarchy, real category filtering */
+#view-settings .settings-nav{display:flex!important;align-items:center!important;gap:8px!important;flex-wrap:wrap!important;width:100%!important;overflow:visible!important;}
+#view-settings .settings-nav button{display:inline-flex!important;align-items:center!important;justify-content:center!important;visibility:visible!important;opacity:1!important;min-width:max-content!important;min-height:38px!important;padding:9px 14px!important;white-space:nowrap!important;font-family:inherit!important;font-size:11px!important;line-height:1.2!important;font-weight:800!important;text-indent:0!important;text-transform:none!important;}
+#view-settings .settings-nav button:not(.active){background:#fff!important;color:#334155!important;border:1px solid #cbd5e1!important;}
+#view-settings .settings-nav button.active{background:#2563eb!important;color:#fff!important;border-color:#2563eb!important;}
+body.dark #view-settings .settings-nav button:not(.active){background:#17243a!important;color:#f8fafc!important;border-color:#40516b!important;}
+body.dark #view-settings .settings-nav button.active{background:#3b82f6!important;color:#fff!important;border-color:#3b82f6!important;}
+#view-settings .settings-section.hidden-by-category,#view-settings .section > .card.hidden-by-category{display:none!important;}
+@media(max-width:520px){#view-settings .settings-nav{gap:6px!important;}#view-settings .settings-nav button{font-size:10px!important;padding:8px 10px!important;}}
+</style>
+
 </body>
 <!-- Kelasku compatibility patch: resilient Firestore sync + legacy fallback -->
 </html>
