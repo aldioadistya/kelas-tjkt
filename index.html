@@ -14567,6 +14567,99 @@ body:not(.dark) [role="button"]:active{
 }
 </style>
 
+
+<style id="kelasku-dark-all-text-white-v10">
+/* MODE GELAP MOBILE — teks putih, tetap nyaman dilihat.
+   Warna putih dibedakan hanya lewat opacity agar hierarki tetap terasa,
+   tanpa membuat teks berubah menjadi abu-abu. */
+@media (max-width:900px){
+  body.dark{
+    color:#ffffff !important;
+    -webkit-text-fill-color:#ffffff !important;
+  }
+
+  body.dark #view-tugas,
+  body.dark #view-tugas *{
+    -webkit-text-fill-color:currentColor;
+  }
+
+  /* Semua teks utama benar-benar putih. */
+  body.dark #view-tugas h1,
+  body.dark #view-tugas h2,
+  body.dark #view-tugas h3,
+  body.dark #view-tugas h4,
+  body.dark #view-tugas h5,
+  body.dark #view-tugas h6,
+  body.dark #view-tugas strong,
+  body.dark #view-tugas b,
+  body.dark #view-tugas label,
+  body.dark #view-tugas .task-pro-title,
+  body.dark #view-tugas .task-pro-desc,
+  body.dark #view-tugas .task-pro-tag,
+  body.dark #view-tugas .task-filter-tab,
+  body.dark #view-tugas button,
+  body.dark #view-tugas span,
+  body.dark #view-tugas p,
+  body.dark #view-tugas small{
+    color:#ffffff !important;
+    -webkit-text-fill-color:#ffffff !important;
+    opacity:1 !important;
+  }
+
+  /* Teks sekunder tetap putih, sedikit lebih lembut lewat opacity,
+     bukan dengan mengganti warna menjadi abu. */
+  body.dark #view-tugas .pagehead p,
+  body.dark #view-tugas .task-pro-desc,
+  body.dark #view-tugas .task-pro-meta,
+  body.dark #view-tugas .field-hint,
+  body.dark #view-tugas .empty{
+    color:#ffffff !important;
+    -webkit-text-fill-color:#ffffff !important;
+    opacity:.82 !important;
+  }
+
+  /* Placeholder/input juga putih. */
+  body.dark #view-tugas input,
+  body.dark #view-tugas textarea,
+  body.dark #view-tugas select{
+    color:#ffffff !important;
+    -webkit-text-fill-color:#ffffff !important;
+  }
+
+  body.dark #view-tugas input::placeholder,
+  body.dark #view-tugas textarea::placeholder{
+    color:#ffffff !important;
+    -webkit-text-fill-color:#ffffff !important;
+    opacity:.65 !important;
+  }
+
+  /* Badge deadline tetap memakai warna semantik agar status cepat terbaca. */
+  body.dark #view-tugas .deadline-safe{
+    color:#86efac !important;
+    -webkit-text-fill-color:#86efac !important;
+  }
+  body.dark #view-tugas .deadline-soon{
+    color:#fbbf24 !important;
+    -webkit-text-fill-color:#fbbf24 !important;
+  }
+  body.dark #view-tugas .deadline-danger{
+    color:#fb7185 !important;
+    -webkit-text-fill-color:#fb7185 !important;
+  }
+
+  /* Navigasi bawah dan header juga putih. */
+  body.dark .tabbar .tab,
+  body.dark .tabbar .tab.active,
+  body.dark .mobile-header,
+  body.dark .mobile-header *,
+  body.dark .topbar,
+  body.dark .topbar *{
+    color:#ffffff !important;
+    -webkit-text-fill-color:#ffffff !important;
+  }
+}
+</style>
+
 </body>
 <!-- Kelasku compatibility patch: resilient Firestore sync + legacy fallback -->
 </html>
