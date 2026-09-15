@@ -7604,6 +7604,52 @@ body:not(.dark) .calendar-day.selected{
 }
 </style>
 
+
+<style id="kelasku-final-qa">
+/* Final QA pass — preserve desktop dark palette as the source of truth. */
+html{scroll-behavior:smooth}
+body{overflow-x:hidden}
+button,input,select,textarea{font:inherit}
+button,.btn,.fab-add,.nav-item,.tabbar-item{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+button:active,.btn:active,.fab-add:active,.nav-item:active,.tabbar-item:active{transform:scale(.97)}
+button:focus-visible,.btn:focus-visible,.nav-item:focus-visible,.tabbar-item:focus-visible,
+input:focus-visible,select:focus-visible,textarea:focus-visible,[tabindex]:focus-visible{
+  outline:2px solid var(--primary,#3b82f6);outline-offset:2px
+}
+/* Keep scrolling, remove the distracting track/edge treatment. */
+#view-laporan .scroll-area,#view-aktivitas .scroll-area,
+#view-laporan .report-list,#view-aktivitas .activity-list{
+  scrollbar-width:thin;scrollbar-color:transparent transparent
+}
+#view-laporan .scroll-area::-webkit-scrollbar,#view-aktivitas .scroll-area::-webkit-scrollbar,
+#view-laporan .report-list::-webkit-scrollbar,#view-aktivitas .activity-list::-webkit-scrollbar{width:6px;height:6px}
+#view-laporan .scroll-area::-webkit-scrollbar-track,#view-aktivitas .scroll-area::-webkit-scrollbar-track,
+#view-laporan .report-list::-webkit-scrollbar-track,#view-aktivitas .activity-list::-webkit-scrollbar-track{background:transparent}
+#view-laporan .scroll-area::-webkit-scrollbar-thumb,#view-aktivitas .scroll-area::-webkit-scrollbar-thumb,
+#view-laporan .report-list::-webkit-scrollbar-thumb,#view-aktivitas .activity-list::-webkit-scrollbar-thumb{background:transparent;border:0}
+/* No accidental horizontal scroll on dense modules. */
+#view-tugas,#view-laporan,#view-setelan,#view-kas,#view-jadwal,#view-hp,#view-aktivitas{min-width:0}
+.task-item,.report-item,.hp-slot,.timeline-item,.settings-section,.kas-card{min-width:0}
+.task-title,.report-title,.report-meta,.hp-slot-name,.hp-slot-status,.timeline-item,.settings-section{overflow-wrap:anywhere}
+/* Desktop is the visual reference; mobile inherits the same navy surfaces. */
+@media (min-width:901px){
+  body{background:#0b1220;color:#f8fafc}
+  .phone{background:#0b1220}
+  .sidebar,.desktop-sidebar{background:#111c2f;border-color:#2b3a51}
+  .content,.main-content{background:#0b1220}
+}
+@media (max-width:900px){
+  .phone{max-width:100vw;overflow-x:hidden}
+  .main-content,.content{padding-left:max(14px,env(safe-area-inset-left));padding-right:max(14px,env(safe-area-inset-right))}
+  .tabbar{padding-bottom:max(8px,env(safe-area-inset-bottom))}
+  .task-item,.report-item{gap:10px}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+}
+</style>
+
 </head>
 
 <body>
@@ -10244,7 +10290,7 @@ Setelan
       let roleLabel = '';
       if (role === 'superadmin') roleLabel = 'Super Admin (Akses Penuh + Kelola Akun)';
       else if (role === 'admin') roleLabel = 'Admin (Akses Penuh, Tanpa Kelola Akun)';
-      else roleLabel = 'Siswa (Lihat Saja)';
+      else roleLabel = 'Siswa';
       document.getElementById('account-role-label').textContent = roleLabel;
   }
   function guardReadOnly() {
@@ -14831,6 +14877,912 @@ body:not(.dark) [role="button"]:active{
   }
 }
 </style>
+
+
+<style id="kelasku-long-view-comfort-v13">
+/* UI nyaman untuk pemakaian lama: dark navy, permukaan bertingkat,
+   teks utama putih, teks pendukung putih yang sedikit lebih lembut. */
+:root{--comfort-radius:18px;--comfort-ease:180ms ease}
+body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+button,.btn,input,select,textarea,.card,.panel,.task-pro-card,.hp-slot,.kas-folder,.tab{
+  transition:background-color var(--comfort-ease),border-color var(--comfort-ease),
+  color var(--comfort-ease),box-shadow var(--comfort-ease),transform var(--comfort-ease);
+}
+@media (max-width:900px){
+  body.dark{background:#0b1220!important;color:#fff!important}
+  body.dark .phone,body.dark .screen,body.dark .content,body.dark .view,
+  body.dark .main-content{background:#0b1220!important;color:#fff!important}
+
+  body.dark .card,body.dark .panel,body.dark .section-card,body.dark .content-card,
+  body.dark .stat-card,body.dark .balance-card,body.dark .task-column,
+  body.dark .task-pro-card,body.dark .report-chart-card,body.dark .report-kpi-card,
+  body.dark .report-kpi,body.dark .timeline-card,body.dark .piket-person,
+  body.dark .hp-slot,body.dark .kas-folder,body.dark .kas-pro-metric,
+  body.dark .kas-pro-table,body.dark .calendar-card,body.dark .cal-card,
+  body.dark .search-box,body.dark .modal,body.dark .modal-content,
+  body.dark #view-settings .settings-profile-card,
+  body.dark #view-settings .settings-section{
+    background:#111c2f!important;border-color:#2b3a51!important;
+    border-radius:var(--comfort-radius);box-shadow:0 1px 2px rgba(0,0,0,.16)!important;
+  }
+
+  body.dark .pagehead h1,body.dark .section-title,body.dark .task-pro-title,
+  body.dark .task-column-title,body.dark .hp-slot-name,body.dark .hp-slot-head,
+  body.dark .settings-title,body.dark .card-title,body.dark .stat-value,
+  body.dark .balance-value{
+    color:#fff!important;-webkit-text-fill-color:#fff!important;opacity:1!important;
+  }
+
+  body.dark .pagehead p,body.dark .section-kicker,body.dark .task-pro-desc,
+  body.dark .task-pro-meta,body.dark .hp-slot-time,body.dark .hp-slot-subtitle,
+  body.dark .field-hint,body.dark .hint,body.dark .muted,body.dark .text-muted,
+  body.dark small{
+    color:#fff!important;-webkit-text-fill-color:#fff!important;opacity:.78!important;
+  }
+
+  body.dark input,body.dark select,body.dark textarea{
+    background:#0e192b!important;color:#fff!important;
+    -webkit-text-fill-color:#fff!important;border-color:#30425c!important;
+    border-radius:14px;
+  }
+  body.dark input::placeholder,body.dark textarea::placeholder{
+    color:#fff!important;-webkit-text-fill-color:#fff!important;opacity:.58!important;
+  }
+
+  body.dark button:not(.btn-primary):not(.primary):not(.btn-danger):not(.danger),
+  body.dark .btn:not(.btn-primary):not(.primary):not(.btn-danger):not(.danger){
+    background:#16243a!important;color:#fff!important;
+    -webkit-text-fill-color:#fff!important;border-color:#30425c!important;
+    box-shadow:none!important;
+  }
+
+  body.dark .tabbar{
+    background:#111c2f!important;border-top:1px solid #2b3a51!important;
+    box-shadow:0 -3px 12px rgba(0,0,0,.18)!important;
+  }
+  body.dark .tabbar .tab{
+    color:#fff!important;-webkit-text-fill-color:#fff!important;opacity:.82!important;
+  }
+  body.dark .tabbar .tab.active{opacity:1!important}
+
+  body.dark #view-tugas .task-pro-desc,
+  body.dark #view-tugas .task-pro-meta,
+  body.dark #view-hp .hp-slot-time{
+    line-height:1.65;
+  }
+
+  body.dark button:not(:disabled):active,
+  body.dark .btn:not(:disabled):active,
+  body.dark .tab:not(:disabled):active{transform:scale(.98)!important}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important;
+  animation-iteration-count:1!important;scroll-behavior:auto!important}
+}
+</style>
+
+
+<style id="kelasku-ui-refinement-final-v14">
+/* =========================================================
+   KELASKU — UI REFINEMENT FINAL
+   Prinsip: tenang, jelas, konsisten, nyaman dipakai lama.
+   Tidak mengubah HTML/JS/Firebase logic.
+   ========================================================= */
+
+/* ---------- DESIGN TOKENS ---------- */
+:root{
+  --ui-radius-sm:12px;
+  --ui-radius-md:16px;
+  --ui-radius-lg:20px;
+  --ui-space-1:6px;
+  --ui-space-2:10px;
+  --ui-space-3:14px;
+  --ui-space-4:18px;
+  --ui-space-5:24px;
+  --ui-space-6:30px;
+  --ui-duration:180ms;
+  --ui-ease:cubic-bezier(.2,.7,.2,1);
+
+  /* Light: warm, calm, readable */
+  --ui-bg:#f5f7fb;
+  --ui-surface:#ffffff;
+  --ui-surface-2:#f8fafc;
+  --ui-border:#dbe3ee;
+  --ui-border-strong:#c9d4e2;
+  --ui-text:#0f172a;
+  --ui-text-soft:#334155;
+  --ui-accent:#2563eb;
+  --ui-accent-soft:#e8f0ff;
+}
+
+/* ---------- GLOBAL TYPOGRAPHY ---------- */
+body{
+  color:var(--ui-text);
+  text-rendering:optimizeLegibility;
+  -webkit-font-smoothing:antialiased;
+}
+
+button,input,select,textarea{
+  font:inherit;
+  -webkit-font-smoothing:antialiased;
+}
+
+button,.btn,.tab,.desktop-nav-item,.section-link,.fab-add{
+  transition:
+    background-color var(--ui-duration) var(--ui-ease),
+    border-color var(--ui-duration) var(--ui-ease),
+    color var(--ui-duration) var(--ui-ease),
+    box-shadow var(--ui-duration) var(--ui-ease),
+    transform var(--ui-duration) var(--ui-ease);
+}
+
+button:not(:disabled):active,
+.btn:not(:disabled):active,
+.tab:not(:disabled):active{
+  transform:scale(.98);
+}
+
+/* ---------- LIGHT MODE ---------- */
+body:not(.dark){
+  background:var(--ui-bg);
+  color:var(--ui-text);
+}
+
+body:not(.dark) .card,
+body:not(.dark) .panel,
+body:not(.dark) .dashboard-panel,
+body:not(.dark) .dashboard-card,
+body:not(.dark) .stat-card,
+body:not(.dark) .balance-card,
+body:not(.dark) .kas-pro-metric,
+body:not(.dark) .kas-pro-table,
+body:not(.dark) .task-pro-card,
+body:not(.dark) .task-column,
+body:not(.dark) .hp-slot,
+body:not(.dark) .timeline-card,
+body:not(.dark) .cal-card,
+body:not(.dark) .calendar-card,
+body:not(.dark) .settings-section,
+body:not(.dark) .search-box{
+  border-color:var(--ui-border);
+  box-shadow:0 1px 2px rgba(15,23,42,.04);
+}
+
+body:not(.dark) .section-kicker,
+body:not(.dark) .field-hint,
+body:not(.dark) .task-meta,
+body:not(.dark) .task-desc,
+body:not(.dark) .task-pro-meta,
+body:not(.dark) .task-pro-desc{
+  color:var(--ui-text-soft);
+}
+
+/* ---------- DARK MODE — DESKTOP IS SOURCE OF TRUTH ---------- */
+body.dark{
+  --ui-bg:#0b1220;
+  --ui-surface:#111c2f;
+  --ui-surface-2:#16243a;
+  --ui-border:#2b3a51;
+  --ui-border-strong:#40516b;
+  --ui-text:#ffffff;
+  --ui-text-soft:#ffffff;
+  --ui-accent:#3b82f6;
+  --ui-accent-soft:#203b72;
+
+  background:#0b1220 !important;
+  color:#ffffff !important;
+}
+
+/* Main surfaces */
+body.dark .card,
+body.dark .panel,
+body.dark .dashboard-panel,
+body.dark .dashboard-card,
+body.dark .stat-card,
+body.dark .balance-card,
+body.dark .kas-pro-metric,
+body.dark .kas-pro-table,
+body.dark .task-pro-card,
+body.dark .task-column,
+body.dark .hp-slot,
+body.dark .timeline-card,
+body.dark .cal-card,
+body.dark .calendar-card,
+body.dark .settings-section,
+body.dark .search-box{
+  background:#111c2f !important;
+  border-color:#2b3a51 !important;
+  box-shadow:0 1px 2px rgba(0,0,0,.14) !important;
+}
+
+/* Secondary surfaces */
+body.dark .field,
+body.dark .field input,
+body.dark .field select,
+body.dark .field textarea,
+body.dark input,
+body.dark select,
+body.dark textarea{
+  background:#0e192b !important;
+  border-color:#30425c !important;
+  color:#ffffff !important;
+  -webkit-text-fill-color:#ffffff !important;
+}
+
+/* ---------- SHARED COMPONENTS ---------- */
+.card,
+.panel,
+.dashboard-panel,
+.dashboard-card,
+.stat-card,
+.balance-card,
+.kas-pro-metric,
+.kas-pro-table,
+.task-pro-card,
+.task-column,
+.hp-slot,
+.timeline-card,
+.cal-card,
+.calendar-card,
+.settings-section{
+  border-radius:var(--ui-radius-md);
+}
+
+.pagehead{
+  margin-bottom:var(--ui-space-5);
+}
+
+.pagehead h1{
+  letter-spacing:-.025em;
+}
+
+.section{
+  margin-bottom:var(--ui-space-6);
+}
+
+.section-head{
+  gap:var(--ui-space-3);
+  margin-bottom:var(--ui-space-3);
+}
+
+.section-title{
+  letter-spacing:-.015em;
+}
+
+.section-kicker{
+  letter-spacing:.06em;
+}
+
+/* ---------- BUTTONS ---------- */
+.btn,
+.section-link,
+.fab-add,
+.mode-btn,
+.cal-nav-btn,
+.bulk-all-btn,
+.kas-history-toggle{
+  border-radius:var(--ui-radius-sm);
+}
+
+body.dark .btn-ghost,
+body.dark .section-link,
+body.dark .mode-btn,
+body.dark .cal-nav-btn,
+body.dark .bulk-all-btn,
+body.dark .kas-history-toggle{
+  background:#16243a !important;
+  color:#ffffff !important;
+  -webkit-text-fill-color:#ffffff !important;
+  border-color:#40516b !important;
+}
+
+body.dark .btn-primary,
+body.dark .fab-add,
+body.dark .mode-btn.active{
+  background:#203b72 !important;
+  color:#ffffff !important;
+  -webkit-text-fill-color:#ffffff !important;
+  border-color:#3b82f6 !important;
+}
+
+/* ---------- DASHBOARD / BERANDA ---------- */
+.dashboard-stat-card,
+.stat-card{
+  overflow:hidden;
+}
+
+.stat-label,
+.stat-status{
+  line-height:1.35;
+}
+
+.stat-value{
+  letter-spacing:-.025em;
+}
+
+.dashboard-panel{
+  padding:var(--ui-space-5);
+}
+
+.compact-list{
+  gap:var(--ui-space-2);
+}
+
+/* ---------- KAS ---------- */
+#view-kas .balance-card{
+  padding:var(--ui-space-5);
+}
+
+#view-kas .balance-value,
+#view-kas .kpm-value{
+  letter-spacing:-.025em;
+}
+
+#view-kas .kas-history-section,
+#view-kas .kas-siswa-section{
+  margin-top:var(--ui-space-5);
+}
+
+#view-kas .kas-folder-list{
+  gap:var(--ui-space-3);
+}
+
+/* ---------- HP ---------- */
+#view-hp .summary-row{
+  gap:var(--ui-space-3);
+}
+
+#view-hp .summary-box{
+  border-radius:var(--ui-radius-md);
+}
+
+#view-hp .roster-list-wrap{
+  border-radius:var(--ui-radius-md);
+}
+
+#view-hp .hp-slot{
+  overflow:hidden;
+  padding:var(--ui-space-4);
+}
+
+#view-hp .hp-slot-name{
+  line-height:1.2;
+  letter-spacing:-.01em;
+}
+
+#view-hp .hp-slot-time{
+  line-height:1.55;
+}
+
+/* ---------- JADWAL ---------- */
+#view-jadwal .day-tabs{
+  gap:8px;
+}
+
+#view-jadwal .day-chip{
+  border-radius:var(--ui-radius-sm);
+}
+
+#view-jadwal .timeline-item{
+  border-radius:var(--ui-radius-md);
+}
+
+#view-jadwal .timeline-time{
+  line-height:1.25;
+}
+
+#view-jadwal .timeline-time span{
+  display:block;
+}
+
+/* ---------- TUGAS ---------- */
+#view-tugas .task-pro-card{
+  padding:var(--ui-space-5);
+}
+
+#view-tugas .task-pro-title,
+#view-tugas .task-title{
+  letter-spacing:-.015em;
+  line-height:1.25;
+}
+
+#view-tugas .task-pro-desc,
+#view-tugas .task-desc{
+  line-height:1.65;
+}
+
+#view-tugas .task-pro-meta,
+#view-tugas .task-meta{
+  line-height:1.4;
+}
+
+body.dark #view-tugas .task-pro-title,
+body.dark #view-tugas .task-title,
+body.dark #view-tugas .task-pro-desc,
+body.dark #view-tugas .task-desc,
+body.dark #view-tugas .task-pro-meta,
+body.dark #view-tugas .task-meta{
+  color:#ffffff !important;
+  -webkit-text-fill-color:#ffffff !important;
+}
+
+/* ---------- LAPORAN ---------- */
+#view-laporan .card{
+  border-radius:var(--ui-radius-lg);
+}
+
+#view-laporan .report-kpi,
+#view-laporan .report-kpi-card{
+  border-radius:var(--ui-radius-md);
+}
+
+#view-laporan .rk-value{
+  letter-spacing:-.02em;
+}
+
+/* ---------- SETELAN ---------- */
+#view-settings .settings-section{
+  padding:var(--ui-space-5);
+}
+
+#view-settings .settings-label{
+  letter-spacing:.045em;
+}
+
+#view-settings .tab{
+  border-radius:var(--ui-radius-sm);
+}
+
+body.dark #view-settings .tab{
+  background:#16243a !important;
+  border-color:#40516b !important;
+  color:#ffffff !important;
+  -webkit-text-fill-color:#ffffff !important;
+}
+
+body.dark #view-settings .tab.active{
+  background:#203b72 !important;
+  border-color:#3b82f6 !important;
+}
+
+/* ---------- MOBILE REFINEMENT ---------- */
+@media (max-width:900px){
+  body.dark .phone,
+  body.dark .screen,
+  body.dark .content,
+  body.dark .view,
+  body.dark .main-content{
+    background:#0b1220 !important;
+  }
+
+  .pagehead{
+    margin-bottom:22px;
+  }
+
+  .pagehead h1{
+    line-height:1.12;
+  }
+
+  .section{
+    margin-bottom:24px;
+  }
+
+  .section-head{
+    align-items:center;
+  }
+
+  .card,
+  .panel,
+  .dashboard-panel,
+  .dashboard-card,
+  .stat-card,
+  .balance-card,
+  .task-pro-card,
+  .task-column,
+  .hp-slot,
+  .timeline-card,
+  .cal-card,
+  .calendar-card,
+  .settings-section{
+    border-radius:18px;
+  }
+
+  /* Hindari terlalu banyak garis di dalam komponen. */
+  body.dark .task-pro-card,
+  body.dark .hp-slot{
+    box-shadow:none !important;
+  }
+
+  /* Teks utama putih; hierarchy dibentuk dengan ukuran/weight,
+     bukan warna abu-abu. */
+  body.dark .pagehead h1,
+  body.dark .section-title,
+  body.dark .task-pro-title,
+  body.dark .task-title,
+  body.dark .hp-slot-name,
+  body.dark .hp-slot-head,
+  body.dark .stat-value,
+  body.dark .balance-value,
+  body.dark .kpm-value,
+  body.dark .rk-value,
+  body.dark #view-settings h2,
+  body.dark #view-settings h3{
+    color:#ffffff !important;
+    -webkit-text-fill-color:#ffffff !important;
+    opacity:1 !important;
+  }
+
+  body.dark .pagehead p,
+  body.dark .section-kicker,
+  body.dark .task-pro-desc,
+  body.dark .task-desc,
+  body.dark .task-pro-meta,
+  body.dark .task-meta,
+  body.dark .hp-slot-time,
+  body.dark .field-hint,
+  body.dark .settings-label{
+    color:#ffffff !important;
+    -webkit-text-fill-color:#ffffff !important;
+    opacity:.78 !important;
+  }
+
+  /* HP: nama dan informasi slot tidak boleh redup. */
+  body.dark #view-hp .hp-slot-name,
+  body.dark #view-hp .hp-slot-head,
+  body.dark #view-hp .hp-slot-head *,
+  body.dark #view-hp .hp-slot-status,
+  body.dark #view-hp .hp-slot label,
+  body.dark #view-hp .hp-slot label *{
+    color:#ffffff !important;
+    -webkit-text-fill-color:#ffffff !important;
+    opacity:1 !important;
+  }
+
+  body.dark #view-hp .hp-slot-time{
+    color:#ffffff !important;
+    -webkit-text-fill-color:#ffffff !important;
+    opacity:.78 !important;
+  }
+
+  /* Search dan filter tidak menjadi blok abu-abu. */
+  body.dark #view-hp .search-box,
+  body.dark #view-hp #hp-search,
+  body.dark #view-tugas input,
+  body.dark #view-tugas select,
+  body.dark #view-tugas textarea{
+    background:#0e192b !important;
+    border-color:#30425c !important;
+  }
+
+  /* Bottom navigation tenang dan konsisten dengan desktop. */
+  body.dark .tabbar{
+    background:#111c2f !important;
+    border-top:1px solid #2b3a51 !important;
+    box-shadow:0 -4px 14px rgba(0,0,0,.16) !important;
+  }
+
+  body.dark .tabbar .tab{
+    color:#ffffff !important;
+    -webkit-text-fill-color:#ffffff !important;
+    opacity:.84 !important;
+  }
+
+  body.dark .tabbar .tab.active{
+    opacity:1 !important;
+  }
+}
+
+/* ---------- DESKTOP ---------- */
+@media (min-width:901px){
+  .phone{
+    background:var(--ui-bg);
+  }
+
+  body.dark .phone{
+    background:#0b1220 !important;
+  }
+
+  .dashboard-stat-card,
+  .stat-card{
+    min-height:116px;
+  }
+
+  .dashboard-panel{
+    min-height:150px;
+  }
+}
+
+/* ---------- ACCESSIBILITY / MOTION ---------- */
+:focus-visible{
+  outline:2px solid var(--ui-accent);
+  outline-offset:2px;
+}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    transition-duration:.01ms !important;
+    animation-duration:.01ms !important;
+    animation-iteration-count:1 !important;
+    scroll-behavior:auto !important;
+  }
+}
+
+/* =========================================================
+   LIGHT MODE PARITY — FINAL POLISH
+   Keep light mode as a first-class theme, not a fallback.
+   ========================================================= */
+body:not(.dark){
+  --ui-bg:#f4f6fa;
+  --ui-surface:#ffffff;
+  --ui-surface-2:#f8fafc;
+  --ui-border:#d6dee9;
+  --ui-border-strong:#b9c6d6;
+  --ui-text:#172033;
+  --ui-text-soft:#334155;
+  --ui-accent:#2563eb;
+  --ui-accent-soft:#eaf1ff;
+  background:#f4f6fa !important;
+  color:#172033 !important;
+}
+
+body:not(.dark) .phone,
+body:not(.dark) .screen,
+body:not(.dark) .content,
+body:not(.dark) .main-content,
+body:not(.dark) .view{
+  background:#f4f6fa !important;
+  color:#172033 !important;
+}
+
+/* Surfaces: clean white, visible borders, restrained shadow. */
+body:not(.dark) .card,
+body:not(.dark) .panel,
+body:not(.dark) .dashboard-panel,
+body:not(.dark) .dashboard-card,
+body:not(.dark) .stat-card,
+body:not(.dark) .balance-card,
+body:not(.dark) .kas-pro-metric,
+body:not(.dark) .kas-pro-table,
+body:not(.dark) .task-pro-card,
+body:not(.dark) .task-column,
+body:not(.dark) .hp-slot,
+body:not(.dark) .timeline-card,
+body:not(.dark) .cal-card,
+body:not(.dark) .calendar-card,
+body:not(.dark) .settings-section,
+body:not(.dark) .search-box,
+body:not(.dark) .summary-box,
+body:not(.dark) .roster-list-wrap,
+body:not(.dark) .report-kpi,
+body:not(.dark) .report-kpi-card{
+  background:#ffffff !important;
+  color:#172033 !important;
+  border-color:#d6dee9 !important;
+  box-shadow:0 1px 2px rgba(15,23,42,.045) !important;
+}
+
+/* Main typography: do not let light mode inherit washed-out gray. */
+body:not(.dark) .pagehead h1,
+body:not(.dark) .pagehead p,
+body:not(.dark) .section-title,
+body:not(.dark) .section-kicker,
+body:not(.dark) .stat-label,
+body:not(.dark) .stat-value,
+body:not(.dark) .stat-status,
+body:not(.dark) .balance-value,
+body:not(.dark) .kpm-value,
+body:not(.dark) .rk-value,
+body:not(.dark) .task-pro-title,
+body:not(.dark) .task-title,
+body:not(.dark) .task-pro-desc,
+body:not(.dark) .task-desc,
+body:not(.dark) .task-pro-meta,
+body:not(.dark) .task-meta,
+body:not(.dark) .hp-slot-name,
+body:not(.dark) .hp-slot-head,
+body:not(.dark) .hp-slot-time,
+body:not(.dark) .timeline-time,
+body:not(.dark) .timeline-title,
+body:not(.dark) .timeline-desc,
+body:not(.dark) .settings-label,
+body:not(.dark) .field-hint,
+body:not(.dark) .rk-label,
+body:not(.dark) label{
+  color:#172033 !important;
+  -webkit-text-fill-color:#172033 !important;
+}
+
+body:not(.dark) .pagehead p,
+body:not(.dark) .section-kicker,
+body:not(.dark) .field-hint,
+body:not(.dark) .task-pro-meta,
+body:not(.dark) .task-meta,
+body:not(.dark) .task-pro-desc,
+body:not(.dark) .task-desc,
+body:not(.dark) .hp-slot-time,
+body:not(.dark) .timeline-desc,
+body:not(.dark) .rk-label{
+  color:#475569 !important;
+  -webkit-text-fill-color:#475569 !important;
+  opacity:1 !important;
+}
+
+/* Inputs/search/filter controls. */
+body:not(.dark) input,
+body:not(.dark) select,
+body:not(.dark) textarea,
+body:not(.dark) .field,
+body:not(.dark) .field input,
+body:not(.dark) .field select,
+body:not(.dark) .field textarea,
+body:not(.dark) .search-box,
+body:not(.dark) #hp-search{
+  background:#ffffff !important;
+  color:#172033 !important;
+  -webkit-text-fill-color:#172033 !important;
+  border-color:#cbd5e1 !important;
+}
+body:not(.dark) input::placeholder,
+body:not(.dark) textarea::placeholder{
+  color:#64748b !important;
+  opacity:1 !important;
+}
+
+/* Neutral controls stay distinct from the page without becoming gray blobs. */
+body:not(.dark) .btn-ghost,
+body:not(.dark) .section-link,
+body:not(.dark) .mode-btn,
+body:not(.dark) .cal-nav-btn,
+body:not(.dark) .bulk-all-btn,
+body:not(.dark) .kas-history-toggle,
+body:not(.dark) .tab,
+body:not(.dark) .day-chip{
+  background:#f8fafc !important;
+  color:#172033 !important;
+  -webkit-text-fill-color:#172033 !important;
+  border-color:#cbd5e1 !important;
+}
+body:not(.dark) .btn-ghost:hover,
+body:not(.dark) .section-link:hover,
+body:not(.dark) .mode-btn:hover,
+body:not(.dark) .cal-nav-btn:hover,
+body:not(.dark) .bulk-all-btn:hover,
+body:not(.dark) .kas-history-toggle:hover,
+body:not(.dark) .tab:hover,
+body:not(.dark) .day-chip:hover{
+  background:#eef2f7 !important;
+  border-color:#b9c6d6 !important;
+}
+body:not(.dark) .btn-primary,
+body:not(.dark) .fab-add,
+body:not(.dark) .mode-btn.active,
+body:not(.dark) .tab.active,
+body:not(.dark) .day-chip.active{
+  background:#2563eb !important;
+  color:#ffffff !important;
+  -webkit-text-fill-color:#ffffff !important;
+  border-color:#2563eb !important;
+}
+
+/* Sidebar and mobile navigation parity. */
+body:not(.dark) .desktop-sidebar,
+body:not(.dark) .sidebar,
+body:not(.dark) .tabbar{
+  background:#ffffff !important;
+  color:#172033 !important;
+  border-color:#d6dee9 !important;
+}
+body:not(.dark) .desktop-nav-item,
+body:not(.dark) .nav-item,
+body:not(.dark) .tabbar .tab{
+  color:#334155 !important;
+  -webkit-text-fill-color:#334155 !important;
+}
+body:not(.dark) .desktop-nav-item.active,
+body:not(.dark) .nav-item.active,
+body:not(.dark) .tabbar .tab.active{
+  color:#1d4ed8 !important;
+  -webkit-text-fill-color:#1d4ed8 !important;
+}
+
+/* Status colors retain meaning while remaining readable. */
+body:not(.dark) .hp-slot-status.done,
+body:not(.dark) .status-done,
+body:not(.dark) .badge-success,
+body:not(.dark) .success{
+  color:#166534 !important;
+  -webkit-text-fill-color:#166534 !important;
+}
+body:not(.dark) .hp-slot-status.todo,
+body:not(.dark) .status-todo,
+body:not(.dark) .badge-warning,
+body:not(.dark) .warning{
+  color:#92400e !important;
+  -webkit-text-fill-color:#92400e !important;
+}
+
+/* Dividers/lines should be visible in light mode too. */
+body:not(.dark) hr,
+body:not(.dark) .divider,
+body:not(.dark) .section-divider{
+  border-color:#d6dee9 !important;
+  background:#d6dee9 !important;
+}
+
+/* Mobile: preserve the same light palette and comfortable spacing. */
+@media (max-width:900px){
+  body:not(.dark) .phone,
+  body:not(.dark) .screen,
+  body:not(.dark) .content,
+  body:not(.dark) .view,
+  body:not(.dark) .main-content{
+    background:#f4f6fa !important;
+  }
+  body:not(.dark) .card,
+  body:not(.dark) .panel,
+  body:not(.dark) .dashboard-panel,
+  body:not(.dark) .dashboard-card,
+  body:not(.dark) .stat-card,
+  body:not(.dark) .balance-card,
+  body:not(.dark) .task-pro-card,
+  body:not(.dark) .task-column,
+  body:not(.dark) .hp-slot,
+  body:not(.dark) .timeline-card,
+  body:not(.dark) .cal-card,
+  body:not(.dark) .calendar-card,
+  body:not(.dark) .settings-section{
+    border-color:#d6dee9 !important;
+    box-shadow:0 1px 2px rgba(15,23,42,.04) !important;
+  }
+  body:not(.dark) .task-pro-desc,
+  body:not(.dark) .task-desc,
+  body:not(.dark) .hp-slot-time{
+    line-height:1.65;
+  }
+  body:not(.dark) .tabbar{
+    box-shadow:0 -4px 14px rgba(15,23,42,.07) !important;
+    border-top:1px solid #d6dee9 !important;
+  }
+}
+
+</style>
+
+
+<script id="kelasku-final-qa-js">
+(function(){
+  'use strict';
+  function closeTransientUi(){
+    try{
+      document.querySelectorAll('.modal.open,.modal.show,[aria-modal="true"]').forEach(function(el){
+        if(el.classList.contains('modal')) return;
+      });
+      document.querySelectorAll('.month-picker.open').forEach(function(el){el.classList.remove('open');});
+    }catch(e){}
+  }
+  function resetViewScroll(){
+    try{
+      document.querySelectorAll('.view').forEach(function(v){
+        if(v.classList.contains('active')){
+          v.scrollTop=0;
+          v.querySelectorAll('.scroll-area,.report-list,.activity-list').forEach(function(el){el.scrollTop=0;});
+        }
+      });
+    }catch(e){}
+  }
+  window.addEventListener('hashchange',resetViewScroll,{passive:true});
+  document.addEventListener('click',function(e){
+    var nav=e.target.closest && e.target.closest('[data-view],.nav-item,.tabbar-item');
+    if(nav) setTimeout(resetViewScroll,0);
+  },true);
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape') closeTransientUi();
+  });
+  window.addEventListener('resize',function(){
+    document.documentElement.style.setProperty('--viewport-w',window.innerWidth+'px');
+  },{passive:true});
+  try{ document.documentElement.style.setProperty('--viewport-w',window.innerWidth+'px'); }catch(e){}
+})();
+</script>
 
 </body>
 <!-- Kelasku compatibility patch: resilient Firestore sync + legacy fallback -->
