@@ -15806,6 +15806,43 @@ body.dark .settings-label.danger{
   color:#fb7185 !important;
 }
 </style>
+
+<style id="kelasku-hp-name-no-background-final">
+/* Nama siswa di Pengumpulan HP: teks saja, tanpa latar/border seperti tombol. */
+#view-hp .hp-slot-name-button,
+#view-hp button.hp-slot-name,
+#view-hp .hp-slot-name.hp-slot-name-button{
+  appearance:none !important;
+  -webkit-appearance:none !important;
+  background:transparent !important;
+  background-color:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+  outline:none;
+  padding:0 !important;
+  margin:0 !important;
+  border-radius:0 !important;
+  text-align:left !important;
+}
+#view-hp .hp-slot-name-button:hover,
+#view-hp .hp-slot-name-button:active,
+#view-hp .hp-slot-name-button:focus{
+  background:transparent !important;
+  background-color:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+}
+body.dark #view-hp .hp-slot-name-button,
+body.dark #view-hp .hp-slot-name.hp-slot-name-button{
+  color:#fff !important;
+  -webkit-text-fill-color:#fff !important;
+}
+body:not(.dark) #view-hp .hp-slot-name-button,
+body:not(.dark) #view-hp .hp-slot-name.hp-slot-name-button{
+  color:#172033 !important;
+  -webkit-text-fill-color:#172033 !important;
+}
+</style>
 </body>
 <!-- Kelasku compatibility patch: resilient Firestore sync + legacy fallback -->
 </html>
