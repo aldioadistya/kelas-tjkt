@@ -14301,6 +14301,148 @@ body:not(.dark) [role="button"]:active{
   transform:scale(.97) !important;
 }
 </style>
+
+<style id="kelasku-dark-mobile-final-override-v8">
+/* FINAL MOBILE DARK OVERRIDE
+   Desktop dark is the source of truth.
+   This block is intentionally LAST so older mobile gray rules cannot win. */
+@media (max-width:900px){
+  body.dark{
+    background:#0f172a !important;
+    color:#f8fafc !important;
+    --glass-bg:#0f172a !important;
+    --glass-card:#111c2f !important;
+    --glass-border:#34445d !important;
+    --input-bg:#0f1a2c !important;
+    --text-main:#f8fafc !important;
+    --text-soft:#cbd5e1 !important;
+    --text-muted:#9fb0c7 !important;
+  }
+
+  body.dark .phone,
+  body.dark .screen,
+  body.dark .content,
+  body.dark .view,
+  body.dark .main-content{
+    background:#0f172a !important;
+    color:#f8fafc !important;
+  }
+
+  /* Settings: remove the gray/charcoal appearance visible in the screenshot. */
+  body.dark #view-settings,
+  body.dark #view-settings .settings-wrap,
+  body.dark #view-settings .settings-content,
+  body.dark #view-settings .settings-section,
+  body.dark #view-settings .settings-profile-card,
+  body.dark #view-settings .acc-row,
+  body.dark #view-settings .manage-details,
+  body.dark #view-settings .role-group,
+  body.dark #view-settings .role-body{
+    background:#111c2f !important;
+    color:#f8fafc !important;
+    border-color:#34445d !important;
+  }
+
+  body.dark #view-settings .settings-nav{
+    background:transparent !important;
+  }
+
+  body.dark #view-settings .settings-nav button,
+  body.dark #view-settings .settings-nav button:not(.active),
+  body.dark #view-settings .mode-btn,
+  body.dark #view-settings .btn-ghost{
+    background:#17243a !important;
+    color:#e2e8f0 !important;
+    border:1px solid #40516b !important;
+    box-shadow:none !important;
+  }
+
+  body.dark #view-settings .settings-nav button.active{
+    background:#203b72 !important;
+    color:#ffffff !important;
+    border-color:#3b82f6 !important;
+  }
+
+  body.dark #view-settings input,
+  body.dark #view-settings select,
+  body.dark #view-settings textarea,
+  body.dark #view-settings .number-input-clean{
+    background:#0f1a2c !important;
+    color:#f8fafc !important;
+    border-color:#34445d !important;
+  }
+
+  /* Bottom navigation must be navy too, not gray. */
+  body.dark .tabbar,
+  body.dark .phone > .tabbar{
+    background:#111c2f !important;
+    border-top:1px solid #34445d !important;
+    box-shadow:0 -4px 16px rgba(0,0,0,.22) !important;
+  }
+
+  body.dark .tabbar .tab{
+    background:transparent !important;
+    color:#9fb0c7 !important;
+    border:0 !important;
+  }
+
+  body.dark .tabbar .tab.active{
+    background:transparent !important;
+    color:#60a5fa !important;
+  }
+
+  /* All common mobile cards use the same desktop-dark surface. */
+  body.dark .card,
+  body.dark .panel,
+  body.dark .section-card,
+  body.dark .content-card,
+  body.dark .stat-card,
+  body.dark .balance-card,
+  body.dark .task-column,
+  body.dark .task-pro-card,
+  body.dark .report-chart-card,
+  body.dark .report-kpi-card,
+  body.dark .report-kpi,
+  body.dark .timeline-card,
+  body.dark .piket-person,
+  body.dark .hp-slot,
+  body.dark .kas-folder,
+  body.dark .kas-pro-metric,
+  body.dark .kas-pro-table,
+  body.dark .calendar-card,
+  body.dark .cal-card,
+  body.dark .search-box,
+  body.dark .modal,
+  body.dark .modal-content{
+    background:#111c2f !important;
+    color:#f8fafc !important;
+    border-color:#34445d !important;
+  }
+
+  /* Neutral controls follow desktop dark, not the old gray mobile palette. */
+  body.dark .btn:not(.btn-primary):not(.primary):not(.btn-danger):not(.danger),
+  body.dark button:not(.btn-primary):not(.primary):not(.btn-danger):not(.danger){
+    background:#17243a !important;
+    color:#e2e8f0 !important;
+    border-color:#40516b !important;
+  }
+
+  body.dark .btn-primary,
+  body.dark .primary{
+    background:#2563eb !important;
+    color:#ffffff !important;
+    border-color:#3b82f6 !important;
+  }
+
+  body.dark .btn-danger,
+  body.dark .danger{
+    background:rgba(244,63,94,.10) !important;
+    color:#fb7185 !important;
+    border-color:rgba(251,113,133,.50) !important;
+  }
+}
+</style>
+
 </body>
 <!-- Kelasku compatibility patch: resilient Firestore sync + legacy fallback -->
 </html>
