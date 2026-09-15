@@ -13555,7 +13555,35 @@ Setelan
     function injectReportUI(){const v=document.getElementById('view-laporan');if(!v||document.getElementById('report-pro-top'))return;const first=v.querySelector('.section');const box=document.createElement('div');box.id='report-pro-top';box.className='report-pro-top';box.innerHTML='<div class="report-chart-card"><div class="section-kicker">RINGKASAN</div><div style="font-size:14px;font-weight:800">Status laporan</div><div id="report-bars" class="report-bars"></div></div><div class="report-kpi-card"><div class="report-kpi-grid"><div class="report-kpi"><div class="rk-label">Menunggu</div><div class="rk-value" id="rk-pending">0</div></div><div class="report-kpi"><div class="rk-label">Ditinjau</div><div class="rk-value" id="rk-reviewed">0</div></div><div class="report-kpi"><div class="rk-label">Selesai</div><div class="rk-value" id="rk-resolved">0</div></div><div class="report-kpi"><div class="rk-label">Ditolak</div><div class="rk-value" id="rk-rejected">0</div></div></div><div class="report-actions" style="margin-top:12px"><button class="report-action-btn primary" onclick="window.print()">Cetak / PDF</button><button class="report-action-btn" onclick="openExportModal()">Export Data</button></div></div>'; if(first)first.before(box);else v.appendChild(box);}
     function updateReportUI(list){injectReportUI();const c={pending:0,reviewed:0,resolved:0,rejected:0};(state.reports||[]).forEach(r=>{if(c[r.status]!=null)c[r.status]++});Object.keys(c).forEach(k=>{const e=document.getElementById('rk-'+k);if(e)e.textContent=c[k]});const max=Math.max(1,...Object.values(c));const bars=document.getElementById('report-bars');if(bars)bars.innerHTML=Object.entries(c).map(([k,v])=>`<div class="report-bar-col"><div class="report-bar" style="height:${Math.max(5,Math.round(v/max*72))}px"></div><div class="report-bar-label">${reportStatusLabel(k)}</div><strong style="font-size:10px">${v}</strong></div>`).join('');}
 
-    function injectSettingsNav(){const v=document.getElementById('view-settings');if(!v||document.getElementById('settings-nav'))return;const head=v.querySelector('.pagehead');const nav=document.createElement('div');nav.id='settings-nav';nav.className='settings-nav';nav.innerHTML='<button class="active" data-cat="profile">Profil & Tampilan</button><button data-cat="members">Anggota & Siswa</button><button data-cat="security">Keamanan & Database</button>';head.after(nav);const all=[...v.querySelectorAll('.settings-section')];all.forEach((el,i)=>{if(!el.dataset.settingCat)el.dataset.settingCat=(i===0||i===1)?'members':(i===2||i===3||i===4)?'security':'profile'});nav.addEventListener('click',e=>{const b=e.target.closest('[data-cat]');if(!b)return;nav.querySelectorAll('button').forEach(x=>x.classList.toggle('active',x===b));const cat=b.dataset.cat;all.forEach(el=>el.classList.toggle('hidden-by-category',el.dataset.settingCat!==cat));});}
+    function injectSettingsNav(){
+  const v=document.getElementById('view-settings');
+  if(!v||document.getElementById('settings-nav'))return;
+  const head=v.querySelector('.pagehead');
+  if(!head)return;
+  const nav=document.createElement('div');
+  nav.id='settings-nav';
+  nav.className='settings-nav';
+  nav.innerHTML='<button type="button" data-cat="profile">Profil & Tampilan</button><button type="button" data-cat="members">Anggota & Siswa</button><button type="button" data-cat="security">Keamanan & Database</button>';
+  head.after(nav);
+  const all=[...v.querySelectorAll('.settings-section')];
+  all.forEach(el=>{
+    if(el.dataset.settingCat)return;
+    const label=(el.querySelector('.settings-label')?.textContent||'').trim().toLowerCase();
+    if(el.id==='account-manage-wrap') el.dataset.settingCat='members';
+    else if(/tugas|laporan|ruang penyimpanan|backup|zona berbahaya|riwayat aktivitas|keamanan hak akses|keamanan firebase/.test(label)) el.dataset.settingCat='security';
+    else el.dataset.settingCat='profile';
+  });
+  function apply(cat){
+    nav.querySelectorAll('button').forEach(x=>{
+      const active=x.dataset.cat===cat;
+      x.classList.toggle('active',active);
+      x.setAttribute('aria-selected',active?'true':'false');
+    });
+    all.forEach(el=>el.classList.toggle('hidden-by-category',el.dataset.settingCat!==cat));
+  }
+  nav.addEventListener('click',e=>{const b=e.target.closest('[data-cat]');if(b)apply(b.dataset.cat);});
+  apply('profile');
+}
 
     const oldRenderKas=window.renderKas, oldRenderHp=window.renderHp, oldRenderPiket=window.renderPiket, oldRenderJadwal=window.renderJadwalList, oldRenderTugas=window.renderTugas, oldRenderReports=window.renderReports;
     window.renderKas=function(){ensureKasEnhancements();professionalRenderKas();if(typeof renderKasSiswa==='function')renderKasSiswa();};
@@ -15846,3 +15874,14 @@ body:not(.dark) #view-hp .hp-slot-name.hp-slot-name-button{
 </body>
 <!-- Kelasku compatibility patch: resilient Firestore sync + legacy fallback -->
 </html>
+
+<style id="kelasku-settings-tabs-fix">
+.settings-nav{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 18px;}
+.settings-nav button{appearance:none;cursor:pointer;min-height:38px;padding:8px 14px;border:1px solid var(--ui-border,#dbe3ee);border-radius:10px;background:var(--ui-surface,#fff);color:var(--ui-text,#0f172a)!important;font-weight:800;font-size:11px;line-height:1.2;}
+.settings-nav button:hover{background:var(--ui-surface-2,#f8fafc);}
+.settings-nav button.active{background:var(--ui-accent,#2563eb)!important;color:#fff!important;border-color:var(--ui-accent,#2563eb)!important;}
+.settings-nav button:focus-visible{outline:2px solid var(--ui-accent,#2563eb);outline-offset:2px;}
+body.dark .settings-nav button{background:#17243a;color:#f8fafc!important;border-color:#40516b;}
+body.dark .settings-nav button:hover{background:#1d2c44;}
+body.dark .settings-nav button.active{background:#3b82f6!important;color:#fff!important;border-color:#3b82f6!important;}
+</style>
