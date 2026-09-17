@@ -16132,6 +16132,294 @@ body:not(.dark) .empty-state *{
 }
 </style>
 
+
+<style id="kelasku-light-visibility-hard-fix-v26">
+/* HARD LIGHT-MODE VISIBILITY FIX
+   Target langsung elemen yang sebelumnya masih bisa mewarisi warna putih/transparent.
+   Tidak mengubah fungsi atau struktur data. */
+@media (min-width:0px){
+  body:not(.dark) #view-jadwal .mode-switch .mode-btn,
+  body:not(.dark) #view-jadwal .mode-btn,
+  body:not(.dark) #view-jadwal .day-tabs .day-chip,
+  body:not(.dark) #view-tugas .task-filter-tabs .task-filter-tab{
+    min-height:38px !important;
+    font-size:11px !important;
+    font-weight:800 !important;
+    line-height:1.2 !important;
+    text-indent:0 !important;
+    visibility:visible !important;
+    opacity:1 !important;
+  }
+
+  body:not(.dark) #view-jadwal .mode-switch .mode-btn:not(.active),
+  body:not(.dark) #view-jadwal .day-tabs .day-chip:not(.active),
+  body:not(.dark) #view-tugas .task-filter-tabs .task-filter-tab:not(.active){
+    background:#ffffff !important;
+    color:#172033 !important;
+    -webkit-text-fill-color:#172033 !important;
+    border:1px solid #c8d2df !important;
+  }
+
+  body:not(.dark) #view-jadwal .mode-switch .mode-btn.active,
+  body:not(.dark) #view-jadwal .day-tabs .day-chip.active,
+  body:not(.dark) #view-tugas .task-filter-tabs .task-filter-tab.active{
+    background:#2563eb !important;
+    color:#ffffff !important;
+    -webkit-text-fill-color:#ffffff !important;
+    border:1px solid #2563eb !important;
+  }
+
+  /* Anak teks ikut dipaksa terlihat; ini mengatasi rule lama yang memakai inherit. */
+  body:not(.dark) #view-jadwal .mode-switch .mode-btn *,
+  body:not(.dark) #view-jadwal .day-tabs .day-chip *,
+  body:not(.dark) #view-tugas .task-filter-tabs .task-filter-tab *{
+    visibility:visible !important;
+    opacity:1 !important;
+    text-indent:0 !important;
+    color:inherit !important;
+    -webkit-text-fill-color:inherit !important;
+  }
+
+  /* Empty card: jangan tampil sebagai kotak kosong ketika daftar memang belum punya data. */
+  body:not(.dark) #view-jadwal #jadwal-list:has(.empty),
+  body:not(.dark) #view-tugas #tugas-open-list:has(.empty),
+  body:not(.dark) #view-tugas #tugas-done-list:has(.empty),
+  body:not(.dark) #view-laporan #report-list:has(.empty){
+    min-height:0 !important;
+  }
+  body:not(.dark) #view-jadwal #jadwal-list .empty,
+  body:not(.dark) #view-tugas #tugas-open-list .empty,
+  body:not(.dark) #view-tugas #tugas-done-list .empty,
+  body:not(.dark) #view-laporan #report-list .empty{
+    display:block !important;
+    min-height:70px !important;
+    padding:24px 14px !important;
+    color:#475569 !important;
+    -webkit-text-fill-color:#475569 !important;
+    font-size:12px !important;
+    line-height:1.5 !important;
+    opacity:1 !important;
+    visibility:visible !important;
+  }
+
+  /* Judul/subjudul halaman dan section. */
+  body:not(.dark) #view-jadwal .pagehead h1,
+  body:not(.dark) #view-jadwal .pagehead p,
+  body:not(.dark) #view-jadwal .section-title,
+  body:not(.dark) #view-jadwal .date-label,
+  body:not(.dark) #view-tugas .pagehead h1,
+  body:not(.dark) #view-tugas .pagehead p,
+  body:not(.dark) #view-tugas .section-title,
+  body:not(.dark) #view-laporan .pagehead h1,
+  body:not(.dark) #view-laporan .pagehead p,
+  body:not(.dark) #view-laporan .section-title{
+    visibility:visible !important;
+    opacity:1 !important;
+  }
+
+  body:not(.dark) #view-jadwal .pagehead h1,
+  body:not(.dark) #view-tugas .pagehead h1,
+  body:not(.dark) #view-laporan .pagehead h1,
+  body:not(.dark) #view-jadwal .section-title,
+  body:not(.dark) #view-tugas .section-title,
+  body:not(.dark) #view-laporan .section-title{
+    color:#172033 !important;
+    -webkit-text-fill-color:#172033 !important;
+  }
+  body:not(.dark) #view-jadwal .pagehead p,
+  body:not(.dark) #view-tugas .pagehead p,
+  body:not(.dark) #view-laporan .pagehead p,
+  body:not(.dark) #view-jadwal .date-label{
+    color:#475569 !important;
+    -webkit-text-fill-color:#475569 !important;
+  }
+}
+</style>
+
+
+<style id="kelasku-light-mode-final-palette-v27">
+/* FINAL LIGHT THEME — source of truth for readable text.
+   Do not allow legacy dark/white text rules to leak into light mode. */
+body:not(.dark){
+  --text-main:#172033 !important;
+  --text-soft:#334155 !important;
+  --text-muted:#64748b !important;
+  --ui-text:#172033 !important;
+  --ui-muted:#475569 !important;
+  --ui-soft:#475569 !important;
+  --ds-text:#172033 !important;
+  --ds-text-muted:#64748b !important;
+  --ds-border:#d6dee9 !important;
+  --glass-bg:#f4f6fa !important;
+  --glass-card:#ffffff !important;
+  --glass-border:#c8d2df !important;
+  --input-bg:#ffffff !important;
+  --dash-text:#172033 !important;
+  --dash-muted:#475569 !important;
+  --dash-border:#d8e0e9 !important;
+}
+
+/* Schedule: every visible text node gets an explicit light color. */
+body:not(.dark) #view-jadwal,
+body:not(.dark) #view-jadwal .card,
+body:not(.dark) #view-jadwal .section,
+body:not(.dark) #view-jadwal .mode-switch,
+body:not(.dark) #view-jadwal .day-tabs,
+body:not(.dark) #view-jadwal .row-item,
+body:not(.dark) #view-jadwal .row-item > div,
+body:not(.dark) #view-jadwal .cal-card,
+body:not(.dark) #view-jadwal .summary-box,
+body:not(.dark) #view-jadwal .section-head{
+  color:#172033 !important;
+  -webkit-text-fill-color:#172033 !important;
+}
+
+body:not(.dark) #view-jadwal .pagehead h1,
+body:not(.dark) #view-jadwal .section-title,
+body:not(.dark) #view-jadwal .row-title,
+body:not(.dark) #view-jadwal .timeline-title,
+body:not(.dark) #view-jadwal .piket-person .mini-name,
+body:not(.dark) #view-jadwal .summary-box .n{
+  color:#172033 !important;
+  -webkit-text-fill-color:#172033 !important;
+  opacity:1 !important;
+  visibility:visible !important;
+}
+
+body:not(.dark) #view-jadwal .pagehead p,
+body:not(.dark) #view-jadwal .row-sub,
+body:not(.dark) #view-jadwal .timeline-sub,
+body:not(.dark) #view-jadwal .piket-person .mini-role,
+body:not(.dark) #view-jadwal .date-label,
+body:not(.dark) #view-jadwal .summary-box .l{
+  color:#475569 !important;
+  -webkit-text-fill-color:#475569 !important;
+  opacity:1 !important;
+  visibility:visible !important;
+}
+
+/* Mode and day controls: inactive dark text, active white text on blue. */
+body:not(.dark) #view-jadwal .mode-btn,
+body:not(.dark) #view-jadwal .day-chip,
+body:not(.dark) #view-jadwal .section-link,
+body:not(.dark) #view-jadwal .cal-nav-btn,
+body:not(.dark) #view-jadwal .bulk-all-btn{
+  background:#ffffff !important;
+  color:#334155 !important;
+  -webkit-text-fill-color:#334155 !important;
+  border-color:#c8d2df !important;
+  opacity:1 !important;
+  visibility:visible !important;
+}
+body:not(.dark) #view-jadwal .mode-btn.active,
+body:not(.dark) #view-jadwal .day-chip.active{
+  background:#2563eb !important;
+  color:#ffffff !important;
+  -webkit-text-fill-color:#ffffff !important;
+  border-color:#2563eb !important;
+  box-shadow:0 2px 7px rgba(37,99,235,.18) !important;
+}
+body:not(.dark) #view-jadwal .mode-btn *,
+body:not(.dark) #view-jadwal .day-chip *{
+  color:inherit !important;
+  -webkit-text-fill-color:inherit !important;
+  opacity:1 !important;
+  visibility:visible !important;
+}
+
+/* Schedule rows/cards. */
+body:not(.dark) #view-jadwal #jadwal-list,
+body:not(.dark) #view-jadwal #piket-list,
+body:not(.dark) #view-jadwal .timeline-card,
+body:not(.dark) #view-jadwal .row-item{
+  background:#ffffff !important;
+  border-color:#d6dee9 !important;
+}
+body:not(.dark) #view-jadwal #jadwal-list *{
+  opacity:1;
+  visibility:visible;
+}
+body:not(.dark) #view-jadwal .row-time{
+  color:#2563eb !important;
+  -webkit-text-fill-color:#2563eb !important;
+  background:#eff6ff !important;
+  border-color:#bfdbfe !important;
+}
+
+/* Search and inputs. */
+body:not(.dark) #view-jadwal input,
+body:not(.dark) #view-jadwal select,
+body:not(.dark) #view-jadwal textarea{
+  color:#172033 !important;
+  -webkit-text-fill-color:#172033 !important;
+  background:#ffffff !important;
+  border-color:#c8d2df !important;
+  opacity:1 !important;
+}
+body:not(.dark) #view-jadwal input::placeholder,
+body:not(.dark) #view-jadwal textarea::placeholder{
+  color:#64748b !important;
+  -webkit-text-fill-color:#64748b !important;
+  opacity:1 !important;
+}
+
+/* Piket calendar controls. */
+body:not(.dark) #view-jadwal .cal-month,
+body:not(.dark) #view-jadwal .cal-month-click,
+body:not(.dark) #view-jadwal .cal-year-click,
+body:not(.dark) #view-jadwal .cal-grid,
+body:not(.dark) #view-jadwal .cal-grid *{
+  color:#172033 !important;
+  -webkit-text-fill-color:#172033 !important;
+  opacity:1 !important;
+  visibility:visible !important;
+}
+
+/* Tugas and Laporan: same rule so the white-text leak cannot return. */
+body:not(.dark) #view-tugas .pagehead h1,
+body:not(.dark) #view-tugas .section-title,
+body:not(.dark) #view-tugas .task-column-title,
+body:not(.dark) #view-tugas .task-title,
+body:not(.dark) #view-tugas .task-pro-title,
+body:not(.dark) #view-tugas .task-pro-meta,
+body:not(.dark) #view-laporan .pagehead h1,
+body:not(.dark) #view-laporan .section-title,
+body:not(.dark) #view-laporan .report-title,
+body:not(.dark) #view-laporan .report-item-title,
+body:not(.dark) #view-laporan .report-subject,
+body:not(.dark) #view-laporan .rk-value,
+body:not(.dark) #view-laporan .rk-label{
+  color:#172033 !important;
+  -webkit-text-fill-color:#172033 !important;
+  opacity:1 !important;
+  visibility:visible !important;
+}
+body:not(.dark) #view-tugas .pagehead p,
+body:not(.dark) #view-tugas .task-pro-desc,
+body:not(.dark) #view-tugas .task-desc,
+body:not(.dark) #view-tugas .task-meta,
+body:not(.dark) #view-tugas .task-pro-meta,
+body:not(.dark) #view-laporan .pagehead p,
+body:not(.dark) #view-laporan .report-description,
+body:not(.dark) #view-laporan .report-meta,
+body:not(.dark) #view-laporan .report-date{
+  color:#475569 !important;
+  -webkit-text-fill-color:#475569 !important;
+  opacity:1 !important;
+}
+
+/* Never let generic card descendants inherit white in light mode. */
+body:not(.dark) #view-jadwal .card *:not(.mode-btn):not(.day-chip),
+body:not(.dark) #view-tugas .card *,
+body:not(.dark) #view-laporan .card *{
+  opacity:1;
+}
+
+@media(max-width:767px){
+  body:not(.dark) #view-jadwal .row-title{font-size:13px !important;line-height:1.4 !important}
+  body:not(.dark) #view-jadwal .row-sub{font-size:11px !important;line-height:1.45 !important}
+}
+</style>
 </html>
 
 <style id="kelasku-settings-tabs-fix">
