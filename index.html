@@ -13576,10 +13576,19 @@ Setelan
   head.after(nav);
 
   const profileCard=v.querySelector('.section > .card');
-  if(profileCard) profileCard.dataset.settingCat='profile';
-
   const all=[...v.querySelectorAll('.settings-section')];
-  if(profileCard) all.unshift(profileCard);
+
+  // The settings card is only a visual shell. Do NOT hide the whole card:
+  // every category lives inside it, so Members/Security would otherwise be blank.
+  const profileItems=[];
+  if(profileCard){
+    [...profileCard.children].forEach(el=>{
+      if(!el.classList.contains('settings-section')){
+        el.dataset.settingCat='profile';
+        profileItems.push(el);
+      }
+    });
+  }
 
   all.forEach(el=>{
     if(el.dataset.settingCat)return;
@@ -13599,6 +13608,7 @@ Setelan
       btn.classList.toggle('active',active);
       btn.setAttribute('aria-selected',active?'true':'false');
     });
+    profileItems.forEach(el=>el.classList.toggle('hidden-by-category',cat!=='profile'));
     all.forEach(el=>el.classList.toggle('hidden-by-category',el.dataset.settingCat!==cat));
   }
 
@@ -15919,6 +15929,7 @@ body:not(.dark) #view-hp .hp-slot-name.hp-slot-name-button{
 body.dark #view-settings .settings-nav button:not(.active){background:#17243a!important;color:#f8fafc!important;border-color:#40516b!important;}
 body.dark #view-settings .settings-nav button.active{background:#3b82f6!important;color:#fff!important;border-color:#3b82f6!important;}
 #view-settings .settings-section.hidden-by-category,#view-settings .section > .card.hidden-by-category{display:none!important;}
+#view-settings [data-setting-cat].hidden-by-category{display:none!important;}
 @media(max-width:520px){#view-settings .settings-nav{gap:6px!important;}#view-settings .settings-nav button{font-size:10px!important;padding:8px 10px!important;}}
 </style>
 
