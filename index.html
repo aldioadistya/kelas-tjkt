@@ -4083,6 +4083,16 @@
     .dashboard-user-meta strong{font-size:12px;color:var(--dash-text);font-weight:700}
     .dashboard-user-meta span{font-size:10px;color:var(--dash-muted);margin-top:3px}
     .dashboard-user-avatar,.dashboard-hero .avatar{display:grid;place-items:center;border-radius: var(--radius-token-07);background:var(--color-ink);color:var(--color-white);font-weight:800;letter-spacing:.02em}
+    .dashboard-user-avatar,.dashboard-hero .avatar,.profile-avatar-editor{position:relative;overflow:hidden}
+    .dashboard-user-avatar,.dashboard-hero .avatar{border:1px solid transparent;cursor:pointer;padding:0;font:inherit}
+    .dashboard-user-avatar img,.dashboard-hero .avatar img,.profile-avatar-editor img{width:100%;height:100%;display:block;object-fit:cover}
+    .dashboard-user-avatar:focus-visible,.dashboard-hero .avatar:focus-visible,.profile-avatar-editor:focus-visible{outline:2px solid var(--ui-blue,#3b82f6);outline-offset:2px}
+    .profile-avatar-editor{appearance:none;border:1px solid var(--glass-border,var(--ui-border,#cbd5e1));background:var(--ui-blue-soft,#eff6ff);color:var(--ui-blue,#2563eb);width:44px;height:44px;min-width:44px;border-radius:14px;display:grid;place-items:center;padding:0;font:inherit;font-size:13px;font-weight:900;cursor:pointer}
+    .profile-avatar-edit-badge{position:absolute;right:2px;bottom:2px;width:17px;height:17px;border-radius:50%;display:grid;place-items:center;background:#2563eb;color:#fff;font-size:10px;line-height:1;border:2px solid var(--ui-surface,#fff)}
+    .avatar-reset-btn{font-size:10px!important;padding:5px 9px!important}
+    body.dark .profile-avatar-editor{background:#17243a;border-color:#40516b;color:#93c5fd}
+    body.dark .profile-avatar-edit-badge{border-color:#111c2f}
+
     .dashboard-user-avatar{width:36px;height:36px;font-size:11px}
     .dashboard-hero{background:linear-gradient(135deg,var(--color-ink-soft) 0%,var(--color-blue-1d4ed8) 100%);border:1px solid var(--color-alpha-039);border-radius: var(--radius-token-11);box-shadow: 0 14px 34px var(--color-alpha-040);padding: var(--space-24) var(--space-26);margin-bottom:16px}
     .dashboard-hero .hero-eyebrow{color:var(--color-blue-bfdbfe);letter-spacing:.08em}
@@ -7898,9 +7908,9 @@ body:not(.dark) .dashboard-hero .avatar {
   <span id="dashboard-user-role">Siswa
 </span>
 </div>
-<div class="dashboard-user-avatar" id="dashboard-user-avatar">
+<button type="button" class="dashboard-user-avatar" id="dashboard-user-avatar" onclick="openAvatarPicker()" aria-label="Ubah avatar profil" title="Ubah avatar profil">
   TJ
-</div>
+</button>
 </div>
 </div>
 <div class="hero dashboard-hero">
@@ -7916,9 +7926,9 @@ body:not(.dark) .dashboard-hero .avatar {
         Kelola aktivitas kelas dengan cepat dari satu tempat.
       </div>
     </div>
-    <div class="avatar" id="hero-avatar">
+    <button type="button" class="avatar" id="hero-avatar" onclick="openAvatarPicker()" aria-label="Ubah avatar profil" title="Ubah avatar profil">
       TJ
-    </div>
+    </button>
   </div>
   <div class="hero-tags">
     <span class="htag"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 4l9 6.5">
@@ -8478,18 +8488,29 @@ X TJKT 1
   </div>
   <div class="section">
     <div class="card">
-      <div class="acc-row" style="margin-bottom:10px;">
-        <div>
-          <div style="font-size:14px; font-weight:800; color:var(--text-main);" id="account-whoami">
-            -
-          </div>
-          <div style="font-size:11px; color:var(--text-soft);" id="account-role-label">
-            -
+      <div class="acc-row" style="margin-bottom:10px; align-items:center;">
+        <div style="display:flex; align-items:center; gap:10px; min-width:0;">
+          <button type="button" class="profile-avatar-editor" id="profile-avatar-editor" onclick="openAvatarPicker()" aria-label="Ubah avatar profil" title="Ubah avatar profil">
+            <span id="profile-avatar-preview">TJ</span>
+            <span class="profile-avatar-edit-badge" aria-hidden="true">✎</span>
+          </button>
+          <div style="min-width:0;">
+            <div style="font-size:14px; font-weight:800; color:var(--text-main);" id="account-whoami">
+              -
+            </div>
+            <div style="font-size:11px; color:var(--text-soft);" id="account-role-label">
+              -
+            </div>
           </div>
         </div>
-        <button class="btn btn-danger" style="padding:4px 10px; font-size:10px;" onclick="logout()">Keluar
-      </button>
-    </div>
+        <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; justify-content:flex-end;">
+          <input type="file" id="profile-avatar-input" accept="image/png,image/jpeg,image/webp,image/gif" style="display:none;" onchange="handleAvatarFile(this.files && this.files[0])">
+          <button type="button" class="btn btn-ghost avatar-reset-btn" id="profile-avatar-reset" onclick="removeAvatar()">Hapus avatar
+          </button>
+          <button class="btn btn-danger" style="padding:4px 10px; font-size:10px;" onclick="logout()">Keluar
+          </button>
+        </div>
+      </div>
     <div class="acc-row" style="border-bottom:1px solid var(--glass-border); padding-bottom:10px; margin-bottom:10px;">
       <span style="font-weight:700; color:var(--text-main);">Mode Tampilan
     </span>
@@ -9463,8 +9484,12 @@ Setelan
               uid: user.uid,
               email: profile.email || user.email,
               username: profile.username || (user.email ? user.email.split('@')[0] : 'Pengguna'),
-              role
+              role,
+              avatar: ''
           };
+
+          currentUser.avatar = getStoredAvatar();
+          refreshAvatarUI();
 
           // Simpan role terakhir sebagai fallback UI saja. Otorisasi tetap
           // ditentukan oleh Firestore Rules, bukan oleh localStorage.
@@ -10169,6 +10194,124 @@ Setelan
   function hasAnyJadwalItems(jadwal) {
       if (!jadwal || typeof jadwal !== 'object' || Array.isArray(jadwal)) return false;
       return DAY_NAMES.some(day => Array.isArray(jadwal[day]) && jadwal[day].length > 0);
+  }
+
+  // ============================================================
+  // PROFILE AVATAR
+  // ============================================================
+  function avatarStorageKey(){
+      return currentUser && currentUser.uid ? 'kelasku-avatar-' + currentUser.uid : '';
+  }
+
+  function getStoredAvatar(){
+      const key = avatarStorageKey();
+      if (!key) return '';
+      try { return localStorage.getItem(key) || ''; } catch (_) { return ''; }
+  }
+
+  function setAvatarVisual(el, avatarData, initials){
+      if (!el) return;
+      if (avatarData) {
+          el.innerHTML = '<img src="' + avatarData + '" alt="Avatar profil">';
+          el.classList.add('has-custom-avatar');
+      } else {
+          el.textContent = initials || 'TJ';
+          el.classList.remove('has-custom-avatar');
+      }
+  }
+
+  function refreshAvatarUI(){
+      const displayName = currentUser ? (currentUser.username || currentUser.email || 'Pengguna') : 'Pengguna';
+      const initials = displayName.split(/\s+/).filter(Boolean).slice(0,2).map(x => x[0]).join('').toUpperCase() || 'TJ';
+      const avatarData = (currentUser && currentUser.avatar) || getStoredAvatar();
+      if (currentUser) currentUser.avatar = avatarData || '';
+      setAvatarVisual(document.getElementById('dashboard-user-avatar'), avatarData, initials);
+      setAvatarVisual(document.getElementById('hero-avatar'), avatarData, initials);
+      const preview = document.getElementById('profile-avatar-preview');
+      const editor = document.getElementById('profile-avatar-editor');
+      if (preview) {
+          if (avatarData) preview.innerHTML = '<img src="' + avatarData + '" alt="Avatar profil">';
+          else preview.textContent = initials;
+      }
+      if (editor) editor.classList.toggle('has-custom-avatar', !!avatarData);
+  }
+
+  function openAvatarPicker(){
+      if (!currentUser) return;
+      const input = document.getElementById('profile-avatar-input');
+      if (input) input.click();
+  }
+
+  function removeAvatar(){
+      if (!currentUser) return;
+      const key = avatarStorageKey();
+      try { if (key) localStorage.removeItem(key); } catch (_) {}
+      currentUser.avatar = '';
+      refreshAvatarUI();
+      showNotification('Avatar profil dihapus.', 'info');
+  }
+
+  async function handleAvatarFile(file){
+      if (!currentUser || !file) return;
+      if (!String(file.type || '').startsWith('image/')) {
+          showNotification('Pilih file gambar untuk avatar.', 'warning');
+          return;
+      }
+      if (file.size > 8 * 1024 * 1024) {
+          showNotification('Ukuran gambar terlalu besar. Maksimal 8 MB.', 'warning');
+          return;
+      }
+      try {
+          const avatarData = await new Promise((resolve, reject) => {
+              const reader = new FileReader();
+              reader.onerror = () => reject(new Error('Gambar tidak bisa dibaca.'));
+              reader.onload = () => {
+                  const img = new Image();
+                  img.onerror = () => reject(new Error('Format gambar tidak dapat diproses.'));
+                  img.onload = () => {
+                      const size = 256;
+                      const canvas = document.createElement('canvas');
+                      canvas.width = size; canvas.height = size;
+                      const ctx = canvas.getContext('2d');
+                      if (!ctx) return reject(new Error('Browser tidak mendukung pemrosesan avatar.'));
+                      ctx.fillStyle = '#ffffff';
+                      ctx.fillRect(0,0,size,size);
+                      const scale = Math.min(size / img.width, size / img.height);
+                      const dw = Math.max(1, Math.round(img.width * scale));
+                      const dh = Math.max(1, Math.round(img.height * scale));
+                      const dx = Math.round((size - dw) / 2);
+                      const dy = Math.round((size - dh) / 2);
+                      ctx.drawImage(img, dx, dy, dw, dh);
+                      let data = '';
+                      try { data = canvas.toDataURL('image/webp', 0.82); } catch (_) {}
+                      if (!data || !data.startsWith('data:image/')) data = canvas.toDataURL('image/jpeg', 0.82);
+                      resolve(data);
+                  };
+                  img.src = String(reader.result || '');
+              };
+              reader.readAsDataURL(file);
+          });
+          if (!avatarData || avatarData.length > 450000) {
+              showNotification('Gambar terlalu besar setelah diproses. Coba foto lain.', 'warning');
+              return;
+          }
+          const key = avatarStorageKey();
+          if (!key) return;
+          try {
+              localStorage.setItem(key, avatarData);
+          } catch (storageError) {
+              showNotification('Avatar tidak bisa disimpan di browser ini.', 'warning');
+              return;
+          }
+          currentUser.avatar = avatarData;
+          refreshAvatarUI();
+          const input = document.getElementById('profile-avatar-input');
+          if (input) input.value = '';
+          showNotification('Avatar profil diperbarui.', 'success');
+      } catch (e) {
+          console.error('Avatar processing failed:', e);
+          showNotification(e.message || 'Avatar tidak dapat diproses.', 'error');
+      }
   }
 
   // ============================================================
@@ -11014,8 +11157,9 @@ Setelan
       if (topName) topName.textContent = displayName;
       if (topRole) topRole.textContent = currentUser ? (currentUser.role === 'superadmin' ? 'Super Admin' : currentUser.role === 'admin' ? 'Admin' : 'Siswa') : 'Siswa';
       const initials = displayName.split(/\s+/).filter(Boolean).slice(0,2).map(x => x[0]).join('').toUpperCase() || 'TJ';
-      if (topAvatar) topAvatar.textContent = initials;
-      if (heroAvatar) heroAvatar.textContent = initials;
+      setAvatarVisual(topAvatar, currentUser && currentUser.avatar ? currentUser.avatar : getStoredAvatar(), initials);
+      setAvatarVisual(heroAvatar, currentUser && currentUser.avatar ? currentUser.avatar : getStoredAvatar(), initials);
+      refreshAvatarUI();
       document.getElementById('tag-today').textContent = new Date().toLocaleDateString('id-ID', { weekday: 'long', day: '2-digit', month: 'short' });
       const saldo = state.kas.reduce((a, t) => a + (t.jenis === 'masuk' ? t.jumlah : -t.jumlah), 0);
       document.getElementById('home-saldo').textContent = rupiah(saldo);
@@ -13380,6 +13524,9 @@ Setelan
   window.confirmReauthentication = confirmReauthentication;
   window.cancelReauthentication = cancelReauthentication;
   window.toggleTheme = toggleTheme;
+  window.openAvatarPicker = openAvatarPicker;
+  window.handleAvatarFile = handleAvatarFile;
+  window.removeAvatar = removeAvatar;
   window.goTo = goTo;
   window.openKasFolderModal = openKasFolderModal;
   window.submitKasFolder = submitKasFolder;
