@@ -17388,3 +17388,17 @@ body:not(.dark) #view-hp .hp-summary-box:focus-visible{outline-color:#2563eb}
   #view-hp #hp-list.hp-status-board{grid-template-columns:minmax(0,1fr) !important;}
 }
 </style>
+<style id="v41-light-profile-avatar-fix">
+/* Light mode: profile/avatar must not inherit the dark dashboard avatar surface. */
+body:not(.dark) .dashboard-user-avatar{
+  background:#2563eb !important;
+  color:#ffffff !important;
+  border:1px solid #3b82f6 !important;
+  box-shadow:0 2px 8px rgba(37,99,235,.18) !important;
+  -webkit-text-fill-color:#ffffff !important;
+}
+body:not(.dark) .dashboard-user-avatar:hover{
+  background:#1d4ed8 !important;
+  border-color:#2563eb !important;
+}
+</style>
