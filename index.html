@@ -7716,6 +7716,81 @@ body:not(.dark) .dashboard-hero .avatar {
   border-color: rgba(255,255,255,.25) !important;
 }
 </style>
+
+<style id="ui-polish-contrast-v44">
+/* Final contrast pass: dark mode secondary text and card boundaries. */
+body.dark{
+  --text-soft:#c3d0df;
+  --text-muted:#a9bbcf;
+  --glass-border:rgba(91,113,143,.72);
+  --glass-shadow:0 4px 16px rgba(0,0,0,.24), 0 1px 0 rgba(255,255,255,.035);
+}
+body.dark .pagehead p,
+body.dark .section-kicker,
+body.dark .notify-text,
+body.dark .notify-time,
+body.dark .activity-meta,
+body.dark .task-pro-desc,
+body.dark .task-pro-tag,
+body.dark .task-meta,
+body.dark .task-desc,
+body.dark .field-hint,
+body.dark .dashboard-panel .section-kicker,
+body.dark .dashboard-user-meta span,
+body.dark .dashboard-search-kbd{
+  color:#c3d0df !important;
+  -webkit-text-fill-color:#c3d0df !important;
+}
+body.dark .card,
+body.dark .stat-card,
+body.dark .balance-card,
+body.dark .cal-card,
+body.dark .kas-folder,
+body.dark .task-pro-card,
+body.dark .report-kpi-card,
+body.dark .report-chart-card,
+body.dark .hp-pro-card,
+body.dark .piket-pro-list,
+body.dark .settings-card{
+  border-color:rgba(91,113,143,.72) !important;
+  box-shadow:var(--glass-shadow);
+}
+
+/* Small red unread badge: stronger text contrast in light mode. */
+.dashboard-notify-badge,
+#report-unread-badge{
+  background:#fee2e2 !important;
+  color:#991b1b !important;
+  -webkit-text-fill-color:#991b1b !important;
+  border:1px solid #fecaca !important;
+  font-weight:800 !important;
+}
+body.dark .dashboard-notify-badge,
+body.dark #report-unread-badge{
+  background:#35131d !important;
+  color:#fecaca !important;
+  -webkit-text-fill-color:#fecaca !important;
+  border-color:#6b2a38 !important;
+}
+
+/* Keep the global search shortcut visually quiet but readable. */
+.dashboard-search-kbd{
+  min-width:50px;
+  text-align:center;
+}
+
+/* Better small-screen readability without making the UI bulky. */
+@media (max-width:520px){
+  .pagehead h1{font-size:20px;line-height:1.2}
+  .pagehead p{font-size:12px;line-height:1.45}
+  .task-pro-title{font-size:14px}
+  .task-pro-desc{font-size:11px;line-height:1.5}
+  .task-pro-tag,.task-pro-deadline{font-size:9.5px}
+  .notify-text{font-size:10.5px;line-height:1.45}
+  .notify-time,.activity-meta{font-size:9.5px}
+}
+</style>
+
 </head>
 
 <body>
@@ -11218,7 +11293,7 @@ Setelan
                   <div style="flex:1; min-width:0;">
                       <div class="task-title">${escapeHtml(t.nama || 'Tugas tanpa nama')}</div>
                       <div class="task-meta"><span class="pill ${dueClass}">${dueText}</span>${t.mapel ? `<span class="pill">${escapeHtml(t.mapel)}</span>` : ''}</div>
-                      ${t.deskripsi ? `<div class="task-desc">${escapeHtml(t.deskripsi)}</div>` : ''}
+                      ${t.deskripsi ? `<div class="task-desc">${escapeHtml(cleanTaskText(t.deskripsi))}</div>` : ''}
                       ${renderTaskFiles(t)}
                   </div>
               </div>
@@ -11858,6 +11933,7 @@ Setelan
       }
   }
   // ===== TUGAS =====
+  function cleanTaskText(value){ return String(value == null ? "" : value).replace(/\bvidio\b/gi, "video"); }
   function renderTaskFiles(t) {
       const files = getItemFiles(t);
       if (!files.length) return '';
@@ -11894,9 +11970,9 @@ Setelan
           <div class="task-item">
               <div class="checkbox admin-only" onclick="event.stopPropagation(); toggleTugas(${t.id})"></div>
               <div style="flex:1; ${readOnly ? '' : 'cursor:pointer;'}" ${readOnly ? '' : `onclick="openTugasModal(${t.id})"`}>
-                  <div class="task-title">${escapeHtml(t.nama)}</div>
-                  <div class="task-meta"><span class="pill">📚 ${escapeHtml(t.mapel || 'Tanpa mata pelajaran')}</span><span class="pill pill-due">📅 ${t.tenggat || 'Tanpa deadline'}</span></div>
-                  ${t.deskripsi ? `<div class="task-desc">${escapeHtml(t.deskripsi)}</div>` : ''}
+                  <div class="task-title">${escapeHtml(cleanTaskText(t.nama))}</div>
+                  <div class="task-meta"><span class="pill">📚 ${escapeHtml(t.mapel || 'Tanpa mata pelajaran')}</span><span class="pill pill-due">📅 ${t.tenggat || 'Tanpa deadline'}</span>${getItemFiles(t).length ? '<span class="pill task-pill-file">📎 Lampiran</span>' : ''}</div>
+                  ${t.deskripsi ? `<div class="task-desc">${escapeHtml(cleanTaskText(t.deskripsi))}</div>` : ''}
                   ${renderTaskFiles(t)}
               </div>
               <button class="s-remove admin-only" onclick="event.stopPropagation(); deleteTugas(${t.id})">×</button>
@@ -11907,9 +11983,9 @@ Setelan
           <div class="task-item">
               <div class="checkbox checked admin-only" onclick="event.stopPropagation(); toggleTugas(${t.id})">✓</div>
               <div style="flex:1; ${readOnly ? '' : 'cursor:pointer;'}" ${readOnly ? '' : `onclick="openTugasModal(${t.id})"`}>
-                  <div class="task-title checked">${escapeHtml(t.nama)}</div>
-                  <div class="task-meta"><span class="pill">📚 ${escapeHtml(t.mapel || 'Tanpa mata pelajaran')}</span><span class="pill pill-due">📅 ${t.tenggat || 'Tanpa deadline'}</span></div>
-                  ${t.deskripsi ? `<div class="task-desc" style="text-decoration:line-through; color:var(--text-muted);">${escapeHtml(t.deskripsi)}</div>` : ''}
+                  <div class="task-title checked">${escapeHtml(cleanTaskText(t.nama))}</div>
+                  <div class="task-meta"><span class="pill">📚 ${escapeHtml(t.mapel || 'Tanpa mata pelajaran')}</span><span class="pill pill-due">📅 ${t.tenggat || 'Tanpa deadline'}</span>${getItemFiles(t).length ? '<span class="pill task-pill-file">📎 Lampiran</span>' : ''}</div>
+                  ${t.deskripsi ? `<div class="task-desc" style="text-decoration:line-through; color:var(--text-muted);">${escapeHtml(cleanTaskText(t.deskripsi))}</div>` : ''}
                   ${renderTaskFiles(t)}
               </div>
               <button class="s-remove admin-only" onclick="event.stopPropagation(); deleteTugas(${t.id})">×</button>
@@ -13401,6 +13477,24 @@ Setelan
       reader.readAsText(file);
   }
 
+
+  // Global search shortcut: Cmd/Ctrl + K focuses the Kelasku search.
+  (function wireGlobalSearchShortcut(){
+      if (window.__kelaskuSearchShortcut) return;
+      window.__kelaskuSearchShortcut = true;
+      document.addEventListener('keydown', function(e){
+          if ((e.ctrlKey || e.metaKey) && String(e.key).toLowerCase() === 'k') {
+              const active = document.activeElement;
+              if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.tagName === 'SELECT' || active.isContentEditable)) return;
+              const input = document.getElementById('global-search-input');
+              if (!input) return;
+              e.preventDefault();
+              input.focus();
+              input.select();
+          }
+      });
+  })();
+
   // ============================================================
   // NAVIGATION
   // ============================================================
@@ -13808,7 +13902,7 @@ Setelan
     function taskMatches(t){const left=daysLeft(t.tenggat);if(taskFilter==='done')return !!t.selesai;if(taskFilter==='active')return !t.selesai;if(taskFilter==='soon')return !t.selesai&&left<=3;return true}
     function professionalRenderTugas(){
       injectTaskFilters(); autoCleanDoneTugas(); const all=(state.tugas||[]).filter(taskMatches); const open=all.filter(t=>!t.selesai),done=all.filter(t=>t.selesai); const hint=document.getElementById('tugas-autoclean-hint');if(hint)hint.textContent='';
-      const renderCard=t=>{const left=daysLeft(t.tenggat);const dc=t.selesai?'deadline-safe':left<=1?'deadline-danger':left<=3?'deadline-soon':'deadline-safe';const dl=t.selesai?'Selesai':t.tenggat?(left<0?'Lewat deadline':left===0?'Hari ini':left===1?'H-1':`H-${left}`):'Tanpa deadline';const clickable=isAdmin()?` role="button" tabindex="0" title="Klik untuk membuka editor" onclick="openTugasModal(${Number(t.id)})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openTugasModal(${Number(t.id)})}"`:'';const action=isAdmin()?`<div class="task-pro-actions"><button type="button" onclick="event.stopPropagation();toggleTugas(${Number(t.id)})">${t.selesai?'Buka lagi':'Tandai selesai'}</button></div>`:'';return `<div class="task-pro-card"${clickable}><div class="task-pro-top"><div class="task-pro-title">${esc(t.nama)}</div><span class="task-pro-deadline ${dc}">${dl}</span></div><div class="task-pro-meta"><span class="task-pro-tag">${esc(t.mapel||'Tanpa mapel')}</span>${t.tenggat?`<span class="task-pro-tag">${esc(t.tenggat)}</span>`:''}</div>${t.deskripsi?`<div class="task-pro-desc">${esc(t.deskripsi)}</div>`:''}${renderTaskFiles(t)}${action}</div>`};
+      const renderCard=t=>{const displayTaskName=String(t.nama||'').replace(/\bvidio\b/gi,'video');const displayTaskDesc=String(t.deskripsi||'').replace(/\bvidio\b/gi,'video');const left=daysLeft(t.tenggat);const dc=t.selesai?'deadline-safe':left<=1?'deadline-danger':left<=3?'deadline-soon':'deadline-safe';const dl=t.selesai?'Selesai':t.tenggat?(left<0?'Lewat deadline':left===0?'Hari ini':left===1?'H-1':`H-${left}`):'Tanpa deadline';const clickable=isAdmin()?` role="button" tabindex="0" title="Klik untuk membuka editor" onclick="openTugasModal(${Number(t.id)})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openTugasModal(${Number(t.id)})}"`:'';const action=isAdmin()?`<div class="task-pro-actions"><button type="button" onclick="event.stopPropagation();toggleTugas(${Number(t.id)})">${t.selesai?'Buka lagi':'Tandai selesai'}</button></div>`:'';return `<div class="task-pro-card"${clickable}><div class="task-pro-top"><div class="task-pro-title">${esc(displayTaskName)}</div><span class="task-pro-deadline ${dc}">${dl}</span></div><div class="task-pro-meta"><span class="task-pro-tag">${esc(t.mapel||'Tanpa mapel')}</span>${t.tenggat?`<span class="task-pro-tag">${esc(t.tenggat)}</span>`:''}</div>${displayTaskDesc?`<div class="task-pro-desc">${esc(displayTaskDesc)}</div>`:''}${renderTaskFiles(t)}${action}</div>`};
       const a=document.getElementById('tugas-open-list'),b=document.getElementById('tugas-done-list');if(a){a.className='task-column';a.innerHTML=`<div class="task-column-title">Aktif</div>${open.length?open.map(renderCard).join(''):'<div class="empty" style="padding:28px 12px">Tidak ada tugas aktif.</div>'}`;}if(b){b.className='task-column';b.innerHTML=`<div class="task-column-title">Selesai</div>${done.length?done.map(renderCard).join(''):'<div class="empty" style="padding:28px 12px">Belum ada tugas selesai.</div>'}`;}
       const openSection=a?.closest('.section'); const doneSection=b?.closest('.section');
       if(openSection && doneSection){
@@ -16894,6 +16988,240 @@ body:not(.dark) #view-laporan .card *{
   body:not(.dark) #view-jadwal .row-sub{font-size:11px !important;line-height:1.45 !important}
 }
 </style>
+
+<style id="kelasku-ui-polish-final-v43">
+/* FINAL UI POLISH v43 — hierarchy, restraint, consistency, responsive finish. */
+
+/* 1) Hilangkan kesan "kotak kosong" tanpa mengganggu container dinamis.
+   Saat container benar-benar kosong, tidak perlu meninggalkan border kosong.
+   Begitu JS memasukkan isi, elemen otomatis kembali terlihat. */
+.view .section > .card:not(:has(*)),
+.view .dashboard-card:not(:has(*)),
+.view .compact-list:not(:has(*)){
+  display:none !important;
+}
+
+/* 2) Kurangi border/shadow yang terlalu sering; pertahankan grouping yang bermakna. */
+.view > .section > .card,
+.view > .section .card,
+.view .dashboard-card,
+.view .stat-card,
+.view .summary-box,
+.view .settings-section,
+.view .task-column,
+.view .timeline-card,
+.view .hp-slot,
+.view .report-item,
+.view .tx-item{
+  border-color:color-mix(in srgb,var(--ds-border) 68%,transparent) !important;
+  box-shadow:0 2px 10px rgba(15,23,42,.035) !important;
+}
+body.dark .view > .section > .card,
+body.dark .view > .section .card,
+body.dark .view .dashboard-card,
+body.dark .view .stat-card,
+body.dark .view .summary-box,
+body.dark .view .settings-section,
+body.dark .view .task-column,
+body.dark .view .timeline-card,
+body.dark .view .hp-slot,
+body.dark .view .report-item,
+body.dark .view .tx-item{
+  border-color:#2b3a51 !important;
+  box-shadow:0 3px 12px rgba(0,0,0,.10) !important;
+}
+
+/* 3) Tipografi: lebih tegas pada informasi utama, tetap ringan pada metadata. */
+.view .pagehead{margin-bottom:20px !important;padding-bottom:2px !important;}
+.view .pagehead h1{
+  font-size:25px !important;
+  line-height:1.18 !important;
+  letter-spacing:-.03em !important;
+}
+.view .pagehead p{
+  margin-top:6px !important;
+  font-size:13px !important;
+  line-height:1.45 !important;
+}
+.view .section-title{
+  font-size:16px !important;
+  line-height:1.3 !important;
+  font-weight:800 !important;
+  letter-spacing:-.018em !important;
+}
+.view .section-kicker{
+  font-size:10px !important;
+  line-height:1.2 !important;
+  font-weight:800 !important;
+  letter-spacing:.07em !important;
+  opacity:.72 !important;
+}
+.view .field-hint,
+.view .date-label,
+.view .row-sub,
+.view .tx-sub,
+.view .stat-label,
+.view .empty,
+.view .announce-date{
+  font-size:11px !important;
+  line-height:1.5 !important;
+}
+.view .row-title,
+.view .tx-title,
+.view .report-title,
+.view .report-item-title{
+  font-size:14px !important;
+  line-height:1.45 !important;
+  font-weight:750 !important;
+}
+.view .announce-title,
+.view .announce-title-btn{
+  font-size:15px !important;
+  line-height:1.45 !important;
+  font-weight:800 !important;
+}
+
+/* 4) Spacing rhythm: satu ritme yang konsisten di seluruh modul. */
+.view .section{margin-top:20px !important;margin-bottom:20px !important;}
+.view .section-head{margin-bottom:10px !important;gap:12px !important;}
+.view .section > .card,
+.view .dashboard-card,
+.view .settings-section{padding:15px !important;}
+.view .search-box{margin-bottom:10px !important;}
+.view .summary-row{gap:12px !important;}
+.view .dashboard-main-grid,
+.view .dashboard-secondary-grid{gap:16px !important;}
+.view .stat-card{padding:14px !important;}
+
+/* 5) Kontrol: lebih seperti produk jadi daripada kumpulan pill. */
+.view .section-link,
+.view .day-chip,
+.view .mode-btn,
+.view .bulk-all-btn,
+.view .kas-history-toggle,
+.view .btn,
+.view .fab-add{
+  min-height:38px !important;
+  font-size:11px !important;
+  font-weight:750 !important;
+  border-radius:10px !important;
+}
+.view .day-chip,
+.view .mode-btn{
+  padding:9px 12px !important;
+}
+.view .section-link{padding:8px 11px !important;}
+
+/* 6) Dashboard: hero tetap dominan, statistik menjadi pendamping. */
+.dashboard-hero,
+.dashboard-welcome,
+.home-hero{
+  border-radius:18px !important;
+}
+.dashboard-stat-card .stat-value{font-size:20px !important;line-height:1.15 !important;}
+.dashboard-stat-card .stat-label{font-size:11px !important;}
+.dashboard-stat-card .stat-status{font-size:10px !important;}
+
+/* 7) Jadwal: hierarchy tabel/list lebih jelas dan tidak terlalu "card-heavy". */
+#view-jadwal .day-tabs{margin-bottom:10px !important;}
+#view-jadwal .timeline-title,
+#view-jadwal .row-title{font-weight:800 !important;}
+#view-jadwal .timeline-time,
+#view-jadwal .row-time{font-weight:800 !important;}
+
+/* 8) Tugas & laporan: fokus ke isi, bukan bingkai. */
+#view-tugas .task-column-title,
+#view-laporan .section-title{font-size:16px !important;}
+#view-laporan #report-search{min-width:170px !important;}
+#view-laporan #report-filter{min-height:38px !important;}
+
+/* 9) Pengumpulan HP & Kas: angka penting lebih menonjol, detail tetap sekunder. */
+#view-hp .hp-summary-box .n,
+#view-jadwal .summary-box .n{font-size:20px !important;line-height:1.1 !important;font-weight:850 !important;}
+#view-hp .hp-summary-box .l,
+#view-jadwal .summary-box .l{font-size:10px !important;font-weight:700 !important;}
+#view-kas .balance-value{font-size:30px !important;line-height:1.1 !important;}
+
+/* 10) Setelan: tab dan isi lebih tenang, tanpa mengubah fungsi kategori. */
+#view-settings .settings-nav{margin-bottom:14px !important;}
+#view-settings .settings-nav button{min-height:38px !important;font-size:11px !important;}
+#view-settings .card{padding:15px !important;}
+
+/* 11) Light mode — hierarchy lebih tegas tanpa mengubah identitas dark mode. */
+body:not(.dark) .view .pagehead h1,
+body:not(.dark) .view .section-title,
+body:not(.dark) .view .row-title,
+body:not(.dark) .view .tx-title,
+body:not(.dark) .view .report-title,
+body:not(.dark) .view .report-item-title,
+body:not(.dark) .view .announce-title,
+body:not(.dark) .view .announce-title-btn{
+  color:#172033 !important;
+  -webkit-text-fill-color:#172033 !important;
+}
+body:not(.dark) .view .pagehead p,
+body:not(.dark) .view .field-hint,
+body:not(.dark) .view .date-label,
+body:not(.dark) .view .row-sub,
+body:not(.dark) .view .tx-sub,
+body:not(.dark) .view .stat-label,
+body:not(.dark) .view .empty,
+body:not(.dark) .view .announce-date{
+  color:#475569 !important;
+  -webkit-text-fill-color:#475569 !important;
+}
+body:not(.dark) .view .card,
+body:not(.dark) .view .dashboard-card,
+body:not(.dark) .view .stat-card,
+body:not(.dark) .view .summary-box,
+body:not(.dark) .view .settings-section,
+body:not(.dark) .view .task-column,
+body:not(.dark) .view .timeline-card,
+body:not(.dark) .view .hp-slot,
+body:not(.dark) .view .report-item,
+body:not(.dark) .view .tx-item{
+  background:#fff !important;
+}
+
+/* 12) Mobile final pass — reflow, readable sizes, no horizontal squeeze. */
+@media (max-width:900px){
+  .view .pagehead{margin-bottom:16px !important;}
+  .view .pagehead h1{font-size:22px !important;}
+  .view .pagehead p{font-size:12px !important;}
+  .view .section{margin-top:16px !important;margin-bottom:16px !important;}
+  .view .section-head{gap:8px !important;margin-bottom:9px !important;}
+  .view .section-title{font-size:15px !important;}
+  .view .section > .card,
+  .view .dashboard-card,
+  .view .settings-section{padding:13px !important;}
+  .view .dashboard-main-grid,
+  .view .dashboard-secondary-grid{gap:12px !important;}
+  .view .stat-card{padding:12px !important;}
+  #view-laporan #report-search{min-width:0 !important;width:100% !important;max-width:100% !important;}
+  #view-laporan .section-head > div:last-child{flex-wrap:wrap !important;justify-content:flex-end !important;}
+}
+@media (max-width:560px){
+  .view .section-link,
+  .view .day-chip,
+  .view .mode-btn,
+  .view .bulk-all-btn,
+  .view .kas-history-toggle,
+  .view .btn,
+  .view .fab-add{min-height:36px !important;font-size:10px !important;}
+  .view .section > .card,
+  .view .dashboard-card,
+  .view .settings-section{padding:12px !important;}
+  #view-hp .summary-row,
+  #view-jadwal .summary-row{grid-template-columns:1fr 1fr !important;}
+  #view-laporan .section-head > div:last-child{width:100% !important;}
+}
+
+/* Reduced motion tetap dihormati. */
+@media (prefers-reduced-motion:reduce){
+  .view *, .view *::before, .view *::after{scroll-behavior:auto !important;transition-duration:0.01ms !important;animation-duration:0.01ms !important;}
+}
+</style>
+
 </html>
 
 <style id="kelasku-settings-tabs-fix">
@@ -17547,5 +17875,111 @@ body:not(.dark) .dashboard-user-avatar{
 body:not(.dark) .dashboard-user-avatar:hover{
   background:#1d4ed8 !important;
   border-color:#2563eb !important;
+}
+</style>
+
+
+<style id="v45-professional-contrast-polish">
+/* v45 — contrast, hierarchy, and status polish */
+body.dark{
+  --ui-muted:#c0cad8 !important;
+  --ui-soft:#aebbcf !important;
+  --dash-muted:#c0cad8 !important;
+  --dash-border:#40516b !important;
+}
+body.dark .view .section-kicker,
+body.dark .view .task-column-title,
+body.dark .view .timeline-time,
+body.dark .view .timeline-sub,
+body.dark .view .field-hint,
+body.dark .view .text-muted,
+body.dark .view .muted,
+body.dark .view .subtext,
+body.dark .view .task-pro-desc,
+body.dark .view .task-pro-tag,
+body.dark .view .report-kpi .rk-label,
+body.dark .view .report-bar-label,
+body.dark .view .settings-desc,
+body.dark .view .activity-meta,
+body.dark .view .notify-time{
+  color:#aebbcf !important;
+  -webkit-text-fill-color:#aebbcf !important;
+}
+body.dark .card,
+body.dark .stat-card,
+body.dark .dashboard-card,
+body.dark .dashboard-stat-card,
+body.dark .task-item,
+body.dark .task-pro-card,
+body.dark .report-kpi,
+body.dark .report-chart-card,
+body.dark .report-kpi-card,
+body.dark .timeline-card,
+body.dark .hp-slot,
+body.dark .kas-pro-metric,
+body.dark .kas-pro-table,
+body.dark .settings-profile-card,
+body.dark .settings-section,
+body.dark .calendar-card,
+body.dark .cal-card{
+  border-color:#40516b !important;
+}
+body.dark .dashboard-notify-badge{
+  background:#8b1e2d !important;
+  border-color:#b84a59 !important;
+  color:#fff !important;
+  -webkit-text-fill-color:#fff !important;
+}
+body.dark .dashboard-stat-card .stat-status,
+body.dark .dashboard-stat-card .stat-label{
+  color:#c0cad8 !important;
+  -webkit-text-fill-color:#c0cad8 !important;
+}
+body.dark .dashboard-icon-blue{background:#17345f !important;color:#8fbcff !important}
+body.dark .dashboard-icon-violet{background:#35235f !important;color:#c9a7ff !important}
+body.dark .dashboard-icon-teal{background:#103d39 !important;color:#72d9cc !important}
+body.dark .dashboard-icon-amber{background:#4b3410 !important;color:#f3c56a !important}
+body.dark .dashboard-icon-rose{background:#4a1f29 !important;color:#ff9aab !important}
+
+/* Light mode: keep secondary text readable and borders clear without becoming heavy. */
+body:not(.dark) .dashboard-stat-card .stat-status{color:#475569 !important}
+body:not(.dark) .dashboard-notify-badge{
+  background:#b91c1c !important;
+  border-color:#991b1b !important;
+  color:#fff !important;
+  -webkit-text-fill-color:#fff !important;
+}
+body:not(.dark) .hp-slot-status.todo{
+  background:#fff1f2 !important;
+  color:#be123c !important;
+  border:1px solid #fecdd3 !important;
+}
+body.dark .hp-slot-status.todo{
+  background:#3a1820 !important;
+  color:#ff9aab !important;
+  border:1px solid #6b2b39 !important;
+}
+.task-pill-file{
+  background:#eef4ff !important;
+  color:#1d4ed8 !important;
+  border:1px solid #bfdbfe !important;
+}
+body.dark .task-pill-file{
+  background:#162f57 !important;
+  color:#a9c9ff !important;
+  border-color:#365f99 !important;
+}
+@media (max-width:720px){
+  body.dark .view .section-kicker,
+  body.dark .view .task-column-title,
+  body.dark .view .timeline-time,
+  body.dark .view .timeline-sub,
+  body.dark .view .field-hint,
+  body.dark .view .text-muted,
+  body.dark .view .muted,
+  body.dark .view .subtext{
+    color:#b5c2d4 !important;
+  }
+  .task-pill-file{font-size:9px !important;}
 }
 </style>
