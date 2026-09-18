@@ -8217,23 +8217,15 @@ X TJKT 1
   </div>
 </div>
 </div>
-<div class="summary-row">
-  <div class="summary-box" style="background:var(--teal-glass);">
-    <div class="n" style="color:var(--teal)" id="hp-collected">
-      0
-    </div>
-    <div class="l" style="color:var(--teal)">
-      Sudah Titip
-    </div>
-  </div>
-  <div class="summary-box" style="background:var(--rose-glass);">
-    <div class="n" style="color:var(--rose)" id="hp-remaining">
-      0
-    </div>
-    <div class="l" style="color:var(--rose)">
-      Belum Titip
-    </div>
-  </div>
+<div class="summary-row hp-summary-actions" role="group" aria-label="Filter pengumpulan HP">
+  <button type="button" class="summary-box hp-summary-box hp-summary-collected" id="hp-summary-collected" onclick="setHpSummaryFilter('collected')" aria-pressed="false">
+    <span class="n" id="hp-collected">0</span>
+    <span class="l">Sudah Titip</span>
+  </button>
+  <button type="button" class="summary-box hp-summary-box hp-summary-remaining" id="hp-summary-remaining" onclick="setHpSummaryFilter('remaining')" aria-pressed="false">
+    <span class="n" id="hp-remaining">0</span>
+    <span class="l">Belum Titip</span>
+  </button>
 </div>
 <div class="section">
   <div class="section-head">
@@ -13559,6 +13551,14 @@ Setelan
       if(typeof window.syncKasHistoryState==='function') window.syncKasHistoryState();
     }
 
+    let hpSummaryFilter = 'all';
+    function setHpSummaryFilter(filter){
+      hpSummaryFilter = hpSummaryFilter === filter ? 'all' : filter;
+      professionalRenderHp();
+      const target = hpSummaryFilter === 'collected' ? document.querySelector('#view-hp .hp-status-section.is-collected') : hpSummaryFilter === 'remaining' ? document.querySelector('#view-hp .hp-status-section.is-remaining') : null;
+      if(target) target.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+
     function professionalRenderHp(){
       const date=state.hpSelectedDate||todayKey();
       const rec=ensureRecord(state.hp,date);
@@ -13569,6 +13569,9 @@ Setelan
       const remaining=remainingNames.length;
       const pe=document.getElementById('hp-collected'), re=document.getElementById('hp-remaining');
       if(pe)pe.textContent=collected; if(re)re.textContent=remaining;
+      const sumCollected=document.getElementById('hp-summary-collected'), sumRemaining=document.getElementById('hp-summary-remaining');
+      if(sumCollected){sumCollected.setAttribute('aria-pressed',hpSummaryFilter==='collected'?'true':'false');sumCollected.classList.toggle('is-active',hpSummaryFilter==='collected');}
+      if(sumRemaining){sumRemaining.setAttribute('aria-pressed',hpSummaryFilter==='remaining'?'true':'false');sumRemaining.classList.toggle('is-active',hpSummaryFilter==='remaining');}
 
       const list=document.getElementById('hp-list'); if(!list)return;
       const query=(rosterUI.hp.search||'').trim().toLowerCase();
@@ -13596,7 +13599,9 @@ Setelan
 
       const sectionHtml=(title,count,items,done)=>{
         const empty=done?'Belum ada siswa yang mengumpulkan HP.':'Semua siswa sudah mengumpulkan HP.';
-        return `<section class="hp-status-section ${done?'is-collected':'is-remaining'}">
+        const activeFilter=done ? hpSummaryFilter==='collected' : hpSummaryFilter==='remaining';
+        const hidden=hpSummaryFilter!=='all' && !activeFilter ? ' is-filtered-out' : '';
+        return `<section class="hp-status-section ${done?'is-collected':'is-remaining'}${hidden}">
           <div class="hp-status-section-head"><div><div class="hp-status-section-title">${title}</div><div class="hp-status-section-sub">${done?'Siswa yang sudah menitipkan HP':'Siswa yang belum menitipkan HP'}</div></div><span class="hp-status-count">${count}</span></div>
           <div class="hp-status-grid">${items.length?items.map((n,i)=>renderPerson(n,done,i)).join(''):`<div class="hp-status-empty">${empty}</div>`}</div>
         </section>`;
@@ -17319,4 +17324,19 @@ body:not(.dark) #view-hp .hp-remaining-card{background:#fffaf0!important;border-
 body:not(.dark) #view-hp .hp-status-empty{color:#64748b!important;border-color:#cbd5e1!important}
 @media(max-width:900px){#view-hp .hp-status-grid{grid-template-columns:1fr 1fr}} 
 @media(max-width:560px){#view-hp .hp-status-grid{grid-template-columns:1fr}#view-hp .hp-status-section{padding:12px}}
+
+/* Pengumpulan HP — ringkasan jumlah bisa dipakai sebagai filter. */
+#view-hp .hp-summary-actions{gap:14px}
+#view-hp .hp-summary-box{appearance:none;-webkit-appearance:none;border:1px solid transparent;border-radius:16px;cursor:pointer;text-align:center;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease,filter .18s ease;min-height:66px;position:relative}
+#view-hp .hp-summary-box:hover{filter:brightness(1.04)}
+#view-hp .hp-summary-box:active{transform:scale(.97)}
+#view-hp .hp-summary-box:focus-visible{outline:2px solid #60a5fa;outline-offset:2px}
+#view-hp .hp-summary-box .n,#view-hp .hp-summary-box .l{display:block}
+#view-hp .hp-summary-collected{background:var(--teal-glass)!important;color:var(--teal)!important;border-color:rgba(16,185,129,.24)}
+#view-hp .hp-summary-remaining{background:var(--rose-glass)!important;color:var(--rose)!important;border-color:rgba(244,63,94,.24)}
+#view-hp .hp-summary-box.is-active{box-shadow:0 0 0 2px rgba(59,130,246,.22);transform:translateY(-1px)}
+#view-hp .hp-status-section.is-filtered-out{display:none!important}
+body:not(.dark) #view-hp .hp-summary-collected{background:#ecfdf5!important;color:#047857!important;border-color:#a7dfc2!important}
+body:not(.dark) #view-hp .hp-summary-remaining{background:#fff1f2!important;color:#be123c!important;border-color:#f1b5c2!important}
+body:not(.dark) #view-hp .hp-summary-box:focus-visible{outline-color:#2563eb}
 </style>
