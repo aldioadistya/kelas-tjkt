@@ -13563,28 +13563,48 @@ Setelan
       const date=state.hpSelectedDate||todayKey();
       const rec=ensureRecord(state.hp,date);
       const names=Array.isArray(state.students)?state.students:[];
-      const collected=names.filter(n=>rosterIsSudah(rec[n])).length;
+      const collectedNames=names.filter(n=>rosterIsSudah(rec[n]));
+      const remainingNames=names.filter(n=>!rosterIsSudah(rec[n]));
+      const collected=collectedNames.length;
+      const remaining=remainingNames.length;
       const pe=document.getElementById('hp-collected'), re=document.getElementById('hp-remaining');
-      if(pe)pe.textContent=collected; if(re)re.textContent=Math.max(0,names.length-collected);
+      if(pe)pe.textContent=collected; if(re)re.textContent=remaining;
+
       const list=document.getElementById('hp-list'); if(!list)return;
       const query=(rosterUI.hp.search||'').trim().toLowerCase();
-      const filtered=query?names.filter(n=>String(n).toLowerCase().includes(query)):names;
-      let html='';
-      filtered.slice(0,36).forEach((n,i)=>{
+      const matches=n=>!query||String(n).toLowerCase().includes(query);
+      const shownCollected=collectedNames.filter(matches);
+      const shownRemaining=remainingNames.filter(matches);
+
+      const renderPerson=(n,isDone,index)=>{
         const st=rosterStatusOf(rec[n]);
         const safeName=JSON.stringify(String(n)).replace(/"/g,'&quot;');
         const initials=esc(String(n).split(/\s+/).map(x=>x[0]||'').slice(0,2).join('').toUpperCase());
-        const editButton='';
-        html+=`<div class="hp-slot ${st&&st.status==='sudah'?'':'empty-slot'}">
-          <div class="hp-slot-head"><span>Slot ${i+1}</span><span>${st&&st.status==='sudah'?'Tersimpan':'Kosong'}</span></div>
-          <div style="display:flex;gap:9px;align-items:center;min-width:0">
-            ${st&&st.status==='sudah'?`<div class="hp-avatar">${initials}</div><div style="min-width:0;flex:1"><button type="button" class="hp-slot-name hp-slot-name-button" ${isAdmin()?`onclick="event.stopPropagation();openHpEditModal(${safeName})"`:''} title="${isAdmin()?'Klik untuk mengedit nama':''}">${esc(n)}</button><div class="hp-slot-time">${st.waktu?esc(st.waktu):'Hari ini'}</div></div>`:`<div style="flex:1">${isAdmin()?`<button class="hp-empty-add" onclick="openRosterStatusModal('hp',${safeName})">+ Titip</button>`:'<span class="hp-slot-empty-note">Belum dititipkan</span>'}</div>`}
-          </div>
-          <span class="hp-slot-status ${st&&st.status==='sudah'?'done':'todo'}">${st&&st.status==='sudah'?'Sudah Titip':'Belum Titip'}</span>
-          ${st&&st.status==='sudah'&&isAdmin()?`<label style="position:absolute;right:10px;bottom:9px;font-size:9px"><input type="checkbox" checked onchange="toggleRosterStudent('hp',${safeName},this.checked)"> selesai</label>`:''}
+        if(isDone){
+          return `<div class="hp-slot hp-status-card hp-collected-card">
+            <div class="hp-slot-head"><span>${index+1}</span><span>Sudah dikumpulkan</span></div>
+            <div class="hp-person-row"><div class="hp-avatar">${initials}</div><div class="hp-person-main"><button type="button" class="hp-slot-name hp-slot-name-button" ${isAdmin()?`onclick="event.stopPropagation();openHpEditModal(${safeName})"`:''} title="${isAdmin()?'Klik untuk mengedit nama':''}">${esc(n)}</button><div class="hp-slot-time">${st?.waktu?esc(st.waktu):'Hari ini'}</div></div></div>
+            <div class="hp-card-footer"><span class="hp-slot-status done">Sudah Titip</span>${isAdmin()?`<label class="hp-done-check"><input type="checkbox" checked onchange="toggleRosterStudent('hp',${safeName},this.checked)"> selesai</label>`:''}</div>
+          </div>`;
+        }
+        return `<div class="hp-slot hp-status-card hp-remaining-card">
+          <div class="hp-slot-head"><span>${index+1}</span><span>Belum dikumpulkan</span></div>
+          <div class="hp-person-row"><div class="hp-avatar hp-avatar-muted">${initials}</div><div class="hp-person-main"><div class="hp-slot-name">${esc(n)}</div><div class="hp-slot-time">Belum dititipkan</div></div></div>
+          <div class="hp-card-footer"><span class="hp-slot-status todo">Belum Titip</span>${isAdmin()?`<button class="hp-empty-add" type="button" onclick="openRosterStatusModal('hp',${safeName})">+ Titip</button>`:''}</div>
         </div>`;
-      });
-      list.innerHTML=html||'<div class="empty" style="grid-column:1/-1;padding:32px">Tidak ada siswa yang cocok dengan pencarian.</div>';
+      };
+
+      const sectionHtml=(title,count,items,done)=>{
+        const empty=done?'Belum ada siswa yang mengumpulkan HP.':'Semua siswa sudah mengumpulkan HP.';
+        return `<section class="hp-status-section ${done?'is-collected':'is-remaining'}">
+          <div class="hp-status-section-head"><div><div class="hp-status-section-title">${title}</div><div class="hp-status-section-sub">${done?'Siswa yang sudah menitipkan HP':'Siswa yang belum menitipkan HP'}</div></div><span class="hp-status-count">${count}</span></div>
+          <div class="hp-status-grid">${items.length?items.map((n,i)=>renderPerson(n,done,i)).join(''):`<div class="hp-status-empty">${empty}</div>`}</div>
+        </section>`;
+      };
+
+      list.className='hp-status-board';
+      list.innerHTML=sectionHtml('Sudah Kumpul',collected,shownCollected,true)+sectionHtml('Belum Kumpul',remaining,shownRemaining,false);
+
       const section=document.getElementById('hp-list')?.closest('.section');
       if(section && !document.getElementById('hp-pro-summary')){
         const s=document.createElement('div'); s.id='hp-pro-summary'; s.className='hp-pro-summary';
@@ -17272,4 +17292,31 @@ body.dark .cal-card .cal-year-click{ color:rgba(248,250,252,.72) !important; }
   .calendar-card .cal-nav-btn,
   .cal-card .cal-nav-btn{width:30px !important;height:30px !important;min-width:30px !important;}
 }
+
+/* Pengumpulan HP — pemisahan jelas antara siswa yang sudah dan belum kumpul. */
+#view-hp .hp-status-board{display:grid;gap:14px;background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important}
+#view-hp .hp-status-section{padding:14px;border:1px solid var(--ui-border,#2b3a51);border-radius:16px;background:var(--surface,#111c2f);}
+#view-hp .hp-status-section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+#view-hp .hp-status-section-title{font-size:14px;font-weight:850;letter-spacing:-.01em}
+#view-hp .hp-status-section-sub{margin-top:3px;font-size:10px;color:var(--ui-muted,#94a3b8)}
+#view-hp .hp-status-count{min-width:34px;height:30px;padding:0 10px;border-radius:10px;display:grid;place-items:center;font-size:13px;font-weight:850;background:rgba(59,130,246,.12);color:#60a5fa;border:1px solid rgba(96,165,250,.22)}
+#view-hp .hp-status-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+#view-hp .hp-status-card{min-width:0;position:relative;padding:12px;border-radius:13px}
+#view-hp .hp-collected-card{background:rgba(16,185,129,.055)!important;border-color:rgba(16,185,129,.24)!important}
+#view-hp .hp-remaining-card{background:rgba(245,158,11,.045)!important;border-color:rgba(148,163,184,.28)!important}
+#view-hp .hp-person-row{display:flex;align-items:center;gap:9px;min-width:0;margin-top:10px}
+#view-hp .hp-person-main{min-width:0;flex:1}
+#view-hp .hp-card-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:11px;min-height:20px}
+#view-hp .hp-done-check{font-size:9px;color:var(--ui-muted,#94a3b8)!important;display:flex;align-items:center;gap:4px}
+#view-hp .hp-avatar-muted{opacity:.62}
+#view-hp .hp-status-empty{padding:18px;border:1px dashed var(--ui-border,#2b3a51);border-radius:12px;text-align:center;font-size:11px;color:var(--ui-muted,#94a3b8);grid-column:1/-1}
+body:not(.dark) #view-hp .hp-status-section{background:#fff!important;border-color:#d6dee9!important;color:#172033!important}
+body:not(.dark) #view-hp .hp-status-section-title{color:#172033!important;-webkit-text-fill-color:#172033!important}
+body:not(.dark) #view-hp .hp-status-section-sub{color:#64748b!important;-webkit-text-fill-color:#64748b!important}
+body:not(.dark) #view-hp .hp-status-card{background:#fff!important;color:#172033!important;border-color:#d6dee9!important}
+body:not(.dark) #view-hp .hp-collected-card{background:#f4fbf7!important;border-color:#b7e1cc!important}
+body:not(.dark) #view-hp .hp-remaining-card{background:#fffaf0!important;border-color:#e6d6ad!important}
+body:not(.dark) #view-hp .hp-status-empty{color:#64748b!important;border-color:#cbd5e1!important}
+@media(max-width:900px){#view-hp .hp-status-grid{grid-template-columns:1fr 1fr}} 
+@media(max-width:560px){#view-hp .hp-status-grid{grid-template-columns:1fr}#view-hp .hp-status-section{padding:12px}}
 </style>
