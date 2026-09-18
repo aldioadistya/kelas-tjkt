@@ -16567,3 +16567,82 @@ body:not(.is-admin) #view-laporan > .section:has(> .fab-add.admin-only){
   display:none !important;
 }
 </style>
+
+
+<style id="kelasku-light-primary-action-final-v29">
+/* V29 — Perbaikan sumber bug tombol yang menjadi kotak putih kosong di light mode.
+   Tombol aksi utama harus selalu memiliki isi visual: biru + teks putih.
+   Jangan biarkan rule generic button/card menimpanya. */
+body:not(.dark) .fab-add,
+body:not(.dark) button.fab-add,
+body:not(.dark) .btn-primary,
+body:not(.dark) button.btn-primary,
+body:not(.dark) #view-laporan .fab-add,
+body:not(.dark) #view-tugas .fab-add,
+body:not(.dark) #view-jadwal .fab-add,
+body:not(.dark) #view-kas .fab-add{
+  appearance:none !important;
+  -webkit-appearance:none !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  min-height:40px !important;
+  box-sizing:border-box !important;
+  background:#2563eb !important;
+  background-image:none !important;
+  color:#ffffff !important;
+  -webkit-text-fill-color:#ffffff !important;
+  border:1px solid #2563eb !important;
+  box-shadow:0 3px 10px rgba(37,99,235,.16) !important;
+  opacity:1 !important;
+  visibility:visible !important;
+}
+body:not(.dark) .fab-add:hover,
+body:not(.dark) .btn-primary:hover{
+  background:#1d4ed8 !important;
+  color:#ffffff !important;
+  -webkit-text-fill-color:#ffffff !important;
+  border-color:#1d4ed8 !important;
+}
+body:not(.dark) .fab-add:active,
+body:not(.dark) .btn-primary:active{
+  background:#1d4ed8 !important;
+  color:#ffffff !important;
+  -webkit-text-fill-color:#ffffff !important;
+}
+body:not(.dark) .fab-add *,
+body:not(.dark) .btn-primary *{
+  color:#ffffff !important;
+  -webkit-text-fill-color:#ffffff !important;
+  opacity:1 !important;
+  visibility:visible !important;
+}
+/* Pastikan icon SVG juga mengikuti warna tombol. */
+body:not(.dark) .fab-add svg,
+body:not(.dark) .btn-primary svg{
+  color:#ffffff !important;
+  fill:currentColor !important;
+  stroke:currentColor !important;
+}
+
+/* Kalau kontrol admin disembunyikan untuk siswa, shell-nya ikut hilang.
+   Jadi tidak meninggalkan strip/border kosong. */
+body:not(.is-admin) #view-kas > .section:has(> .fab-add.admin-only),
+body:not(.is-admin) #view-jadwal > #jadwal-mode-pelajaran > .section:has(> .fab-add.admin-only),
+body:not(.is-admin) #view-jadwal > #jadwal-mode-piket .section:has(> .fab-add.admin-only){
+  display:none !important;
+}
+
+/* Section yang memang berisi tombol utama jangan punya tinggi/border tambahan.
+   Border milik tombolnya, bukan border kosong di belakang tombol. */
+body:not(.dark) #view-kas > .section:has(> .fab-add),
+body:not(.dark) #view-tugas > .section:has(> .fab-add),
+body:not(.dark) #view-laporan > .section:has(> .fab-add),
+body:not(.dark) #view-jadwal > #jadwal-mode-pelajaran > .section:has(> .fab-add){
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+  padding-top:0 !important;
+  padding-bottom:0 !important;
+}
+</style>
