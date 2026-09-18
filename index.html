@@ -3705,6 +3705,18 @@
       box-shadow: none;
       transition:border-color .18s var(--ds-ease),box-shadow .18s ease,background-color .18s ease;
     }
+    /* Chrome/Edge autofill: cegah email tersimpan berubah jadi kotak biru pucat + teks putih */
+    #login-overlay .login-card .field input:-webkit-autofill,
+    #login-overlay .login-card .field input:-webkit-autofill:hover,
+    #login-overlay .login-card .field input:-webkit-autofill:focus{
+      -webkit-text-fill-color:var(--color-ink) !important;
+      caret-color:var(--color-ink);
+      -webkit-box-shadow:0 0 0 1000px var(--color-white) inset !important;
+      box-shadow:0 0 0 1000px var(--color-white) inset !important;
+      border-color:var(--color-neutral-dbe2ea);
+      transition:background-color 9999s ease-out 0s;
+    }
+
     #login-overlay .login-card .field input::placeholder{color:var(--color-muted);}
     #login-overlay .login-card .field input:hover{border-color:var(--color-accent-cbd5e1);}
     #login-overlay .login-card .field input:focus{
@@ -3777,6 +3789,15 @@
     body.dark #login-overlay .login-sub{color:var(--color-muted);}
     body.dark #login-overlay .login-card .field label{color:var(--color-muted);}
     body.dark #login-overlay .login-card .field input{background:var(--color-ink);border-color:var(--color-blue-334155);color:var(--color-neutral-f8fafc);}
+    body.dark #login-overlay .login-card .field input:-webkit-autofill,
+    body.dark #login-overlay .login-card .field input:-webkit-autofill:hover,
+    body.dark #login-overlay .login-card .field input:-webkit-autofill:focus{
+      -webkit-text-fill-color:var(--color-neutral-f8fafc) !important;
+      caret-color:var(--color-neutral-f8fafc);
+      -webkit-box-shadow:0 0 0 1000px var(--color-ink) inset !important;
+      box-shadow:0 0 0 1000px var(--color-ink) inset !important;
+      border-color:var(--color-blue-334155);
+    }
     body.dark #login-overlay .login-card .field input::placeholder{color:var(--color-slate);}
     body.dark #login-overlay .login-card .field input:hover{border-color:var(--color-blue-475569);}
     body.dark #login-overlay .login-card .field input:focus{border-color:var(--color-blue-60a5fa);box-shadow: 0 0 0 3px var(--color-alpha-087);background:var(--color-ink);}
