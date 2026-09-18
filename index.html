@@ -13558,6 +13558,8 @@ Setelan
       const target = hpSummaryFilter === 'collected' ? document.querySelector('#view-hp .hp-status-section.is-collected') : hpSummaryFilter === 'remaining' ? document.querySelector('#view-hp .hp-status-section.is-remaining') : null;
       if(target) target.scrollIntoView({behavior:'smooth', block:'start'});
     }
+    // Dipanggil dari onclick pada HTML, jadi harus tersedia di window.
+    window.setHpSummaryFilter = setHpSummaryFilter;
 
     function professionalRenderHp(){
       const date=state.hpSelectedDate||todayKey();
