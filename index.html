@@ -14,7 +14,33 @@
     <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Kelasku — X TJKT 1</title>
-  <link rel="manifest" href="manifest.json"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#0F172A"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="manifest" href="manifest.json">
+  <!-- Runtime environment config. In production, generate this file during deployment. -->
+  <script src="./kelasku-env.js"></script>
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  <script id="kelasku-security-bootstrap">
+    (function(){
+      var isLocal = /^(localhost|127\.0\.0\.1|::1)$/.test(location.hostname);
+      if (location.protocol === 'http:' && !isLocal) {
+        location.replace('https://' + location.host + location.pathname + location.search + location.hash);
+      }
+      window.__KELASKU_DEBUG__ = false;
+      try {
+        var originalError = console.error ? console.error.bind(console) : function(){};
+        var originalWarn = console.warn ? console.warn.bind(console) : function(){};
+        console.error = function(){ if (window.__KELASKU_DEBUG__) originalError.apply(console, arguments); };
+        console.warn = function(){ if (window.__KELASKU_DEBUG__) originalWarn.apply(console, arguments); };
+      } catch (_) {}
+      if (!window.__KELASKU_DEBUG__) {
+        window.addEventListener('error', function(e){
+          try { e.preventDefault(); } catch (_) {}
+        });
+        window.addEventListener('unhandledrejection', function(e){
+          try { e.preventDefault(); } catch (_) {}
+        });
+      }
+    })();
+  </script><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#0F172A"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
@@ -9535,6 +9561,7 @@ Setelan
 </div>
 
 <script>
+  function clientSafeError(fallback) { return String(fallback || 'Terjadi kendala. Coba lagi.'); }
   // Application behavior
 
   // Toast notification
@@ -9569,14 +9596,12 @@ Setelan
   // ============================================================
   // FIREBASE
   // ============================================================
-  const firebaseConfig = {
-      apiKey: "AIzaSyAhrh00F2N07_Lx-QT6sHi_ygsvWfds1eQ",
-      authDomain: "apps-kelas.firebaseapp.com",
-      projectId: "apps-kelas",
-      storageBucket: "apps-kelas.firebasestorage.app",
-      messagingSenderId: "24953961039",
-      appId: "1:24953961039:web:4ad80d05e9f4be771c083a"
-  };
+  const runtimeEnv = window.KELASKU_ENV || {};
+  const firebaseConfig = runtimeEnv.firebaseConfig || {};
+  if (!firebaseConfig.apiKey || !firebaseConfig.authDomain || !firebaseConfig.projectId || !firebaseConfig.appId) {
+      document.documentElement.classList.add('kelasku-config-missing');
+      throw new Error('Konfigurasi aplikasi belum tersedia. Tambahkan kelasku-env.js sebelum menjalankan Kelasku.');
+  }
   firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
   const db = firebase.firestore();
@@ -9588,9 +9613,8 @@ Setelan
   const FS_META = 'kelasku_meta';
   const FS_REPORTS = 'kelasku_reports';
   const FS_NOTIFICATIONS = 'kelasku_notifications';
-  // Google Drive bridge. Paste the deployed Apps Script /exec URL here.
-  // Leave blank to keep the safe legacy Base64 fallback until Drive is configured.
-  const KELASKU_DRIVE_API_URL = 'https://script.google.com/macros/s/AKfycbxkCOpaqCYnQ7HOgK61t189lvHap3wCjP9jj9ks73XbQJdWgHFnGUdye0hxjoh8Z1mveQ/exec';
+  // Google Drive bridge URL comes from deployment environment.
+  const KELASKU_DRIVE_API_URL = String(runtimeEnv.driveApiUrl || '').trim();
   const SECURITY_DATA_VERSION = 2;
   const PUBLIC_STATE_DOC = 'kelasku-state';
   const ADMIN_STATE_DOC = 'admin-state';
@@ -12414,7 +12438,7 @@ Setelan
               showNotification('File sedang diunduh (pratinjau diblokir browser).', 'info');
           }
           setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
-      } catch (e) { showNotification('Gagal membuka file. Coba download manual lewat tombol lain.', 'error'); }
+      } catch (e) { showNotification(clientSafeError('Gagal membuka file. Coba lagi.'), 'error'); }
   }
   function readFileAsDataUrl(file) {
       return new Promise((resolve, reject) => {
@@ -12801,7 +12825,7 @@ Setelan
               driveUrl = stored.driveUrl || stored.url || '';
               fileSize = Number(stored.sizeBytes || attachment.sizeBytes || 0);
               fileMimeType = stored.mimeType || attachment.mimeType || '';
-          } catch (e) { showNotification(e.message || 'Gagal memproses file.', 'error'); return; }
+          } catch (e) { showNotification(clientSafeError('Gagal memproses file. Coba lagi.'), 'error'); return; }
       }
       const judul = document.getElementById('report-judul').value.trim();
       const deskripsi = document.getElementById('report-deskripsi').value.trim();
@@ -16735,6 +16759,15 @@ body.dark .cal-card .cal-nav-btn{color:#f8fafc !important;background:transparent
 }
 </style>
 
+<style id="kelasku-config-guard">
+  html.kelasku-config-missing body::before {
+    content: 'Konfigurasi Kelasku belum tersedia. Tambahkan kelasku-env.js lalu muat ulang halaman.';
+    position: fixed; inset: 24px; z-index: 999999; display: grid; place-items: center;
+    padding: 24px; border: 1px solid #cbd5e1; border-radius: 16px;
+    background: #ffffff; color: #172033; font: 600 16px/1.5 system-ui, sans-serif; text-align: center;
+    box-shadow: 0 12px 36px rgba(15,23,42,.12);
+  }
+</style>
 </body>
 <!-- Kelasku compatibility patch: resilient Firestore sync + legacy fallback -->
 
