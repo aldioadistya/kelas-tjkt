@@ -7656,6 +7656,35 @@ input:focus-visible,select:focus-visible,textarea:focus-visible,[tabindex]:focus
 }
 </style>
 
+
+<style id="light-dashboard-hero-text-fix-v32">
+/* Light mode: dashboard hero is a blue gradient, so every hero text/icon stays white. */
+body:not(.dark) .dashboard-hero,
+body:not(.dark) .dashboard-hero * {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+body:not(.dark) .dashboard-hero .hero-eyebrow {
+  color: #dbeafe !important;
+  -webkit-text-fill-color: #dbeafe !important;
+}
+body:not(.dark) .dashboard-hero .hero-copy {
+  color: #eff6ff !important;
+  -webkit-text-fill-color: #eff6ff !important;
+}
+body:not(.dark) .dashboard-hero .htag {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  background: rgba(255,255,255,.10) !important;
+  border-color: rgba(255,255,255,.22) !important;
+}
+body:not(.dark) .dashboard-hero .avatar {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  background: rgba(255,255,255,.10) !important;
+  border-color: rgba(255,255,255,.25) !important;
+}
+</style>
 </head>
 
 <body>
