@@ -16535,3 +16535,35 @@ body:not(.dark) #view-beranda #pengumuman-list .announce-date{color:#64748b !imp
   #view-beranda #pengumuman-list .announce-description{font-size:12px !important}
 }
 </style>
+
+<style id="kelasku-role-visibility-final-v28">
+/* Final role-visibility fix.
+   Some late component rules were overriding .admin-only and leaving an empty
+   full-width button in student view. Keep the control hidden at the source. */
+.admin-only{display:none !important;}
+button.admin-only,
+a.admin-only,
+.fab-add.admin-only,
+.btn.admin-only{display:none !important;}
+body.is-admin .admin-only{display:flex !important;}
+body.is-admin button.admin-only,
+body.is-admin a.admin-only,
+body.is-admin .fab-add.admin-only,
+body.is-admin .btn.admin-only{display:inline-flex !important;}
+body.is-admin div.admin-only,
+body.is-admin section.admin-only{display:block !important;}
+.superadmin-only{display:none !important;}
+body.is-superadmin .superadmin-only{display:flex !important;}
+body.is-superadmin button.superadmin-only,
+body.is-superadmin a.superadmin-only,
+body.is-superadmin .btn.superadmin-only{display:inline-flex !important;}
+body.is-superadmin div.superadmin-only,
+body.is-superadmin section.superadmin-only{display:block !important;}
+
+/* If a section contains only a role-restricted add button, remove the shell
+   while the button is unavailable. This prevents blank bordered strips. */
+body:not(.is-admin) #view-tugas > .section:has(> .fab-add.admin-only),
+body:not(.is-admin) #view-laporan > .section:has(> .fab-add.admin-only){
+  display:none !important;
+}
+</style>
