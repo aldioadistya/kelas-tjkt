@@ -3883,6 +3883,14 @@
     /* JADWAL */
     .day-tabs{display:flex;gap: var(--space-6);overflow:auto;padding: var(--space-4) var(--space-2) var(--space-6)}.day-chip{border:1px solid var(--ui-border);background:var(--ui-surface);color:var(--ui-muted);border-radius: var(--radius-token-28);padding: var(--space-8) var(--space-14);font-weight:700}.day-chip.active{background:var(--ui-blue-soft);border-color:var(--color-blue-bfdbfe);color:var(--ui-blue)}.timeline{position:relative;padding: var(--space-6) 0}.timeline:before{content:"";position:absolute;left:74px;top:14px;bottom:14px;width:1px;background:var(--ui-border)}.timeline-item{display:grid;grid-template-columns:66px 1fr;gap: var(--space-16);position:relative;padding: var(--space-9) 0}.timeline-time{font-size:11px;color:var(--ui-muted);font-weight:800;text-align:right}.timeline-card{background:var(--ui-surface);border:1px solid var(--ui-border);border-radius: var(--radius-token-09);padding: var(--space-13) var(--space-14);position:relative}.timeline-card:before{content:"";position:absolute;left:-22px;top:16px;width:8px;height:8px;border-radius: var(--radius-token-21);background:var(--ui-blue);box-shadow: var(--shadow-token-12)}.timeline-sub{font-size:10px;color:var(--ui-muted);margin-top:3px}.piket-pro-list{display:flex;flex-wrap:wrap;gap: var(--space-8);padding: var(--space-8) 0}.piket-person{display:flex;align-items:center;gap: var(--space-8);border:1px solid var(--ui-border);border-radius: var(--radius-token-08);padding: var(--space-8) var(--space-10);background:var(--ui-surface)}.piket-person .mini-avatar{width:28px;height:28px;border-radius: var(--radius-token-30);background:var(--ui-blue-soft);color:var(--ui-blue);display:grid;place-items:center;font-size:10px;font-weight:800}.piket-person .mini-name{font-size:11px;font-weight:800}.piket-person input{accent-color:var(--ui-blue)}
     /* TUGAS */
+    .task-pill-drive{color:var(--ui-blue) !important; background:var(--ui-blue-soft) !important; border-color:var(--ui-blue) !important;}
+    .task-drive-link{margin-top:8px;}
+    .task-drive-link a{display:inline-flex;align-items:center;gap:6px;padding:8px 10px;border:1px solid var(--ui-border);border-radius:var(--ui-radius-sm);background:var(--ui-blue-soft);color:var(--ui-blue);font-size:10px;font-weight:800;text-decoration:none;}
+    .task-drive-link a:hover{border-color:var(--ui-blue);}
+    .task-drive-link-done a{opacity:.86;}
+    body.dark #view-tugas .task-pill-drive{color:#ffffff !important;background:#18366d !important;border-color:#4b83ff !important;}
+    body.dark #view-tugas .task-drive-link a{background:#172d52 !important;border-color:#40516b !important;color:#ffffff !important;}
+    /* TUGAS */
     .task-filter-tabs{display:flex;gap: var(--space-6);flex-wrap:wrap;margin: var(--space-15) 0 var(--space-14)}.task-filter-tab{border:1px solid var(--ui-border);background:var(--ui-surface);color:var(--ui-muted);border-radius: var(--radius-token-28);padding: var(--space-7) var(--space-11);font-size:11px;font-weight:800;cursor:pointer}.task-filter-tab.active{background:var(--ui-blue-soft);border-color:var(--color-blue-bfdbfe);color:var(--ui-blue)}.task-board{display:grid;grid-template-columns:1fr 1fr;gap: var(--space-16)}.task-column{border:1px solid var(--ui-border);background:var(--ui-bg);border-radius: var(--radius-token-10);padding: var(--space-12)}.task-column-title{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--ui-soft);font-weight:800;margin-bottom:8px}.task-pro-card{background:var(--ui-surface);border:1px solid var(--ui-border);border-radius: var(--radius-token-09);padding: var(--space-14);margin-bottom:9px;box-shadow: 0 3px 10px var(--color-alpha-031)}.task-pro-card:hover{border-color:var(--color-alpha-078)}.task-pro-top{display:flex;justify-content:space-between;gap: var(--space-8);align-items:flex-start}.task-pro-title{font-size:13px;font-weight:800;line-height:1.35}.task-pro-deadline{font-size:9px;font-weight:800;padding: var(--space-4) var(--space-7);border-radius: var(--radius-token-28);white-space:nowrap}.deadline-safe{background:var(--ui-green-soft);color:var(--ui-green)}.deadline-soon{background:var(--ui-amber-soft);color:var(--ui-amber)}.deadline-danger{background:var(--ui-red-soft);color:var(--ui-red)}.task-pro-meta{display:flex;gap: var(--space-6);flex-wrap:wrap;margin-top:8px}.task-pro-tag{font-size:9px;border:1px solid var(--ui-border);color:var(--ui-muted);padding: var(--space-4) var(--space-7);border-radius: var(--radius-token-28)}.task-pro-desc{font-size:10.5px;color:var(--ui-muted);line-height:1.45;margin-top:8px}.task-pro-actions{display:flex;gap: var(--space-6);margin-top:10px}.task-pro-actions button{border:1px solid var(--ui-border);background:transparent;color:var(--ui-muted);border-radius: var(--radius-token-26);padding: var(--space-6) var(--space-8);font-size:10px;cursor:pointer}.task-pro-actions button.primary{color:var(--ui-blue);background:var(--ui-blue-soft);border-color:var(--color-blue-bfdbfe)}
     /* LAPORAN */
     .report-pro-top{display:grid;grid-template-columns:1.2fr .8fr;gap: var(--space-14);margin: var(--space-16) 0}.report-chart-card,.report-kpi-card{background:var(--ui-surface);border:1px solid var(--ui-border);border-radius: var(--radius-token-10);padding: var(--space-16)}.report-kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap: var(--space-10)}.report-kpi{border:1px solid var(--ui-border);border-radius: var(--radius-token-08);padding: var(--space-11)}.report-kpi .rk-label{font-size:9px;color:var(--ui-soft);font-weight:800;text-transform:uppercase;letter-spacing:.05em}.report-kpi .rk-value{font-size:20px;font-weight:800;margin-top:5px}.report-bars{display:grid;grid-template-columns:repeat(4,1fr);gap: var(--space-10);align-items:end;height:112px;margin-top:10px}.report-bar-col{display:flex;flex-direction:column;align-items:center;gap: var(--space-6);height:100%;justify-content:end}.report-bar{width:100%;max-width:36px;background:var(--ui-blue);border-radius: var(--radius-token-27);min-height:4px}.report-bar-label{font-size:9px;color:var(--ui-soft)}.report-actions{display:flex;gap: var(--space-7);flex-wrap:wrap}.report-action-btn{border:1px solid var(--ui-border);background:var(--ui-surface);color:var(--ui-muted);border-radius: var(--radius-token-06);padding: var(--space-8) var(--space-10);font-size:10px;font-weight:800;cursor:pointer}.report-action-btn.primary{background:var(--ui-blue);color:var(--color-white);border-color:var(--ui-blue)}
@@ -9139,6 +9147,14 @@ Setelan
 <input id="tugas-tenggat" type="date">
 </div>
 <div class="field">
+  <label>Folder Google Drive untuk pengumpulan (opsional)
+</label>
+<input id="tugas-drive-link" type="url" inputmode="url" autocomplete="off" placeholder="https://drive.google.com/drive/folders/...">
+<div class="field-hint">
+  Siswa bisa membuka folder ini untuk mengumpulkan presentasi. Atur izin folder di Google Drive agar siswa dapat menambahkan file.
+</div>
+</div>
+<div class="field">
   <label>Deskripsi
 </label>
 <textarea id="tugas-deskripsi" placeholder="Deskripsi tugas...">
@@ -12191,8 +12207,9 @@ Setelan
               <div class="checkbox admin-only" onclick="event.stopPropagation(); toggleTugas(${t.id})"></div>
               <div style="flex:1; ${readOnly ? '' : 'cursor:pointer;'}" ${readOnly ? '' : `onclick="openTugasModal(${t.id})"`}>
                   <div class="task-title">${escapeHtml(cleanTaskText(t.nama))}</div>
-                  <div class="task-meta"><span class="pill">📚 ${escapeHtml(t.mapel || 'Tanpa mata pelajaran')}</span><span class="pill pill-due">📅 ${t.tenggat || 'Tanpa deadline'}</span>${getItemFiles(t).length ? '<span class="pill task-pill-file">📎 Lampiran</span>' : ''}</div>
+                  <div class="task-meta"><span class="pill">📚 ${escapeHtml(t.mapel || 'Tanpa mata pelajaran')}</span><span class="pill pill-due">📅 ${t.tenggat || 'Tanpa deadline'}</span>${getItemFiles(t).length ? '<span class="pill task-pill-file">📎 Lampiran</span>' : ''}${t.driveLink ? '<span class="pill task-pill-drive">☁️ Google Drive</span>' : ''}</div>
                   ${t.deskripsi ? `<div class="task-desc">${escapeHtml(cleanTaskText(t.deskripsi))}</div>` : ''}
+                  ${t.driveLink ? `<div class="task-drive-link"><a href="${escapeHtml(t.driveLink)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">☁️ Buka folder Google Drive untuk mengumpulkan</a></div>` : ''}
                   ${renderTaskFiles(t)}
               </div>
               <button class="s-remove admin-only" onclick="event.stopPropagation(); deleteTugas(${t.id})">×</button>
@@ -12204,8 +12221,9 @@ Setelan
               <div class="checkbox checked admin-only" onclick="event.stopPropagation(); toggleTugas(${t.id})">✓</div>
               <div style="flex:1; ${readOnly ? '' : 'cursor:pointer;'}" ${readOnly ? '' : `onclick="openTugasModal(${t.id})"`}>
                   <div class="task-title checked">${escapeHtml(cleanTaskText(t.nama))}</div>
-                  <div class="task-meta"><span class="pill">📚 ${escapeHtml(t.mapel || 'Tanpa mata pelajaran')}</span><span class="pill pill-due">📅 ${t.tenggat || 'Tanpa deadline'}</span>${getItemFiles(t).length ? '<span class="pill task-pill-file">📎 Lampiran</span>' : ''}</div>
+                  <div class="task-meta"><span class="pill">📚 ${escapeHtml(t.mapel || 'Tanpa mata pelajaran')}</span><span class="pill pill-due">📅 ${t.tenggat || 'Tanpa deadline'}</span>${getItemFiles(t).length ? '<span class="pill task-pill-file">📎 Lampiran</span>' : ''}${t.driveLink ? '<span class="pill task-pill-drive">☁️ Google Drive</span>' : ''}</div>
                   ${t.deskripsi ? `<div class="task-desc" style="text-decoration:line-through; color:var(--text-muted);">${escapeHtml(cleanTaskText(t.deskripsi))}</div>` : ''}
+                  ${t.driveLink ? `<div class="task-drive-link task-drive-link-done"><a href="${escapeHtml(t.driveLink)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">☁️ Buka folder Google Drive</a></div>` : ''}
                   ${renderTaskFiles(t)}
               </div>
               <button class="s-remove admin-only" onclick="event.stopPropagation(); deleteTugas(${t.id})">×</button>
@@ -12296,6 +12314,7 @@ Setelan
           document.getElementById('tugas-nama').value = t.nama || '';
           document.getElementById('tugas-mapel').value = t.mapel || '';
           document.getElementById('tugas-tenggat').value = t.tenggat || '';
+          document.getElementById('tugas-drive-link').value = t.driveLink || '';
           document.getElementById('tugas-deskripsi').value = t.deskripsi || '';
           document.getElementById('tugas-edit-id').value = t.id;
           document.getElementById('tugas-modal-title').textContent = 'Edit Tugas';
@@ -12305,6 +12324,7 @@ Setelan
           document.getElementById('tugas-nama').value = '';
           document.getElementById('tugas-mapel').value = '';
           document.getElementById('tugas-tenggat').value = '';
+          document.getElementById('tugas-drive-link').value = '';
           document.getElementById('tugas-deskripsi').value = '';
           document.getElementById('tugas-edit-id').value = '';
           document.getElementById('tugas-modal-title').textContent = 'Tambah Tugas';
@@ -12520,14 +12540,37 @@ Setelan
           compressed
       };
   }
+  function normalizeTugasDriveLink(value) {
+      const raw = String(value || '').trim();
+      if (!raw) return '';
+      try {
+          const u = new URL(raw);
+          const host = u.hostname.toLowerCase();
+          if (u.protocol !== 'https:' || (host !== 'drive.google.com' && host !== 'docs.google.com')) {
+              throw new Error('Gunakan tautan Google Drive/Docs dengan HTTPS.');
+          }
+          return u.href;
+      } catch (e) {
+          throw new Error(e && e.message ? e.message : 'Tautan Google Drive tidak valid.');
+      }
+  }
   async function submitTugas() {
       if (guardReadOnly()) return;
       const nama = document.getElementById('tugas-nama').value.trim();
       const mapel = document.getElementById('tugas-mapel').value.trim();
       const tenggat = document.getElementById('tugas-tenggat').value;
+      const driveLinkRaw = document.getElementById('tugas-drive-link').value.trim();
       const deskripsi = document.getElementById('tugas-deskripsi').value.trim();
       const editId = document.getElementById('tugas-edit-id').value;
       if (!nama) { showNotification('Nama tugas wajib diisi.', 'warning'); return; }
+
+      let driveLink = '';
+      try {
+          driveLink = normalizeTugasDriveLink(driveLinkRaw);
+      } catch (e) {
+          showNotification('Link Google Drive: ' + (e.message || 'tidak valid') + '.', 'warning', 5000);
+          return;
+      }
 
       let files;
       try {
@@ -12563,14 +12606,14 @@ Setelan
                       void deleteDriveAttachment(oldFile, 'task');
                   }
               });
-              t.nama = nama; t.mapel = mapel; t.tenggat = tenggat; t.deskripsi = deskripsi; t.files = files;
+              t.nama = nama; t.mapel = mapel; t.tenggat = tenggat; t.driveLink = driveLink; t.deskripsi = deskripsi; t.files = files;
               delete t.file; delete t.fileData;
           }
           addActivity('Mengubah tugas', t ? t.nama : 'Tugas');
           addNotification('Tugas diperbarui', 'Tugas ' + (t ? t.nama : '') + ' telah diperbarui.', {role:'siswa'});
           await saveState(); renderTugas(); renderBeranda(); closeModal('tugas'); showNotification('Tugas berhasil diperbarui.', 'success'); return;
       }
-      state.tugas.push({ id: Date.now(), nama, mapel, tenggat, deskripsi, files, selesai: false });
+      state.tugas.push({ id: Date.now(), nama, mapel, tenggat, driveLink, deskripsi, files, selesai: false });
       document.getElementById('tugas-deskripsi').value = '';
       addActivity('Menambahkan tugas', nama);
       addNotification('Tugas baru', 'Tugas baru: ' + nama + (tenggat ? ' · Deadline ' + tenggat : ''), {role:'siswa'});
