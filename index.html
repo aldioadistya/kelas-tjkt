@@ -7791,6 +7791,202 @@ body.dark #report-unread-badge{
 }
 </style>
 
+
+<style id="v46-light-mode-parity-polish">
+/* v46 — light mode receives the same level of hierarchy and refinement as dark mode. */
+body:not(.dark){
+  --glass-bg:#f6f8fb !important;
+  --glass-card:#ffffff !important;
+  --glass-border:#d5deea !important;
+  --glass-shadow:0 1px 2px rgba(15,23,42,.04),0 8px 24px rgba(15,23,42,.06) !important;
+  --text-main:#172033 !important;
+  --text-soft:#475569 !important;
+  --text-muted:#64748b !important;
+  --ui-page:#f4f6fa !important;
+  --ui-surface:#ffffff !important;
+  --ui-border:#d5deea !important;
+  --ui-muted:#475569 !important;
+  --ui-soft:#64748b !important;
+  --dash-surface:#ffffff !important;
+  --dash-surface-soft:#f7f9fc !important;
+  --dash-border:#d5deea !important;
+  --dash-text:#172033 !important;
+  --dash-muted:#475569 !important;
+}
+
+/* Surface hierarchy: clear separation without heavy boxes. */
+body:not(.dark) .card,
+body:not(.dark) .stat-card,
+body:not(.dark) .dashboard-card,
+body:not(.dark) .dashboard-stat-card,
+body:not(.dark) .task-item,
+body:not(.dark) .task-pro-card,
+body:not(.dark) .report-kpi,
+body:not(.dark) .report-chart-card,
+body:not(.dark) .report-kpi-card,
+body:not(.dark) .timeline-card,
+body:not(.dark) .hp-slot,
+body:not(.dark) .kas-pro-metric,
+body:not(.dark) .kas-pro-table,
+body:not(.dark) .settings-profile-card,
+body:not(.dark) .settings-section,
+body:not(.dark) .calendar-card,
+body:not(.dark) .cal-card{
+  box-shadow:0 1px 2px rgba(15,23,42,.035),0 8px 22px rgba(15,23,42,.045) !important;
+}
+
+/* Secondary text should remain readable at normal and low screen brightness. */
+body:not(.dark) .view .row-sub,
+body:not(.dark) .view .tx-sub,
+body:not(.dark) .view .task-meta,
+body:not(.dark) .view .report-meta,
+body:not(.dark) .view .announce-date,
+body:not(.dark) .view .timeline-sub,
+body:not(.dark) .view .field-hint,
+body:not(.dark) .view .pagehead p,
+body:not(.dark) .view .cal-dow,
+body:not(.dark) .view .student-meta,
+body:not(.dark) .view .settings-desc,
+body:not(.dark) .view .activity-meta,
+body:not(.dark) .view .notify-time,
+body:not(.dark) .view .task-pro-desc,
+body:not(.dark) .view .task-pro-tag,
+body:not(.dark) .view .report-bar-label{
+  color:#475569 !important;
+  -webkit-text-fill-color:#475569 !important;
+}
+
+/* Small labels get a little more breathing room and weight. */
+body:not(.dark) .view .section-kicker,
+body:not(.dark) .view .task-column-title,
+body:not(.dark) .view .field-label,
+body:not(.dark) .view .settings-label,
+body:not(.dark) .view .report-kpi .rk-label,
+body:not(.dark) .view .timeline-time{
+  color:#334155 !important;
+  -webkit-text-fill-color:#334155 !important;
+  font-weight:700 !important;
+}
+
+/* Neutral controls: calm white surfaces, stronger outline, restrained hover. */
+body:not(.dark) .view button:not(.fab-add):not(.btn-primary):not(.primary):not(.btn-danger):not(.danger),
+body:not(.dark) .view .mode-btn:not(.active),
+body:not(.dark) .view .day-chip:not(.active),
+body:not(.dark) .view .task-filter-tab:not(.active),
+body:not(.dark) .view .section-link,
+body:not(.dark) .view .section-action,
+body:not(.dark) .view .kas-history-toggle,
+body:not(.dark) .view .report-action-btn:not(.primary),
+body:not(.dark) .view .settings-nav button:not(.active){
+  background:#ffffff !important;
+  color:#334155 !important;
+  -webkit-text-fill-color:#334155 !important;
+  border-color:#cbd5e1 !important;
+  box-shadow:0 1px 2px rgba(15,23,42,.025) !important;
+}
+body:not(.dark) .view button:not(.fab-add):not(.btn-primary):not(.primary):not(.btn-danger):not(.danger):hover,
+body:not(.dark) .view .mode-btn:not(.active):hover,
+body:not(.dark) .view .day-chip:not(.active):hover,
+body:not(.dark) .view .task-filter-tab:not(.active):hover,
+body:not(.dark) .view .section-link:hover,
+body:not(.dark) .view .section-action:hover,
+body:not(.dark) .view .kas-history-toggle:hover,
+body:not(.dark) .view .report-action-btn:not(.primary):hover,
+body:not(.dark) .view .settings-nav button:not(.active):hover{
+  background:#f8fafc !important;
+  border-color:#93c5fd !important;
+}
+
+/* Inputs/selects: crisp outline and clear placeholder. */
+body:not(.dark) .view input,
+body:not(.dark) .view textarea,
+body:not(.dark) .view select{
+  background:#ffffff !important;
+  color:#172033 !important;
+  -webkit-text-fill-color:#172033 !important;
+  border-color:#cbd5e1 !important;
+  box-shadow:inset 0 1px 1px rgba(15,23,42,.02) !important;
+}
+body:not(.dark) .view input:focus,
+body:not(.dark) .view textarea:focus,
+body:not(.dark) .view select:focus{
+  border-color:#3b82f6 !important;
+  box-shadow:0 0 0 3px rgba(59,130,246,.12) !important;
+}
+body:not(.dark) .view input::placeholder,
+body:not(.dark) .view textarea::placeholder{
+  color:#64748b !important;
+  opacity:1 !important;
+}
+
+/* Active states use one consistent interaction color. */
+body:not(.dark) .view .mode-btn.active,
+body:not(.dark) .view .day-chip.active,
+body:not(.dark) .view .task-filter-tab.active,
+body:not(.dark) .view .settings-nav button.active{
+  background:#2563eb !important;
+  border-color:#2563eb !important;
+  color:#ffffff !important;
+  -webkit-text-fill-color:#ffffff !important;
+  box-shadow:0 3px 10px rgba(37,99,235,.18) !important;
+}
+
+/* Dashboard/profile accents stay strong, without turning into neon. */
+body:not(.dark) .dashboard-icon-blue{background:#eff6ff !important;color:#2563eb !important}
+body:not(.dark) .dashboard-icon-violet{background:#f3efff !important;color:#6d28d9 !important}
+body:not(.dark) .dashboard-icon-teal{background:#ecfdf5 !important;color:#047857 !important}
+body:not(.dark) .dashboard-icon-amber{background:#fff7ed !important;color:#b45309 !important}
+body:not(.dark) .dashboard-icon-rose{background:#fff1f2 !important;color:#be123c !important}
+body:not(.dark) .dashboard-stat-card .stat-label,
+body:not(.dark) .dashboard-stat-card .stat-status{color:#475569 !important;-webkit-text-fill-color:#475569 !important}
+
+/* Hero remains the visual anchor: white text on blue gradient in light mode. */
+body:not(.dark) .dashboard-hero,
+body:not(.dark) .home-hero,
+body:not(.dark) .hero-card{
+  color:#ffffff !important;
+}
+body:not(.dark) .dashboard-hero * ,
+body:not(.dark) .home-hero * ,
+body:not(.dark) .hero-card *{
+  color:inherit;
+}
+
+/* Calendar controls: professional focus without a second nested-looking box. */
+body:not(.dark) .calendar-card .cal-head,
+body:not(.dark) .cal-card .cal-head{
+  background:#ffffff !important;
+  border-color:#d5deea !important;
+}
+body:not(.dark) .calendar-card .cal-nav-btn,
+body:not(.dark) .cal-card .cal-nav-btn{
+  background:#f8fafc !important;
+  border-color:#cbd5e1 !important;
+  color:#334155 !important;
+  -webkit-text-fill-color:#334155 !important;
+}
+body:not(.dark) .calendar-card .cal-nav-btn:hover,
+body:not(.dark) .cal-card .cal-nav-btn:hover{
+  background:#eff6ff !important;
+  border-color:#60a5fa !important;
+  color:#1d4ed8 !important;
+}
+
+@media(max-width:900px){
+  body:not(.dark) .card,
+  body:not(.dark) .dashboard-card,
+  body:not(.dark) .task-pro-card,
+  body:not(.dark) .report-kpi-card,
+  body:not(.dark) .timeline-card,
+  body:not(.dark) .hp-slot,
+  body:not(.dark) .kas-pro-table,
+  body:not(.dark) .calendar-card,
+  body:not(.dark) .cal-card{
+    box-shadow:0 1px 2px rgba(15,23,42,.035),0 5px 16px rgba(15,23,42,.035) !important;
+  }
+}
+</style>
+
 </head>
 
 <body>
