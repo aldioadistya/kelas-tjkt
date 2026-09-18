@@ -4586,6 +4586,12 @@
         border-color: color-mix(in srgb, var(--primary) 24%, var(--glass-border));
     }
 
+    .cal-day-label {
+      font-weight: 800;
+      color: var(--text-main);
+      margin-right: 2px;
+    }
+
     .cal-month-click,
     .cal-year-click {
         cursor: pointer;
@@ -11441,7 +11447,15 @@ Setelan
   // ===== CALENDAR =====
   function renderMiniCalendar(prefix, year, month, selectedDate, dict, selectFnName) {
       const monthLabel = document.getElementById(prefix + '-month-label');
-      if (monthLabel) { const type = prefix === 'cal' ? 'hp' : 'piket'; monthLabel.innerHTML = `<span class="cal-month-click" onclick="toggleCalendar('${type}', event)">${escapeHtml(MONTH_LABEL[month])}</span> <span class="cal-year-click" onclick="openMonthYearPicker('${type}', event)">${year}</span>`; }
+      if (monthLabel) {
+          const type = prefix === 'cal' ? 'hp' : 'piket';
+          let selectedDay = '';
+          if (selectedDate) {
+              const parts = String(selectedDate).split('-');
+              if (parts.length === 3 && Number(parts[0]) === year && Number(parts[1]) === month + 1) selectedDay = String(Number(parts[2]));
+          }
+          monthLabel.innerHTML = `${selectedDay ? `<span class="cal-day-label">${escapeHtml(selectedDay)}</span> ` : ''}<span class="cal-month-click" onclick="toggleCalendar('${type}', event)">${escapeHtml(MONTH_LABEL[month])}</span> <span class="cal-year-click" onclick="openMonthYearPicker('${type}', event)">${year}</span>`;
+      }
       document.getElementById(prefix + '-dow-row').innerHTML = DOW_LABEL.map(d => `<div class="cal-dow">${d}</div>`).join('');
       const firstDow = new Date(year, month, 1).getDay();
       const daysInMonth = new Date(year, month + 1, 0).getDate();
