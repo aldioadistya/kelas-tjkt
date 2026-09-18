@@ -17,7 +17,9 @@
   <link rel="manifest" href="manifest.json">
   <!-- Runtime environment config. In production, generate this file during deployment. -->
   <script src="./kelasku-env.js"></script>
-  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  <meta http-equiv="Content-Security-Policy" content="default-src \'self\'; base-uri \'self\'; form-action \'self\'; object-src \'none\'; script-src \'self\' \'unsafe-inline\' https://www.gstatic.com; style-src \'self\' \'unsafe-inline\' https://fonts.googleapis.com; font-src \'self\' https://fonts.gstatic.com data:; img-src \'self\' data: blob: https:; connect-src \'self\' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com https://script.google.com https://script.googleusercontent.com; frame-src \'self\' https://*.firebaseapp.com; worker-src \'self\' blob:; manifest-src \'self\'; upgrade-insecure-requests">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=()">
   <script id="kelasku-security-bootstrap">
     (function(){
       var isLocal = /^(localhost|127\.0\.0\.1|::1)$/.test(location.hostname);
@@ -8931,6 +8933,9 @@ X TJKT 1
 <div id="drive-migration-status" class="field-hint" style="margin-top:6px;">
   Belum dicek.
 </div>
+<div class="field-hint" style="margin-top:6px;">
+  Akses Drive harus memverifikasi Firebase ID token dan role di sisi server.
+</div>
 </div>
 <div class="settings-section admin-only">
   <div class="settings-label">
@@ -9618,17 +9623,7 @@ Setelan
   // Web adalah client config, bukan server secret.
   const runtimeEnv = (window.KELASKU_ENV && typeof window.KELASKU_ENV === 'object')
       ? window.KELASKU_ENV
-      : {
-          firebaseConfig: {
-              apiKey: 'AIzaSyAhrh00F2N07_Lx-QT6sHi_ygsvWfds1eQ',
-              authDomain: 'apps-kelas.firebaseapp.com',
-              projectId: 'apps-kelas',
-              storageBucket: 'apps-kelas.firebasestorage.app',
-              messagingSenderId: '24953961039',
-              appId: '1:24953961039:web:4ad80d05e9f4be771c083a'
-          },
-          driveApiUrl: 'https://script.google.com/macros/s/AKfycbxkCOpaqCYnQ7HOgK61t189lvHap3wCjP9jj9ks73XbQJdWgHFnGUdye0hxjoh8Z1mveQ/exec'
-      };
+      : {};
   const firebaseConfig = runtimeEnv.firebaseConfig || {};
   if (!firebaseConfig.apiKey || !firebaseConfig.authDomain || !firebaseConfig.projectId || !firebaseConfig.appId) {
       document.documentElement.classList.add('kelasku-config-missing');
@@ -9647,6 +9642,7 @@ Setelan
   const FS_NOTIFICATIONS = 'kelasku_notifications';
   // Google Drive bridge URL comes from deployment environment.
   const KELASKU_DRIVE_API_URL = String(runtimeEnv.driveApiUrl || '').trim();
+  const KELASKU_DRIVE_ALLOWED_ACTIONS = new Set(['storage','upload','delete','cleanup-all']);
   const SECURITY_DATA_VERSION = 2;
   const PUBLIC_STATE_DOC = 'kelasku-state';
   const ADMIN_STATE_DOC = 'admin-state';
@@ -11403,25 +11399,38 @@ Setelan
       }
   }
   async function driveApiRequest(payload) {
-      if (!driveStorageEnabled()) throw new Error('Google Drive belum dikonfigurasi di index.html.');
+      if (!driveStorageEnabled()) throw new Error('Google Drive belum dikonfigurasi.');
       const user = auth.currentUser;
       if (!user) throw new Error('Sesi login tidak tersedia.');
-      const idToken = await user.getIdToken(false);
-      const response = await fetch(KELASKU_DRIVE_API_URL.trim(), {
-          method: 'POST',
-          redirect: 'follow',
-          credentials: 'omit',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify(Object.assign({}, payload, { idToken }))
-      });
-      if (!response.ok) {
-          throw new Error('Google Drive Bridge mengembalikan HTTP ' + response.status + '. Pastikan deployment Apps Script masih aktif.');
+      if (!payload || typeof payload !== 'object' || !KELASKU_DRIVE_ALLOWED_ACTIONS.has(String(payload.action || ''))) {
+          throw new Error('Permintaan Google Drive tidak valid.');
       }
-      const text = await response.text();
-      let data;
-      try { data = JSON.parse(text); } catch (e) { throw new Error('Respons Google Drive tidak valid.'); }
-      if (!data || data.ok !== true) throw new Error((data && data.error) || 'Google Drive gagal memproses permintaan.');
-      return data;
+      const idToken = await user.getIdToken(false);
+      const controller = typeof AbortController === 'function' ? new AbortController() : null;
+      const timeoutId = controller ? setTimeout(() => controller.abort(), 20000) : null;
+      try {
+          const response = await fetch(KELASKU_DRIVE_API_URL.trim(), {
+              method: 'POST',
+              redirect: 'follow',
+              credentials: 'omit',
+              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+              body: JSON.stringify(Object.assign({}, payload, { idToken })),
+              signal: controller ? controller.signal : undefined
+          });
+          if (!response.ok) {
+              throw new Error('Google Drive tidak dapat memproses permintaan.');
+          }
+          const responseText = await response.text();
+          let data;
+          try { data = JSON.parse(responseText); } catch (e) { throw new Error('Respons Google Drive tidak valid.'); }
+          if (!data || data.ok !== true) throw new Error('Google Drive tidak dapat memproses permintaan.');
+          return data;
+      } catch (e) {
+          if (e && e.name === 'AbortError') throw new Error('Koneksi Google Drive terlalu lama. Coba lagi.');
+          throw e instanceof Error ? e : new Error('Google Drive tidak dapat diakses.');
+      } finally {
+          if (timeoutId) clearTimeout(timeoutId);
+      }
   }
   async function refreshDriveStorageUsage() {
       if (!isAdmin() || !driveStorageEnabled()) return;
@@ -11449,7 +11458,7 @@ Setelan
       } catch (e) {
           // Pertahankan angka Firestore yang sudah tampil sebagai fallback.
           if (statusEl) { statusEl.textContent = 'Status Drive: terhubung, tetapi kapasitas belum dapat dibaca'; statusEl.style.color = 'var(--amber)'; }
-          if (hintEl) hintEl.textContent = 'Data aplikasi tetap dihitung dari Firestore. Pemeriksaan kapasitas Google Drive gagal: ' + (e.message || 'tidak dapat terhubung') + '.';
+          if (hintEl) hintEl.textContent = 'Data aplikasi tetap dihitung dari Firestore. Kapasitas Google Drive belum dapat dibaca saat ini.';
           renderStorageUsage();
       }
   }
