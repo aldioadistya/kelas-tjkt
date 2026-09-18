@@ -17340,3 +17340,28 @@ body:not(.dark) #view-hp .hp-summary-collected{background:#ecfdf5!important;colo
 body:not(.dark) #view-hp .hp-summary-remaining{background:#fff1f2!important;color:#be123c!important;border-color:#f1b5c2!important}
 body:not(.dark) #view-hp .hp-summary-box:focus-visible{outline-color:#2563eb}
 </style>
+<style id="hp-status-board-layout-fix-v38">
+/* Fix: papan pemisahan Sudah/Belum harus menjadi dua section vertikal penuh.
+   Sebelumnya #hp-list membawa grid 4 kolom dari roster lama, sehingga kedua
+   section ikut menyempit dan kartu siswa menjadi terlalu kecil/terpotong. */
+#view-hp #hp-list.hp-status-board{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) !important;
+  grid-auto-flow:row !important;
+  width:100% !important;
+  min-width:0 !important;
+  box-sizing:border-box !important;
+}
+#view-hp #hp-list.hp-status-board > .hp-status-section{
+  width:100% !important;
+  min-width:0 !important;
+  box-sizing:border-box !important;
+}
+#view-hp .hp-status-grid{
+  width:100% !important;
+  min-width:0 !important;
+}
+@media(max-width:900px){
+  #view-hp #hp-list.hp-status-board{grid-template-columns:minmax(0,1fr) !important;}
+}
+</style>
