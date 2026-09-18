@@ -16646,3 +16646,189 @@ body:not(.dark) #view-jadwal > #jadwal-mode-pelajaran > .section:has(> .fab-add)
   padding-bottom:0 !important;
 }
 </style>
+<style>
+/* ===== UI POLISH v30 =====
+   Fokus: light mode terbaca, hierarchy lebih natural, tanpa border kosong. */
+body:not(.dark){
+  --ui-text:#172033;
+  --ui-muted:#475569;
+  --ui-soft:#64748b;
+  --ui-border:#cbd5e1;
+  --ui-surface:#ffffff;
+  --ui-page:#f4f6fa;
+}
+
+/* Tipografi utama light mode: jangan biarkan warna legacy membuat teks putih. */
+body:not(.dark) .view,
+body:not(.dark) .view p,
+body:not(.dark) .view label,
+body:not(.dark) .view .section-title,
+body:not(.dark) .view .section-kicker,
+body:not(.dark) .view .section-head,
+body:not(.dark) .view .field-label,
+body:not(.dark) .view .field-hint,
+body:not(.dark) .view .row-title,
+body:not(.dark) .view .row-sub,
+body:not(.dark) .view .tx-title,
+body:not(.dark) .view .tx-sub,
+body:not(.dark) .view .task-title,
+body:not(.dark) .view .task-desc,
+body:not(.dark) .view .task-meta,
+body:not(.dark) .view .report-title,
+body:not(.dark) .view .report-meta,
+body:not(.dark) .view .announce-text,
+body:not(.dark) .view .announce-date,
+body:not(.dark) .view .timeline-title,
+body:not(.dark) .view .timeline-sub,
+body:not(.dark) .view .timeline-time,
+body:not(.dark) .view .student-name,
+body:not(.dark) .view .student-meta,
+body:not(.dark) .view .summary-box .l,
+body:not(.dark) .view .cal-dow,
+body:not(.dark) .view .cal-month,
+body:not(.dark) .view .pagehead p{
+  color:var(--ui-text) !important;
+  -webkit-text-fill-color:var(--ui-text) !important;
+}
+body:not(.dark) .view .row-sub,
+body:not(.dark) .view .tx-sub,
+body:not(.dark) .view .task-meta,
+body:not(.dark) .view .report-meta,
+body:not(.dark) .view .announce-date,
+body:not(.dark) .view .timeline-sub,
+body:not(.dark) .view .field-hint,
+body:not(.dark) .view .pagehead p,
+body:not(.dark) .view .cal-dow,
+body:not(.dark) .view .student-meta{
+  color:var(--ui-muted) !important;
+  -webkit-text-fill-color:var(--ui-muted) !important;
+}
+
+/* Card putih: teks turunannya ikut warna card, bukan warna dark legacy. */
+body:not(.dark) .card,
+body:not(.dark) .section-card,
+body:not(.dark) .content-card,
+body:not(.dark) .task-column,
+body:not(.dark) .task-pro-card,
+body:not(.dark) .report-chart-card,
+body:not(.dark) .report-kpi-card,
+body:not(.dark) .report-kpi,
+body:not(.dark) .timeline-card,
+body:not(.dark) .piket-person,
+body:not(.dark) .hp-slot,
+body:not(.dark) .kas-folder,
+body:not(.dark) .kas-pro-metric,
+body:not(.dark) .kas-pro-table,
+body:not(.dark) .calendar-card,
+body:not(.dark) .cal-card,
+body:not(.dark) .settings-card,
+body:not(.dark) .settings-profile-card{
+  background:var(--ui-surface) !important;
+  color:var(--ui-text) !important;
+  border-color:var(--ui-border) !important;
+}
+
+/* Komponen interaktif biasa: putih + teks gelap. */
+body:not(.dark) .view button:not(.fab-add):not(.btn-primary):not(.primary):not(.btn-danger):not(.danger),
+body:not(.dark) .view .mode-btn:not(.active),
+body:not(.dark) .view .day-chip:not(.active),
+body:not(.dark) .view .task-filter-tab:not(.active),
+body:not(.dark) .view .section-link,
+body:not(.dark) .view .section-action,
+body:not(.dark) .view .kas-history-toggle,
+body:not(.dark) .view .report-action-btn:not(.primary),
+body:not(.dark) .view .settings-nav button:not(.active){
+  color:#334155 !important;
+  -webkit-text-fill-color:#334155 !important;
+  background:#fff !important;
+  border-color:#cbd5e1 !important;
+}
+
+/* Input/select tidak boleh mewarisi putih. */
+body:not(.dark) input,
+body:not(.dark) textarea,
+body:not(.dark) select,
+body:not(.dark) option{
+  color:#172033 !important;
+  -webkit-text-fill-color:#172033 !important;
+  background:#fff !important;
+}
+body:not(.dark) input::placeholder,
+body:not(.dark) textarea::placeholder{color:#64748b !important;opacity:1 !important;}
+
+/* Tombol utama tetap putih di atas biru. */
+body:not(.dark) .fab-add,
+body:not(.dark) .btn-primary,
+body:not(.dark) button.primary,
+body:not(.dark) .section-action.primary{
+  color:#fff !important;
+  -webkit-text-fill-color:#fff !important;
+  background:#2563eb !important;
+  border-color:#2563eb !important;
+}
+
+/* Filter aktif jelas, tetapi tidak terlalu berat. */
+body:not(.dark) .mode-btn.active,
+body:not(.dark) .day-chip.active,
+body:not(.dark) .task-filter-tab.active,
+body:not(.dark) .settings-nav button.active{
+  color:#fff !important;
+  -webkit-text-fill-color:#fff !important;
+  background:#2563eb !important;
+  border-color:#2563eb !important;
+}
+
+/* Section wrapper tidak perlu terlihat sebagai card kosong. */
+body:not(.dark) .view > .section,
+body:not(.dark) #jadwal-mode-pelajaran > .section,
+body:not(.dark) #jadwal-mode-piket > .section{
+  background:transparent !important;
+  border-color:transparent !important;
+  box-shadow:none !important;
+}
+
+/* Bila section hanya menampung kontrol admin yang disembunyikan, hilangkan seluruh ruangnya. */
+body:not(.is-admin) .view > .section:has(> .admin-only:only-child),
+body:not(.is-admin) #jadwal-mode-pelajaran > .section:has(> .admin-only:only-child),
+body:not(.is-admin) #jadwal-mode-piket > .section:has(> .admin-only:only-child){
+  display:none !important;
+}
+
+/* Admin-only button yang langsung berada di section tetap punya ruang natural. */
+body.is-admin .view > .section:has(> .admin-only:only-child),
+body.is-admin #jadwal-mode-pelajaran > .section:has(> .admin-only:only-child){
+  padding:0 !important;
+  margin-top:10px !important;
+}
+
+/* Daftar kosong: jangan tampilkan card putih besar tanpa konteks. */
+body:not(.dark) .view .card:empty{
+  min-height:0 !important;
+  padding:0 !important;
+  border:0 !important;
+  box-shadow:none !important;
+  background:transparent !important;
+}
+
+/* Card berisi daftar tetap punya ruang yang cukup, tetapi tidak terasa seperti kotak raksasa. */
+body:not(.dark) #tugas-open-list:not(:empty),
+body:not(.dark) #tugas-done-list:not(:empty),
+body:not(.dark) #jadwal-list:not(:empty),
+body:not(.dark) #kas-list:not(:empty),
+body:not(.dark) #report-list:not(:empty){
+  padding:12px 14px !important;
+}
+
+/* Heading section sedikit lebih tegas; isi tetap ringan. */
+body:not(.dark) .section-title{font-weight:800 !important;letter-spacing:-.01em;}
+body:not(.dark) .pagehead h1{color:#172033 !important;-webkit-text-fill-color:#172033 !important;}
+
+/* Dark mode: jangan mengubah patokan yang sudah ada. */
+body.dark .view .card:empty{min-height:0 !important;}
+
+@media (max-width:900px){
+  body:not(.dark) .view > .section,
+  body:not(.dark) #jadwal-mode-pelajaran > .section,
+  body:not(.dark) #jadwal-mode-piket > .section{margin-top:12px;}
+}
+</style>
