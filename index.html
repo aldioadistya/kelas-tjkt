@@ -11483,7 +11483,11 @@ Setelan
               const parts = String(selectedDate).split('-');
               if (parts.length === 3 && Number(parts[0]) === year && Number(parts[1]) === month + 1) selectedDay = String(Number(parts[2]));
           }
-          monthLabel.innerHTML = `${selectedDay ? `<span class="cal-day-label">${escapeHtml(selectedDay)}</span> ` : ''}<span class="cal-month-click" onclick="toggleCalendar('${type}', event)">${escapeHtml(MONTH_LABEL[month])}</span> <span class="cal-year-click" onclick="openMonthYearPicker('${type}', event)">${year}</span>`;
+          const selectedDateObj = selectedDate ? new Date(String(selectedDate) + 'T00:00:00') : null;
+          const selectedWeekday = selectedDateObj && !Number.isNaN(selectedDateObj.getTime()) && Number(selectedDateObj.getFullYear()) === year && Number(selectedDateObj.getMonth()) === month
+              ? selectedDateObj.toLocaleDateString('id-ID', { weekday: 'long' })
+              : '';
+          monthLabel.innerHTML = `${selectedDay ? `<span class="cal-day-label">${escapeHtml(selectedDay)}</span>` : ''}<span class="cal-date-info"><span class="cal-weekday">${selectedWeekday ? escapeHtml(selectedWeekday) : 'Kalender'}</span><span class="cal-date-main"><span class="cal-month-click" onclick="toggleCalendar('${type}', event)">${escapeHtml(MONTH_LABEL[month])}</span><span class="cal-year-click" onclick="openMonthYearPicker('${type}', event)">${year}</span></span></span>`;
       }
       document.getElementById(prefix + '-dow-row').innerHTML = DOW_LABEL.map(d => `<div class="cal-dow">${d}</div>`).join('');
       const firstDow = new Date(year, month, 1).getDay();
@@ -16014,6 +16018,81 @@ body.dark #view-settings .settings-nav button.active{background:#3b82f6!importan
 @media(max-width:520px){#view-settings .settings-nav{gap:6px!important;}#view-settings .settings-nav button{font-size:10px!important;padding:8px 10px!important;}}
 </style>
 
+
+<style id="calendar-modern-elegant-v33">
+  /* Calendar header: simple, but with a clear visual hierarchy. */
+  .cal-head{
+    min-height:78px;
+    padding:14px 18px;
+    gap:14px;
+  }
+  .cal-head > .cal-month{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:11px;
+    min-width:0;
+    line-height:1;
+  }
+  .cal-day-label{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-width:46px;
+    height:46px;
+    padding:0 9px;
+    border-radius:14px;
+    background:var(--primary);
+    color:#fff !important;
+    font-size:22px !important;
+    font-weight:900;
+    letter-spacing:-.04em;
+    box-shadow:0 5px 14px color-mix(in srgb, var(--primary) 20%, transparent);
+  }
+  .cal-date-info{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    justify-content:center;
+    gap:5px;
+    min-width:0;
+  }
+  .cal-weekday{
+    color:var(--text-2);
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:.01em;
+    line-height:1.1;
+  }
+  .cal-date-main{
+    display:flex;
+    align-items:center;
+    gap:5px;
+    white-space:nowrap;
+  }
+  .cal-month-click,
+  .cal-year-click{
+    padding:0 !important;
+    border-radius:8px;
+    color:var(--text-main);
+    font-size:14px;
+    font-weight:850;
+    line-height:1.15;
+  }
+  .cal-year-click{ color:var(--text-2); font-weight:750; }
+  .cal-month-click:hover,.cal-year-click:hover{ color:var(--primary); background:transparent !important; }
+  .cal-month-click:focus-visible,.cal-year-click:focus-visible{ outline:2px solid var(--primary); outline-offset:4px; }
+  @media screen and (max-width:900px){
+    .cal-head{min-height:68px;padding:12px 14px;gap:10px;}
+    .cal-day-label{min-width:40px;height:40px;border-radius:12px;font-size:19px !important;}
+    .cal-date-info{gap:4px;}
+    .cal-weekday{font-size:9px;}
+    .cal-month-click,.cal-year-click{font-size:12px;}
+  }
+  body.dark .cal-weekday{color:rgba(248,250,252,.72);}
+  body.dark .cal-month-click{color:#f8fafc;}
+  body.dark .cal-year-click{color:rgba(248,250,252,.72);}
+</style>
 </body>
 <!-- Kelasku compatibility patch: resilient Firestore sync + legacy fallback -->
 
