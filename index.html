@@ -16093,6 +16093,163 @@ body.dark #view-settings .settings-nav button.active{background:#3b82f6!importan
   body.dark .cal-month-click{color:#f8fafc;}
   body.dark .cal-year-click{color:rgba(248,250,252,.72);}
 </style>
+
+<style id="calendar-designer-polish-v35">
+/* Calendar header — professional product-design pass.
+   One clear surface, stronger hierarchy, restrained decoration. */
+.calendar-card .cal-head,
+.cal-card .cal-head{
+  min-height:96px !important;
+  padding:16px 18px !important;
+  grid-template-columns:42px minmax(0,1fr) 42px !important;
+  gap:16px !important;
+  border:1px solid var(--glass-border) !important;
+  border-radius:18px !important;
+  background:var(--glass-card) !important;
+  box-shadow:0 8px 24px rgba(15,23,42,.06) !important;
+  overflow:hidden !important;
+}
+.calendar-card .cal-head::after,
+.cal-card .cal-head::after{
+  display:none !important;
+}
+.calendar-card .cal-head > .cal-month,
+.cal-card .cal-head > .cal-month{
+  width:max-content !important;
+  max-width:100% !important;
+  justify-self:center !important;
+  gap:14px !important;
+  text-align:left !important;
+}
+.calendar-card .cal-day-label,
+.cal-card .cal-day-label{
+  width:58px !important;
+  min-width:58px !important;
+  height:58px !important;
+  border-radius:16px !important;
+  background:linear-gradient(145deg,#5a9bff 0%,#2563eb 100%) !important;
+  box-shadow:0 8px 20px rgba(37,99,235,.22) !important;
+  font-size:24px !important;
+  line-height:1 !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+.calendar-card .cal-date-info,
+.cal-card .cal-date-info{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:flex-start !important;
+  gap:4px !important;
+}
+.calendar-card .cal-weekday,
+.cal-card .cal-weekday{
+  font-size:10px !important;
+  font-weight:700 !important;
+  line-height:1.2 !important;
+  opacity:.72 !important;
+  letter-spacing:.02em !important;
+}
+.calendar-card .cal-date-main,
+.cal-card .cal-date-main{
+  display:flex !important;
+  align-items:baseline !important;
+  gap:7px !important;
+  white-space:nowrap !important;
+}
+.calendar-card .cal-month-click,
+.cal-card .cal-month-click{
+  font-size:15px !important;
+  font-weight:850 !important;
+  line-height:1.2 !important;
+  letter-spacing:-.01em !important;
+}
+.calendar-card .cal-year-click,
+.cal-card .cal-year-click{
+  font-size:14px !important;
+  font-weight:700 !important;
+  line-height:1.2 !important;
+  opacity:.7 !important;
+}
+.calendar-card .cal-month-click:hover,
+.calendar-card .cal-year-click:hover,
+.cal-card .cal-month-click:hover,
+.cal-card .cal-year-click:hover{
+  background:transparent !important;
+}
+.calendar-card .cal-nav-btn,
+.cal-card .cal-nav-btn{
+  width:34px !important;
+  min-width:34px !important;
+  height:34px !important;
+  border-radius:11px !important;
+  background:transparent !important;
+  border:1px solid var(--glass-border) !important;
+  font-size:13px !important;
+  box-shadow:none !important;
+}
+.calendar-card .cal-nav-btn:hover,
+.cal-card .cal-nav-btn:hover{
+  background:color-mix(in srgb,var(--primary) 7%,transparent) !important;
+}
+.calendar-card .cal-nav-btn:focus-visible,
+.cal-card .cal-nav-btn:focus-visible{
+  outline:2px solid var(--primary) !important;
+  outline-offset:2px !important;
+}
+body:not(.dark) .calendar-card .cal-head,
+body:not(.dark) .cal-card .cal-head{
+  background:linear-gradient(180deg,#ffffff 0%,#f8fbff 100%) !important;
+  border-color:#d6dee9 !important;
+  box-shadow:0 8px 24px rgba(15,23,42,.07) !important;
+}
+body:not(.dark) .calendar-card .cal-weekday,
+body:not(.dark) .cal-card .cal-weekday{color:#334155 !important;}
+body:not(.dark) .calendar-card .cal-month-click,
+body:not(.dark) .cal-card .cal-month-click{color:#172033 !important;}
+body:not(.dark) .calendar-card .cal-year-click,
+body:not(.dark) .cal-card .cal-year-click{color:#475569 !important;}
+body:not(.dark) .calendar-card .cal-nav-btn,
+body:not(.dark) .cal-card .cal-nav-btn{color:#172033 !important;background:#fff !important;}
+body.dark .calendar-card .cal-head,
+body.dark .cal-card .cal-head{
+  background:linear-gradient(180deg,#16243a 0%,#111c2f 100%) !important;
+  border-color:#34445d !important;
+  box-shadow:0 10px 26px rgba(0,0,0,.18) !important;
+}
+body.dark .calendar-card .cal-weekday,
+body.dark .cal-card .cal-weekday{color:#f8fafc !important;}
+body.dark .calendar-card .cal-month-click,
+body.dark .cal-card .cal-month-click{color:#f8fafc !important;}
+body.dark .calendar-card .cal-year-click,
+body.dark .cal-card .cal-year-click{color:#d5deea !important;}
+body.dark .calendar-card .cal-nav-btn,
+body.dark .cal-card .cal-nav-btn{color:#f8fafc !important;background:transparent !important;}
+@media(max-width:600px){
+  .calendar-card .cal-head,
+  .cal-card .cal-head{
+    min-height:82px !important;
+    padding:12px 13px !important;
+    grid-template-columns:38px minmax(0,1fr) 38px !important;
+    gap:10px !important;
+    border-radius:15px !important;
+  }
+  .calendar-card .cal-head > .cal-month,
+  .cal-card .cal-head > .cal-month{gap:10px !important;}
+  .calendar-card .cal-day-label,
+  .cal-card .cal-day-label{
+    width:46px !important;min-width:46px !important;height:46px !important;
+    border-radius:13px !important;font-size:20px !important;
+  }
+  .calendar-card .cal-month-click,
+  .cal-card .cal-month-click{font-size:13px !important;}
+  .calendar-card .cal-year-click,
+  .cal-card .cal-year-click{font-size:12px !important;}
+  .calendar-card .cal-nav-btn,
+  .cal-card .cal-nav-btn{width:30px !important;min-width:30px !important;height:30px !important;}
+}
+</style>
+
 </body>
 <!-- Kelasku compatibility patch: resilient Firestore sync + legacy fallback -->
 
