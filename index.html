@@ -22413,27 +22413,6 @@ body.kelasku-authenticated #view-jadwal > .mode-switch .mode-btn{
   }
 }
 </style>
-</body></html>`;
-    const w=window.open('','_blank','width=900,height=700');if(!w){showNotification('Popup diblokir browser. Izinkan popup untuk mencetak PDF.','warning');return;}w.document.write(html);w.document.close();w.focus();setTimeout(()=>w.print(),250);
-  };
-
-  function renderKasWorld(){
-    ensureKasHeader();
-    if(typeof original.renderKas==='function'){
-      try{original.renderKas();}catch(e){console.warn('legacy Kas render:',e)}
-    }
-    ensureKasHeader();
-    updateKasMetricNotes();
-    renderKasFoldersWorld();
-  }
-  window.renderKas=function(){renderKasWorld();};
-  window.renderKasSiswa=function(){ensureKasHeader();renderKasFoldersWorld();};
-
-  function boot(){try{renderKasWorld();}catch(e){console.warn('Kas world-class boot:',e)}}
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else setTimeout(boot,0);
-})();
-</script>
-
 
 <style id="hp-v82-mobile-grid-only">
 /* v82 — Mobile Pengumpulan HP: tampilkan mode Grid saja agar toolbar tidak penuh. */
@@ -22470,11 +22449,11 @@ body.kelasku-authenticated #view-jadwal > .mode-switch .mode-btn{
       }
     }
   }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', forceMobileGrid, {once:true});
-  else forceMobileGrid();
+  document.addEventListener('DOMContentLoaded', forceMobileGrid);
   window.addEventListener('resize', forceMobileGrid);
 })();
 </script>
+
 <style id="hp-v84-desktop-readability-mobile-simplify">
 /* v84 — Pengumpulan HP: desktop lebih terbaca, mobile lebih ringkas. */
 @media (min-width: 761px){
@@ -22528,6 +22507,8 @@ body.kelasku-authenticated #view-jadwal > .mode-switch .mode-btn{
   #view-hp .hp-filter-row button span{font-size:8px !important;min-width:19px !important;height:19px !important}
 }
 </style>
+</body>
+
 <style id="dark-mode-readability-v83">
 /* v83 — Pastikan teks pada kontrol berlatar terang tetap kontras di Dark Mode. */
 body.dark #view-hp .hp-date-switcher .hp-date-main{
@@ -22602,69 +22583,79 @@ body.dark #view-tugas .task-pro-check-btn.is-done .task-pro-check-icon{
   border-color:#22c55e !important;
 }
 </style>
-<style id="jadwal-mode-switch-final-v85">
-/* v85 — Fix final: Pelajaran / Piket adalah segmented control horizontal compact. */
-body.kelasku-authenticated #view-jadwal > .mode-switch{
+</html>`;
+    const w=window.open('','_blank','width=900,height=700');if(!w){showNotification('Popup diblokir browser. Izinkan popup untuk mencetak PDF.','warning');return;}w.document.write(html);w.document.close();w.focus();setTimeout(()=>w.print(),250);
+  };
+
+  function renderKasWorld(){
+    ensureKasHeader();
+    if(typeof original.renderKas==='function'){
+      try{original.renderKas();}catch(e){console.warn('legacy Kas render:',e)}
+    }
+    ensureKasHeader();
+    updateKasMetricNotes();
+    renderKasFoldersWorld();
+  }
+  window.renderKas=function(){renderKasWorld();};
+  window.renderKasSiswa=function(){ensureKasHeader();renderKasFoldersWorld();};
+
+  function boot(){try{renderKasWorld();}catch(e){console.warn('Kas world-class boot:',e)}}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else setTimeout(boot,0);
+})();
+</script>
+
+<style id="jadwal-v85-mobile-tab-size">
+/* v85 — Tab Pelajaran/Piket: mobile lebih besar dan mudah disentuh, desktop tetap compact. */
+#view-jadwal > .mode-switch{
   display:inline-flex !important;
   align-items:center !important;
-  justify-content:flex-start !important;
-  flex-direction:row !important;
-  width:fit-content !important;
-  max-width:100% !important;
+  justify-content:stretch !important;
+  width:min(100%, 560px) !important;
+  max-width:560px !important;
   height:40px !important;
   min-height:40px !important;
-  box-sizing:border-box !important;
   padding:4px !important;
   gap:4px !important;
-  margin:0 !important;
+  margin:8px 0 0 0 !important;
+  box-sizing:border-box !important;
   border-radius:10px !important;
   overflow:hidden !important;
-  align-self:flex-start !important;
-  flex:0 0 auto !important;
 }
-
-body.kelasku-authenticated #view-jadwal > .mode-switch .mode-btn{
+#view-jadwal > .mode-switch .mode-btn{
+  flex:1 1 0 !important;
+  width:50% !important;
+  min-width:0 !important;
+  height:32px !important;
+  min-height:32px !important;
+  margin:0 !important;
+  padding:0 16px !important;
   display:inline-flex !important;
   align-items:center !important;
   justify-content:center !important;
-  flex:0 1 260px !important;
-  width:260px !important;
-  max-width:calc((100vw - 60px) / 2) !important;
-  height:auto !important;
-  min-height:0 !important;
-  max-height:32px !important;
   box-sizing:border-box !important;
-  padding:7px 20px !important;
-  margin:0 !important;
-  line-height:1.2 !important;
-  border-radius:8px !important;
+  font-size:13px !important;
+  font-weight:800 !important;
+  line-height:1 !important;
   white-space:nowrap !important;
+  border-radius:8px !important;
 }
-
-/* Override legacy rules that used height:100% / min-height on tab buttons. */
-#view-jadwal > .mode-switch .mode-btn,
-body.kelasku-authenticated #view-jadwal > .mode-switch .mode-btn,
-body.dark #view-jadwal > .mode-switch .mode-btn,
-body:not(.dark) #view-jadwal > .mode-switch .mode-btn{
-  height:auto !important;
-  min-height:0 !important;
-}
-
-@media (max-width:620px){
-  body.kelasku-authenticated #view-jadwal > .mode-switch{
-    width:fit-content !important;
-    max-width:100% !important;
+@media(max-width:620px){
+  #view-jadwal > .mode-switch{
+    width:100% !important;
+    max-width:none !important;
+    height:48px !important;
+    min-height:48px !important;
+    padding:4px !important;
+    margin-top:8px !important;
+    border-radius:11px !important;
+  }
+  #view-jadwal > .mode-switch .mode-btn{
     height:40px !important;
     min-height:40px !important;
-    padding:4px !important;
-    gap:4px !important;
-  }
-  body.kelasku-authenticated #view-jadwal > .mode-switch .mode-btn{
-    flex:0 1 150px !important;
-    width:150px !important;
-    max-width:calc((100vw - 44px) / 2) !important;
-    padding:7px 14px !important;
-    max-height:32px !important;
+    padding:0 18px !important;
+    font-size:14px !important;
+    font-weight:800 !important;
+    border-radius:9px !important;
   }
 }
 </style>
