@@ -8125,6 +8125,457 @@ body.dark #view-tugas .task-pro-drive a{background:#172d52!important;border-colo
   #view-tugas .task-pro-clear-btn{width:auto}
 }
 </style>
+<style id="hp-command-center-v67">
+/* v67 — Penitipan Smartphone command center */
+#view-hp .hp-command-shell{display:flex;flex-direction:column;gap:16px;padding-bottom:18px}
+#view-hp .hp-command-header{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;padding:6px 2px 0}
+#view-hp .hp-command-kicker{display:flex;align-items:center;gap:7px;font-size:9px;letter-spacing:.13em;font-weight:900;color:#64748b}
+#view-hp .hp-command-live-dot{width:7px;height:7px;border-radius:50%;background:#10b981;box-shadow:0 0 0 4px rgba(16,185,129,.10);animation:hpLivePulse 1.8s ease-out infinite}
+@keyframes hpLivePulse{0%{box-shadow:0 0 0 0 rgba(16,185,129,.22)}70%{box-shadow:0 0 0 7px rgba(16,185,129,0)}100%{box-shadow:0 0 0 0 rgba(16,185,129,0)}}
+#view-hp .hp-command-title-row{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:4px}
+#view-hp .hp-command-title-row h1{font-family:var(--font-display);font-size:21px;line-height:1.12;font-weight:800;letter-spacing:-.03em;color:#0f172a}
+#view-hp .hp-command-status{display:inline-flex;align-items:center;min-height:24px;padding:4px 8px;border-radius:999px;background:#ecfdf5;border:1px solid #bbf7d0;color:#047857;font-size:8px;font-weight:900}
+#view-hp .hp-command-heading>p{margin-top:6px;font-size:10px;line-height:1.5;color:#64748b;font-weight:600}
+#view-hp .hp-command-actions{display:flex;gap:7px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+#view-hp .hp-command-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:38px;border-radius:11px;padding:0 12px;border:1px solid #e2e8f0;font-size:10px;font-weight:900;cursor:pointer;transition:transform .16s cubic-bezier(.16,1,.3,1),box-shadow .16s ease,background .16s ease}
+#view-hp .hp-command-btn:active{transform:scale(.96)}
+#view-hp .hp-command-btn-ghost{background:#fff;color:#0f172a;box-shadow:0 4px 14px rgba(15,23,42,.04)}
+#view-hp .hp-command-btn-ghost:hover{border-color:#bfdbfe;box-shadow:0 8px 20px rgba(15,23,42,.06)}
+#view-hp .hp-command-btn-primary{background:#2563eb;border-color:#2563eb;color:#fff;box-shadow:0 8px 20px rgba(37,99,235,.18)}
+#view-hp .hp-command-btn-primary:hover{background:#1d4ed8}
+#view-hp .hp-command-btn-icon{font-size:16px;line-height:1}
+#view-hp .hp-command-btn-icon-only{width:38px;padding:0;background:#fff;color:#2563eb}
+#view-hp .hp-date-strip{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 12px;border:1px solid #e2e8f0;border-radius:14px;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.03)}
+#view-hp .hp-date-context{display:grid;gap:2px;min-width:0}
+#view-hp .hp-date-overline{font-size:7px;letter-spacing:.12em;font-weight:900;color:#94a3b8}
+#view-hp .hp-date-context strong{font-size:11px;color:#0f172a;font-weight:900;letter-spacing:-.01em}
+#view-hp .hp-date-switcher{display:inline-flex;align-items:center;gap:2px;border:1px solid #e2e8f0;border-radius:999px;background:#f8fafc;padding:3px}
+#view-hp .hp-date-switcher button{width:30px;height:28px;border:0;border-radius:999px;background:transparent;color:#475569;font-size:17px;cursor:pointer;transition:transform .16s ease,background .16s ease}
+#view-hp .hp-date-switcher button:active{transform:scale(.96)}
+#view-hp .hp-date-switcher .hp-date-main{width:auto;min-width:82px;padding:0 10px;display:inline-flex;gap:6px;align-items:center;justify-content:center;background:#fff;border:1px solid #e2e8f0;color:#0f172a;font-size:9px;font-weight:900;box-shadow:0 2px 8px rgba(15,23,42,.05)}
+#view-hp .hp-date-main-chevron{font-size:10px;color:#94a3b8}
+#view-hp .hp-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+#view-hp .hp-metric-card{display:flex;align-items:center;gap:10px;min-height:72px;padding:12px;border-radius:14px;background:#fff;border:1px solid #e2e8f0;box-shadow:0 2px 10px rgba(0,0,0,.03)}
+#view-hp .hp-metric-icon{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;font-size:14px;font-weight:900;flex:0 0 32px}
+#view-hp .hp-metric-copy{display:grid;gap:3px;min-width:0}
+#view-hp .hp-metric-copy span{font-size:8px;text-transform:uppercase;letter-spacing:.05em;font-weight:900;color:#64748b}
+#view-hp .hp-metric-copy strong{font-family:var(--font-display);font-size:18px;line-height:1;font-weight:800;color:#0f172a}
+#view-hp .hp-metric-occupied .hp-metric-icon{background:#ecfdf5;color:#047857}.hp-metric-pending .hp-metric-icon{background:#fff1f2;color:#be123c}.hp-metric-excused .hp-metric-icon{background:#fffbeb;color:#b45309}
+#view-hp .hp-progress-card{padding:14px 15px;border:1px solid #e2e8f0;border-radius:14px;background:#fff;box-shadow:0 4px 20px -2px rgba(15,23,42,.04)}
+#view-hp .hp-progress-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+#view-hp .hp-progress-head>div{display:grid;gap:3px}.hp-progress-kicker{font-size:7px;letter-spacing:.12em;font-weight:900;color:#94a3b8}.hp-progress-head strong{font-size:11px;font-weight:900;color:#0f172a}.hp-progress-pct{font-family:var(--font-display);font-size:18px;font-weight:800;color:#047857}
+#view-hp .hp-progress-track{height:8px;margin-top:10px;border-radius:999px;overflow:hidden;background:#eef2f7}.hp-progress-track span{display:block;height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,#34d399 0%,#10b981 55%,#059669 100%);transition:width .35s cubic-bezier(.16,1,.3,1)}
+#view-hp .hp-progress-note{display:flex;justify-content:space-between;gap:8px;margin-top:7px;font-size:8px;color:#64748b;font-weight:700}.hp-progress-note span:last-child{color:#94a3b8}
+#view-hp .hp-view-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+#view-hp .hp-view-switcher{display:inline-flex;align-items:center;gap:2px;padding:3px;border:1px solid #e2e8f0;border-radius:11px;background:#f8fafc}
+#view-hp .hp-view-switcher button{min-height:31px;padding:0 9px;display:inline-flex;align-items:center;gap:5px;border:0;border-radius:8px;background:transparent;color:#64748b;font-size:9px;font-weight:900;cursor:pointer;transition:transform .16s ease,background .16s ease,color .16s ease}
+#view-hp .hp-view-switcher button:active{transform:scale(.96)}#view-hp .hp-view-switcher button.is-active{background:#0f172a;color:#fff;box-shadow:0 3px 8px rgba(15,23,42,.10)}
+#view-hp .hp-search-wrap{display:flex;align-items:center;gap:7px;min-width:250px;flex:1;max-width:420px;height:37px;padding:0 11px;border:1px solid #e2e8f0;border-radius:11px;background:#fff;box-shadow:0 2px 8px rgba(15,23,42,.03)}
+#view-hp .hp-search-wrap>span{font-size:13px;color:#94a3b8}.hp-search-wrap input{width:100%;border:0;outline:0;background:transparent;color:#0f172a;font-size:10px;font-weight:700}.hp-search-wrap input::placeholder{color:#94a3b8}
+#view-hp .hp-filter-row{display:flex;align-items:center;gap:5px;overflow:auto;padding-bottom:2px;scrollbar-width:none}.hp-filter-row::-webkit-scrollbar{display:none}
+#view-hp .hp-filter-row button{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;min-height:31px;padding:0 9px;border:1px solid #e2e8f0;border-radius:999px;background:#fff;color:#64748b;font-size:8px;font-weight:900;cursor:pointer;transition:transform .16s ease,background .16s ease,color .16s ease,border-color .16s ease}.hp-filter-row button:active{transform:scale(.96)}#view-hp .hp-filter-row button span{display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 4px;border-radius:999px;background:#f1f5f9;color:#64748b;font-size:7px}.hp-filter-row button.is-active{background:#0f172a;color:#fff;border-color:#0f172a}.hp-filter-row button.is-active span{background:rgba(255,255,255,.12);color:#fff}
+#view-hp .hp-command-list-wrap{min-height:90px}.hp-command-list{display:block}
+#view-hp .hp-command-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+#view-hp .hp-student-card{padding:12px;border:1px solid #e2e8f0;border-radius:14px;background:#fff;box-shadow:0 4px 20px -2px rgba(15,23,42,.05);transition:transform .18s cubic-bezier(.16,1,.3,1),box-shadow .18s ease,border-color .18s ease}.hp-student-card:active{transform:scale(.985)}.hp-student-card:hover{box-shadow:0 9px 24px -6px rgba(15,23,42,.10);border-color:#cbd5e1}
+#view-hp .hp-student-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.hp-student-roll{font-size:7px;font-weight:900;color:#64748b}.hp-slot-tag{font-size:7px;font-weight:900;color:#475569;background:#f8fafc;border:1px solid #e2e8f0;padding:4px 7px;border-radius:999px}
+#view-hp .hp-student-main{display:flex;align-items:center;gap:10px;margin-top:10px}.hp-student-avatar{width:38px;height:38px;display:grid;place-items:center;border-radius:11px;background:#eff6ff;color:#1d4ed8;font-size:10px;font-weight:900;flex:0 0 38px}.hp-student-avatar.occupied{background:#ecfdf5;color:#047857}.hp-student-avatar.excused{background:#fffbeb;color:#b45309}
+#view-hp .hp-student-copy{min-width:0;flex:1}.hp-student-name{font-size:11px;font-weight:900;line-height:1.2;color:#0f172a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.hp-student-sub{margin-top:4px;display:flex;gap:6px;flex-wrap:wrap;font-size:7px;color:#94a3b8;font-weight:700}.hp-device-dot{color:#64748b}
+#view-hp .hp-student-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:11px;padding-top:9px;border-top:1px solid #f1f5f9}.hp-status-chip{display:inline-flex;align-items:center;gap:5px;padding:5px 8px;border-radius:999px;font-size:7px;font-weight:900}.hp-status-chip.done{color:#047857;background:#ecfdf5}.hp-status-chip.pending{color:#be123c;background:#fff1f2}.hp-status-chip.excused{color:#b45309;background:#fffbeb}
+#view-hp .hp-quick-btn{border:1px solid #e2e8f0;background:#f8fafc;color:#0f172a;border-radius:9px;padding:6px 9px;font-size:7px;font-weight:900;cursor:pointer;transition:transform .16s ease,background .16s ease,border-color .16s ease}.hp-quick-btn:active{transform:scale(.96)}.hp-quick-btn.done{background:#0f172a;color:#fff;border-color:#0f172a}.hp-quick-btn.izin{background:#fffbeb;color:#92400e;border-color:#fde68a}
+#view-hp .hp-command-table{width:100%;border-collapse:separate;border-spacing:0 7px}.hp-command-table th{padding:0 10px 3px;font-size:7px;letter-spacing:.07em;text-transform:uppercase;color:#94a3b8;text-align:left}.hp-command-table td{padding:10px;border-top:1px solid #e2e8f0;border-bottom:1px solid #e2e8f0;background:#fff;font-size:8px;color:#475569;font-weight:700}.hp-command-table td:first-child{border-left:1px solid #e2e8f0;border-radius:11px 0 0 11px}.hp-command-table td:last-child{border-right:1px solid #e2e8f0;border-radius:0 11px 11px 0}.hp-table-name{font-size:9px;font-weight:900;color:#0f172a}.hp-command-table .hp-quick-btn{white-space:nowrap}
+#view-hp .hp-rack-shell{padding:14px;border-radius:16px;background:#0f172a;box-shadow:0 12px 28px rgba(2,6,23,.16)}.hp-rack-head{display:flex;align-items:end;justify-content:space-between;gap:10px;color:#f8fafc}.hp-rack-head strong{font-family:var(--font-display);font-size:15px}.hp-rack-head span{font-size:7px;color:#cbd5e1;font-weight:700}.hp-rack-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin-top:12px}.hp-rack-slot{min-height:82px;padding:8px;border:1px solid #334155;border-radius:11px;background:#111c2f;color:#cbd5e1;cursor:pointer;transition:transform .16s cubic-bezier(.16,1,.3,1),border-color .16s ease,background .16s ease}.hp-rack-slot:active{transform:scale(.96)}.hp-rack-slot.empty{cursor:default;background:#0b1220;color:#64748b}.hp-rack-slot.occupied{border-color:#166534;background:linear-gradient(180deg,#10271f 0%,#0e201b 100%);box-shadow:inset 0 0 0 1px rgba(16,185,129,.05)}.hp-rack-slot.excused{border-color:#6b5a28;background:#211c11}.hp-rack-num{font-size:7px;font-weight:900;color:#94a3b8}.hp-rack-slot.occupied .hp-rack-num{color:#86efac}.hp-rack-name{margin-top:8px;font-size:8px;font-weight:900;line-height:1.2;color:#f8fafc;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.hp-rack-state{margin-top:6px;font-size:6.5px;font-weight:800;color:#94a3b8}.hp-rack-slot.occupied .hp-rack-state{color:#86efac}.hp-rack-slot.excused .hp-rack-state{color:#fcd34d}
+#view-hp .hp-command-empty{display:grid;place-items:center;text-align:center;padding:48px 18px;border:1px dashed #cbd5e1;border-radius:16px;background:#fff;box-shadow:0 4px 20px -2px rgba(15,23,42,.03)}.hp-command-doodle{width:70px;height:48px;position:relative;margin-bottom:12px}.hp-command-doodle:before{content:"";position:absolute;left:9px;top:13px;width:52px;height:25px;border:2px solid #cbd5e1;border-radius:12px}.hp-command-doodle:after{content:"";position:absolute;left:22px;top:4px;width:27px;height:12px;border:2px solid #cbd5e1;border-bottom:0;border-radius:9px 9px 0 0}.hp-command-empty strong{font-size:12px;color:#0f172a}.hp-command-empty span{margin-top:5px;font-size:8px;line-height:1.5;color:#94a3b8}
+#view-hp .hp-calendar-drawer{display:none;margin-top:1px}.hp-calendar-drawer.is-open{display:block}.hp-calendar-drawer-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}.hp-calendar-drawer-head>div{display:grid;gap:2px}.hp-calendar-drawer-head strong{font-size:11px;color:#0f172a}.hp-calendar-drawer-head button{width:28px;height:28px;border:1px solid #e2e8f0;border-radius:9px;background:#fff;color:#64748b;cursor:pointer}
+#view-hp .hp-calendar-drawer .cal-card{box-shadow:0 4px 20px -2px rgba(15,23,42,.04)}
+#view-hp .hp-edit-meta-grid{display:grid;grid-template-columns:1.4fr .8fr;gap:10px}.hp-edit-meta-grid .field{margin-top:0}
+#modal-hp-edit .hp-edit-status-grid{grid-template-columns:repeat(3,1fr)}#modal-hp-edit .hp-edit-status-btn{min-height:42px;font-size:9px}
+#modal-roster-status .roster-status-choices{grid-template-columns:repeat(3,1fr)}#modal-roster-status .roster-choice-btn.excused{color:#92400e;background:#fffbeb;border:1px solid #fde68a}
+/* Dark */
+body.dark #view-hp .hp-command-kicker{color:#94a3b8}body.dark #view-hp .hp-command-title-row h1,body.dark #view-hp .hp-date-context strong,body.dark #view-hp .hp-metric-copy strong,body.dark #view-hp .hp-progress-head strong,body.dark #view-hp .hp-student-name,body.dark #view-hp .hp-table-name,body.dark #view-hp .hp-calendar-drawer-head strong{color:#f8fafc}
+body.dark #view-hp .hp-command-status{background:#052e22;border-color:#166534;color:#86efac}body.dark #view-hp .hp-command-heading>p,body.dark #view-hp .hp-date-overline,body.dark #view-hp .hp-progress-kicker{color:#94a3b8}
+body.dark #view-hp .hp-command-btn-ghost,body.dark #view-hp .hp-command-btn-icon-only,body.dark #view-hp .hp-date-strip,body.dark #view-hp .hp-progress-card,body.dark #view-hp .hp-metric-card,body.dark #view-hp .hp-student-card,body.dark #view-hp .hp-search-wrap,body.dark #view-hp .hp-filter-row button,body.dark #view-hp .hp-command-table td,body.dark #view-hp .hp-command-empty,body.dark #view-hp .hp-calendar-drawer .cal-card{background:#1e293b;color:#f8fafc;border-color:#334155}
+body.dark #view-hp .hp-date-switcher,body.dark #view-hp .hp-view-switcher{background:#111c2f;border-color:#334155}body.dark #view-hp .hp-date-switcher .hp-date-main{background:#f8fafc;color:#0f172a;border-color:#f8fafc}body.dark #view-hp .hp-date-switcher button{color:#cbd5e1}
+body.dark #view-hp .hp-metric-occupied .hp-metric-icon{background:#052e22;color:#86efac}body.dark #view-hp .hp-metric-pending .hp-metric-icon{background:#3f1720;color:#fda4af}body.dark #view-hp .hp-metric-excused .hp-metric-icon{background:#2d2411;color:#fcd34d}
+body.dark #view-hp .hp-progress-track{background:#0f172a}body.dark #view-hp .hp-progress-note{color:#cbd5e1}body.dark #view-hp .hp-progress-note span:last-child{color:#94a3b8}
+body.dark #view-hp .hp-search-wrap input{color:#f8fafc}body.dark #view-hp .hp-search-wrap input::placeholder{color:#94a3b8}body.dark #view-hp .hp-filter-row button{color:#cbd5e1}body.dark #view-hp .hp-filter-row button span{background:#16243a;color:#94a3b8}body.dark #view-hp .hp-filter-row button.is-active{background:#f8fafc;color:#0f172a;border-color:#f8fafc}body.dark #view-hp .hp-filter-row button.is-active span{background:#e2e8f0;color:#475569}
+body.dark #view-hp .hp-student-card{box-shadow:0 8px 24px -6px rgba(2,6,23,.22)}body.dark #view-hp .hp-student-head,body.dark #view-hp .hp-student-sub{color:#94a3b8}body.dark #view-hp .hp-slot-tag{background:#16243a;border-color:#334155;color:#cbd5e1}body.dark #view-hp .hp-student-avatar{background:#172554;color:#93c5fd}body.dark #view-hp .hp-student-avatar.occupied{background:#052e22;color:#86efac}body.dark #view-hp .hp-student-avatar.excused{background:#2d2411;color:#fcd34d}body.dark #view-hp .hp-student-footer{border-top-color:#334155}body.dark #view-hp .hp-quick-btn{background:#16243a;color:#e2e8f0;border-color:#334155}
+body.dark #view-hp .hp-command-table td{color:#cbd5e1}body.dark #view-hp .hp-command-table td:first-child{border-left-color:#334155}body.dark #view-hp .hp-command-table td:last-child{border-right-color:#334155}body.dark #view-hp .hp-command-table td{border-top-color:#334155;border-bottom-color:#334155}
+body.dark #view-hp .hp-command-empty span{color:#94a3b8}body.dark #view-hp .hp-command-empty strong{color:#f8fafc}body.dark #view-hp .hp-command-doodle:before,body.dark #view-hp .hp-command-doodle:after{border-color:#475569}
+@media(max-width:900px){#view-hp .hp-command-header{flex-direction:column}#view-hp .hp-command-actions{width:100%;justify-content:flex-start}#view-hp .hp-command-btn-icon-only{display:none}#view-hp .hp-command-title-row h1{font-size:19px}}
+@media(max-width:680px){#view-hp .hp-metrics{grid-template-columns:1fr}.hp-metric-card{min-height:64px}#view-hp .hp-date-strip{align-items:flex-start}#view-hp .hp-view-toolbar{align-items:stretch;flex-direction:column}#view-hp .hp-search-wrap{max-width:none;min-width:0}.hp-command-grid{grid-template-columns:1fr 1fr!important}.hp-rack-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.hp-rack-slot{min-height:74px}#view-hp .hp-edit-meta-grid{grid-template-columns:1fr}#modal-hp-edit .hp-edit-status-grid,#modal-roster-status .roster-status-choices{grid-template-columns:1fr}}
+@media(max-width:420px){.hp-command-grid{grid-template-columns:1fr!important}.hp-rack-grid{grid-template-columns:repeat(3,minmax(0,1fr))}#view-hp .hp-command-btn{flex:1}.hp-command-actions{width:100%}}
+</style>
+
+<style id="hp-command-center-v67-extra">
+#view-hp .hp-command-status.is-history{background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8}
+#modal-hp-scan .hp-scan-modal{max-width:420px}.hp-scan-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.hp-scan-top h3{font-family:var(--font-display);font-size:18px;color:var(--text-main);margin-top:2px}.hp-scan-top p{margin-top:5px;font-size:9px;line-height:1.5;color:var(--text-soft)}.hp-scan-kicker{font-size:7px;letter-spacing:.13em;color:#64748b;font-weight:900}.hp-scan-close{width:28px;height:28px;border:1px solid var(--glass-border);border-radius:9px;background:var(--glass-card);color:var(--text-soft);cursor:pointer}.hp-scan-frame{position:relative;height:190px;margin:14px 0;padding:16px;display:grid;place-items:center;background:#0f172a;border-radius:16px;overflow:hidden}.hp-scan-frame::before{content:"";position:absolute;inset:35px 55px;border:1px solid rgba(255,255,255,.16);border-radius:14px}.hp-scan-crosshair{position:relative;z-index:2;width:52px;height:52px;display:grid;place-items:center;border:1px solid rgba(255,255,255,.25);border-radius:13px;color:#dbeafe;font-size:22px}.hp-scan-pulse{position:absolute;width:72px;height:72px;border-radius:16px;border:2px solid rgba(96,165,250,.70);animation:hpScanPulse 1.6s ease-out infinite}.hp-scan-frame-label{position:absolute;bottom:16px;left:0;right:0;text-align:center;font-size:8px;color:#cbd5e1;font-weight:700}.hp-scan-frame-corner{position:absolute;width:16px;height:16px;border-color:#60a5fa;border-style:solid}.hp-scan-frame-corner.tl{top:42px;left:62px;border-width:2px 0 0 2px}.hp-scan-frame-corner.tr{top:42px;right:62px;border-width:2px 2px 0 0}.hp-scan-frame-corner.bl{bottom:42px;left:62px;border-width:0 0 2px 2px}.hp-scan-frame-corner.br{bottom:42px;right:62px;border-width:0 2px 2px 0}@keyframes hpScanPulse{0%{transform:scale(.82);opacity:.35}70%{transform:scale(1.18);opacity:0}100%{transform:scale(1.18);opacity:0}}.hp-scan-meta{display:flex;justify-content:space-between;gap:10px;padding:9px 10px;border:1px solid var(--glass-border);border-radius:10px;background:var(--color-alpha-025);font-size:8px;color:var(--text-soft)}.hp-scan-meta strong{color:var(--text-main)}
+.hp-confetti{position:fixed;inset:0;pointer-events:none;z-index:9999;overflow:hidden}.hp-confetti span{position:absolute;top:-18px;width:7px;height:12px;border-radius:2px;background:#3b82f6;animation:hpConfettiFall 1.4s cubic-bezier(.16,1,.3,1) forwards;transform:rotate(0)}.hp-confetti span:nth-child(3n){background:#10b981}.hp-confetti span:nth-child(3n+1){background:#f59e0b}.hp-confetti span:nth-child(4n){background:#e11d48}@keyframes hpConfettiFall{0%{transform:translate3d(0,0,0) rotate(0);opacity:1}100%{transform:translate3d(var(--x),105vh,0) rotate(var(--r));opacity:0}}
+body.dark #view-hp .hp-command-status.is-history{background:#172554;border-color:#29406b;color:#bfdbfe}body.dark .hp-scan-top h3{color:#f8fafc}body.dark .hp-scan-meta strong{color:#f8fafc}body.dark .hp-scan-meta{background:#16243a}
+</style>
+
+
+<style id="kelasku-worldclass-v68">
+/* =========================================================
+   KELASKU V68 — GLOBAL PRODUCT SYSTEM
+   Purpose: unify all modules around one human, tactile shell.
+   Existing module-specific renderers remain intact.
+   ========================================================= */
+body.kelasku-authenticated{
+  --ks-bg:#f8fafc;
+  --ks-surface:#ffffff;
+  --ks-surface-2:#f1f5f9;
+  --ks-border:#e2e8f0;
+  --ks-border-strong:#cbd5e1;
+  --ks-text:#0f172a;
+  --ks-muted:#64748b;
+  --ks-soft:#94a3b8;
+  --ks-primary:#4338ca;
+  --ks-primary-soft:#eef2ff;
+  --ks-positive:#10b981;
+  --ks-positive-soft:#ecfdf5;
+  --ks-negative:#f43f5e;
+  --ks-negative-soft:#fff1f2;
+  --ks-amber:#d97706;
+  --ks-amber-soft:#fffbeb;
+  --ks-shadow:0 4px 20px -2px rgba(15,23,42,.05);
+  --ks-shadow-lift:0 10px 30px -8px rgba(15,23,42,.14);
+  background:var(--ks-bg) !important;
+  color:var(--ks-text);
+  font-family:'Plus Jakarta Sans',Inter,system-ui,sans-serif;
+}
+body.kelasku-authenticated.dark{
+  --ks-bg:#0f172a;
+  --ks-surface:#1e293b;
+  --ks-surface-2:#162235;
+  --ks-border:#334155;
+  --ks-border-strong:#475569;
+  --ks-text:#f8fafc;
+  --ks-muted:#cbd5e1;
+  --ks-soft:#94a3b8;
+  --ks-primary:#818cf8;
+  --ks-primary-soft:#242348;
+  --ks-positive:#34d399;
+  --ks-positive-soft:#113428;
+  --ks-negative:#fb7185;
+  --ks-negative-soft:#3a1822;
+  --ks-amber:#fbbf24;
+  --ks-amber-soft:#3b2d0b;
+  --ks-shadow:0 6px 24px -8px rgba(2,6,23,.35);
+  --ks-shadow-lift:0 16px 34px -10px rgba(2,6,23,.48);
+}
+
+body.kelasku-authenticated .phone{
+  background:var(--ks-bg) !important;
+  color:var(--ks-text);
+  border:0;
+}
+body.kelasku-authenticated .screen{
+  background:transparent !important;
+  color:var(--ks-text);
+  scroll-behavior:smooth;
+}
+body.kelasku-authenticated .view{
+  color:var(--ks-text);
+}
+body.kelasku-authenticated .pagehead h1,
+body.kelasku-authenticated .pagehead p,
+body.kelasku-authenticated .section-title,
+body.kelasku-authenticated .section-kicker,
+body.kelasku-authenticated .field label,
+body.kelasku-authenticated .row-title,
+body.kelasku-authenticated .tx-title,
+body.kelasku-authenticated .stat-value,
+body.kelasku-authenticated .stat-label,
+body.kelasku-authenticated .empty{
+  color:var(--ks-text) !important;
+}
+body.kelasku-authenticated .pagehead p,
+body.kelasku-authenticated .field-hint,
+body.kelasku-authenticated .row-sub,
+body.kelasku-authenticated .tx-sub,
+body.kelasku-authenticated .stat-label{
+  color:var(--ks-muted) !important;
+}
+
+/* Unified surface system */
+body.kelasku-authenticated .card,
+body.kelasku-authenticated .stat-card,
+body.kelasku-authenticated .kas-pro-metric,
+body.kelasku-authenticated .kas-folder,
+body.kelasku-authenticated .kas-pro-table,
+body.kelasku-authenticated .timeline-card,
+body.kelasku-authenticated .hp-slot,
+body.kelasku-authenticated .task-pro-card,
+body.kelasku-authenticated .report-item,
+body.kelasku-authenticated .piket-person,
+body.kelasku-authenticated .jadwal-card{
+  border-color:var(--ks-border) !important;
+  box-shadow:var(--ks-shadow) !important;
+}
+body.kelasku-authenticated .card:hover,
+body.kelasku-authenticated .stat-card:hover,
+body.kelasku-authenticated .kas-pro-metric:hover,
+body.kelasku-authenticated .hp-slot:hover,
+body.kelasku-authenticated .task-pro-card:hover,
+body.kelasku-authenticated .timeline-card:hover,
+body.kelasku-authenticated .jadwal-card:hover{
+  box-shadow:var(--ks-shadow-lift) !important;
+}
+body.kelasku-authenticated .btn,
+body.kelasku-authenticated .fab-add,
+body.kelasku-authenticated .section-action,
+body.kelasku-authenticated .mode-btn,
+body.kelasku-authenticated .day-chip,
+body.kelasku-authenticated .toggle-btn,
+body.kelasku-authenticated .section-link,
+body.kelasku-authenticated .bulk-all-btn{
+  transition:transform .18s cubic-bezier(.16,1,.3,1),box-shadow .18s ease,background .18s ease,border-color .18s ease,color .18s ease !important;
+}
+body.kelasku-authenticated .btn:active,
+body.kelasku-authenticated .fab-add:active,
+body.kelasku-authenticated .section-action:active,
+body.kelasku-authenticated .mode-btn:active,
+body.kelasku-authenticated .day-chip:active,
+body.kelasku-authenticated .toggle-btn:active,
+body.kelasku-authenticated .section-link:active,
+body.kelasku-authenticated .bulk-all-btn:active{
+  transform:scale(.97) !important;
+}
+
+/* Global sticky product header */
+.app-global-header{
+  position:relative;
+  z-index:90;
+  min-height:82px;
+  display:flex;
+  align-items:center;
+  padding:14px 22px;
+  border-bottom:1px solid rgba(226,232,240,.82);
+  background:rgba(255,255,255,.84);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  box-shadow:0 1px 0 rgba(255,255,255,.55);
+}
+.app-global-header-inner{
+  width:100%;
+  max-width:1280px;
+  margin:0 auto;
+  display:flex;
+  align-items:center;
+  gap:18px;
+}
+.app-global-heading{min-width:0;flex:1;display:flex;flex-direction:column;gap:3px}
+.app-breadcrumb{font-size:9px;line-height:1.1;font-weight:800;letter-spacing:.07em;color:#94a3b8;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.app-global-title-row{display:flex;align-items:center;gap:9px;min-width:0}
+.app-global-title{font-size:18px;line-height:1.15;font-weight:800;letter-spacing:-.03em;color:#0f172a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.app-global-subtitle{font-size:10.5px;line-height:1.35;color:#64748b;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.app-global-tools{display:flex;align-items:center;justify-content:flex-end;gap:9px;min-width:0}
+.app-global-actions{display:flex;align-items:center;justify-content:flex-end;gap:7px;min-width:0;flex-wrap:wrap}
+.app-global-actions:empty{display:none}
+.app-global-action,
+.app-global-actions .fab-add,
+.app-global-actions .jadwal-pro-add,
+.app-global-actions .task-pro-primary,
+.app-global-actions .hp-command-btn,
+.app-global-actions .piket-action-btn,
+.app-global-actions .section-action{
+  width:auto !important;
+  min-width:0 !important;
+  min-height:36px !important;
+  padding:9px 12px !important;
+  border-radius:10px !important;
+  border:1px solid transparent !important;
+  font-size:10px !important;
+  font-weight:800 !important;
+  white-space:nowrap !important;
+  box-shadow:0 5px 14px rgba(67,56,202,.16) !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:6px !important;
+}
+.app-global-actions .fab-add,
+.app-global-actions .jadwal-pro-add,
+.app-global-actions .task-pro-primary,
+.app-global-actions .hp-command-btn-primary,
+.app-global-actions .piket-action-primary,
+.app-global-actions .section-action{
+  background:#4338ca !important;color:#fff !important;border-color:#4338ca !important;
+}
+.app-global-actions .hp-command-btn-ghost,
+.app-global-actions .piket-action-secondary{
+  background:#fff !important;color:#0f172a !important;border-color:#e2e8f0 !important;box-shadow:0 3px 12px rgba(15,23,42,.04) !important;
+}
+.app-global-actions .hp-command-btn-icon-only{display:none !important}
+
+.app-global-search{
+  position:relative;
+  width:min(250px,23vw);
+  min-width:180px;
+  flex:0 1 250px;
+}
+.app-global-search .dashboard-search{position:relative;width:100%;margin:0}
+.app-global-search .home-search-input{
+  width:100% !important;height:38px !important;
+  padding:0 52px 0 34px !important;
+  background:#f8fafc !important;
+  border:1px solid #e2e8f0 !important;
+  border-radius:10px !important;
+  color:#0f172a !important;
+  font-size:11px !important;font-weight:600 !important;
+}
+.app-global-search .dashboard-search-icon{left:11px !important;color:#64748b !important}
+.app-global-search .dashboard-search-kbd{right:9px !important;top:50% !important;transform:translateY(-50%);font-size:9px !important;color:#94a3b8 !important;background:transparent !important;border:0 !important;padding:0 !important}
+.app-global-search .global-search-results{position:absolute;top:43px;left:0;right:0;z-index:120;max-height:340px;overflow:auto;padding:5px;background:rgba(255,255,255,.96);border:1px solid #e2e8f0;border-radius:12px;box-shadow:0 16px 40px rgba(15,23,42,.12)}
+.app-global-search .global-search-item{padding:9px 10px;border:0;border-radius:8px;background:transparent}
+.app-global-search .global-search-item:hover{background:#f8fafc}
+
+.app-profile-wrap{position:relative;flex:0 0 auto}
+.app-profile-toggle{display:flex;align-items:center;gap:8px;padding:5px 7px 5px 8px;border:1px solid #e2e8f0;border-radius:12px;background:#fff;cursor:pointer;transition:transform .18s cubic-bezier(.16,1,.3,1),box-shadow .18s ease,border-color .18s ease}
+.app-profile-toggle:active{transform:scale(.97)}
+.app-profile-toggle:hover{box-shadow:0 6px 18px rgba(15,23,42,.06);border-color:#cbd5e1}
+.app-profile-toggle .dashboard-user-meta{display:flex !important;flex-direction:column;min-width:0;text-align:right}
+.app-profile-toggle .dashboard-user-meta strong{font-size:10px;color:#0f172a;line-height:1.1}
+.app-profile-toggle .dashboard-user-meta span{font-size:8px;color:#64748b;line-height:1.2;margin-top:2px}
+.app-profile-toggle .dashboard-user-avatar{width:30px !important;height:30px !important;border-radius:10px !important;border:0 !important;background:#eef2ff !important;color:#4338ca !important;font-size:10px !important;box-shadow:none !important;cursor:pointer !important}
+.app-profile-caret{font-size:10px;color:#94a3b8;line-height:1}
+.app-profile-menu{position:absolute;top:calc(100% + 8px);right:0;width:210px;padding:6px;background:rgba(255,255,255,.98);border:1px solid #e2e8f0;border-radius:12px;box-shadow:0 18px 46px rgba(15,23,42,.15);display:none}
+.app-profile-menu.open{display:block;animation:appMenuIn .18s cubic-bezier(.16,1,.3,1)}
+@keyframes appMenuIn{from{opacity:0;transform:translateY(-4px) scale(.98)}to{opacity:1;transform:none}}
+.app-profile-menu button{width:100%;display:flex;align-items:center;gap:9px;padding:9px 10px;border:0;border-radius:8px;background:transparent;color:#0f172a;font:inherit;font-size:10px;font-weight:700;text-align:left;cursor:pointer}
+.app-profile-menu button:hover{background:#f8fafc}
+.app-profile-menu .danger{color:#be123c}
+
+/* Move old page-local CTA containers out of the visual rhythm */
+body.kelasku-authenticated .app-moved-source{display:inline-flex !important}
+body.kelasku-authenticated .app-legacy-hidden{display:none !important}
+body.kelasku-authenticated .dashboard-topbar{display:none !important}
+body.kelasku-authenticated .screen{padding-top:20px}
+body.kelasku-authenticated .view > .pagehead{padding-top:4px}
+body.kelasku-authenticated .view > .pagehead h1{text-transform:none}
+
+/* Module polish */
+body.kelasku-authenticated input,
+body.kelasku-authenticated select,
+body.kelasku-authenticated textarea{
+  font-family:'Plus Jakarta Sans',Inter,system-ui,sans-serif;
+}
+body.kelasku-authenticated input::placeholder,
+body.kelasku-authenticated textarea::placeholder{color:#94a3b8;opacity:1}
+body.kelasku-authenticated .pagehead{margin-bottom:2px}
+body.kelasku-authenticated .section{margin-top:18px}
+body.kelasku-authenticated .section-head{gap:10px}
+body.kelasku-authenticated .section-link{border-color:var(--ks-border) !important;background:var(--ks-surface) !important;color:var(--ks-text) !important}
+body.kelasku-authenticated .btn-primary,
+body.kelasku-authenticated .fab-add{background:var(--ks-primary) !important;border-color:var(--ks-primary) !important;color:#fff !important}
+body.kelasku-authenticated .btn-ghost,
+body.kelasku-authenticated .section-action{background:var(--ks-surface) !important;border-color:var(--ks-border) !important;color:var(--ks-text) !important}
+
+/* Warm, coherent metrics */
+body.kelasku-authenticated .kas-pro-metric,
+body.kelasku-authenticated .hp-slot,
+body.kelasku-authenticated .task-pro-card,
+body.kelasku-authenticated .timeline-card,
+body.kelasku-authenticated .jadwal-card{background:var(--ks-surface) !important}
+body.kelasku-authenticated .kas-pro-metric .kpm-in .kpm-icon{background:var(--ks-positive-soft) !important;color:var(--ks-positive) !important}
+body.kelasku-authenticated .kas-pro-metric .kpm-out .kpm-icon{background:var(--ks-negative-soft) !important;color:var(--ks-negative) !important}
+body.kelasku-authenticated .kas-pro-metric .kpm-bal .kpm-icon{background:var(--ks-primary-soft) !important;color:var(--ks-primary) !important}
+
+/* Preserve specialized hero cards, remove excessive dark default in light mode */
+body.kelasku-authenticated:not(.dark) .hero.dashboard-hero,
+body.kelasku-authenticated:not(.dark) .balance-card{box-shadow:0 14px 32px -12px rgba(15,23,42,.18) !important}
+
+/* Dark mode */
+body.kelasku-authenticated.dark .app-global-header{background:rgba(15,23,42,.84);border-bottom-color:rgba(51,65,85,.8);box-shadow:0 1px 0 rgba(255,255,255,.02)}
+body.kelasku-authenticated.dark .app-breadcrumb{color:#94a3b8}
+body.kelasku-authenticated.dark .app-global-title{color:#f8fafc}
+body.kelasku-authenticated.dark .app-global-subtitle{color:#cbd5e1}
+body.kelasku-authenticated.dark .app-global-search .home-search-input{background:#111c2f !important;border-color:#334155 !important;color:#f8fafc !important}
+body.kelasku-authenticated.dark .app-global-search .dashboard-search-icon{color:#94a3b8 !important}
+body.kelasku-authenticated.dark .app-global-search .global-search-results{background:#111c2f;border-color:#334155;box-shadow:0 18px 46px rgba(2,6,23,.42)}
+body.kelasku-authenticated.dark .app-global-search .global-search-item:hover{background:#16243a}
+body.kelasku-authenticated.dark .app-profile-toggle{background:#111c2f;border-color:#334155}
+body.kelasku-authenticated.dark .app-profile-toggle .dashboard-user-meta strong{color:#f8fafc}
+body.kelasku-authenticated.dark .app-profile-toggle .dashboard-user-meta span{color:#cbd5e1}
+body.kelasku-authenticated.dark .app-profile-toggle .dashboard-user-avatar{background:#242348 !important;color:#a5b4fc !important}
+body.kelasku-authenticated.dark .app-profile-menu{background:#111c2f;border-color:#334155;box-shadow:0 20px 48px rgba(2,6,23,.45)}
+body.kelasku-authenticated.dark .app-profile-menu button{color:#f8fafc}
+body.kelasku-authenticated.dark .app-profile-menu button:hover{background:#16243a}
+body.kelasku-authenticated.dark .app-global-actions .hp-command-btn-ghost,
+body.kelasku-authenticated.dark .app-global-actions .piket-action-secondary{background:#111c2f !important;color:#f8fafc !important;border-color:#334155 !important}
+
+/* Desktop shell: sidebar + scrollable canvas + persistent header */
+@media(min-width:901px){
+  body.kelasku-authenticated .phone{display:grid !important;grid-template-columns:255px minmax(0,1fr) !important;grid-template-rows:100vh !important}
+  body.kelasku-authenticated .desktop-sidebar{grid-column:1 !important;grid-row:1 !important;background:#fff !important;border-right:1px solid var(--ks-border) !important}
+  body.kelasku-authenticated.dark .desktop-sidebar{background:#111827 !important;border-right-color:#273449 !important}
+  body.kelasku-authenticated .screen{grid-column:2 !important;grid-row:1 !important;min-width:0 !important;height:100vh !important;overflow-y:auto !important;padding:102px 30px 34px !important}
+  body.kelasku-authenticated .app-global-header{grid-column:2;grid-row:1;align-self:start;position:relative;min-width:0;width:100%;margin:0;z-index:95}
+  body.kelasku-authenticated .desktop-sidebar{z-index:100}
+  body.kelasku-authenticated .view{max-width:1200px}
+}
+@media(min-width:1201px){
+  body.kelasku-authenticated .desktop-sidebar{width:268px !important}
+  body.kelasku-authenticated .phone{grid-template-columns:268px minmax(0,1fr) !important}
+  body.kelasku-authenticated .screen{padding-left:38px !important;padding-right:38px !important}
+}
+
+/* Mobile shell */
+@media(max-width:900px){
+  body.kelasku-authenticated .app-global-header{min-height:72px;padding:10px 14px;background:rgba(248,250,252,.92);border-bottom-color:var(--ks-border)}
+  body.kelasku-authenticated.dark .app-global-header{background:rgba(15,23,42,.92)}
+  .app-global-header-inner{gap:9px;align-items:flex-start}
+  .app-global-title{font-size:15px}
+  .app-global-subtitle{display:none}
+  .app-breadcrumb{font-size:7px}
+  .app-global-tools{gap:6px;flex:0 0 auto}
+  .app-global-search{width:40px;min-width:40px;flex:0 0 40px}
+  .app-global-search .home-search-input{width:40px !important;padding:0 0 0 34px !important;color:transparent !important;cursor:pointer !important}
+  .app-global-search .dashboard-search-kbd{display:none}
+  .app-global-search .global-search-results{left:auto;right:-52px;width:280px;top:42px}
+  .app-profile-toggle{padding:4px}
+  .app-profile-toggle .dashboard-user-meta{display:none !important}
+  .app-profile-toggle .dashboard-user-avatar{width:32px !important;height:32px !important}
+  .app-profile-caret{display:none}
+  .app-global-actions{gap:5px}
+  .app-global-actions .fab-add,
+  .app-global-actions .jadwal-pro-add,
+  .app-global-actions .task-pro-primary,
+  .app-global-actions .hp-command-btn,
+  .app-global-actions .piket-action-btn,
+  .app-global-actions .section-action{min-height:32px !important;padding:7px 9px !important;font-size:9px !important}
+  body.kelasku-authenticated .screen{padding:12px 14px 18px !important}
+  body.kelasku-authenticated .view > .pagehead{padding-top:3px}
+}
+@media(max-width:620px){
+  .app-global-header-inner{align-items:center}
+  .app-global-heading{min-width:0}
+  .app-global-title-row{min-width:0}
+  .app-global-title{max-width:52vw}
+  .app-global-actions .hp-command-btn span:last-child,
+  .app-global-actions .piket-action-btn span:last-child{display:none}
+}
+
+/* The global header becomes the single source of page identity; old generic heads stay out of the way. */
+body.kelasku-authenticated .view > .pagehead{display:none !important}
+body.kelasku-authenticated #view-hp .hp-command-header{display:none !important}
+body.kelasku-authenticated #view-jadwal .jadwal-pro-head{display:none !important}
+body.kelasku-authenticated #view-jadwal .piket-actionbar{display:none !important}
+body.kelasku-authenticated #view-kas > .section:has(.fab-add[onclick*="openKasAddModal"]),
+body.kelasku-authenticated #view-laporan > .section:has(.fab-add[onclick*="openReportModal"]){display:none !important}
+body.kelasku-authenticated .app-global-actions .app-action-source-wrap:empty{display:none !important}
+
+/* A tiny live clock keeps the shell feeling alive without competing with the page title. */
+.app-global-clock{display:inline-flex;align-items:center;gap:5px;padding:4px 7px;border-radius:999px;background:#f8fafc;color:#64748b;border:1px solid #e2e8f0;font-size:8px;font-weight:800;white-space:nowrap}
+.app-global-clock i{width:5px;height:5px;border-radius:50%;background:#10b981}
+body.kelasku-authenticated.dark .app-global-clock{background:#111c2f;border-color:#334155;color:#cbd5e1}
+
+/* Reduced motion respects accessibility */
+@media(prefers-reduced-motion:reduce){
+  body.kelasku-authenticated *{scroll-behavior:auto !important;transition:none !important;animation:none !important}
+}
+</style>
+
 </head>
 
 <body>
@@ -8623,78 +9074,100 @@ X TJKT 1
 
 </div>
 <div class="view" id="view-hp">
-  <div class="pagehead">
-    <h1>
-      Pengumpulan HP
-    </h1>
-    <p>
-      Absensi kedisiplinan pengumpulan smartphone
-    </p>
-  </div>
-  <div class="card cal-card" id="hp-cal-card">
-    <div class="cal-head">
-      <div class="cal-nav-btn" onclick="calShift(-1)">
-        ‹
+  <div class="hp-command-shell">
+    <header class="hp-command-header">
+      <div class="hp-command-heading">
+        <div class="hp-command-kicker"><span class="hp-command-live-dot"></span> PENITIPAN SMARTPHONE</div>
+        <div class="hp-command-title-row">
+          <h1>Penitipan Smartphone - Kelas X-1</h1>
+          <span class="hp-command-status" id="hp-command-status-badge">Hari ini</span>
+        </div>
+        <p id="hp-command-status-subtitle">Memantau pengumpulan HP kelas secara real-time.</p>
       </div>
-      <div class="cal-month" id="cal-month-label">
-        <span class="cal-month-click" onclick="toggleCalendar('hp', event)">September
-      </span>
-      <span class="cal-year-click" onclick="openMonthYearPicker('hp', event)">2026
-    </span>
-  </div>
-  <div class="cal-btn-group">
-    <div class="cal-nav-btn" onclick="calShift(1)">
-      ›
+      <div class="hp-command-actions admin-only">
+        <button type="button" class="hp-command-btn hp-command-btn-ghost" onclick="openHpScanModal()" title="Simulasikan scan barcode/QR">
+          <span class="hp-command-btn-icon">📷</span><span>Scan Barcode QR</span>
+        </button>
+        <button type="button" class="hp-command-btn hp-command-btn-primary" onclick="markAllHpCollected()">
+          <span>＋</span><span>Kumpul Semua</span>
+        </button>
+        <button type="button" class="hp-command-btn hp-command-btn-icon-only" onclick="openStudentModal()" aria-label="Tambah siswa">＋</button>
+      </div>
+    </header>
+
+    <div class="hp-date-strip">
+      <div class="hp-date-context">
+        <span class="hp-date-overline">CATATAN PENGUMPULAN</span>
+        <strong id="hp-command-date-label">Sabtu, 19 September 2026</strong>
+      </div>
+      <div class="hp-date-switcher" role="group" aria-label="Navigasi tanggal pengumpulan HP">
+        <button type="button" onclick="shiftHpSelectedDate(-1)" aria-label="Tanggal sebelumnya">‹</button>
+        <button type="button" class="hp-date-main" onclick="toggleCalendar('hp', event)">
+          <span id="hp-command-date-short">19 Sep</span><span class="hp-date-main-chevron">⌄</span>
+        </button>
+        <button type="button" onclick="shiftHpSelectedDate(1)" aria-label="Tanggal berikutnya">›</button>
+      </div>
+    </div>
+
+    <div class="hp-metrics" role="group" aria-label="Ringkasan penitipan HP">
+      <div class="hp-metric-card hp-metric-occupied">
+        <div class="hp-metric-icon">✓</div><div class="hp-metric-copy"><span>Sudah Titip HP</span><strong id="hp-command-collected">0</strong></div>
+      </div>
+      <div class="hp-metric-card hp-metric-pending">
+        <div class="hp-metric-icon">○</div><div class="hp-metric-copy"><span>Belum Titip</span><strong id="hp-command-pending">0</strong></div>
+      </div>
+      <div class="hp-metric-card hp-metric-excused">
+        <div class="hp-metric-icon">!</div><div class="hp-metric-copy"><span>Izin / Tidak Bawa</span><strong id="hp-command-excused">0</strong></div>
+      </div>
+    </div>
+
+    <div class="hp-progress-card">
+      <div class="hp-progress-head">
+        <div><span class="hp-progress-kicker">KAPASITAS RAK</span><strong id="hp-command-progress-text">0 dari 36 Slot Terisi</strong></div>
+        <span class="hp-progress-pct" id="hp-command-progress-pct">0%</span>
+      </div>
+      <div class="hp-progress-track"><span id="hp-command-progress-bar"></span></div>
+      <div class="hp-progress-note"><span id="hp-command-progress-note">Belum ada HP yang dititipkan hari ini.</span><span>36 slot</span></div>
+    </div>
+
+    <div class="hp-view-toolbar">
+      <div class="hp-view-switcher" role="group" aria-label="Mode tampilan">
+        <button type="button" data-hp-view="grid" class="is-active" onclick="setHpViewMode('grid')"><span>▦</span> Grid</button>
+        <button type="button" data-hp-view="rack" onclick="setHpViewMode('rack')"><span>▥</span> Rak</button>
+        <button type="button" data-hp-view="table" onclick="setHpViewMode('table')"><span>☷</span> Tabel</button>
+      </div>
+      <div class="hp-search-wrap">
+        <span>⌕</span><input type="search" id="hp-command-search" placeholder="Cari nama, absen, atau rak..." oninput="onHpCommandSearch()" autocomplete="off">
+      </div>
+    </div>
+
+    <div class="hp-filter-row" role="group" aria-label="Filter status HP">
+      <button type="button" data-hp-filter="all" class="is-active" onclick="setHpCommandFilter('all')">Semua <span id="hp-filter-all-count">0</span></button>
+      <button type="button" data-hp-filter="belum" onclick="setHpCommandFilter('belum')">Belum Titip <span id="hp-filter-belum-count">0</span></button>
+      <button type="button" data-hp-filter="sudah" onclick="setHpCommandFilter('sudah')">Sudah Titip <span id="hp-filter-sudah-count">0</span></button>
+      <button type="button" data-hp-filter="izin" onclick="setHpCommandFilter('izin')">Izin <span id="hp-filter-izin-count">0</span></button>
+    </div>
+
+    <div id="hp-list-wrap" class="hp-command-list-wrap">
+      <div id="hp-list" class="hp-command-list"></div>
+    </div>
+
+    <div class="hp-calendar-drawer" id="hp-calendar-drawer">
+      <div class="hp-calendar-drawer-head">
+        <div><span class="hp-date-overline">RIWAYAT</span><strong>Kalender penitipan HP</strong></div>
+        <button type="button" onclick="toggleCalendar('hp', event)" aria-label="Tutup kalender">×</button>
+      </div>
+      <div class="card cal-card" id="hp-cal-card">
+        <div class="cal-head">
+          <div class="cal-nav-btn" onclick="calShift(-1)">‹</div>
+          <div class="cal-month" id="cal-month-label"><span class="cal-month-click" onclick="toggleCalendar('hp', event)">September</span> <span class="cal-year-click" onclick="openMonthYearPicker('hp', event)">2026</span></div>
+          <div class="cal-btn-group"><div class="cal-nav-btn" onclick="calShift(1)">›</div></div>
+        </div>
+        <div class="cal-month-picker" id="hp-month-picker"></div>
+        <div class="cal-body-wrap" id="hp-cal-body"><div id="cal-dow-row" class="cal-grid"></div><div id="cal-grid" class="cal-grid" style="margin-top:4px;"></div></div>
+      </div>
     </div>
   </div>
-</div>
-<div class="cal-month-picker" id="hp-month-picker">
-</div>
-<div class="cal-body-wrap" id="hp-cal-body">
-  <div id="cal-dow-row" class="cal-grid">
-  </div>
-  <div id="cal-grid" class="cal-grid" style="margin-top:4px;">
-  </div>
-</div>
-</div>
-<div class="summary-row hp-summary-actions" role="group" aria-label="Filter pengumpulan HP">
-  <button type="button" class="summary-box hp-summary-box hp-summary-collected" id="hp-summary-collected" onclick="setHpSummaryFilter('collected')" aria-pressed="false">
-    <span class="n" id="hp-collected">0</span>
-    <span class="l">Sudah Titip</span>
-  </button>
-  <button type="button" class="summary-box hp-summary-box hp-summary-remaining" id="hp-summary-remaining" onclick="setHpSummaryFilter('remaining')" aria-pressed="false">
-    <span class="n" id="hp-remaining">0</span>
-    <span class="l">Belum Titip</span>
-  </button>
-</div>
-<div class="section">
-  <div class="section-head">
-    <div class="date-label" id="hp-date-label">
-      Hari Ini
-    </div>
-    <div style="display:flex;gap:8px;align-items:center;">
-      <div class="section-link" onclick="openStatsModal('hp')">
-        Statistik
-      </div>
-      <div class="section-link admin-only" onclick="resetRoster('hp')">
-        Reset
-      </div>
-      <button class="bulk-all-btn admin-only" type="button" onclick="toggleAllRoster('hp')">☐ Semua Sudah
-    </button>
-  </div>
-</div>
-<div class="search-box">
-  <span class="search-icon">🔍
-</span>
-<input type="text" id="hp-search" placeholder="Cari nama siswa..." oninput="onRosterSearch('hp')">
-</div>
-<div class="roster-list-wrap" id="hp-list-wrap">
-  <div class="card" id="hp-list">
-  </div>
-</div>
-<button class="fab-add admin-only" style="margin-top:10px;" onclick="openStudentModal()">＋ Tambah Siswa
-</button>
-</div>
 </div>
 <div class="view" id="view-jadwal">
   <div class="pagehead">
@@ -9305,6 +9778,15 @@ Setelan
 </div>
 </div>
 </div>
+<div class="modal-bg" id="modal-hp-scan">
+  <div class="modal hp-scan-modal">
+    <div class="hp-scan-top"><div><span class="hp-scan-kicker">SIMULATOR</span><h3>Scan Barcode QR</h3><p>Simulasikan pemindaian untuk mencatat penitipan tanpa mengetik ulang nama.</p></div><button type="button" class="hp-scan-close" onclick="closeModal('hp-scan')">×</button></div>
+    <div class="hp-scan-frame"><div class="hp-scan-frame-corner tl"></div><div class="hp-scan-frame-corner tr"></div><div class="hp-scan-frame-corner bl"></div><div class="hp-scan-frame-corner br"></div><div class="hp-scan-pulse"></div><div class="hp-scan-crosshair">⌁</div><span class="hp-scan-frame-label">Arahkan barcode ke area ini</span></div>
+    <div class="field"><label>Siswa</label><select id="hp-scan-student"></select></div>
+    <div class="hp-scan-meta"><span>Tanggal</span><strong id="hp-scan-date">-</strong></div>
+    <div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal('hp-scan')">Batal</button><button class="btn btn-primary" onclick="simulateHpScan()">Simulasikan Scan</button></div>
+  </div>
+</div>
 <div class="modal-bg" id="modal-hp-edit">
   <div class="modal hp-edit-modal">
     <h3>
@@ -9322,12 +9804,16 @@ Setelan
     <label>Status
   </label>
   <div class="hp-edit-status-grid">
-    <button type="button" class="hp-edit-status-btn" id="hp-edit-sudah-btn" onclick="setHpEditStatus('sudah')">Sudah Terkumpul
-  </button>
-  <button type="button" class="hp-edit-status-btn" id="hp-edit-belum-btn" onclick="setHpEditStatus('belum')">Belum Terkumpul
-</button>
+    <button type="button" class="hp-edit-status-btn" id="hp-edit-sudah-btn" onclick="setHpEditStatus('sudah')">Sudah Terkumpul</button>
+    <button type="button" class="hp-edit-status-btn" id="hp-edit-belum-btn" onclick="setHpEditStatus('belum')">Belum Terkumpul</button>
+    <button type="button" class="hp-edit-status-btn" id="hp-edit-izin-btn" onclick="setHpEditStatus('izin')">Izin / Tidak Bawa</button>
 </div>
 <input type="hidden" id="hp-edit-status">
+</div>
+<div class="hp-edit-meta-grid">
+  <div class="field"><label>Model HP</label><input id="hp-edit-device" type="text" maxlength="60" placeholder="Contoh: Samsung A15"></div>
+  <div class="field"><label>Slot Rak</label><input id="hp-edit-slot" type="number" min="1" max="36" inputmode="numeric" placeholder="1 - 36"></div>
+</div>
 </div>
 <div class="field" id="hp-edit-reason-field" style="display:none">
   <label>Alasan belum terkumpul
@@ -9354,10 +9840,9 @@ Setelan
     untuk hari ini.
   </div>
   <div class="roster-status-choices">
-    <button class="roster-choice-btn done" id="roster-status-sudah-btn" onclick="setRosterStatusChoice('sudah')">✓ Sudah
-  </button>
-  <button class="roster-choice-btn undone" id="roster-status-belum-btn" onclick="setRosterStatusChoice('belum')">✕ Belum
-</button>
+    <button class="roster-choice-btn done" id="roster-status-sudah-btn" onclick="setRosterStatusChoice('sudah')">✓ Sudah</button>
+    <button class="roster-choice-btn undone" id="roster-status-belum-btn" onclick="setRosterStatusChoice('belum')">✕ Belum</button>
+    <button class="roster-choice-btn excused" id="roster-status-izin-btn" onclick="setRosterStatusChoice('izin')">! Izin</button>
 </div>
 <input type="hidden" id="roster-status-choice">
 <div class="field" id="roster-status-alasan-field" style="display:none;">
@@ -11407,7 +11892,7 @@ Setelan
       if (v === undefined || v === null) return null;
       if (v === true) return { status: 'sudah', alasan: '' };
       if (v === false) return { status: 'belum', alasan: '' };
-      if (typeof v === 'object') return { status: v.status || 'belum', alasan: v.alasan || '' };
+      if (typeof v === 'object') return { status: ['sudah','belum','izin'].includes(v.status) ? v.status : 'belum', alasan: v.alasan || '', waktu: v.waktu || '', deviceModel: v.deviceModel || '', slot: Number(v.slot) || 0 };
       return null;
   }
   function rosterIsSudah(v) {
@@ -12142,6 +12627,7 @@ Setelan
   function updateRosterListUI(type) { const wrap = document.getElementById(type + '-list-wrap'); const btn = document.getElementById(type + '-list-toggle'); if (!wrap || !btn) return; wrap.classList.toggle('collapsed', rosterUI[type].minimized); btn.textContent = rosterUI[type].minimized ? '+' : '−'; }
   function onRosterSearch(type) { const input = document.getElementById(type + '-search'); rosterUI[type].search = input ? input.value : ''; if (type === 'hp') renderHp(); else renderPiket(); }
   function renderHp() {
+      if (typeof window.hpCommandRender === 'function') return window.hpCommandRender();
       const date = state.hpSelectedDate || todayKey();
       renderRosterView({ dict: state.hp, selectedDate: date, collectedId: 'hp-collected', remainingId: 'hp-remaining', dateLabelId: 'hp-date-label', listId: 'hp-list', type: 'hp', searchQuery: rosterUI.hp.search });
       updateRosterListUI('hp');
@@ -12169,33 +12655,50 @@ Setelan
   function setRosterStatusChoice(status) {
       document.getElementById('roster-status-sudah-btn').classList.toggle('active', status === 'sudah');
       document.getElementById('roster-status-belum-btn').classList.toggle('active', status === 'belum');
+      document.getElementById('roster-status-izin-btn')?.classList.toggle('active', status === 'izin');
       document.getElementById('roster-status-choice').value = status || '';
-      document.getElementById('roster-status-alasan-field').style.display = status === 'belum' ? '' : 'none';
+      document.getElementById('roster-status-alasan-field').style.display = (status === 'belum' || status === 'izin') ? '' : 'none';
   }
-  function submitRosterStatus() {
+  async function submitRosterStatus() {
       const { type, name } = _rosterModalCtx;
       if (!type || !name) return;
       const status = document.getElementById('roster-status-choice').value;
       const alasan = document.getElementById('roster-status-alasan').value.trim();
-      if (!status) { showNotification('Pilih status Sudah atau Belum dulu.', 'warning'); return; }
+      if (!['sudah','belum','izin'].includes(status)) { showNotification('Pilih status Sudah, Belum, atau Izin dulu.', 'warning'); return; }
+      if (status==='belum' && !alasan) { showNotification('Isi keterangan untuk status Belum.', 'warning'); return; }
       const date = type === 'hp' ? (state.hpSelectedDate || todayKey()) : (state.piketSelectedDate || todayKey());
       const rec = ensureRecord(type === 'hp' ? state.hp : state.piket, date);
-      rec[name] = status === 'sudah' ? { status: 'sudah', alasan: '' } : { status: 'belum', alasan };
-      saveState();
-      if (type === 'hp') { renderHp(); renderHpCalendar(); } else { renderPiket(); renderPiketCalendar(); }
-      renderBeranda();
-      closeModal('roster-status');
+      const oldValue = rec[name] ? JSON.parse(JSON.stringify(rec[name])) : undefined;
+      const old = rosterStatusOf(oldValue) || {};
+      rec[name] = { status, alasan: (status==='sudah'?'':alasan), waktu: status==='sudah' ? (old.waktu||new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})) : (old.waktu||''), deviceModel: old.deviceModel||'', slot: old.slot||0 };
+      try {
+          await saveState({requirePublic:true});
+          if (type === 'hp') { renderHp(); renderHpCalendar(); } else { renderPiket(); renderPiketCalendar(); }
+          renderBeranda();
+          closeModal('roster-status');
+          showNotification(status==='sudah'?'HP berhasil ditandai sudah dititipkan.':status==='izin'?'Status izin tersimpan.':'Status belum dititipkan tersimpan.','success');
+      } catch(e) {
+          if (oldValue===undefined) delete rec[name]; else rec[name]=oldValue;
+          renderHp(); renderPiket();
+          showNotification('Status belum berhasil disimpan ke Firebase.','error',5000);
+      }
   }
-  function clearRosterStatus() {
+  async function clearRosterStatus() {
       const { type, name } = _rosterModalCtx;
       if (!type || !name) return;
       const date = type === 'hp' ? (state.hpSelectedDate || todayKey()) : (state.piketSelectedDate || todayKey());
       const rec = ensureRecord(type === 'hp' ? state.hp : state.piket, date);
+      const oldValue = rec[name] ? JSON.parse(JSON.stringify(rec[name])) : undefined;
       delete rec[name];
-      saveState();
-      if (type === 'hp') { renderHp(); renderHpCalendar(); } else { renderPiket(); renderPiketCalendar(); }
-      renderBeranda();
-      closeModal('roster-status');
+      try {
+          await saveState({requirePublic:true});
+          if (type === 'hp') { renderHp(); renderHpCalendar(); } else { renderPiket(); renderPiketCalendar(); }
+          renderBeranda(); closeModal('roster-status'); showNotification('Status penitipan dihapus.','info');
+      } catch(e) {
+          if(oldValue!==undefined) rec[name]=oldValue;
+          renderHp(); renderPiket(); renderBeranda();
+          showNotification('Perubahan belum berhasil disimpan.','error',5000);
+      }
   }
   function removeStudent(name) {
       if (guardReadOnly()) return;
@@ -12219,38 +12722,44 @@ Setelan
       document.getElementById('hp-edit-current-name').textContent='Sedang mengedit: '+current;
       document.getElementById('hp-edit-name').value=current;
       document.getElementById('hp-edit-reason').value=(st&&st.alasan)||'';
-      setHpEditStatus(st&&st.status==='sudah'?'sudah':'belum');
+      const deviceEl=document.getElementById('hp-edit-device'); if(deviceEl) deviceEl.value=(st&&st.deviceModel)||'';
+      const slotEl=document.getElementById('hp-edit-slot'); if(slotEl) slotEl.value=(st&&st.slot)||'';
+      setHpEditStatus(st&&['sudah','belum','izin'].includes(st.status)?st.status:'belum');
       openModal('hp-edit');
       setTimeout(()=>document.getElementById('hp-edit-name')?.focus(),40);
   }
   function setHpEditStatus(status){
       document.getElementById('hp-edit-status').value=status;
-      document.getElementById('hp-edit-sudah-btn').classList.toggle('active',status==='sudah');
-      document.getElementById('hp-edit-belum-btn').classList.toggle('active',status==='belum');
-      document.getElementById('hp-edit-reason-field').style.display=status==='belum'?'':'none';
+      ['sudah','belum','izin'].forEach(k=>document.getElementById('hp-edit-'+k+'-btn')?.classList.toggle('active',status===k));
+      const reasonField=document.getElementById('hp-edit-reason-field'); if(reasonField) reasonField.style.display=(status==='belum'||status==='izin')?'':'none';
   }
-  function submitHpEdit(){
+  async function submitHpEdit(){
       if(!isAdmin()) return;
       const oldName=_hpEditCtx.name;
       const date=_hpEditCtx.date||state.hpSelectedDate||todayKey();
       const newName=document.getElementById('hp-edit-name').value.trim().replace(/\s+/g,' ');
       const status=document.getElementById('hp-edit-status').value;
       const reason=document.getElementById('hp-edit-reason').value.trim();
+      const deviceModel=(document.getElementById('hp-edit-device')?.value||'').trim().replace(/\s+/g,' ');
+      const slot=Number(document.getElementById('hp-edit-slot')?.value||0);
       if(!oldName||!newName){showNotification('Nama siswa wajib diisi.','warning');return;}
       if(newName.length>80){showNotification('Nama siswa maksimal 80 karakter.','warning');return;}
-      if(!status){showNotification('Pilih status Sudah Terkumpul atau Belum Terkumpul.','warning');return;}
-      if(status==='belum' && !reason){showNotification('Isi alasan jika HP belum terkumpul.','warning');return;}
+      if(!['sudah','belum','izin'].includes(status)){showNotification('Pilih status penitipan dulu.','warning');return;}
+      if(status==='belum' && !reason){showNotification('Isi keterangan jika HP belum dititipkan.','warning');return;}
+      if(slot && (slot<1 || slot>36)){showNotification('Slot rak harus 1 sampai 36.','warning');return;}
       const duplicate=(state.students||[]).some(n=>n.toLowerCase()===newName.toLowerCase() && n!==oldName);
       if(duplicate){showNotification('Nama siswa sudah ada.','warning');return;}
       const idx=state.students.indexOf(oldName);
       if(idx<0){closeModal('hp-edit');return;}
-      state.students[idx]=newName;
       const rec=ensureRecord(state.hp,date);
-      if(newName!==oldName){
-          if(Object.prototype.hasOwnProperty.call(rec,oldName)) delete rec[oldName];
-      }
-      rec[newName]=status==='sudah'?{status:'sudah',alasan:'',waktu:(rosterStatusOf(rec[oldName])?.waktu||new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}))}:{status:'belum',alasan:reason};
-      // Perbarui nama pada semua data terkait agar konsisten.
+      const previous={...rec[oldName]};
+      const previousStudentIndex=idx;
+      const oldPiket=JSON.stringify(state.piket||{});
+      const oldPiketJadwal=JSON.stringify(state.piketJadwal||{});
+      const oldStudents=[...state.students];
+      state.students[idx]=newName;
+      if(newName!==oldName && Object.prototype.hasOwnProperty.call(rec,oldName)) delete rec[oldName];
+      rec[newName]={status,alasan:status==='sudah'?'':reason,waktu:status==='sudah'?(previous.waktu||new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})):(previous.waktu||''),deviceModel,slot};
       if(state.piket && typeof state.piket==='object' && newName!==oldName){
           Object.keys(state.piket).forEach(k=>{if(state.piket[k]&&Object.prototype.hasOwnProperty.call(state.piket[k],oldName)){state.piket[k][newName]=state.piket[k][oldName];delete state.piket[k][oldName];}});
       }
@@ -12258,10 +12767,20 @@ Setelan
           Object.keys(state.piketJadwal).forEach(day=>{if(Array.isArray(state.piketJadwal[day])) state.piketJadwal[day]=state.piketJadwal[day].map(n=>n===oldName?newName:n);});
       }
       replaceNameInPiketWeeklyAssignments(oldName, newName);
-      saveState();
-      closeModal('hp-edit');
-      renderHp(); renderBeranda(); renderPiket();
-      showNotification('Data Titip HP berhasil diperbarui.','success');
+      try{
+          await saveState({requirePublic:true});
+          closeModal('hp-edit');
+          renderHp(); renderHpCalendar(); renderBeranda(); renderPiket();
+          showNotification('Data Titip HP berhasil diperbarui.','success');
+      }catch(e){
+          state.students=oldStudents;
+          state.piket=JSON.parse(oldPiket); state.piketJadwal=JSON.parse(oldPiketJadwal);
+          if(newName!==oldName) delete rec[newName];
+          rec[oldName]=previous;
+          state.students[previousStudentIndex]=oldName;
+          renderHp();renderHpCalendar();renderBeranda();renderPiket();
+          showNotification('Perubahan belum tersimpan ke Firebase. Data dikembalikan.','error',5000);
+      }
       _hpEditCtx={name:null,date:null};
   }
   function openStudentModal() {
@@ -15161,6 +15680,7 @@ Setelan
     window.setHpSummaryFilter = setHpSummaryFilter;
 
     function professionalRenderHp(){
+      if (typeof window.hpCommandRender === 'function') return window.hpCommandRender();
       const date=state.hpSelectedDate||todayKey();
       const rec=ensureRecord(state.hp,date);
       const names=Array.isArray(state.students)?state.students:[];
@@ -18145,6 +18665,370 @@ body.dark .cal-card .cal-nav-btn{color:#f8fafc !important;background:transparent
     .piket-manual-row select{width:100%}
   }
 </style>
+<script id="hp-command-center-v67-js">
+(function(){
+  const CAPACITY=36;
+  let hpCommandViewMode='grid';
+  let hpCommandFilter='all';
+  let hpCommandSearch='';
+  let hpCelebratedDate='';
+
+  function hpSafeName(n){return JSON.stringify(String(n||'')).replace(/</g,'\\u003c');}
+  function hpInitials(name){return String(name||'').split(/\s+/).map(x=>x[0]||'').slice(0,2).join('').toUpperCase();}
+  function hpFormatDateLong(key){
+    const [y,m,d]=String(key).split('-').map(Number); const dt=new Date(y,m-1,d);
+    return dt.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  }
+  function hpFormatDateShort(key){
+    const [y,m,d]=String(key).split('-').map(Number); const dt=new Date(y,m-1,d);
+    return dt.toLocaleDateString('id-ID',{day:'numeric',month:'short'});
+  }
+  function hpNames(){return Array.isArray(state.students)?state.students.map(x=>String(x||'').trim()).filter(Boolean):[];}
+  function hpRecordFor(date){return ensureRecord(state.hp,date);}
+  function hpStatus(name,rec){return rosterStatusOf(rec[name]);}
+  function hpMeta(name,rec,index){
+    const st=hpStatus(name,rec)||{};
+    let slot=Number(st.slot)||0;
+    if(slot<1||slot>CAPACITY) slot=index+1;
+    const device=String(st.deviceModel||'').trim();
+    return {slot:Math.min(CAPACITY,slot),device};
+  }
+  function hpMatch(name,index,meta,st){
+    const q=hpCommandSearch.trim().toLowerCase(); if(!q)return true;
+    return [name,String(index+1),String(meta.slot),meta.device,st?.status||'',st?.alasan||''].join(' ').toLowerCase().includes(q);
+  }
+  function hpFilteredEntries(){
+    const date=state.hpSelectedDate||todayKey(), rec=hpRecordFor(date), names=hpNames();
+    return names.map((name,index)=>{const st=hpStatus(name,rec)||{status:'belum',alasan:'',waktu:'',deviceModel:'',slot:0}; return {name,index,st,meta:hpMeta(name,rec,index)};})
+      .filter(x=>hpCommandFilter==='all'||x.st.status===hpCommandFilter)
+      .filter(x=>hpMatch(x.name,x.index,x.meta,x.st));
+  }
+  function hpAllEntries(){
+    const date=state.hpSelectedDate||todayKey(), rec=hpRecordFor(date), names=hpNames();
+    return names.map((name,index)=>{const st=hpStatus(name,rec)||{status:'belum',alasan:'',waktu:'',deviceModel:'',slot:0}; return {name,index,st,meta:hpMeta(name,rec,index)};});
+  }
+  function setText(id,val){const el=document.getElementById(id);if(el)el.textContent=val;}
+  function syncActiveButtons(selector,attr,value){document.querySelectorAll(selector).forEach(b=>b.classList.toggle('is-active',b.getAttribute(attr)===value));}
+
+  async function toggleHpQuick(name){
+    if(!isAdmin())return;
+    const date=state.hpSelectedDate||todayKey(), rec=hpRecordFor(date), oldValue=rec[name]?JSON.parse(JSON.stringify(rec[name])):undefined, oldStatus=rosterStatusOf(oldValue)||{};
+    const next=oldStatus.status==='sudah'?'belum':'sudah';
+    rec[name]={status:next,alasan:next==='sudah'?'':'',waktu:next==='sudah'?(oldStatus.waktu||new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})):(oldStatus.waktu||''),deviceModel:oldStatus.deviceModel||'',slot:oldStatus.slot||0};
+    try{
+      await saveState({requirePublic:true});
+      renderHpCommandCenter(); renderBeranda();
+      showNotification(next==='sudah'?`${name} ditandai sudah titip.`:`${name} dikembalikan ke status belum titip.`,'success',2600);
+      hpMaybeCelebrate(date);
+    }catch(e){
+      if(oldValue===undefined)delete rec[name];else rec[name]=oldValue;
+      renderHpCommandCenter(); showNotification('Status belum tersimpan ke Firebase. Perubahan dikembalikan.','error',5000);
+    }
+  }
+  async function markAllHpCollected(){
+    if(!isAdmin())return;
+    const date=state.hpSelectedDate||todayKey(), rec=hpRecordFor(date), names=hpNames();
+    if(!names.length){showNotification('Belum ada siswa di daftar kelas.','warning');return;}
+    const old={}; names.forEach(n=>{old[n]=rec[n]===undefined?undefined:JSON.parse(JSON.stringify(rec[n])); const st=rosterStatusOf(rec[n])||{}; rec[n]={status:'sudah',alasan:'',waktu:st.waktu||new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}),deviceModel:st.deviceModel||'',slot:st.slot||0};});
+    try{
+      await saveState({requirePublic:true});
+      renderHpCommandCenter();renderBeranda();hpMaybeCelebrate(date);showNotification(`Semua ${names.length} siswa ditandai sudah titip.`,'success',3000);
+    }catch(e){
+      names.forEach(n=>{if(old[n]===undefined)delete rec[n];else rec[n]=old[n];});
+      renderHpCommandCenter();showNotification('Semua data belum berhasil disimpan ke Firebase. Perubahan dikembalikan.','error',5000);
+    }
+  }
+  function hpMaybeCelebrate(date){
+    const entries=hpAllEntries(), count=entries.filter(x=>x.st.status==='sudah').length;
+    if(count>=CAPACITY && hpCelebratedDate!==date){hpCelebratedDate=date;hpConfetti();}
+  }
+  function hpConfetti(){
+    const host=document.createElement('div');host.className='hp-confetti';
+    for(let i=0;i<36;i++){const bit=document.createElement('span');bit.style.left=(Math.random()*100)+'%';bit.style.setProperty('--x',(Math.random()*120-60)+'px');bit.style.setProperty('--r',(Math.random()*520-260)+'deg');bit.style.animationDelay=(Math.random()*.12)+'s';host.appendChild(bit);}
+    document.body.appendChild(host);setTimeout(()=>host.remove(),1500);
+  }
+  function shiftHpSelectedDate(delta){
+    const key=state.hpSelectedDate||todayKey();
+    const [y,m,d]=String(key).split('-').map(Number);
+    const dt=new Date(y,m-1,d); dt.setDate(dt.getDate()+Number(delta||0));
+    state.hpSelectedDate=dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0');
+    try{saveState();}catch(e){}
+    renderHpCommandCenter(); renderHpCalendar(); renderBeranda();
+  }
+  function setHpViewMode(mode){if(!['grid','rack','table'].includes(mode))mode='grid';hpCommandViewMode=mode;syncActiveButtons('#view-hp [data-hp-view]','data-hp-view',mode);renderHpCommandCenter();}
+  function setHpCommandFilter(filter){if(!['all','belum','sudah','izin'].includes(filter))filter='all';hpCommandFilter=hpCommandFilter===filter&&filter!=='all'?'all':filter;syncActiveButtons('#view-hp [data-hp-filter]','data-hp-filter',hpCommandFilter);renderHpCommandCenter();}
+  function onHpCommandSearch(){hpCommandSearch=(document.getElementById('hp-command-search')?.value||'').trim();renderHpCommandCenter();}
+
+  function hpStatusLabel(status){return status==='sudah'?'Sudah Titip':status==='izin'?'Izin / Tidak Bawa':'Belum Titip';}
+  function hpStatusClass(status){return status==='sudah'?'done':status==='izin'?'excused':'pending';}
+  function hpCard(entry){
+    const {name,index,st,meta}=entry,safe=hpSafeName(name),initials=hpInitials(name),admin=isAdmin(), done=st.status==='sudah';
+    return `<article class="hp-student-card" data-name="${escapeHtml(name)}" ${admin?`onclick="toggleHpQuick(${safe})"`:``}>\n      <div class="hp-student-head"><span class="hp-student-roll">#${index+1} · ${escapeHtml(name)}</span><span class="hp-slot-tag">Slot Rak #${meta.slot}</span></div>\n      <div class="hp-student-main"><div class="hp-student-avatar ${done?'occupied':st.status==='izin'?'excused':''}">${escapeHtml(initials)}</div><div class="hp-student-copy"><div class="hp-student-name">${escapeHtml(name)}</div><div class="hp-student-sub"><span>📱 ${escapeHtml(meta.device||'Model belum dicatat')}</span>${st.alasan?`<span class="hp-device-dot">• ${escapeHtml(st.alasan)}</span>`:''}</div></div></div>\n      <div class="hp-student-footer"><span class="hp-status-chip ${hpStatusClass(st.status)}">${done?'●':st.status==='izin'?'!':'○'} ${hpStatusLabel(st.status)}</span>${admin?`<button type="button" class="hp-quick-btn ${done?'done':st.status==='izin'?'izin':''}" onclick="event.stopPropagation();toggleHpQuick(${safe})">${done?'✓ Sudah':'Kumpul'}</button>`:''}</div>\n    </article>`;
+  }
+  function hpTable(entries){
+    const rows=entries.map(x=>`<tr><td><div class="hp-table-name">#${x.index+1} · ${escapeHtml(x.name)}</div></td><td>Slot #${x.meta.slot}</td><td>${escapeHtml(x.meta.device||'—')}</td><td><span class="hp-status-chip ${hpStatusClass(x.st.status)}">${hpStatusLabel(x.st.status)}</span></td><td>${isAdmin()?`<button type="button" class="hp-quick-btn ${x.st.status==='sudah'?'done':''}" onclick="toggleHpQuick(${hpSafeName(x.name)})">${x.st.status==='sudah'?'✓ Sudah':'Kumpul'}</button>`:'—'}</td></tr>`).join('');
+    return `<div class="hp-table-scroll"><table class="hp-command-table"><thead><tr><th>Siswa</th><th>Rak</th><th>Perangkat</th><th>Status</th><th>Aksi</th></tr></thead><tbody>${rows||'<tr><td colspan="5">Belum ada data.</td></tr>'}</tbody></table></div>`;
+  }
+  function hpRack(entries){
+    const bySlot=new Map();
+    entries.forEach(x=>{if(!bySlot.has(x.meta.slot))bySlot.set(x.meta.slot,x);});
+    let slots='';
+    for(let slot=1;slot<=CAPACITY;slot++){
+      const x=bySlot.get(slot);
+      if(!x){slots+=`<div class="hp-rack-slot empty"><div class="hp-rack-num">#${slot}</div><div class="hp-rack-name">Kosong</div><div class="hp-rack-state">Siap dipakai</div></div>`;continue;}
+      const stateCls=x.st.status==='sudah'?'occupied':x.st.status==='izin'?'excused':'';
+      slots+=`<button type="button" class="hp-rack-slot ${stateCls}" onclick="${isAdmin()?`toggleHpQuick(${hpSafeName(x.name)})`:`void(0)`}"><div class="hp-rack-num">#${slot}</div><div class="hp-rack-name">${escapeHtml(x.name)}</div><div class="hp-rack-state">${hpStatusLabel(x.st.status)}</div></button>`;
+    }
+    return `<div class="hp-rack-shell"><div class="hp-rack-head"><div><strong>Rak Penitipan</strong><div><span>36 slot fisik · klik slot untuk aksi cepat</span></div></div><span>${entries.filter(x=>x.st.status==='sudah').length}/${CAPACITY} terisi</span></div><div class="hp-rack-grid">${slots}</div></div>`;
+  }
+  function hpEmpty(text='Santai! Belum ada tugas penitipan untuk tampilan ini.'){
+    return `<div class="hp-command-empty"><div class="hp-command-doodle"></div><strong>${text}</strong><span>Coba pilih filter lain atau periksa tanggal pengumpulan.</span></div>`;
+  }
+  function renderHpCommandCenter(){
+    const date=state.hpSelectedDate||todayKey(),all=hpAllEntries(),entries=hpFilteredEntries();
+    const counts={sudah:all.filter(x=>x.st.status==='sudah').length,belum:all.filter(x=>x.st.status!=='sudah'&&x.st.status!=='izin').length,izin:all.filter(x=>x.st.status==='izin').length};
+    const total=all.length,occupied=Math.min(CAPACITY,counts.sudah),pct=Math.min(100,Math.round(occupied/CAPACITY*100));
+    setText('hp-command-collected',counts.sudah);setText('hp-command-pending',counts.belum);setText('hp-command-excused',counts.izin);
+    setText('hp-filter-all-count',total);setText('hp-filter-belum-count',counts.belum);setText('hp-filter-sudah-count',counts.sudah);setText('hp-filter-izin-count',counts.izin);
+    setText('hp-command-progress-text',`${occupied} dari ${CAPACITY} Slot Terisi`);setText('hp-command-progress-pct',pct+'%');
+    setText('hp-command-progress-note',occupied===0?'Belum ada HP yang dititipkan hari ini.':occupied>=CAPACITY?'Rak penuh. Semua slot terisi.':`${CAPACITY-occupied} slot masih tersedia.`);
+    const pb=document.getElementById('hp-command-progress-bar');if(pb)pb.style.width=pct+'%';
+    setText('hp-command-date-label',hpFormatDateLong(date));setText('hp-command-date-short',hpFormatDateShort(date));
+    const badge=document.getElementById('hp-command-status-badge');if(badge){badge.textContent=date===todayKey()?'Hari ini':'Riwayat';badge.className='hp-command-status'+(date===todayKey()?'':' is-history');}
+    setText('hp-command-status-subtitle',date===todayKey()?`${counts.sudah}/${Math.max(CAPACITY,total)} HP sudah dititipkan · pembaruan langsung.`:`Melihat catatan penitipan pada ${hpFormatDateLong(date)}.`);
+    const list=document.getElementById('hp-list');if(!list)return;
+    let html='';
+    if(!entries.length){html=hpEmpty(hpCommandFilter==='all'?'Belum ada data siswa untuk ditampilkan.':hpCommandFilter==='sudah'?'Belum ada siswa yang sudah menitipkan HP.':hpCommandFilter==='izin'?'Belum ada siswa dengan status izin.':'Belum ada siswa yang belum menitipkan HP.');}
+    else if(hpCommandViewMode==='grid'){html=`<div class="hp-command-grid">${entries.map(hpCard).join('')}</div>`;}
+    else if(hpCommandViewMode==='table'){html=hpTable(entries);}
+    else {html=hpRack(all);}
+    list.innerHTML=html;
+    syncActiveButtons('#view-hp [data-hp-filter]','data-hp-filter',hpCommandFilter);syncActiveButtons('#view-hp [data-hp-view]','data-hp-view',hpCommandViewMode);
+    const drawer=document.getElementById('hp-calendar-drawer'); if(drawer && state.calMinimized?.hp===false) drawer.classList.add('is-open'); else if(drawer) drawer.classList.remove('is-open');
+    if(pct>=100)hpMaybeCelebrate(date);
+  }
+
+  function openHpScanModal(){
+    if(!isAdmin())return;
+    const modal=document.getElementById('modal-hp-scan');if(!modal)return;
+    const select=document.getElementById('hp-scan-student'); const names=hpNames();
+    if(select)select.innerHTML=names.map((n,i)=>`<option value="${escapeHtml(n)}">#${i+1} · ${escapeHtml(n)}</option>`).join('');
+    setText('hp-scan-date',hpFormatDateLong(state.hpSelectedDate||todayKey()));
+    modal.classList.add('open');
+  }
+  async function simulateHpScan(){
+    if(!isAdmin())return;const name=document.getElementById('hp-scan-student')?.value||'';if(!name){showNotification('Pilih siswa dulu.','warning');return;}
+    await toggleHpQuick(name);closeModal('hp-scan');
+  }
+
+  function syncCalendarDrawer(){
+    const drawer=document.getElementById('hp-calendar-drawer');if(!drawer)return;const min=!!(state.calMinimized&&state.calMinimized.hp);drawer.classList.toggle('is-open',!min);renderHpCalendar();
+  }
+  window.hpCommandRender=renderHpCommandCenter;
+  window.setHpViewMode=setHpViewMode;window.shiftHpSelectedDate=shiftHpSelectedDate;window.setHpCommandFilter=setHpCommandFilter;window.onHpCommandSearch=onHpCommandSearch;window.toggleHpQuick=toggleHpQuick;window.markAllHpCollected=markAllHpCollected;window.openHpScanModal=openHpScanModal;window.simulateHpScan=simulateHpScan;
+  window.syncHpCalendarDrawer=syncCalendarDrawer;
+  window.addEventListener('load',()=>{setTimeout(()=>{try{renderHpCommandCenter();}catch(e){}},50)});
+  // Keep compact calendar drawer synced whenever the legacy toggle function runs.
+  const legacyToggleCalendar=window.toggleCalendar;
+  if(typeof legacyToggleCalendar==='function'){
+    window.toggleCalendar=function(type,evt){const r=legacyToggleCalendar(type,evt);if(type==='hp'){const drawer=document.getElementById('hp-calendar-drawer');if(drawer)drawer.classList.toggle('is-open',!!(state.calMinimized&&state.calMinimized.hp)===false);try{renderHpCommandCenter();}catch(e){}}return r;};
+  }
+})();
+</script>
+
+
+<script id="kelasku-worldclass-v68-js">
+(function(){
+  'use strict';
+
+  const ACTIONS = {
+    beranda:{title:'Beranda',crumb:'Kelasku',sub:'Ringkasan aktivitas kelas hari ini.',selector:'#view-beranda .dashboard-panel-announcements .section-action'},
+    kas:{title:'Kas Kelas',crumb:'Kelasku / Keuangan',sub:'Catat transaksi dan pantau saldo kas kelas.',selector:'#view-kas .fab-add[onclick*="openKasAddModal"]'},
+    hp:{title:'Penitipan Smartphone',crumb:'Kelasku / Penitipan HP',sub:'Pantau pengumpulan HP kelas secara real-time.',selector:'#view-hp .hp-command-actions'},
+    tugas:{title:'Manajemen Tugas',crumb:'Kelasku / Tugas',sub:'Pantau deadline dan bereskan tugas tanpa ribet.',selector:'#view-tugas .task-pro-primary'},
+    laporan:{title:'Laporan Siswa',crumb:'Kelasku / Laporan',sub:'Sampaikan aspirasi atau kendala secara aman.',selector:'#view-laporan .fab-add'},
+    settings:{title:'Pengaturan',crumb:'Kelasku / Pengaturan',sub:'Atur tampilan, anggota, dan keamanan sistem.'}
+  };
+
+  function byId(id){return document.getElementById(id)}
+  function activeView(){return document.querySelector('.view.active')}
+  function currentKey(){const v=activeView(); return v?.id?.replace('view-','')||'beranda'}
+  function currentJadwalIsPiket(){return !!(typeof state==='object'&&state&&state.jadwalMode==='piket')}
+
+  function ensureHeader(){
+    if(byId('app-global-header')) return;
+    const phone=document.querySelector('.phone'); const statusbar=phone?.querySelector('.statusbar'); const screen=phone?.querySelector('.screen');
+    if(!phone||!screen)return;
+
+    const header=document.createElement('header');
+    header.id='app-global-header'; header.className='app-global-header';
+    header.innerHTML=`
+      <div class="app-global-header-inner">
+        <div class="app-global-heading">
+          <div class="app-breadcrumb" id="app-global-crumb">Kelasku</div>
+          <div class="app-global-title-row"><h1 class="app-global-title" id="app-global-title">Beranda</h1><span class="app-global-clock" id="app-global-clock"><i></i><span>--:--</span></span></div>
+          <p class="app-global-subtitle" id="app-global-subtitle">Ringkasan aktivitas kelas hari ini.</p>
+        </div>
+        <div class="app-global-tools">
+          <div class="app-global-search" id="app-global-search-slot"></div>
+          <div class="app-global-actions" id="app-global-actions"></div>
+          <div class="app-profile-wrap" id="app-profile-wrap"></div>
+        </div>
+      </div>`;
+    if(statusbar) statusbar.after(header); else phone.prepend(header);
+
+    const homeSearch=document.querySelector('#view-beranda .dashboard-search');
+    const homeUser=document.querySelector('#view-beranda .dashboard-user-menu');
+    if(homeSearch) byId('app-global-search-slot').appendChild(homeSearch);
+    if(homeUser) setupProfile(homeUser);
+    updateClock();
+    setInterval(updateClock,10000);
+    document.addEventListener('click', closeMenusOnOutside, true);
+    document.addEventListener('keydown', onShortcut, true);
+  }
+
+  function setupProfile(userMenu){
+    const wrap=byId('app-profile-wrap'); if(!wrap)return;
+    const meta=userMenu.querySelector('.dashboard-user-meta');
+    const avatar=userMenu.querySelector('.dashboard-user-avatar');
+    if(avatar){avatar.removeAttribute('onclick'); avatar.addEventListener('click', e=>{e.stopPropagation();toggleProfileMenu()})}
+    const trigger=document.createElement('button');
+    trigger.type='button'; trigger.className='app-profile-toggle'; trigger.setAttribute('aria-haspopup','menu'); trigger.setAttribute('aria-expanded','false');
+    if(meta) trigger.appendChild(meta);
+    if(avatar) trigger.appendChild(avatar);
+    const caret=document.createElement('span'); caret.className='app-profile-caret'; caret.textContent='⌄'; trigger.appendChild(caret);
+    trigger.addEventListener('click',e=>{e.stopPropagation();toggleProfileMenu()});
+    const menu=document.createElement('div'); menu.className='app-profile-menu'; menu.id='app-profile-menu'; menu.setAttribute('role','menu');
+    menu.innerHTML=`
+      <button type="button" data-profile-action="avatar">◌ <span>Ubah avatar</span></button>
+      <button type="button" data-profile-action="settings">⚙️ <span>Profil & tampilan</span></button>
+      <button type="button" data-profile-action="theme">◐ <span>Ganti tema</span></button>
+      <button type="button" class="danger" data-profile-action="logout">↪ <span>Keluar dari Kelasku</span></button>`;
+    menu.addEventListener('click',e=>{
+      const b=e.target.closest('[data-profile-action]'); if(!b)return;
+      const a=b.dataset.profileAction;
+      if(a==='avatar'&&typeof openAvatarPicker==='function') openAvatarPicker();
+      else if(a==='settings'&&typeof goTo==='function') goTo('settings');
+      else if(a==='theme'&&typeof toggleTheme==='function') toggleTheme();
+      else if(a==='logout'&&typeof logout==='function') logout();
+      closeProfileMenu();
+    });
+    wrap.innerHTML=''; wrap.appendChild(trigger); wrap.appendChild(menu);
+  }
+
+  function toggleProfileMenu(){const m=byId('app-profile-menu'); const t=document.querySelector('.app-profile-toggle'); if(!m)return; const open=m.classList.toggle('open'); if(t)t.setAttribute('aria-expanded',open?'true':'false')}
+  function closeProfileMenu(){const m=byId('app-profile-menu'); const t=document.querySelector('.app-profile-toggle'); if(m)m.classList.remove('open'); if(t)t.setAttribute('aria-expanded','false')}
+  function closeMenusOnOutside(e){ if(!e.target.closest('#app-profile-wrap')) closeProfileMenu(); if(!e.target.closest('#app-global-search-slot')){const r=byId('global-search-results'); if(r)r.classList.remove('is-v68-open')}}
+
+  function updateClock(){
+    const d=new Date();
+    const value=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+    const el=byId('app-global-clock');
+    const out=el?.querySelector('span:last-child');
+    if(out)out.textContent=value;
+  }
+
+  function onShortcut(e){
+    if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){
+      e.preventDefault();
+      const input=byId('global-search-input');
+      if(input){input.focus(); input.select();}
+    }
+    if(e.key==='Escape') closeProfileMenu();
+  }
+
+  function actionFor(key){
+    if(key==='jadwal'){
+      if(currentJadwalIsPiket()) return {title:'Jadwal Piket',crumb:'Kelasku / Jadwal / Piket',sub:'Atur pembagian tugas dan pantau progres hari ini.',selectors:['#view-jadwal .piket-actionbar-actions']};
+      return {title:'Jadwal Pelajaran',crumb:'Kelasku / Jadwal / Pelajaran',sub:'Pantau mata pelajaran harian & jam mengajar guru.',selectors:['#view-jadwal .jadwal-pro-add']};
+    }
+    const d=ACTIONS[key]||ACTIONS.beranda; return {...d,selectors:d.selector?[d.selector]:[]};
+  }
+
+  function moveSources(){
+    const slot=byId('app-global-actions'); if(!slot)return;
+    // If this is the first run, move source elements into stable wrappers.
+    const moveOne=(selector,wrapId,visible)=>{
+      let wrap=byId(wrapId);
+      if(!wrap){wrap=document.createElement('div');wrap.id=wrapId;wrap.className='app-action-source-wrap';slot.appendChild(wrap)}
+      const el=document.querySelector(selector);
+      if(el && el.parentElement!==wrap){
+        const legacyParent=el.parentElement;
+        wrap.appendChild(el);
+        if(legacyParent && legacyParent!==slot && !legacyParent.closest('#app-global-header')) legacyParent.classList.add('app-legacy-hidden');
+      }
+      wrap.style.display=visible?'':'none';
+      const moved=wrap.firstElementChild;
+      if(moved) moved.classList.add('app-moved-source');
+      return moved || null;
+    };
+
+    // Generic single actions.
+    moveOne('#view-beranda .dashboard-panel-announcements .section-action','app-action-beranda',currentKey()==='beranda');
+    moveOne('#view-kas .fab-add[onclick*="openKasAddModal"]','app-action-kas',currentKey()==='kas');
+    moveOne('#view-tugas .task-pro-primary','app-action-tugas',currentKey()==='tugas');
+    moveOne('#view-laporan .fab-add','app-action-laporan',currentKey()==='laporan');
+    moveOne('#view-jadwal .jadwal-pro-add','app-action-jadwal-pelajaran',currentKey()==='jadwal'&&!currentJadwalIsPiket());
+    moveOne('#view-jadwal .piket-actionbar-actions','app-action-jadwal-piket',currentKey()==='jadwal'&&currentJadwalIsPiket());
+
+    let hpWrap=byId('app-action-hp');
+    if(!hpWrap){hpWrap=document.createElement('div');hpWrap.id='app-action-hp';hpWrap.className='app-action-source-wrap';slot.appendChild(hpWrap)}
+    const hp=document.querySelector('#view-hp .hp-command-actions');
+    if(hp && hp.parentElement!==hpWrap){hpWrap.appendChild(hp);}
+    hpWrap.style.display=currentKey()==='hp'?'':'none';
+    if(hpWrap.firstElementChild) hpWrap.firstElementChild.classList.add('app-moved-source');
+
+    // Keep the original module locations collapsed after their actions move into the global header.
+    document.querySelectorAll('#view-kas > .section.app-legacy-hidden,#view-laporan > .section.app-legacy-hidden').forEach(sec=>sec.style.display='none');
+  }
+
+  function updateHeader(){
+    ensureHeader();
+    const key=currentKey(); const meta=actionFor(key);
+    byId('app-global-title').textContent=meta.title;
+    byId('app-global-crumb').textContent=meta.crumb;
+    byId('app-global-subtitle').textContent=meta.sub;
+    moveSources();
+    const setLabel=(selector,label)=>{const b=document.querySelector(selector);if(b){b.setAttribute('aria-label',label);b.title=label;}};
+    setLabel('#app-action-beranda .section-action','Tambah Pengumuman');
+    setLabel('#app-action-kas .fab-add','Catat Transaksi');
+    setLabel('#app-action-laporan .fab-add','Buat Laporan');
+    // Refresh profile labels from the source user menu after account changes.
+    const nameSrc=document.querySelector('#view-beranda .dashboard-user-meta strong');
+    const roleSrc=document.querySelector('#view-beranda .dashboard-user-meta span');
+    const trig=document.querySelector('.app-profile-toggle');
+    if(trig&&nameSrc&&roleSrc){
+      const strong=trig.querySelector('.dashboard-user-meta strong'); const span=trig.querySelector('.dashboard-user-meta span');
+      if(strong)strong.textContent=nameSrc.textContent; if(span)span.textContent=roleSrc.textContent;
+    }
+  }
+
+  function observeViews(){
+    const root=document.querySelector('.phone'); if(!root)return;
+    const obs=new MutationObserver(records=>{for(const r of records){if(r.type==='attributes'&&r.attributeName==='class'&&r.target.classList.contains('view')){updateHeader();break}}});
+    obs.observe(root,{subtree:true,attributes:true,attributeFilter:['class']});
+    setTimeout(updateHeader,60); setTimeout(updateHeader,450);
+  }
+
+  // Make global search feel like a native app command bar.
+  function enhanceSearch(){
+    const input=byId('global-search-input'); if(!input||input.dataset.v68==='1')return;
+    input.dataset.v68='1'; input.placeholder='Cari di Kelasku...';
+    input.addEventListener('focus',()=>{const r=byId('global-search-results');if(r)r.classList.add('is-v68-open')});
+    input.addEventListener('input',()=>{const r=byId('global-search-results');if(r)r.classList.add('is-v68-open')});
+  }
+
+  function init(){
+    if(!document.body.classList.contains('kelasku-authenticated')) return;
+    ensureHeader(); enhanceSearch(); observeViews(); updateHeader();
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true}); else init();
+  window.addEventListener('load',()=>setTimeout(init,80));
+  // Public hooks for existing navigation / theme refresh paths.
+  window.toggleProfileMenu=toggleProfileMenu;
+})();
+</script>
+
 </body>
 <!-- Kelasku compatibility patch: resilient Firestore sync + legacy fallback -->
 
