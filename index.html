@@ -8679,17 +8679,24 @@ X TJKT 1
     </div>
   </div>
 </div>
-<div class="section piket-weekly-section" id="piket-weekly-section">
-  <div class="piket-weekly-head">
-    <div>
-      <div class="section-kicker">ROTASI MINGGUAN</div>
-      <div class="section-title">Tugas Piket Minggu Ini</div>
-      <div class="field-hint" id="piket-weekly-label">-</div>
+<div class="section piket-weekly-section piket-weekly-pro" id="piket-weekly-section">
+  <div class="piket-weekly-hero">
+    <div class="piket-weekly-copy">
+      <div class="piket-weekly-kicker"><span class="piket-weekly-kicker-dot"></span> ROTASI MINGGUAN</div>
+      <div class="piket-weekly-title-row">
+        <div class="section-title piket-weekly-title">Tugas Piket Minggu Ini</div>
+        <span class="piket-rotation-badge" id="piket-rotation-badge">Otomatis</span>
+      </div>
+      <div class="piket-weekly-label" id="piket-weekly-label">-</div>
     </div>
     <div class="piket-weekly-head-actions">
-      <span class="piket-rotation-badge" id="piket-rotation-badge">Otomatis</span>
-      <button class="btn btn-ghost admin-only piket-rotation-settings-btn" type="button" onclick="openPiketRotationModal()">⚙️ Rotasi</button>
+      <button class="btn btn-ghost admin-only piket-rotation-settings-btn" type="button" onclick="openPiketRotationModal()">⚙️ Atur rotasi</button>
     </div>
+  </div>
+  <div class="piket-weekly-stats" id="piket-weekly-stats">
+    <div class="piket-weekly-stat"><span class="piket-weekly-stat-label">Peserta</span><strong id="piket-weekly-stat-students">0</strong></div>
+    <div class="piket-weekly-stat"><span class="piket-weekly-stat-label">Tugas</span><strong id="piket-weekly-stat-tasks">0</strong></div>
+    <div class="piket-weekly-stat"><span class="piket-weekly-stat-label">Terbagi</span><strong id="piket-weekly-stat-assigned">0</strong></div>
   </div>
   <div id="piket-weekly-list" class="piket-weekly-list"></div>
 </div>
@@ -9293,33 +9300,61 @@ Setelan
 </div>
 </div>
 <div class="modal-bg" id="modal-piket-rotasi">
-  <div class="modal piket-rotation-modal">
-    <h3>Rotasi Tugas Piket</h3>
-    <div class="field-hint" style="margin:-6px 0 12px;">
-      Setiap minggu pembagian tugas bisa diacak otomatis atau kamu atur sendiri secara manual.
+  <div class="modal piket-rotation-modal piket-rotation-modal-pro">
+    <div class="piket-modal-header">
+      <div>
+        <div class="piket-modal-kicker">ROTASI MINGGUAN</div>
+        <h3>Atur pembagian piket</h3>
+        <div class="piket-modal-sub">Atur tugas, jumlah orang, lalu pilih cara pembagiannya untuk minggu ini.</div>
+      </div>
+      <button type="button" class="piket-modal-close" aria-label="Tutup" onclick="closeModal('piket-rotasi')">×</button>
     </div>
-    <div class="field">
-      <label>Metode rotasi</label>
-      <div class="piket-rotation-mode-switch" role="group" aria-label="Metode rotasi piket">
-        <button type="button" id="piket-rotation-auto-btn" class="piket-rotation-mode-btn active" onclick="setPiketRotationMode('auto')">Otomatis</button>
-        <button type="button" id="piket-rotation-manual-btn" class="piket-rotation-mode-btn" onclick="setPiketRotationMode('manual')">Manual</button>
+
+    <div class="piket-rotation-panel">
+      <div class="piket-panel-head">
+        <div>
+          <div class="piket-panel-eyebrow">CARA PEMBAGIAN</div>
+          <div class="piket-panel-title">Bagaimana tugas dibagi?</div>
+        </div>
+      </div>
+      <div class="piket-rotation-mode-switch piket-rotation-mode-switch-pro" role="group" aria-label="Metode rotasi piket">
+        <button type="button" id="piket-rotation-auto-btn" class="piket-rotation-mode-btn active" onclick="setPiketRotationMode('auto')"><span class="piket-mode-icon">↻</span><span><b>Otomatis</b><small>Acak + rotasi tiap minggu</small></span></button>
+        <button type="button" id="piket-rotation-manual-btn" class="piket-rotation-mode-btn" onclick="setPiketRotationMode('manual')"><span class="piket-mode-icon">☷</span><span><b>Manual</b><small>Kamu tentukan satu per satu</small></span></button>
       </div>
     </div>
-    <div class="field">
-      <label>Daftar tugas</label>
-      <div id="piket-task-editor" class="piket-task-editor"></div>
-      <button type="button" class="btn btn-ghost piket-add-task-btn" onclick="addPiketTaskInput()">＋ Tambah tugas</button>
-      <div class="field-hint">Atur jumlah orang per tugas. Bersihkan lantai default 2 orang; tugas lain 1 orang.</div>
+
+    <div class="piket-rotation-panel piket-task-panel">
+      <div class="piket-panel-head piket-task-panel-head">
+        <div>
+          <div class="piket-panel-eyebrow">DAFTAR TUGAS</div>
+          <div class="piket-panel-title">Tugas &amp; jumlah orang</div>
+        </div>
+        <button type="button" class="btn btn-ghost piket-add-task-btn" onclick="addPiketTaskInput()">＋ Tambah tugas</button>
+      </div>
+      <div id="piket-task-editor" class="piket-task-editor piket-task-editor-pro"></div>
+      <div class="piket-panel-note">Bersihkan lantai default <strong>2 orang</strong>. Tugas lain default <strong>1 orang</strong>. Semua angka bisa kamu ubah.</div>
     </div>
-    <div class="field" id="piket-manual-assignment-wrap" style="display:none;">
-      <label>Pembagian minggu ini</label>
-      <div class="field-hint" style="margin:-2px 0 8px;">Pilih tugas untuk setiap siswa.</div>
-      <div id="piket-manual-assignment-list" class="piket-manual-assignment-list"></div>
+
+    <div class="field piket-manual-field" id="piket-manual-assignment-wrap" style="display:none;">
+      <div class="piket-rotation-panel">
+        <div class="piket-panel-head">
+          <div>
+            <div class="piket-panel-eyebrow">PEMBAGIAN MINGGU INI</div>
+            <div class="piket-panel-title">Tentukan tugas setiap siswa</div>
+          </div>
+        </div>
+        <div class="piket-panel-note" style="margin-top:-2px;">Siswa diambil langsung dari jadwal piket yang sudah kamu atur untuk hari ini.</div>
+        <div id="piket-manual-assignment-list" class="piket-manual-assignment-list piket-manual-assignment-list-pro"></div>
+      </div>
     </div>
-    <div class="piket-rotation-preview" id="piket-rotation-preview"></div>
-    <div class="modal-actions">
-      <button class="btn btn-ghost" type="button" onclick="closeModal('piket-rotasi')">Batal</button>
-      <button class="btn btn-primary" type="button" onclick="savePiketRotation()">Simpan rotasi</button>
+
+    <div class="piket-rotation-preview piket-rotation-preview-pro" id="piket-rotation-preview"></div>
+    <div class="piket-modal-footer">
+      <div class="piket-modal-footer-note">Perubahan hanya berlaku untuk rotasi minggu ini.</div>
+      <div class="modal-actions piket-modal-actions-pro">
+        <button class="btn btn-ghost" type="button" onclick="closeModal('piket-rotasi')">Batal</button>
+        <button class="btn btn-primary" type="button" onclick="savePiketRotation()">Simpan rotasi</button>
+      </div>
     </div>
   </div>
 </div>
@@ -12557,6 +12592,17 @@ Setelan
       });
       return plan;
   }
+  function piketTaskShortIcon(task) {
+      const t = String(task || '').toLowerCase();
+      if (t.includes('sapu') || t.includes('lantai') || t.includes('bersih')) return 'BL';
+      if (t.includes('sampah') || t.includes('buang')) return 'BS';
+      if (t.includes('jendela')) return 'TJ';
+      if (t.includes('meja') || t.includes('kursi') || t.includes('rapikan')) return 'RK';
+      if (t.includes('papan') || t.includes('tulis')) return 'PT';
+      if (t.includes('lampu') || t.includes('mati')) return 'ML';
+      if (t.includes('periksa') || t.includes('cek')) return 'CK';
+      return String(task || 'T').trim().slice(0,2).toUpperCase();
+  }
   function renderPiketWeeklyRotation() {
       const labelEl = document.getElementById('piket-weekly-label');
       const badgeEl = document.getElementById('piket-rotation-badge');
@@ -12566,35 +12612,58 @@ Setelan
       const day = currentPiketDay();
       const rotationKey = piketRotationKey(weekKey, day);
       const students = uniquePiketStudents(day);
-      if (labelEl) labelEl.textContent = `${day} • Minggu ${formatPiketWeekLabel(weekKey)} • ${students.length} siswa`;
+      const studentStat = document.getElementById('piket-weekly-stat-students');
+      const taskStat = document.getElementById('piket-weekly-stat-tasks');
+      const assignedStat = document.getElementById('piket-weekly-stat-assigned');
+      if (labelEl) labelEl.textContent = `${day} · ${formatPiketWeekLabel(weekKey)}`;
       if (badgeEl) {
           const mode = state.piketRotationMode === 'manual' ? 'Manual' : 'Otomatis';
           badgeEl.textContent = mode;
           badgeEl.className = `piket-rotation-badge ${state.piketRotationMode === 'manual' ? 'manual' : 'auto'}`;
       }
+      if (studentStat) studentStat.textContent = String(students.length);
       const plan = ensurePiketWeeklyPlan(rotationKey);
       if (!students.length) {
-          listEl.innerHTML = `<div class="piket-weekly-empty">Belum ada siswa yang diatur untuk piket ${escapeHtml(day)}.</div>`;
+          if (taskStat) taskStat.textContent = '0';
+          if (assignedStat) assignedStat.textContent = '0';
+          listEl.innerHTML = `<div class="piket-weekly-empty piket-empty-pro"><div class="piket-empty-mark">＋</div><div><b>Belum ada peserta untuk ${escapeHtml(day)}</b><span>Atur siswa di <strong>Jadwal Piket per Hari</strong> terlebih dahulu.</span></div></div>`;
           return;
       }
       if (!plan) {
-          listEl.innerHTML = `<div class="piket-weekly-empty">Belum ada rotasi untuk ${escapeHtml(day)} minggu ini.${isAdmin() ? ' Klik <b>Rotasi</b> untuk mengaturnya.' : ''}</div>`;
+          if (taskStat) taskStat.textContent = '0';
+          if (assignedStat) assignedStat.textContent = '0';
+          listEl.innerHTML = `<div class="piket-weekly-empty piket-empty-pro"><div class="piket-empty-mark">↻</div><div><b>Rotasi belum dibuat</b><span>${isAdmin() ? 'Klik <strong>Atur rotasi</strong> untuk membagi tugas minggu ini.' : 'Belum ada pembagian tugas untuk minggu ini.'}</span></div></div>`;
           return;
       }
       const assignments = plan.assignments && typeof plan.assignments === 'object' ? plan.assignments : {};
       const tasks = uniquePiketTasks(plan.tasks && plan.tasks.length ? plan.tasks : state.piketTaskList);
-      listEl.innerHTML = tasks.map((task, index) => {
+      const activeEntries = tasks.map((task, index) => {
           const people = Array.isArray(assignments[task]) ? assignments[task] : [];
-          if (!people.length) return '';
-          return `<div class="piket-week-card">
-              <div class="piket-week-task-index">${String(index + 1).padStart(2,'0')}</div>
-              <div class="piket-week-task-main">
-                  <div class="piket-week-task-name">${escapeHtml(task)}</div>
-                  <div class="piket-week-task-people">${people.map(name => `<span class="piket-week-person">${escapeHtml(name)}</span>`).join('')}</div>
+          return { task, index, people };
+      }).filter(x => x.people.length);
+      const totalAssigned = activeEntries.reduce((sum, x) => sum + x.people.length, 0);
+      if (taskStat) taskStat.textContent = String(activeEntries.length);
+      if (assignedStat) assignedStat.textContent = `${totalAssigned}/${students.length}`;
+      listEl.innerHTML = activeEntries.map(entry => {
+          const quota = getPiketTaskQuota(entry.task);
+          const short = piketTaskShortIcon(entry.task);
+          const names = entry.people.map(name => {
+              const initials = String(name).split(/\s+/).map(x => x[0] || '').slice(0,2).join('').toUpperCase();
+              return `<div class="piket-person-card"><span class="piket-person-avatar">${escapeHtml(initials || '•')}</span><span class="piket-person-name">${escapeHtml(name)}</span></div>`;
+          }).join('');
+          return `<article class="piket-week-card piket-week-card-pro ${entry.people.length > 1 ? 'multi-person' : ''}">
+              <div class="piket-week-card-top">
+                  <div class="piket-week-task-symbol">${escapeHtml(short)}</div>
+                  <div class="piket-week-task-meta"><span>TUGAS ${String(entry.index + 1).padStart(2,'0')}</span><span>${entry.people.length}/${quota} ORANG</span></div>
               </div>
-          </div>`;
+              <div class="piket-week-task-main piket-week-task-main-pro">
+                  <div class="piket-week-task-name">${escapeHtml(entry.task)}</div>
+                  <div class="piket-week-task-people piket-week-task-people-pro">${names}</div>
+              </div>
+          </article>`;
       }).join('') || `<div class="piket-weekly-empty">Belum ada pembagian tugas.</div>`;
   }
+
   function renderPiketTaskEditor() {
       const wrap = document.getElementById('piket-task-editor');
       if (!wrap) return;
@@ -17683,6 +17752,126 @@ body.dark .cal-card .cal-nav-btn{color:#f8fafc !important;background:transparent
 </body>
 <!-- Kelasku compatibility patch: resilient Firestore sync + legacy fallback -->
 
+<style id="piket-weekly-pro-ui-v61">
+  .piket-weekly-pro{position:relative;overflow:hidden}
+  .piket-weekly-hero{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:16px 16px 14px;border:1px solid var(--ui-border);background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(248,250,252,.78));border-radius:18px;box-shadow:0 8px 24px rgba(15,23,42,.055)}
+  .piket-weekly-copy{min-width:0;flex:1}
+  .piket-weekly-kicker,.piket-modal-kicker,.piket-panel-eyebrow{font-size:9px;font-weight:900;letter-spacing:.14em;color:var(--ui-muted)}
+  .piket-weekly-kicker{display:flex;align-items:center;gap:7px;margin-bottom:7px}
+  .piket-weekly-kicker-dot{width:7px;height:7px;border-radius:50%;background:var(--ui-blue);box-shadow:0 0 0 4px var(--ui-blue-soft)}
+  .piket-weekly-title-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .piket-weekly-title{font-size:15px;line-height:1.2}
+  .piket-weekly-label{margin-top:5px;font-size:10px;font-weight:700;color:var(--ui-muted)}
+  .piket-weekly-head-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .piket-rotation-settings-btn{padding:8px 11px;font-size:10px;border-radius:11px;white-space:nowrap}
+  .piket-rotation-badge{display:inline-flex;align-items:center;justify-content:center;min-height:26px;padding:0 9px;border-radius:999px;font-size:9px;font-weight:900;border:1px solid var(--ui-border);background:var(--ui-surface);color:var(--ui-muted);letter-spacing:.02em}
+  .piket-rotation-badge.auto{background:var(--ui-blue-soft);border-color:rgba(37,99,235,.18);color:var(--ui-blue)}
+  .piket-rotation-badge.manual{background:var(--ui-amber-soft);border-color:rgba(180,83,9,.18);color:var(--ui-amber)}
+  .piket-weekly-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+  .piket-weekly-stat{padding:10px 12px;border:1px solid var(--ui-border);background:var(--ui-surface);border-radius:13px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .piket-weekly-stat-label{font-size:9px;font-weight:800;letter-spacing:.07em;color:var(--ui-muted);text-transform:uppercase}
+  .piket-weekly-stat strong{font:800 13px var(--font-display);color:var(--ui-text)}
+  .piket-weekly-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:9px}
+  .piket-week-card-pro{position:relative;display:block;padding:12px 13px 13px;border:1px solid var(--ui-border);background:var(--ui-surface);border-radius:15px;box-shadow:0 5px 16px rgba(15,23,42,.045);overflow:hidden;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+  .piket-week-card-pro::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--ui-blue);opacity:.9}
+  .piket-week-card-pro.multi-person::before{background:var(--ui-green)}
+  .piket-week-card-pro:hover{transform:translateY(-1px);box-shadow:0 9px 22px rgba(15,23,42,.07);border-color:#c7d2df}
+  .piket-week-card-top{display:flex;align-items:center;gap:9px;margin-bottom:12px}
+  .piket-week-task-symbol{width:30px;height:30px;display:grid;place-items:center;border-radius:10px;background:var(--ui-blue-soft);color:var(--ui-blue);font-size:9px;font-weight:900;letter-spacing:.03em;flex:0 0 auto}
+  .multi-person .piket-week-task-symbol{background:var(--ui-green-soft);color:var(--ui-green)}
+  .piket-week-task-meta{display:flex;justify-content:space-between;gap:8px;min-width:0;flex:1}
+  .piket-week-task-meta span{font-size:8px;font-weight:900;letter-spacing:.1em;color:var(--ui-muted);white-space:nowrap}
+  .piket-week-task-main-pro{padding-left:39px}
+  .piket-week-task-name{font-size:12px;font-weight:900;color:var(--ui-text);margin-bottom:10px;line-height:1.28}
+  .piket-week-task-people-pro{display:grid;gap:6px}
+  .piket-person-card{min-width:0;display:flex;align-items:center;gap:7px;padding:6px 7px;border-radius:10px;background:var(--ui-bg);border:1px solid var(--ui-border)}
+  .piket-person-avatar{width:23px;height:23px;display:grid;place-items:center;border-radius:8px;background:var(--ui-surface);border:1px solid var(--ui-border);font-size:8px;font-weight:900;color:var(--ui-text);flex:0 0 auto}
+  .piket-person-name{font-size:10px;font-weight:800;color:var(--ui-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .piket-empty-pro{display:flex;align-items:center;justify-content:center;gap:11px;text-align:left;min-height:82px;padding:15px!important;border:1px dashed var(--ui-border);border-radius:15px;background:var(--ui-bg)}
+  .piket-empty-mark{width:32px;height:32px;display:grid;place-items:center;border-radius:10px;background:var(--ui-surface);border:1px solid var(--ui-border);font-size:14px;font-weight:900;color:var(--ui-blue)}
+  .piket-empty-pro b{display:block;font-size:11px;color:var(--ui-text);margin-bottom:2px}
+  .piket-empty-pro span{display:block;font-size:9px;color:var(--ui-muted);line-height:1.45}
+  .piket-rotation-modal-pro{padding:0!important;overflow:hidden;max-height:min(90vh,820px);display:flex;flex-direction:column}
+  .piket-modal-header{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding:18px 18px 14px;border-bottom:1px solid var(--ui-border)}
+  .piket-modal-header h3{margin:4px 0 3px;font-size:18px;line-height:1.15;color:var(--ui-text)}
+  .piket-modal-sub{font-size:10px;line-height:1.5;color:var(--ui-muted);max-width:520px}
+  .piket-modal-close{width:32px;height:32px;border:1px solid var(--ui-border);background:var(--ui-surface);color:var(--ui-muted);border-radius:10px;font-size:20px;line-height:1;cursor:pointer}
+  .piket-modal-close:hover{color:var(--ui-text);border-color:#b8c4d2}
+  .piket-rotation-modal-pro>.piket-rotation-panel,.piket-rotation-modal-pro>.field{margin:0 18px}
+  .piket-rotation-panel{border:1px solid var(--ui-border);background:var(--ui-bg);border-radius:14px;padding:12px;margin-top:10px}
+  .piket-panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:9px}
+  .piket-panel-title{font-size:12px;font-weight:900;color:var(--ui-text);margin-top:2px}
+  .piket-rotation-mode-switch-pro{gap:8px}
+  .piket-rotation-mode-btn{display:flex;align-items:center;gap:9px;text-align:left;border:1px solid var(--ui-border);background:var(--ui-surface);color:var(--ui-text);min-height:54px;border-radius:12px;padding:8px 10px;font-size:10px;font-weight:800;cursor:pointer;transition:.18s ease}
+  .piket-rotation-mode-btn:hover{border-color:#b8c4d2;transform:translateY(-1px)}
+  .piket-rotation-mode-btn.active{background:var(--ui-text);border-color:var(--ui-text);color:#fff;box-shadow:0 6px 15px rgba(15,23,42,.16)}
+  .piket-mode-icon{width:28px;height:28px;display:grid;place-items:center;border-radius:9px;background:var(--ui-bg);color:var(--ui-blue);font-size:15px;flex:0 0 auto}
+  .piket-rotation-mode-btn.active .piket-mode-icon{background:rgba(255,255,255,.12);color:#fff}
+  .piket-rotation-mode-btn span:last-child{display:flex;flex-direction:column;gap:2px}
+  .piket-rotation-mode-btn b{font-size:10px}
+  .piket-rotation-mode-btn small{font-size:8px;font-weight:600;opacity:.68}
+  .piket-task-panel{background:var(--ui-surface)}
+  .piket-task-panel-head{margin-bottom:10px}
+  .piket-task-editor-pro{gap:7px}
+  .piket-task-editor-row{display:grid;grid-template-columns:minmax(0,1fr) auto 36px;gap:7px;align-items:center;padding:7px;border:1px solid var(--ui-border);background:var(--ui-bg);border-radius:12px}
+  .piket-task-input{height:36px;border:1px solid var(--ui-border);background:var(--ui-surface);color:var(--ui-text);border-radius:9px;padding:0 10px;font-size:10.5px;outline:none}
+  .piket-task-input:focus{border-color:var(--ui-blue);box-shadow:0 0 0 3px rgba(37,99,235,.10)}
+  .piket-task-count{display:inline-flex;align-items:center;gap:5px;min-width:76px;height:36px;padding:0 7px;border:1px solid var(--ui-border);background:var(--ui-surface);color:var(--ui-muted);border-radius:9px;font-size:8px;font-weight:800;white-space:nowrap}
+  .piket-task-count-input{width:32px;height:26px;border:1px solid var(--ui-border);border-radius:7px;background:var(--ui-bg);color:var(--ui-text);font:800 10px inherit;text-align:center;outline:none}
+  .piket-task-remove{width:36px;height:36px;border:1px solid var(--ui-border);background:var(--ui-surface);color:var(--ui-red);border-radius:9px;font-size:17px;line-height:1;cursor:pointer}
+  .piket-add-task-btn{font-size:9px;padding:7px 9px;border-radius:9px;white-space:nowrap}
+  .piket-panel-note{font-size:8.5px;color:var(--ui-muted);line-height:1.5;margin-top:8px}
+  .piket-panel-note strong{color:var(--ui-text)}
+  .piket-manual-field{padding-bottom:0}
+  .piket-manual-assignment-list-pro{max-height:270px;padding-right:2px;margin-top:9px}
+  .piket-manual-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(165px,.9fr);gap:9px;align-items:center;padding:7px 0;border-bottom:1px solid var(--ui-border)}
+  .piket-manual-row:last-child{border-bottom:none}
+  .piket-manual-name{font-size:10px;font-weight:900;color:var(--ui-text)}
+  .piket-manual-row select{height:34px;border:1px solid var(--ui-border);background:var(--ui-surface);color:var(--ui-text);border-radius:9px;padding:0 8px;font-size:9px;outline:none}
+  .piket-manual-row select:focus{border-color:var(--ui-blue);box-shadow:0 0 0 3px rgba(37,99,235,.10)}
+  .piket-rotation-preview-pro{margin:10px 18px 0;padding:10px 12px;border-radius:12px;background:var(--ui-bg);border:1px solid var(--ui-border);font-size:9px;line-height:1.55;color:var(--ui-muted)}
+  .piket-modal-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 18px 16px;margin-top:auto;border-top:1px solid var(--ui-border);background:var(--ui-surface)}
+  .piket-modal-footer-note{font-size:8.5px;color:var(--ui-muted)}
+  .piket-modal-actions-pro{margin:0;display:flex;gap:7px}
+  .piket-modal-actions-pro .btn{min-width:96px}
+  body.dark .piket-weekly-hero{background:linear-gradient(180deg,#111c2f,#0f192a);border-color:#40516b;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+  body.dark .piket-weekly-stat,body.dark .piket-week-card-pro,body.dark .piket-person-card,body.dark .piket-person-avatar{background:#111c2f;border-color:#40516b;color:#f8fafc}
+  body.dark .piket-weekly-stat strong,body.dark .piket-week-task-name,body.dark .piket-person-name,body.dark .piket-empty-pro b,body.dark .piket-modal-header h3,body.dark .piket-panel-title,body.dark .piket-manual-name{color:#f8fafc}
+  body.dark .piket-weekly-label,body.dark .piket-weekly-stat-label,body.dark .piket-week-task-meta span,body.dark .piket-empty-pro span,body.dark .piket-modal-sub,body.dark .piket-panel-eyebrow,body.dark .piket-modal-kicker,body.dark .piket-panel-note,body.dark .piket-modal-footer-note{color:#aeb8ca}
+  body.dark .piket-weekly-hero .piket-rotation-badge.auto{background:#13233d;border-color:#29406b;color:#93c5fd}
+  body.dark .piket-weekly-hero .piket-rotation-badge.manual{background:#2b2113;border-color:#5b4b28;color:#fbbf24}
+  body.dark .piket-weekly-kicker-dot{box-shadow:0 0 0 4px rgba(59,130,246,.12)}
+  body.dark .piket-week-task-symbol{background:#13233d;color:#93c5fd}
+  body.dark .multi-person .piket-week-task-symbol{background:#0d2417;color:#4ade80}
+  body.dark .piket-empty-pro{background:#0f192a;border-color:#40516b}
+  body.dark .piket-empty-mark{background:#111c2f;border-color:#40516b;color:#93c5fd}
+  body.dark .piket-rotation-panel{background:#0f192a;border-color:#40516b}
+  body.dark .piket-task-panel{background:#111c2f}
+  body.dark .piket-rotation-mode-btn,body.dark .piket-task-editor-row,body.dark .piket-task-input,body.dark .piket-task-count,body.dark .piket-task-remove,body.dark .piket-manual-row select,body.dark .piket-rotation-preview-pro,body.dark .piket-modal-close{background:#111c2f;border-color:#40516b;color:#f8fafc}
+  body.dark .piket-task-editor-row{background:#0f192a}
+  body.dark .piket-task-count-input{background:#16243a;border-color:#40516b;color:#f8fafc}
+  body.dark .piket-rotation-mode-btn.active{background:#3b82f6;border-color:#3b82f6;color:#fff}
+  body.dark .piket-mode-icon{background:#16243a;color:#93c5fd}
+  body.dark .piket-rotation-mode-btn.active .piket-mode-icon{background:rgba(255,255,255,.14);color:#fff}
+  body.dark .piket-modal-footer,body.dark .piket-modal-header{background:#111c2f;border-color:#40516b}
+  @media(max-width:760px){
+    .piket-weekly-hero{flex-direction:column;align-items:stretch}
+    .piket-weekly-head-actions{justify-content:flex-start}
+    .piket-weekly-list{grid-template-columns:1fr}
+    .piket-modal-footer{align-items:flex-start;flex-direction:column}
+    .piket-modal-actions-pro{width:100%}
+    .piket-modal-actions-pro .btn{flex:1}
+  }
+  @media(max-width:520px){
+    .piket-task-editor-row{grid-template-columns:minmax(0,1fr) 68px 34px;padding:6px}
+    .piket-task-count{min-width:68px;padding:0 5px;gap:3px}
+    .piket-task-count-input{width:27px}
+    .piket-rotation-modal-pro>.piket-rotation-panel,.piket-rotation-modal-pro>.field{margin-left:12px;margin-right:12px}
+    .piket-modal-header{padding:15px 12px 12px}
+    .piket-rotation-preview-pro{margin-left:12px;margin-right:12px}
+    .piket-modal-footer{padding-left:12px;padding-right:12px}
+  }
+</style>
 <style id="kelasku-light-text-visibility-final-v25">
 /* FINAL LIGHT TEXT VISIBILITY FIX
    Mengembalikan teks yang hilang/putih di atas permukaan putih.
