@@ -8026,6 +8026,105 @@ body:not(.dark) .cal-card .cal-nav-btn:hover{
 }
 </style>
 
+
+<style id="kelasku-tugas-worldclass-v1">
+/* TUGAS — world-class smart list redesign */
+#view-tugas{
+  --task-bg:#f8fafc;
+  --task-surface:#ffffff;
+  --task-ink:#0f172a;
+  --task-muted:#64748b;
+  --task-line:#e2e8f0;
+  --task-accent:#4338ca;
+  --task-accent-soft:#eef2ff;
+  --task-shadow:0 4px 20px -2px rgba(15,23,42,.05);
+  color:var(--task-ink);
+}
+#view-tugas .task-pro-pagehead{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;padding-bottom:2px;margin-bottom:14px}
+#view-tugas .task-pagehead-copy{min-width:0}
+#view-tugas .task-pagehead-copy h1{letter-spacing:-.035em}
+#view-tugas .task-pagehead-copy p{max-width:520px}
+#view-tugas .task-pro-primary{flex:0 0 auto;width:auto;margin:0!important;padding:10px 14px!important;border-radius:12px!important;box-shadow:0 8px 18px rgba(37,99,235,.16)!important}
+#view-tugas .task-pro-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 12px}
+#view-tugas .task-pro-search-wrap{position:relative;flex:1 1 210px;min-width:180px}
+#view-tugas .task-pro-search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:15px;color:#64748b;pointer-events:none}
+#view-tugas #task-pro-search{width:100%;height:38px;padding:0 12px 0 31px;border:1px solid var(--task-line)!important;border-radius:11px!important;background:var(--task-surface)!important;color:var(--task-ink)!important;box-shadow:0 1px 2px rgba(15,23,42,.03)!important;font-size:12px!important}
+#view-tugas #task-pro-search:focus{border-color:#a5b4fc!important;box-shadow:0 0 0 3px rgba(99,102,241,.10)!important}
+#view-tugas .task-pro-filter-tabs{display:flex!important;gap:5px!important;margin:0!important;flex:0 0 auto}
+#view-tugas .task-pro-filter-tabs .task-filter-tab{min-height:38px;padding:0 11px;border:1px solid transparent!important;background:transparent!important;box-shadow:none!important;color:#64748b!important;border-radius:10px!important;white-space:nowrap;transition:all .2s cubic-bezier(.16,1,.3,1)!important}
+#view-tugas .task-pro-filter-tabs .task-filter-tab:hover{background:#f1f5f9!important;color:#334155!important}
+#view-tugas .task-pro-filter-tabs .task-filter-tab.active{background:#eef2ff!important;color:#3730a3!important;border-color:#c7d2fe!important;box-shadow:0 1px 2px rgba(67,56,202,.06)!important}
+#view-tugas .task-pro-summary-row{display:flex;align-items:end;justify-content:space-between;gap:12px;padding:2px 2px 10px}
+#view-tugas .task-pro-summary-title{font-size:13px;font-weight:800;letter-spacing:-.01em}
+#view-tugas .task-pro-summary-sub{font-size:10.5px;color:#64748b;margin-top:3px}
+#view-tugas .task-pro-clear-btn{font-size:10px!important;min-height:32px;display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+#view-tugas .task-pro-list-wrap{margin-top:0}
+#view-tugas .task-pro-smart-list{display:flex;flex-direction:column;gap:10px}
+#view-tugas .task-pro-hidden-compat{display:none!important}
+#view-tugas .task-pro-card{background:#fff!important;border:1px solid #e2e8f0!important;border-radius:14px!important;padding:14px 15px 13px!important;box-shadow:0 4px 20px -2px rgba(15,23,42,.05)!important;position:relative;transition:transform .2s cubic-bezier(.16,1,.3,1),box-shadow .2s ease,border-color .2s ease,opacity .22s ease!important;overflow:hidden}
+#view-tugas .task-pro-card:hover{border-color:#cbd5e1!important;box-shadow:0 8px 24px -4px rgba(15,23,42,.08)!important}
+#view-tugas .task-pro-card:active{transform:scale(.985)}
+#view-tugas .task-pro-card.is-complete{background:linear-gradient(180deg,#fff 0%,#fbfffd 100%)!important}
+#view-tugas .task-pro-card.is-complete .task-pro-title{text-decoration:line-through;text-decoration-thickness:1px;text-decoration-color:#94a3b8;opacity:.78}
+#view-tugas .task-pro-card-head{display:flex;align-items:center;justify-content:space-between;gap:9px;margin-bottom:8px}
+#view-tugas .task-pro-subject{display:inline-flex;align-items:center;gap:6px;padding:5px 8px;border-radius:999px;background:#f1f5f9;color:#334155;font-size:9.5px;font-weight:800;max-width:70%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#view-tugas .task-pro-subject-icon{width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;background:#e0e7ff;color:#4338ca;font-size:9px;flex:0 0 auto}
+#view-tugas .task-pro-deadline{font-size:9px;font-weight:800;padding:5px 8px;border-radius:999px;white-space:nowrap;line-height:1}
+#view-tugas .task-pro-title{font-size:15px!important;font-weight:800!important;line-height:1.28!important;letter-spacing:-.018em!important;text-transform:capitalize;color:#0f172a!important;max-width:92%}
+#view-tugas .task-pro-desc{font-size:11px!important;line-height:1.5!important;color:#475569!important;margin-top:6px!important;max-width:900px}
+#view-tugas .task-pro-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px;padding-top:10px;border-top:1px solid #f1f5f9}
+#view-tugas .task-pro-footer-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0}
+#view-tugas .task-pro-meta-item{font-size:9.5px;color:#64748b;display:inline-flex;align-items:center;gap:4px}
+#view-tugas .task-pro-status-dot{font-size:9px;font-weight:800;display:inline-flex;align-items:center;gap:4px}
+#view-tugas .task-pro-status-dot i{width:6px;height:6px;border-radius:50%;display:inline-block;background:#22c55e}
+#view-tugas .task-pro-check-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:32px;padding:0 10px;border:1px solid #c7d2fe!important;background:#eef2ff!important;color:#3730a3!important;border-radius:9px!important;font-size:10px!important;font-weight:800!important;box-shadow:0 1px 2px rgba(67,56,202,.07)!important;cursor:pointer;transition:all .2s cubic-bezier(.16,1,.3,1)!important}
+#view-tugas .task-pro-check-btn:hover{background:#e0e7ff!important;border-color:#a5b4fc!important}
+#view-tugas .task-pro-check-btn:active{transform:scale(.96)}
+#view-tugas .task-pro-check-btn.is-done{background:#ecfdf5!important;border-color:#bbf7d0!important;color:#166534!important}
+#view-tugas .task-pro-check-icon{width:18px;height:18px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;background:#fff;color:inherit;font-size:12px;line-height:1;border:1px solid currentColor}
+#view-tugas .task-pro-check-btn.is-done .task-pro-check-icon{background:#22c55e;color:#fff;border-color:#22c55e}
+#view-tugas .task-pro-drive{margin-top:9px!important}
+#view-tugas .task-pro-drive a{display:inline-flex!important;align-items:center!important;min-height:30px;padding:0 9px!important;border:1px solid #dbeafe!important;border-radius:9px!important;background:#eff6ff!important;color:#1d4ed8!important;font-size:9.5px!important;font-weight:800!important;text-decoration:none!important}
+#view-tugas .task-pro-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:#fff;border:1px dashed #cbd5e1;border-radius:14px;padding:38px 18px 34px;min-height:210px;box-shadow:0 2px 10px rgba(15,23,42,.025)}
+#view-tugas .task-pro-empty-doodle{width:54px;height:54px;border-radius:18px;background:#f1f5f9;color:#4338ca;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:10px;transform:rotate(-4deg)}
+#view-tugas .task-pro-empty-title{font-size:13px;font-weight:800;color:#0f172a}
+#view-tugas .task-pro-empty-sub{font-size:10.5px;line-height:1.5;color:#64748b;max-width:330px;margin-top:4px}
+body.dark #view-tugas{--task-surface:#1e293b;--task-ink:#f8fafc;--task-muted:#cbd5e1;--task-line:#40516b;--task-accent-soft:#203b72}
+body.dark #view-tugas .task-pro-pagehead .task-pagehead-copy p{color:#cbd5e1!important}
+body.dark #view-tugas .task-pro-search-wrap .task-pro-search-icon{color:#93a4ba}
+body.dark #view-tugas #task-pro-search{background:#17243a!important;color:#f8fafc!important;border-color:#40516b!important}
+body.dark #view-tugas .task-pro-filter-tabs .task-filter-tab{color:#cbd5e1!important}
+body.dark #view-tugas .task-pro-filter-tabs .task-filter-tab:hover{background:#1e293b!important;color:#f8fafc!important}
+body.dark #view-tugas .task-pro-filter-tabs .task-filter-tab.active{background:#203b72!important;color:#fff!important;border-color:#4b78c8!important}
+body.dark #view-tugas .task-pro-summary-sub{color:#aebbd0!important}
+body.dark #view-tugas .task-pro-clear-btn{background:#172033!important;color:#dbe5f1!important;border-color:#3a4a61!important}
+body.dark #view-tugas .task-pro-card{background:#1e293b!important;border-color:#40516b!important;box-shadow:0 5px 20px -4px rgba(0,0,0,.20)!important}
+body.dark #view-tugas .task-pro-card:hover{border-color:#52657e!important;box-shadow:0 8px 26px -5px rgba(0,0,0,.26)!important}
+body.dark #view-tugas .task-pro-card.is-complete{background:linear-gradient(180deg,#1e293b 0%,#182c27 100%)!important}
+body.dark #view-tugas .task-pro-subject{background:#17243a;color:#e2e8f0}
+body.dark #view-tugas .task-pro-subject-icon{background:#203b72;color:#93c5fd}
+body.dark #view-tugas .task-pro-title{color:#f8fafc!important}
+body.dark #view-tugas .task-pro-desc{color:#cbd5e1!important}
+body.dark #view-tugas .task-pro-footer{border-top-color:#2c3a50}
+body.dark #view-tugas .task-pro-meta-item{color:#aebbd0}
+body.dark #view-tugas .task-pro-empty{background:#1e293b;border-color:#40516b}
+body.dark #view-tugas .task-pro-empty-doodle{background:#17243a;color:#93c5fd}
+body.dark #view-tugas .task-pro-empty-title{color:#f8fafc}
+body.dark #view-tugas .task-pro-empty-sub{color:#aebbd0}
+body.dark #view-tugas .task-pro-drive a{background:#172d52!important;border-color:#40516b!important;color:#fff!important}
+@media(max-width:900px){
+  #view-tugas .task-pro-pagehead{align-items:flex-start;flex-direction:column;gap:10px}
+  #view-tugas .task-pro-primary{align-self:flex-start}
+  #view-tugas .task-pro-toolbar{align-items:stretch}
+  #view-tugas .task-pro-search-wrap{flex-basis:100%;min-width:0}
+  #view-tugas .task-pro-filter-tabs{width:100%;overflow-x:auto;flex-wrap:nowrap;padding-bottom:1px;scrollbar-width:none}
+  #view-tugas .task-pro-filter-tabs::-webkit-scrollbar{display:none}
+  #view-tugas .task-pro-filter-tabs .task-filter-tab{flex:0 0 auto}
+  #view-tugas .task-pro-summary-row{align-items:flex-start;flex-direction:column;gap:7px}
+  #view-tugas .task-pro-clear-wrap{width:100%}
+  #view-tugas .task-pro-clear-btn{width:auto}
+}
+</style>
 </head>
 
 <body>
@@ -8708,41 +8807,45 @@ X TJKT 1
 </div>
 </div>
 <div class="view" id="view-tugas">
-  <div class="pagehead">
-    <h1>
-      Manajemen Tugas
-    </h1>
-    <p>
-      Pantau deadline &amp; kumpulkan berkas tugas
-    </p>
+  <div class="pagehead task-pro-pagehead">
+    <div class="task-pagehead-copy">
+      <h1>Manajemen Tugas</h1>
+      <p>Pantau deadline dan bereskan tugas tanpa ribet.</p>
+    </div>
+    <button type="button" class="fab-add admin-only task-pro-primary" onclick="openTugasModal()">＋ Tambah Tugas</button>
   </div>
-  <div class="section">
-    <button class="fab-add admin-only" onclick="openTugasModal()">＋ Tambah Tugas
-  </button>
-</div>
-<div class="section">
-  <div class="section-head">
-    <div class="section-title">
-      Belum Selesai
+
+  <div class="task-pro-toolbar" id="task-pro-toolbar">
+    <div class="task-pro-search-wrap">
+      <span class="task-pro-search-icon" aria-hidden="true">⌕</span>
+      <input id="task-pro-search" type="search" placeholder="🔍 Cari tugas..." aria-label="Cari tugas" autocomplete="off">
+    </div>
+    <div class="task-filter-tabs task-pro-filter-tabs" id="task-filter-tabs" role="tablist" aria-label="Filter tugas">
+      <button type="button" class="task-filter-tab active" data-task-filter="all" role="tab" aria-selected="true">Semua</button>
+      <button type="button" class="task-filter-tab" data-task-filter="active" role="tab" aria-selected="false">Aktif</button>
+      <button type="button" class="task-filter-tab" data-task-filter="soon" role="tab" aria-selected="false">Mendekati Deadline</button>
+      <button type="button" class="task-filter-tab" data-task-filter="done" role="tab" aria-selected="false">Selesai</button>
     </div>
   </div>
-  <div class="card" id="tugas-open-list">
-  </div>
-</div>
-<div class="section">
-  <div class="section-head">
-    <div class="section-title">
-      Sudah Selesai
+
+  <div class="task-pro-summary-row">
+    <div class="task-pro-summary-copy">
+      <div class="task-pro-summary-title" id="task-pro-summary-title">Semua tugas</div>
+      <div class="task-pro-summary-sub" id="task-pro-summary-sub">Atur ritme kerja, satu tugas pada satu waktu.</div>
     </div>
-    <div class="section-link admin-only" onclick="clearDoneTugas()">
-      🗑️ Bersihkan
+    <div class="task-pro-clear-wrap admin-only">
+      <button type="button" class="section-link task-pro-clear-btn" onclick="clearDoneTugas()">🗑️ Bersihkan selesai</button>
     </div>
   </div>
-  <div class="field-hint" id="tugas-autoclean-hint" style="margin:-4px 0 8px;">
+
+  <div class="task-pro-list-wrap" id="task-pro-list-wrap">
+    <div id="tugas-smart-list" class="task-pro-smart-list"></div>
   </div>
-  <div class="card" id="tugas-done-list">
+  <div class="task-pro-hidden-compat" aria-hidden="true">
+    <div id="tugas-open-list"></div>
+    <div id="tugas-done-list"></div>
   </div>
-</div>
+  <div class="field-hint" id="tugas-autoclean-hint" style="margin:8px 0 0;"></div>
 </div>
 <div class="view" id="view-laporan">
   <div class="pagehead">
@@ -15135,23 +15238,115 @@ Setelan
     }
 
     let taskFilter='all';
-    function injectTaskFilters(){const v=document.getElementById('view-tugas');if(!v||document.getElementById('task-filter-tabs'))return;const head=v.querySelector('.pagehead');const tabs=document.createElement('div');tabs.id='task-filter-tabs';tabs.className='task-filter-tabs';tabs.innerHTML=[['all','Semua'],['active','Aktif'],['soon','Mendekati Deadline'],['done','Selesai']].map(x=>`<button class="task-filter-tab ${x[0]==='all'?'active':''}" data-task-filter="${x[0]}">${x[1]}</button>`).join('');head.after(tabs);tabs.addEventListener('click',e=>{const b=e.target.closest('[data-task-filter]');if(!b)return;taskFilter=b.dataset.taskFilter;tabs.querySelectorAll('.task-filter-tab').forEach(x=>x.classList.toggle('active',x===b));professionalRenderTugas();});}
-    function daysLeft(d){if(!d)return 999;const a=new Date();a.setHours(0,0,0,0);const b=new Date(d+'T00:00:00');return Math.ceil((b-a)/86400000)}
-    function taskMatches(t){const left=daysLeft(t.tenggat);if(taskFilter==='done')return !!t.selesai;if(taskFilter==='active')return !t.selesai;if(taskFilter==='soon')return !t.selesai&&left<=3;return true}
-    function professionalRenderTugas(){
-      injectTaskFilters(); autoCleanDoneTugas(); const all=(state.tugas||[]).filter(taskMatches); const open=all.filter(t=>!t.selesai),done=all.filter(t=>t.selesai); const hint=document.getElementById('tugas-autoclean-hint');if(hint)hint.textContent='';
-      const renderCard=t=>{const displayTaskName=String(t.nama||'').replace(/\bvidio\b/gi,'video');const displayTaskDesc=String(t.deskripsi||'').replace(/\bvidio\b/gi,'video');const left=daysLeft(t.tenggat);const dc=t.selesai?'deadline-safe':left<=1?'deadline-danger':left<=3?'deadline-soon':'deadline-safe';const dl=t.selesai?'Selesai':t.tenggat?(left<0?'Lewat deadline':left===0?'Hari ini':left===1?'H-1':`H-${left}`):'Tanpa deadline';const clickable=isAdmin()?` role="button" tabindex="0" title="Klik untuk membuka editor" onclick="openTugasModal(${Number(t.id)})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openTugasModal(${Number(t.id)})}"`:'';const action=isAdmin()?`<div class="task-pro-actions"><button type="button" onclick="event.stopPropagation();toggleTugas(${Number(t.id)})">${t.selesai?'Buka lagi':'Tandai selesai'}</button></div>`:'';let driveLink='';try{const raw=String(t.driveLink||'').trim();if(raw){const u=new URL(raw);const host=u.hostname.toLowerCase();if(u.protocol==='https:'&&(host==='drive.google.com'||host==='docs.google.com'))driveLink=u.href;}}catch(_){}return `<div class="task-pro-card"${clickable}><div class="task-pro-top"><div class="task-pro-title">${esc(displayTaskName)}</div><span class="task-pro-deadline ${dc}">${dl}</span></div><div class="task-pro-meta"><span class="task-pro-tag">${esc(t.mapel||'Tanpa mapel')}</span>${t.tenggat?`<span class="task-pro-tag">${esc(t.tenggat)}</span>`:''}${driveLink?'<span class="task-pro-tag task-pill-drive">☁️ Google Drive</span>':''}</div>${displayTaskDesc?`<div class="task-pro-desc">${esc(displayTaskDesc)}</div>`:''}${driveLink?`<div class="task-drive-link"><a href="${esc(driveLink)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">☁️ Buka folder Google Drive untuk mengumpulkan</a></div>`:''}${renderTaskFiles(t)}${action}</div>`};
-      const a=document.getElementById('tugas-open-list'),b=document.getElementById('tugas-done-list');if(a){a.className='task-column';a.innerHTML=`<div class="task-column-title">Aktif</div>${open.length?open.map(renderCard).join(''):'<div class="empty" style="padding:28px 12px">Tidak ada tugas aktif.</div>'}`;}if(b){b.className='task-column';b.innerHTML=`<div class="task-column-title">Selesai</div>${done.length?done.map(renderCard).join(''):'<div class="empty" style="padding:28px 12px">Belum ada tugas selesai.</div>'}`;}
-      const openSection=a?.closest('.section'); const doneSection=b?.closest('.section');
-      if(openSection && doneSection){
-        let board=document.getElementById('task-board-shell');
-        if(!board){
-          board=document.createElement('div'); board.id='task-board-shell'; board.className='task-board-shell';
-          openSection.parentNode.insertBefore(board, openSection);
-          board.appendChild(openSection); board.appendChild(doneSection);
-        }
-        board.classList.add('task-board');
+    let taskSearch='';
+    function injectTaskFilters(){
+      const v=document.getElementById('view-tugas');
+      if(!v) return;
+      const tabs=document.getElementById('task-filter-tabs');
+      const search=document.getElementById('task-pro-search');
+      if(search && !search.dataset.bound){
+        search.dataset.bound='1';
+        search.addEventListener('input',()=>{ taskSearch=search.value||''; professionalRenderTugas(); });
       }
+      if(tabs && !tabs.dataset.bound){
+        tabs.dataset.bound='1';
+        tabs.addEventListener('click',e=>{
+          const b=e.target.closest('[data-task-filter]');
+          if(!b) return;
+          taskFilter=b.dataset.taskFilter||'all';
+          tabs.querySelectorAll('[data-task-filter]').forEach(x=>{
+            const active=x===b;
+            x.classList.toggle('active',active);
+            x.setAttribute('aria-selected',active?'true':'false');
+          });
+          professionalRenderTugas();
+        });
+      }
+    }
+    function daysLeft(d){if(!d)return 999;const a=new Date();a.setHours(0,0,0,0);const b=new Date(d+'T00:00:00');return Math.ceil((b-a)/86400000)}
+    function taskMatches(t){
+      const left=daysLeft(t.tenggat);
+      if(taskFilter==='done')return !!t.selesai;
+      if(taskFilter==='active')return !t.selesai;
+      if(taskFilter==='soon')return !t.selesai&&left<=3;
+      return true;
+    }
+    function taskSearchMatches(t){
+      const q=String(taskSearch||'').trim().toLowerCase();
+      if(!q) return true;
+      const hay=[t.nama,t.deskripsi,t.mapel,t.tenggat,t.driveLink].map(v=>String(v||'')).join(' ').toLowerCase();
+      return hay.includes(q);
+    }
+    function taskTitleCase(value){
+      return String(value||'').replace(/\bvidio\b/gi,'video').trim();
+    }
+    function professionalRenderTugas(){
+      injectTaskFilters();
+      autoCleanDoneTugas();
+      const list=document.getElementById('tugas-smart-list');
+      if(!list)return;
+      const source=Array.isArray(state.tugas)?state.tugas:[];
+      const all=source.filter(taskMatches).filter(taskSearchMatches);
+      const openCount=source.filter(t=>!t.selesai).length;
+      const doneCount=source.filter(t=>!!t.selesai).length;
+      const soonCount=source.filter(t=>!t.selesai&&daysLeft(t.tenggat)<=3).length;
+      const total=all.length;
+      const titleMap={all:'Semua tugas',active:'Tugas aktif',soon:'Mendekati deadline',done:'Tugas selesai'};
+      const summaryTitle=document.getElementById('task-pro-summary-title');
+      const summarySub=document.getElementById('task-pro-summary-sub');
+      if(summaryTitle) summaryTitle.textContent=titleMap[taskFilter]||'Semua tugas';
+      if(summarySub){
+        const query=String(taskSearch||'').trim();
+        summarySub.textContent=query?`${total} tugas cocok dengan pencarian “${query}”`:`${openCount} aktif · ${soonCount} mendekati deadline · ${doneCount} selesai`;
+      }
+      const hint=document.getElementById('tugas-autoclean-hint');
+      if(hint) hint.textContent='';
+      const sortTasks=items=>items.slice().sort((a,b)=>{
+        if(!!a.selesai!==!!b.selesai) return a.selesai?1:-1;
+        const da=a.tenggat?new Date(a.tenggat+'T00:00:00').getTime():Infinity;
+        const db=b.tenggat?new Date(b.tenggat+'T00:00:00').getTime():Infinity;
+        return da-db || Number(b.id||0)-Number(a.id||0);
+      });
+      const renderCard=t=>{
+        const displayName=taskTitleCase(t.nama||'Tugas tanpa judul');
+        const displayDesc=taskTitleCase(t.deskripsi||'');
+        const left=daysLeft(t.tenggat);
+        const dc=t.selesai?'deadline-safe':left<0?'deadline-danger':left<=1?'deadline-danger':left<=3?'deadline-soon':'deadline-safe';
+        const dl=t.selesai?'Selesai':t.tenggat?(left<0?'Lewat deadline':left===0?'Hari ini':left===1?'Besok':`H-${left}`):'Tanpa deadline';
+        const mapel=String(t.mapel||'Tanpa mapel');
+        const clickable=isAdmin()?` role="button" tabindex="0" onclick="openTugasModal(${Number(t.id)})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openTugasModal(${Number(t.id)})}"`:'';
+        let driveLink='';
+        try{const raw=String(t.driveLink||'').trim();if(raw){const u=new URL(raw);const host=u.hostname.toLowerCase();if(u.protocol==='https:'&&(host==='drive.google.com'||host==='docs.google.com'))driveLink=u.href;}}catch(_){}
+        const completionAction=isAdmin()?`<button type="button" class="task-pro-check-btn ${t.selesai?'is-done':''}" onclick="event.stopPropagation();toggleTugas(${Number(t.id)})"><span class="task-pro-check-icon">${t.selesai?'✓':'○'}</span><span>${t.selesai?'Beres':'Bereskan'}</span></button>`:'';
+        const fileMarkup=renderTaskFiles(t)||'';
+        return `<article class="task-pro-card ${t.selesai?'is-complete':''}"${clickable}>
+          <div class="task-pro-card-head">
+            <div class="task-pro-subject"><span class="task-pro-subject-icon">◈</span><span>${esc(mapel)}</span></div>
+            <span class="task-pro-deadline ${dc}">${esc(dl)}</span>
+          </div>
+          <div class="task-pro-title">${esc(displayName)}</div>
+          ${displayDesc?`<div class="task-pro-desc">${esc(displayDesc)}</div>`:''}
+          <div class="task-pro-footer">
+            <div class="task-pro-footer-meta">
+              <span class="task-pro-meta-item">◷ ${esc(t.tenggat||'Tanpa deadline')}</span>
+              ${t.selesai?'<span class="task-pro-status-dot done"><i></i>Beres</span>':''}
+            </div>
+            ${completionAction}
+          </div>
+          ${driveLink?`<div class="task-drive-link task-pro-drive"><a href="${esc(driveLink)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">☁️ Buka folder pengumpulan</a></div>`:''}
+          ${fileMarkup}
+        </article>`;
+      };
+      if(!total){
+        const empty=taskSearch?`<div class="task-pro-empty"><div class="task-pro-empty-doodle" aria-hidden="true"><span>⌕</span></div><div class="task-pro-empty-title">Belum ketemu tugasnya.</div><div class="task-pro-empty-sub">Coba kata kunci lain atau pilih filter yang berbeda.</div></div>`:
+          taskFilter==='done'?`<div class="task-pro-empty"><div class="task-pro-empty-doodle" aria-hidden="true"><span>✓</span></div><div class="task-pro-empty-title">Belum ada tugas yang beres.</div><div class="task-pro-empty-sub">Santai, bagian ini akan terisi setelah tugas selesai.</div></div>`:
+          `<div class="task-pro-empty"><div class="task-pro-empty-doodle" aria-hidden="true"><span>✦</span></div><div class="task-pro-empty-title">Santai! Belum ada tugas baru hari ini.</div><div class="task-pro-empty-sub">Nikmati jedanya. Nanti tugas baru akan muncul di sini.</div></div>`;
+        list.innerHTML=empty;
+      }else{
+        list.innerHTML=sortTasks(all).map(renderCard).join('');
+      }
+      const a=document.getElementById('tugas-open-list'),b=document.getElementById('tugas-done-list');
+      if(a)a.innerHTML=''; if(b)b.innerHTML='';
     }
 
     // Keep the Google Drive collection link visible in the professional task renderer too.
