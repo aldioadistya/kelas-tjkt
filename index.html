@@ -22413,6 +22413,27 @@ body.kelasku-authenticated #view-jadwal > .mode-switch .mode-btn{
   }
 }
 </style>
+</body></html>`;
+    const w=window.open('','_blank','width=900,height=700');if(!w){showNotification('Popup diblokir browser. Izinkan popup untuk mencetak PDF.','warning');return;}w.document.write(html);w.document.close();w.focus();setTimeout(()=>w.print(),250);
+  };
+
+  function renderKasWorld(){
+    ensureKasHeader();
+    if(typeof original.renderKas==='function'){
+      try{original.renderKas();}catch(e){console.warn('legacy Kas render:',e)}
+    }
+    ensureKasHeader();
+    updateKasMetricNotes();
+    renderKasFoldersWorld();
+  }
+  window.renderKas=function(){renderKasWorld();};
+  window.renderKasSiswa=function(){ensureKasHeader();renderKasFoldersWorld();};
+
+  function boot(){try{renderKasWorld();}catch(e){console.warn('Kas world-class boot:',e)}}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else setTimeout(boot,0);
+})();
+</script>
+
 
 <style id="hp-v82-mobile-grid-only">
 /* v82 — Mobile Pengumpulan HP: tampilkan mode Grid saja agar toolbar tidak penuh. */
@@ -22449,11 +22470,11 @@ body.kelasku-authenticated #view-jadwal > .mode-switch .mode-btn{
       }
     }
   }
-  document.addEventListener('DOMContentLoaded', forceMobileGrid);
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', forceMobileGrid, {once:true});
+  else forceMobileGrid();
   window.addEventListener('resize', forceMobileGrid);
 })();
 </script>
-
 <style id="hp-v84-desktop-readability-mobile-simplify">
 /* v84 — Pengumpulan HP: desktop lebih terbaca, mobile lebih ringkas. */
 @media (min-width: 761px){
@@ -22507,8 +22528,6 @@ body.kelasku-authenticated #view-jadwal > .mode-switch .mode-btn{
   #view-hp .hp-filter-row button span{font-size:8px !important;min-width:19px !important;height:19px !important}
 }
 </style>
-</body>
-
 <style id="dark-mode-readability-v83">
 /* v83 — Pastikan teks pada kontrol berlatar terang tetap kontras di Dark Mode. */
 body.dark #view-hp .hp-date-switcher .hp-date-main{
@@ -22583,155 +22602,69 @@ body.dark #view-tugas .task-pro-check-btn.is-done .task-pro-check-icon{
   border-color:#22c55e !important;
 }
 </style>
-<style id="laporan-clean-modern-v85">
-#view-laporan .report-pro-top,
-#view-laporan .report-chart-card,
-#view-laporan .report-bars,
-#view-laporan #report-stats{display:none !important}
-
-#view-laporan .report-clean-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:0 0 16px}
-#view-laporan .report-stat-card{min-width:0;display:flex;align-items:center;gap:11px;padding:14px 15px;border:1px solid var(--ui-border,#2f415b);border-radius:14px;background:var(--ui-surface,#111c2f);box-shadow:0 5px 16px rgba(15,23,42,.045)}
-#view-laporan .report-stat-icon{width:32px;height:32px;flex:0 0 32px;display:grid;place-items:center;border-radius:10px;background:#16243a;color:#93c5fd;font-size:15px;font-weight:800;line-height:1}
-#view-laporan .report-stat-copy{min-width:0}
-#view-laporan .report-stat-label{color:#94a3b8;font-size:10px;font-weight:800;line-height:1.2}
-#view-laporan .report-stat-value{margin-top:4px;color:#f8fafc;font-size:22px;font-weight:900;line-height:1;letter-spacing:-.03em}
-#view-laporan .report-stat-card.pending .report-stat-icon{background:#2a2210;color:#fbbf24}
-#view-laporan .report-stat-card.reviewed .report-stat-icon{background:#172554;color:#93c5fd}
-#view-laporan .report-stat-card.resolved .report-stat-icon{background:#0d2a20;color:#34d399}
-#view-laporan .report-stat-card.rejected .report-stat-icon{background:#32151c;color:#fb7185}
-
-#view-laporan .report-pagehead-row{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
-#view-laporan .report-print-action{flex:0 0 auto;min-height:38px;padding:9px 13px;border:1px solid #3b82f6;border-radius:10px;background:#3b82f6;color:#fff;font-size:11px;font-weight:900;cursor:pointer;box-shadow:0 6px 16px rgba(59,130,246,.16)}
-#view-laporan .report-print-action:hover{filter:brightness(1.04)}
-#view-laporan .report-print-action:active{transform:scale(.98)}
-#view-laporan .report-list-section-head{margin-bottom:10px}
-#view-laporan .report-list-section-head .section-title{font-size:15px !important;line-height:1.25;letter-spacing:-.02em}
-
-#view-laporan .report-toolbar{display:grid;grid-template-columns:minmax(0,1fr) 240px;align-items:center;gap:10px;margin:0 0 12px}
-#view-laporan .report-status-pills{min-width:0;display:flex;align-items:center;gap:6px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:2px 1px}
-#view-laporan .report-status-pills::-webkit-scrollbar{display:none}
-#view-laporan .report-status-pill{flex:0 0 auto;min-height:34px;padding:7px 11px;border:1px solid #33445c;border-radius:999px;background:#111c2f;color:#cbd5e1;font-size:10px;font-weight:800;cursor:pointer;transition:background .18s ease,border-color .18s ease,color .18s ease,transform .18s ease}
-#view-laporan .report-status-pill:hover{background:#16243a;border-color:#50637d;color:#fff}
-#view-laporan .report-status-pill:active{transform:scale(.97)}
-#view-laporan .report-status-pill.active{background:#3b82f6;border-color:#3b82f6;color:#fff;box-shadow:0 5px 12px rgba(59,130,246,.16)}
-#view-laporan #report-search{width:240px !important;min-width:0;min-height:38px;padding:9px 11px !important;border-radius:10px !important;border:1px solid #33445c !important;background:#0e192b !important;color:#f8fafc !important;font-size:11px !important;outline:none}
-#view-laporan #report-filter{display:none !important}
-body.dark #view-laporan #report-search::placeholder{color:#94a3b8 !important}
-
-#view-laporan .report-empty-state{min-height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;padding:28px 18px;text-align:center;border:1px dashed #33445c;border-radius:14px;background:rgba(17,28,47,.55)}
-#view-laporan .report-empty-icon{width:46px;height:46px;display:grid;place-items:center;border-radius:14px;background:rgba(59,130,246,.08);color:rgba(147,197,253,.86);border:1px solid rgba(96,165,250,.12);font-size:21px}
-#view-laporan .report-empty-title{color:#f8fafc;font-size:13px;font-weight:900}
-#view-laporan .report-empty-sub{max-width:360px;color:#9fb0c7;font-size:10px;line-height:1.55}
-
-body:not(.dark) #view-laporan .report-stat-card,body:not(.dark) #view-laporan .report-status-pill,body:not(.dark) #view-laporan .report-empty-state{background:#fff !important;border-color:#cbd5e1 !important;color:#172033 !important;box-shadow:0 4px 14px rgba(15,23,42,.035)}
-body:not(.dark) #view-laporan .report-stat-icon{background:#eff6ff !important;color:#2563eb !important}
-body:not(.dark) #view-laporan .report-stat-label{color:#64748b !important}
-body:not(.dark) #view-laporan .report-stat-value{color:#172033 !important}
-body:not(.dark) #view-laporan .report-status-pill{color:#475569 !important}
-body:not(.dark) #view-laporan .report-status-pill:hover{background:#f8fafc !important;color:#172033 !important}
-body:not(.dark) #view-laporan .report-status-pill.active{background:#2563eb !important;border-color:#2563eb !important;color:#fff !important}
-body:not(.dark) #view-laporan #report-search{background:#fff !important;color:#172033 !important;border-color:#cbd5e1 !important}
-body:not(.dark) #view-laporan #report-search::placeholder{color:#64748b !important}
-body:not(.dark) #view-laporan .report-empty-icon{background:#eff6ff;border-color:#dbeafe;color:#2563eb}
-body:not(.dark) #view-laporan .report-empty-title{color:#172033}
-body:not(.dark) #view-laporan .report-empty-sub{color:#64748b}
-
-@media(max-width:900px){
-  #view-laporan .report-clean-summary{grid-template-columns:repeat(2,minmax(0,1fr))}
-  #view-laporan .report-toolbar{grid-template-columns:1fr}
-  #view-laporan #report-search{width:100% !important}
+<style id="jadwal-mode-switch-final-v85">
+/* v85 — Fix final: Pelajaran / Piket adalah segmented control horizontal compact. */
+body.kelasku-authenticated #view-jadwal > .mode-switch{
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:flex-start !important;
+  flex-direction:row !important;
+  width:fit-content !important;
+  max-width:100% !important;
+  height:40px !important;
+  min-height:40px !important;
+  box-sizing:border-box !important;
+  padding:4px !important;
+  gap:4px !important;
+  margin:0 !important;
+  border-radius:10px !important;
+  overflow:hidden !important;
+  align-self:flex-start !important;
+  flex:0 0 auto !important;
 }
-@media(max-width:520px){
-  #view-laporan .report-pagehead-row{align-items:center}
-  #view-laporan .report-print-action{min-height:36px;padding:8px 10px;font-size:10px}
-  #view-laporan .report-clean-summary{gap:8px}
-  #view-laporan .report-stat-card{padding:12px;gap:9px}
-  #view-laporan .report-stat-icon{width:29px;height:29px;flex-basis:29px;font-size:14px}
-  #view-laporan .report-stat-value{font-size:19px}
-  #view-laporan .report-status-pill{min-height:32px;padding:6px 10px;font-size:9px}
+
+body.kelasku-authenticated #view-jadwal > .mode-switch .mode-btn{
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  flex:0 1 260px !important;
+  width:260px !important;
+  max-width:calc((100vw - 60px) / 2) !important;
+  height:auto !important;
+  min-height:0 !important;
+  max-height:32px !important;
+  box-sizing:border-box !important;
+  padding:7px 20px !important;
+  margin:0 !important;
+  line-height:1.2 !important;
+  border-radius:8px !important;
+  white-space:nowrap !important;
+}
+
+/* Override legacy rules that used height:100% / min-height on tab buttons. */
+#view-jadwal > .mode-switch .mode-btn,
+body.kelasku-authenticated #view-jadwal > .mode-switch .mode-btn,
+body.dark #view-jadwal > .mode-switch .mode-btn,
+body:not(.dark) #view-jadwal > .mode-switch .mode-btn{
+  height:auto !important;
+  min-height:0 !important;
+}
+
+@media (max-width:620px){
+  body.kelasku-authenticated #view-jadwal > .mode-switch{
+    width:fit-content !important;
+    max-width:100% !important;
+    height:40px !important;
+    min-height:40px !important;
+    padding:4px !important;
+    gap:4px !important;
+  }
+  body.kelasku-authenticated #view-jadwal > .mode-switch .mode-btn{
+    flex:0 1 150px !important;
+    width:150px !important;
+    max-width:calc((100vw - 44px) / 2) !important;
+    padding:7px 14px !important;
+    max-height:32px !important;
+  }
 }
 </style>
-<script id="laporan-clean-modern-v85-js">
-(function(){
-  'use strict';
-  const STATUS=[['all','Semua','•'],['pending','Menunggu','◷'],['reviewed','Ditinjau','◌'],['resolved','Selesai','✓'],['rejected','Ditolak','×']];
-  const byId=id=>document.getElementById(id);
-  const view=()=>byId('view-laporan');
-
-  function pagehead(){
-    const v=view(),head=v?.querySelector('.pagehead'); if(!head)return;
-    let row=head.querySelector('.report-pagehead-row');
-    if(!row){row=document.createElement('div');row.className='report-pagehead-row';while(head.firstChild)row.appendChild(head.firstChild);head.appendChild(row);}
-    if(!row.querySelector('.report-print-action')){
-      const b=document.createElement('button');b.type='button';b.className='report-print-action';b.textContent='↗ Cetak / PDF';b.title='Cetak / PDF';
-      b.addEventListener('click',()=>window.print());row.appendChild(b);
-    }
-  }
-
-  function summary(){
-    const v=view(); if(!v)return;
-    v.querySelector('#report-pro-top')?.remove();
-    let box=v.querySelector('#report-clean-summary');
-    if(!box){box=document.createElement('div');box.id='report-clean-summary';box.className='report-clean-summary';const first=[...v.querySelectorAll('.section')].find(s=>!s.classList.contains('app-legacy-hidden'));if(first)first.before(box);else v.appendChild(box);}
-    if(!box.dataset.ready){
-      box.innerHTML=[['pending','Menunggu','◷'],['reviewed','Ditinjau','◌'],['resolved','Selesai','✓'],['rejected','Ditolak','×']].map(x=>`<div class="report-stat-card ${x[0]}"><div class="report-stat-icon" aria-hidden="true">${x[2]}</div><div class="report-stat-copy"><div class="report-stat-label">${x[1]}</div><div class="report-stat-value" id="report-clean-${x[0]}">0</div></div></div>`).join('');
-      box.dataset.ready='1';
-    }
-  }
-
-  function listSection(){const v=view(),list=byId('report-list');return v&&list?[...v.querySelectorAll('.section')].find(s=>s.contains(list)):null;}
-  function toolbar(){
-    const v=view(),sec=listSection();if(!v||!sec)return;
-    const head=sec.querySelector('.section-head');
-    if(head){head.classList.add('report-list-section-head');const title=head.querySelector('.section-title');if(title)title.textContent='Daftar Laporan';const right=head.children.length>1?head.lastElementChild:null;if(right&&right!==title?.parentElement)right.remove();}
-    let bar=sec.querySelector('#report-clean-toolbar');
-    if(!bar){
-      bar=document.createElement('div');bar.id='report-clean-toolbar';bar.className='report-toolbar';
-      const oldSearch=byId('report-search'),oldFilter=byId('report-filter');
-      const pills=document.createElement('div');pills.id='report-status-pills';pills.className='report-status-pills';
-      STATUS.forEach(([value,label,icon])=>{const b=document.createElement('button');b.type='button';b.className='report-status-pill';b.dataset.reportFilter=value;b.innerHTML=`<span aria-hidden="true">${icon}</span> ${label}`;b.addEventListener('click',()=>{if(oldFilter)oldFilter.value=value;window.renderReports?.();});pills.appendChild(b);});
-      bar.appendChild(pills);
-      if(oldSearch){oldSearch.removeAttribute('style');bar.appendChild(oldSearch);}else{const i=document.createElement('input');i.id='report-search';i.placeholder='Cari laporan...';i.type='text';i.addEventListener('input',()=>window.renderReports?.());bar.appendChild(i);}
-      if(oldFilter)bar.appendChild(oldFilter);
-      if(head)head.after(bar);else sec.prepend(bar);
-    }
-    const filter=byId('report-filter');if(filter){filter.style.display='none';filter.tabIndex=-1;filter.setAttribute('aria-hidden','true');}
-  }
-
-  function cards(){
-    const c={pending:0,reviewed:0,resolved:0,rejected:0};
-    const reps=(typeof state!=='undefined'&&Array.isArray(state.reports))?state.reports:[];
-    reps.forEach(r=>{if(c[r.status]!=null)c[r.status]++;});
-    Object.keys(c).forEach(k=>{const e=byId('report-clean-'+k);if(e)e.textContent=c[k];});
-  }
-  function sync(){const v=view(),f=byId('report-filter')?.value||'all';v?.querySelectorAll('[data-report-filter]').forEach(b=>{const a=b.dataset.reportFilter===f;b.classList.toggle('active',a);b.setAttribute('aria-pressed',a?'true':'false');});}
-  function empty(){const list=byId('report-list'),e=list?.querySelector('.empty');if(!e)return;const mine=(e.textContent||'').includes('Kamu belum pernah');e.className='report-empty-state';e.innerHTML=`<div class="report-empty-icon" aria-hidden="true">${mine?'✓':'▱'}</div><div class="report-empty-title">Belum ada laporan.</div><div class="report-empty-sub">${mine?'Laporan yang kamu buat akan muncul di sini setelah dikirim.':'Belum ada laporan yang masuk pada tampilan ini.'}</div>`;}
-  function clean(){const v=view();if(!v)return;pagehead();summary();toolbar();cards();sync();empty();const s=byId('report-stats');if(s)s.style.display='none';}
-
-  const previousRender=window.renderReports;
-  window.renderReports=function(){const ret=typeof previousRender==='function'?previousRender.apply(this,arguments):undefined;setTimeout(clean,0);return ret;};
-  const observer=new MutationObserver(()=>{if(view())clean();});
-  function boot(){clean();observer.observe(document.body,{childList:true,subtree:true});setTimeout(clean,100);setTimeout(clean,500);}
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
-})();
-</script>
-</html>`;
-    const w=window.open('','_blank','width=900,height=700');if(!w){showNotification('Popup diblokir browser. Izinkan popup untuk mencetak PDF.','warning');return;}w.document.write(html);w.document.close();w.focus();setTimeout(()=>w.print(),250);
-  };
-
-  function renderKasWorld(){
-    ensureKasHeader();
-    if(typeof original.renderKas==='function'){
-      try{original.renderKas();}catch(e){console.warn('legacy Kas render:',e)}
-    }
-    ensureKasHeader();
-    updateKasMetricNotes();
-    renderKasFoldersWorld();
-  }
-  window.renderKas=function(){renderKasWorld();};
-  window.renderKasSiswa=function(){ensureKasHeader();renderKasFoldersWorld();};
-
-  function boot(){try{renderKasWorld();}catch(e){console.warn('Kas world-class boot:',e)}}
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else setTimeout(boot,0);
-})();
-</script>
