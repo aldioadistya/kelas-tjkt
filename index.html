@@ -8712,26 +8712,25 @@ X TJKT 1
 </button>
 </div>
 <div id="jadwal-mode-pelajaran">
-  <div class="day-tabs" id="day-tabs" aria-label="Pilih hari">
-    <button type="button" class="day-chip active" data-jadwal-day="Senin">Senin
-  </button>
-  <button type="button" class="day-chip" data-jadwal-day="Selasa">Selasa
-</button>
-<button type="button" class="day-chip" data-jadwal-day="Rabu">Rabu
-</button>
-<button type="button" class="day-chip" data-jadwal-day="Kamis">Kamis
-</button>
-<button type="button" class="day-chip" data-jadwal-day="Jumat">Jumat
-</button>
-</div>
-<div class="section">
-  <button class="fab-add admin-only" onclick="openJadwalModal()">＋ Tambah Jam
-</button>
-</div>
-<div class="section">
-  <div class="card" id="jadwal-list">
+  <div class="jadwal-pro-head">
+    <div class="jadwal-pro-head-copy">
+      <div class="jadwal-eyebrow"><span class="jadwal-eyebrow-dot"></span> JADWAL PELAJARAN</div>
+      <div class="jadwal-pro-title-row">
+        <h2>Jadwal Kelas</h2>
+        <span class="jadwal-today-mark" id="jadwal-today-mark">Hari ini</span>
+      </div>
+      <p>Pantau mata pelajaran harian &amp; jam mengajar guru.</p>
+    </div>
+    <button type="button" class="jadwal-pro-add admin-only" onclick="openJadwalModal()">＋ Tambah Jam</button>
   </div>
-</div>
+
+  <div class="jadwal-day-rail-wrap">
+    <div class="day-tabs jadwal-day-rail" id="day-tabs" aria-label="Pilih hari"></div>
+  </div>
+
+  <div class="jadwal-next-banner" id="jadwal-next-banner" hidden></div>
+
+  <div class="jadwal-pro-list" id="jadwal-list"></div>
 </div>
 <div id="jadwal-mode-piket" style="display:none;">
   <div class="piket-actionbar">
@@ -9537,6 +9536,11 @@ Setelan
   <label>Guru
 </label>
 <input id="jadwal-guru" type="text" placeholder="Nama Guru">
+</div>
+<div class="field">
+  <label>Ruang
+</label>
+<input id="jadwal-ruang" type="text" placeholder="Contoh: Lab IPA / Ruang 10B">
 </div>
 <input type="hidden" id="jadwal-edit-id">
 <div class="modal-actions">
@@ -13040,39 +13044,29 @@ Setelan
       const wrap = document.getElementById('day-tabs');
       if (!wrap) return;
       if (!DAY_NAMES.includes(state.selectedDay)) state.selectedDay = DAY_NAMES[0];
+      const today = dayNameOf(todayKey());
       wrap.innerHTML = DAY_NAMES.map(d => `
           <button type="button"
                   class="day-chip ${state.selectedDay===d?'active':''}"
                   data-jadwal-day="${escapeHtml(d)}"
                   aria-pressed="${state.selectedDay===d ? 'true' : 'false'}">
-              ${escapeHtml(d)}
+              <span>${escapeHtml(d)}</span>
+              ${d===today ? '<small>HARI INI</small>' : ''}
           </button>
       `).join('');
+      const mark = document.getElementById('jadwal-today-mark');
+      if (mark) mark.textContent = state.selectedDay===today ? 'Hari ini' : state.selectedDay;
   }
   function selectDay(d) {
       if (!DAY_NAMES.includes(d)) return;
-      if (!state.jadwal || typeof state.jadwal !== 'object' || Array.isArray(state.jadwal)) {
-          state.jadwal = {};
-      }
+      if (!state.jadwal || typeof state.jadwal !== 'object' || Array.isArray(state.jadwal)) state.jadwal = {};
       if (!Array.isArray(state.jadwal[d])) state.jadwal[d] = [];
       state.selectedDay = d;
       renderDayTabs();
       renderJadwalList();
   }
   function renderJadwalList() {
-      const wrap = document.getElementById('jadwal-list');
-      if (!wrap) return;
-      if (!state.jadwal || typeof state.jadwal !== 'object' || Array.isArray(state.jadwal)) {
-          state.jadwal = {};
-      }
-      const items = Array.isArray(state.jadwal[state.selectedDay]) ? state.jadwal[state.selectedDay] : [];
-      const readOnly = isReadOnly();
-      wrap.innerHTML = items.length ? items.map(j => `
-          <div class="row-item" ${readOnly ? '' : `onclick="openJadwalModal(${Number(j.id)})"`} style="${readOnly ? '' : 'cursor:pointer;'}">
-              <div class="row-time">${escapeHtml(j.jam || '')}</div>
-              <div><div class="row-title">${escapeHtml(j.mapel || '')}</div><div class="row-sub">${escapeHtml(j.guru || '')}</div></div>
-          </div>
-      `).join('') : `<div class="empty">Tidak ada jadwal pelajaran.</div>`;
+      professionalRenderJadwalList();
   }
   function openJadwalModal(id) {
       if (guardReadOnly()) return;
@@ -13091,6 +13085,7 @@ Setelan
           document.getElementById('jadwal-selesai').value = selesai || '';
           document.getElementById('jadwal-mapel').value = found.mapel || '';
           document.getElementById('jadwal-guru').value = found.guru || '';
+          const ruangInput = document.getElementById('jadwal-ruang'); if (ruangInput) ruangInput.value = found.ruang || '';
           document.getElementById('jadwal-edit-id').value = found.id;
           document.getElementById('jadwal-delete-btn').style.display = '';
           document.getElementById('jadwal-modal-title').textContent = 'Edit Jam Pelajaran';
@@ -13100,33 +13095,42 @@ Setelan
           document.getElementById('jadwal-selesai').value = '';
           document.getElementById('jadwal-mapel').value = '';
           document.getElementById('jadwal-guru').value = '';
+          const ruangInput = document.getElementById('jadwal-ruang'); if (ruangInput) ruangInput.value = '';
           document.getElementById('jadwal-edit-id').value = '';
           document.getElementById('jadwal-delete-btn').style.display = 'none';
           document.getElementById('jadwal-modal-title').textContent = 'Atur Jam Pelajaran';
       }
       openModal('jadwal');
   }
-  function submitJadwal() {
+  async function submitJadwal() {
       if (guardReadOnly()) return;
       const hari = document.getElementById('jadwal-hari').value;
       const mulai = document.getElementById('jadwal-mulai').value;
       const selesai = document.getElementById('jadwal-selesai').value;
       const mapel = document.getElementById('jadwal-mapel').value.trim();
       const guru = document.getElementById('jadwal-guru').value.trim();
+      const ruang = (document.getElementById('jadwal-ruang')?.value || '').trim();
       const editId = document.getElementById('jadwal-edit-id').value;
-      if (!mapel || !mulai || !selesai) { showNotification('Isi semua field!', 'warning'); return; }
+      if (!mapel || !mulai || !selesai) { showNotification('Isi mata pelajaran dan jamnya dulu.', 'warning'); return; }
+      if (selesai <= mulai) { showNotification('Jam selesai harus lebih besar dari jam mulai.', 'warning'); return; }
       if (!state.jadwal[hari]) state.jadwal[hari] = [];
       if (editId) {
-          for (let day in state.jadwal) { state.jadwal[day] = state.jadwal[day].filter(j => j.id !== Number(editId)); }
-          state.jadwal[hari].push({ id: Number(editId), jam: mulai+'-'+selesai, mapel, guru });
+          for (let day in state.jadwal) state.jadwal[day] = state.jadwal[day].filter(j => j.id !== Number(editId));
+          state.jadwal[hari].push({ id: Number(editId), jam: mulai+'-'+selesai, mapel, guru, ruang });
           addActivity('Mengubah jadwal', mapel + ' · ' + hari + ' ' + mulai + '-' + selesai);
           addNotification('Jadwal diperbarui', mapel + ' · ' + hari + ' ' + mulai + '-' + selesai, {role:'siswa'});
-          saveState(); renderJadwalList(); renderBeranda(); closeModal('jadwal'); showNotification('Jadwal berhasil diperbarui.', 'success'); return;
+      } else {
+          state.jadwal[hari].push({ id: Date.now(), jam: mulai+'-'+selesai, mapel, guru, ruang });
+          addActivity('Menambahkan jadwal', mapel + ' · ' + hari + ' ' + mulai + '-' + selesai);
+          addNotification('Jadwal baru', mapel + ' · ' + hari + ' ' + mulai + '-' + selesai, {role:'siswa'});
       }
-      state.jadwal[hari].push({ id: Date.now(), jam: mulai+'-'+selesai, mapel, guru });
-      addActivity('Menambahkan jadwal', mapel + ' · ' + hari + ' ' + mulai + '-' + selesai);
-      addNotification('Jadwal baru', mapel + ' · ' + hari + ' ' + mulai + '-' + selesai, {role:'siswa'});
-      saveState(); renderJadwalList(); renderBeranda(); closeModal('jadwal'); showNotification('Jadwal berhasil ditambahkan.', 'success');
+      const result = await saveState();
+      if (result && (result.synced === false || result.publicSynced === false)) {
+          showNotification('Jadwal tampil, tetapi belum terkonfirmasi tersimpan ke Firebase.', 'error', 7000);
+          return;
+      }
+      renderJadwalList(); renderBeranda(); closeModal('jadwal');
+      showNotification(editId ? 'Jadwal berhasil diperbarui.' : 'Jadwal berhasil ditambahkan.', 'success');
   }
   function deleteJadwalCurrent() {
       if (guardReadOnly()) return;
@@ -15218,8 +15222,109 @@ Setelan
       if(pt)pt.textContent=`${collected}/${names.length} HP Terkumpul`; if(pp)pp.textContent=pct+'%'; if(pb)pb.style.width=pct+'%';
     }
 
+    function jadwalTimeParts(jam){
+      const m=String(jam||'').match(/^(\d{1,2}):(\d{2})\s*-\s*(\d{1,2}):(\d{2})$/);
+      if(!m)return null;
+      const sh=Number(m[1]), sm=Number(m[2]), eh=Number(m[3]), em=Number(m[4]);
+      if(sh>23||eh>23||sm>59||em>59)return null;
+      return {start:sh*60+sm,end:eh*60+em,startLabel:`${String(sh).padStart(2,'0')}:${String(sm).padStart(2,'0')}`,endLabel:`${String(eh).padStart(2,'0')}:${String(em).padStart(2,'0')}`};
+    }
+    function jadwalNormalizeTitle(v){ return String(v||'').trim().toLowerCase().replace(/\s+/g,' '); }
+    function jadwalTypeOf(j){
+      const t=jadwalNormalizeTitle(j.mapel);
+      if(/^(istirahat|break|makan|snack|jam istirahat|rehat)\b/.test(t) || /istirahat/.test(t)) return 'break';
+      if(/^(upacara|literasi|apel|senam|kegiatan|projek|pembiasaan)\b/.test(t)) return 'routine';
+      return 'subject';
+    }
+    function jadwalInitials(name){ return String(name||'').split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join('').toUpperCase() || 'G'; }
+    function jadwalEscapeClass(v){ return String(v||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''); }
+    function buildGroupedJadwal(items){
+      const sorted=items.slice().sort((a,b)=>{
+        const pa=jadwalTimeParts(a.jam), pb=jadwalTimeParts(b.jam);
+        return (pa?.start??9999)-(pb?.start??9999) || Number(a.id||0)-Number(b.id||0);
+      });
+      const groups=[];
+      sorted.forEach(item=>{
+        const p=jadwalTimeParts(item.jam);
+        const prev=groups[groups.length-1];
+        if(prev && p && prev.end===p.start && jadwalNormalizeTitle(prev.mapel)===jadwalNormalizeTitle(item.mapel) && jadwalNormalizeTitle(prev.guru)===jadwalNormalizeTitle(item.guru) && jadwalNormalizeTitle(prev.ruang)===jadwalNormalizeTitle(item.ruang)){
+          prev.end=p.end; prev.endLabel=p.endLabel; prev.count+=1; prev.items.push(item); prev.ids.push(Number(item.id));
+        }else{
+          groups.push({start:p?.start??0,end:p?.end??0,startLabel:p?.startLabel||(String(item.jam||'-').split('-')[0]||'-'),endLabel:p?.endLabel||(String(item.jam||'-').split('-')[1]||'-'),count:1,mapel:item.mapel||'-',guru:item.guru||'',ruang:item.ruang||'',type:jadwalTypeOf(item),items:[item],ids:[Number(item.id)]});
+        }
+      });
+      return groups;
+    }
+    function jadwalMinutesNow(){ const d=new Date(); return d.getHours()*60+d.getMinutes(); }
+    function jadwalLiveStatus(group,isToday){
+      if(!isToday)return {current:false,ended:false};
+      const now=jadwalMinutesNow();
+      return {current:now>=group.start && now<group.end, ended:now>=group.end};
+    }
+    function renderJadwalNextBanner(groups,isToday){
+      const el=document.getElementById('jadwal-next-banner'); if(!el)return;
+      if(!isToday){ el.hidden=true; el.innerHTML=''; return; }
+      const now=jadwalMinutesNow();
+      const next=groups.find(g=>g.start>now);
+      if(!next){ el.hidden=true; el.innerHTML=''; return; }
+      const nextName=escapeHtml(next.mapel);
+      el.hidden=false;
+      el.innerHTML=`<span class="jadwal-next-icon">→</span><div><small>Selanjutnya</small><strong>${nextName}</strong></div><time>${escapeHtml(next.startLabel)}</time>`;
+    }
+    function renderJadwalPageState(groups,isToday){
+      const list=document.getElementById('jadwal-list'); if(!list)return;
+      if(!groups.length){
+        list.className='jadwal-pro-list is-empty';
+        list.innerHTML=`<div class="jadwal-empty"><div class="jadwal-empty-doodle" aria-hidden="true"><span></span><span></span><span></span></div><strong>${isToday?'Tidak ada kelas tersisa hari ini. Waktunya istirahat!':'Belum ada jadwal pelajaran untuk hari ini.'}</strong><span>Tambah jadwal dari tombol di kanan atas.</span></div>`;
+        return;
+      }
+      const activeGroups=groups.map(g=>({g,state:jadwalLiveStatus(g,isToday)}));
+      list.className='jadwal-pro-list';
+      list.innerHTML=`<div class="jadwal-timeline">${activeGroups.map(({g,state:st},idx)=>{
+        const icon=g.type==='break'?'☕':g.type==='routine'?'✦':'•';
+        const cardClass=`jadwal-card jadwal-card-${g.type} ${st.current?'is-current':''} ${st.ended?'is-ended':''}`;
+        const metaRoom=g.ruang?`<span class="jadwal-meta-chip">⌂ ${escapeHtml(g.ruang)}</span>`:`<span class="jadwal-meta-chip is-muted">⌂ Ruang belum diatur</span>`;
+        const subjectTag=g.type==='subject'?`<span class="jadwal-subject-pill">${escapeHtml(g.mapel)}</span>`:'';
+        if(g.type==='break'){
+          return `<article class="jadwal-timeline-item ${st.current?'is-current':''}" data-jadwal-id="${g.ids[0]}">
+            <div class="jadwal-time-rail"><strong>${escapeHtml(g.startLabel)}</strong><span>${escapeHtml(g.endLabel)}</span></div>
+            <div class="${cardClass}" ${isReadOnly()?'':`onclick="openJadwalModal(${g.ids[0]})"`}>
+              <div class="jadwal-break-ribbon"><span class="jadwal-break-icon">${icon}</span><div><small>WAKTU ISTIRAHAT</small><strong>${escapeHtml(g.mapel)}</strong></div><span class="jadwal-duration">${g.count} JP</span></div>
+            </div>
+          </article>`;
+        }
+        return `<article class="jadwal-timeline-item ${st.current?'is-current':''}" data-jadwal-id="${g.ids[0]}">
+          <div class="jadwal-time-rail"><strong>${escapeHtml(g.startLabel)}</strong><span>${escapeHtml(g.endLabel)}</span></div>
+          <div class="${cardClass}" ${isReadOnly()?'':`onclick="openJadwalModal(${g.ids[0]})"`}>
+            <div class="jadwal-card-top">
+              ${g.type==='routine'?`<span class="jadwal-routine-pill">${icon} Kegiatan</span>`:subjectTag}
+              ${st.current?`<span class="jadwal-live"><i></i>Sedang Berlangsung</span>`:''}
+            </div>
+            <div class="jadwal-card-body">
+              <div class="jadwal-card-title">${escapeHtml(g.mapel)}</div>
+              <div class="jadwal-card-subline">${escapeHtml(`${g.startLabel} – ${g.endLabel}`)} <span>•</span> ${g.count} ${g.count===1?'Jam Pelajaran':'Jam Pelajaran'}</div>
+            </div>
+            <div class="jadwal-card-footer">
+              <span class="jadwal-teacher"><span class="jadwal-teacher-avatar">${escapeHtml(jadwalInitials(g.guru))}</span><span>${escapeHtml(g.guru||'Guru belum diatur')}</span></span>
+              ${metaRoom}
+            </div>
+          </div>
+        </article>`;
+      }).join('')}</div>`;
+      if(isToday){
+        const current=groups.find(g=>jadwalLiveStatus(g,true).current);
+        if(current){ list.classList.add('has-live'); }
+      }
+    }
     function professionalRenderJadwalList(){
-      const wrap=document.getElementById('jadwal-list'); if(!wrap)return; const items=Array.isArray(state.jadwal?.[state.selectedDay])?state.jadwal[state.selectedDay].slice().sort((a,b)=>String(a.jam).localeCompare(String(b.jam))):[]; const readOnly=isReadOnly(); wrap.innerHTML=items.length?`<div class="timeline">${items.map(j=>`<div class="timeline-item" ${readOnly?'':'onclick="openJadwalModal('+Number(j.id)+')"'} style="${readOnly?'':'cursor:pointer'}"><div class="timeline-time">${esc(j.jam||'-')}</div><div class="timeline-card"><div style="font-size:13px;font-weight:800">${esc(j.mapel||'-')}</div><div class="timeline-sub">${esc(j.guru||'Tanpa keterangan')}</div></div></div>`).join('')}</div>`:'<div class="empty" style="padding:35px">Tidak ada jadwal pelajaran untuk hari ini.</div>';
+      const wrap=document.getElementById('jadwal-list'); if(!wrap)return;
+      renderDayTabs();
+      const day=state.selectedDay||DAY_NAMES[0];
+      const items=Array.isArray(state.jadwal?.[day])?state.jadwal[day].slice():[];
+      const groups=buildGroupedJadwal(items);
+      const isToday=day===dayNameOf(todayKey());
+      renderJadwalNextBanner(groups,isToday);
+      renderJadwalPageState(groups,isToday);
     }
 
     function professionalRenderPiket(){
@@ -15441,11 +15546,23 @@ Setelan
     window.renderHp=function(){professionalRenderHp();};
     window.renderPiket=function(){professionalRenderPiket();};
     window.renderJadwalList=function(){professionalRenderJadwalList();};
+
+    document.addEventListener('click', function(e){
+      const dayBtn=e.target.closest('#day-tabs .day-chip[data-jadwal-day]');
+      if(dayBtn){ e.preventDefault(); selectDay(dayBtn.dataset.jadwalDay); }
+    }, true);
+
+    setInterval(function(){
+      try{
+        if(document.getElementById('view-jadwal')?.classList.contains('active') && state.jadwalMode==='pelajaran') professionalRenderJadwalList();
+      }catch(e){}
+    }, 30000);
+
     window.renderTugas=function(){professionalRenderTugas();};
     window.renderReports=function(){if(typeof oldRenderReports==='function')oldRenderReports();updateReportUI();};
 
     function boot(){
-      try{ensureKasEnhancements();injectTaskFilters();injectReportUI();injectSettingsNav();}catch(e){console.warn('Module V6 UI init',e)}
+      try{ensureKasEnhancements();injectTaskFilters();injectReportUI();injectSettingsNav(); if(typeof professionalRenderJadwalList==='function') professionalRenderJadwalList();}catch(e){console.warn('Module V6 UI init',e)}
     }
     if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
   })();
@@ -19811,4 +19928,137 @@ body.dark .task-pill-file{
     .piket-toolbar-btn{font-size:8.2px;min-height:30px;padding:0 6px}
     .piket-toolbar-btn span{font-size:9px}
   }
+</style>
+
+
+<style id="jadwal-v66-world-class">
+/* =========================================================
+   JADWAL PELAJARAN v66 — fluid timeline / design system
+   ========================================================= */
+#view-jadwal #jadwal-mode-pelajaran{padding-bottom:22px}
+#view-jadwal .jadwal-pro-head{
+  display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin:2px 0 14px;
+}
+#view-jadwal .jadwal-pro-head-copy{min-width:0}
+#view-jadwal .jadwal-eyebrow{display:flex;align-items:center;gap:7px;font-size:9px;letter-spacing:.12em;font-weight:800;color:var(--ui-muted);margin-bottom:5px}
+#view-jadwal .jadwal-eyebrow-dot{width:6px;height:6px;border-radius:50%;background:#3b82f6;box-shadow:0 0 0 4px rgba(59,130,246,.10)}
+#view-jadwal .jadwal-pro-title-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+#view-jadwal .jadwal-pro-title-row h2{font-family:var(--font-display);font-size:20px;line-height:1.05;color:var(--text-main);letter-spacing:-.03em}
+#view-jadwal .jadwal-pro-head-copy p{margin-top:5px;font-size:11px;color:var(--text-soft);line-height:1.45}
+#view-jadwal .jadwal-today-mark{display:inline-flex;align-items:center;min-height:22px;padding:4px 8px;border-radius:999px;background:#eff6ff;border:1px solid #dbeafe;color:#1d4ed8;font-size:9px;font-weight:800;letter-spacing:.02em}
+#view-jadwal .jadwal-pro-add{border:1px solid #1d4ed8;background:#2563eb;color:#fff;border-radius:11px;padding:10px 14px;font-size:11px;font-weight:800;box-shadow:0 6px 18px rgba(37,99,235,.16);cursor:pointer;white-space:nowrap;transition:transform .15s cubic-bezier(.16,1,.3,1),box-shadow .15s ease,filter .15s ease}
+#view-jadwal .jadwal-pro-add:hover{filter:brightness(1.03);box-shadow:0 8px 22px rgba(37,99,235,.20)}
+#view-jadwal .jadwal-pro-add:active{transform:scale(.98)}
+#view-jadwal .jadwal-day-rail-wrap{overflow:hidden}
+#view-jadwal .jadwal-day-rail{display:flex;gap:7px;overflow-x:auto;padding:2px 1px 8px;margin:0;scrollbar-width:none}
+#view-jadwal .jadwal-day-rail::-webkit-scrollbar{display:none}
+#view-jadwal .jadwal-day-rail .day-chip{position:relative;flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--ui-border);background:var(--ui-surface);color:var(--ui-muted);border-radius:999px;padding:8px 11px;font-size:10px;font-weight:800;line-height:1;box-shadow:none;cursor:pointer;transition:transform .15s ease,background .15s ease,color .15s ease,border-color .15s ease}
+#view-jadwal .jadwal-day-rail .day-chip small{font-size:7px;line-height:1;font-weight:900;letter-spacing:.05em;color:#2563eb}
+#view-jadwal .jadwal-day-rail .day-chip:active{transform:scale(.98)}
+#view-jadwal .jadwal-day-rail .day-chip.active{background:#0f172a;color:#fff;border-color:#0f172a;box-shadow:0 4px 14px rgba(15,23,42,.10)}
+#view-jadwal .jadwal-day-rail .day-chip.active small{color:#bfdbfe}
+#view-jadwal .jadwal-next-banner{display:flex;align-items:center;gap:9px;margin:4px 0 14px;padding:10px 12px;border:1px solid #dbeafe;background:#f8fbff;border-radius:12px;box-shadow:0 4px 14px rgba(37,99,235,.05)}
+#view-jadwal .jadwal-next-banner[hidden]{display:none}
+#view-jadwal .jadwal-next-icon{width:24px;height:24px;border-radius:8px;display:grid;place-items:center;background:#eff6ff;color:#2563eb;font-weight:900}
+#view-jadwal .jadwal-next-banner div{display:grid;min-width:0;flex:1}
+#view-jadwal .jadwal-next-banner small{font-size:8px;color:#64748b;font-weight:800;text-transform:uppercase;letter-spacing:.05em}
+#view-jadwal .jadwal-next-banner strong{font-size:11px;color:#0f172a;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#view-jadwal .jadwal-next-banner time{font-size:11px;color:#1d4ed8;font-weight:900}
+#view-jadwal .jadwal-pro-list{padding:2px 0 0}
+#view-jadwal .jadwal-timeline{position:relative;display:grid;gap:11px}
+#view-jadwal .jadwal-timeline:before{content:"";position:absolute;left:55px;top:18px;bottom:18px;width:1px;background:#e2e8f0}
+#view-jadwal .jadwal-timeline-item{display:grid;grid-template-columns:44px minmax(0,1fr);gap:14px;position:relative;align-items:start}
+#view-jadwal .jadwal-time-rail{display:flex;flex-direction:column;align-items:flex-end;padding-top:11px;position:relative;z-index:1}
+#view-jadwal .jadwal-time-rail:after{content:"";position:absolute;right:-18px;top:16px;width:7px;height:7px;border-radius:50%;background:#93c5fd;box-shadow:0 0 0 4px #f8fafc}
+#view-jadwal .jadwal-time-rail strong{font-size:10px;line-height:1.1;color:#0f172a;font-weight:900}
+#view-jadwal .jadwal-time-rail span{margin-top:3px;font-size:8px;line-height:1;color:#94a3b8;font-weight:800}
+#view-jadwal .jadwal-card{min-width:0;border:1px solid #e2e8f0;border-radius:14px;background:#fff;box-shadow:0 4px 20px -2px rgba(15,23,42,.04);padding:12px 13px;cursor:pointer;transition:transform .15s cubic-bezier(.16,1,.3,1),box-shadow .15s ease,border-color .15s ease,opacity .18s ease}
+#view-jadwal .jadwal-card:hover{box-shadow:0 8px 24px -4px rgba(15,23,42,.08);border-color:#d7dee8}
+#view-jadwal .jadwal-card:active{transform:scale(.985)}
+#view-jadwal .jadwal-card.is-ended{opacity:.72}
+#view-jadwal .jadwal-card.is-current{border-color:#86efac;box-shadow:0 8px 26px -6px rgba(22,163,74,.16)}
+#view-jadwal .jadwal-card-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;min-height:18px}
+#view-jadwal .jadwal-subject-pill,#view-jadwal .jadwal-routine-pill{display:inline-flex;align-items:center;min-height:20px;padding:4px 7px;border-radius:999px;font-size:8px;font-weight:900}
+#view-jadwal .jadwal-subject-pill{background:#eef2ff;color:#4338ca}
+#view-jadwal .jadwal-routine-pill{background:#f1f5f9;color:#334155}
+#view-jadwal .jadwal-live{display:inline-flex;align-items:center;gap:5px;padding:4px 7px;border-radius:999px;background:#ecfdf5;color:#047857;font-size:8px;font-weight:900;white-space:nowrap}
+#view-jadwal .jadwal-live i{width:6px;height:6px;border-radius:50%;background:#16a34a;box-shadow:0 0 0 0 rgba(34,197,94,.45);animation:jadwalPulse 1.8s ease-out infinite}
+@keyframes jadwalPulse{0%{box-shadow:0 0 0 0 rgba(34,197,94,.45)}70%{box-shadow:0 0 0 7px rgba(34,197,94,0)}100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}}
+#view-jadwal .jadwal-card-body{min-width:0}
+#view-jadwal .jadwal-card-title{font-family:var(--font-display);font-size:15px;line-height:1.2;font-weight:800;color:#0f172a;letter-spacing:-.025em;text-transform:capitalize}
+#view-jadwal .jadwal-card-subline{margin-top:5px;font-size:9px;color:#64748b;font-weight:700}
+#view-jadwal .jadwal-card-subline span{color:#cbd5e1;margin:0 2px}
+#view-jadwal .jadwal-card-footer{display:flex;align-items:center;justify-content:space-between;gap:9px;margin-top:10px;padding-top:9px;border-top:1px solid #f1f5f9;flex-wrap:wrap}
+#view-jadwal .jadwal-teacher{display:inline-flex;align-items:center;gap:7px;min-width:0;color:#64748b;font-size:9px;font-weight:800}
+#view-jadwal .jadwal-teacher-avatar{width:22px;height:22px;border-radius:8px;display:grid;place-items:center;flex:0 0 22px;background:#f1f5f9;color:#475569;font-size:8px;font-weight:900}
+#view-jadwal .jadwal-meta-chip{display:inline-flex;align-items:center;gap:4px;padding:4px 7px;border-radius:999px;background:#f8fafc;color:#64748b;font-size:8px;font-weight:800}
+#view-jadwal .jadwal-meta-chip.is-muted{color:#94a3b8}
+#view-jadwal .jadwal-card-routine{background:#f8fafc;border-color:#e2e8f0}
+#view-jadwal .jadwal-card-break{padding:7px;background:#fffdf7;border-color:#fde68a}
+#view-jadwal .jadwal-break-ribbon{display:flex;align-items:center;gap:9px;min-height:42px}
+#view-jadwal .jadwal-break-icon{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:#fffbeb;color:#b45309;font-size:14px;flex:0 0 30px}
+#view-jadwal .jadwal-break-ribbon div{display:grid;min-width:0;flex:1}
+#view-jadwal .jadwal-break-ribbon small{font-size:7px;letter-spacing:.08em;color:#b45309;font-weight:900}
+#view-jadwal .jadwal-break-ribbon strong{margin-top:2px;font-size:12px;line-height:1.2;color:#7c5a10;font-weight:900}
+#view-jadwal .jadwal-duration{font-size:8px;color:#a16207;font-weight:900}
+#view-jadwal .jadwal-empty{display:grid;place-items:center;text-align:center;padding:46px 18px;border:1px dashed #cbd5e1;border-radius:14px;background:#fff;box-shadow:0 4px 20px -2px rgba(15,23,42,.03)}
+#view-jadwal .jadwal-empty-doodle{width:64px;height:40px;position:relative;margin-bottom:14px}
+#view-jadwal .jadwal-empty-doodle:before,#view-jadwal .jadwal-empty-doodle:after{content:"";position:absolute;border:2px solid #cbd5e1;border-radius:12px}
+#view-jadwal .jadwal-empty-doodle:before{left:7px;top:8px;width:44px;height:26px}
+#view-jadwal .jadwal-empty-doodle:after{left:17px;top:0;width:25px;height:10px;border-bottom:none;border-radius:9px 9px 0 0}
+#view-jadwal .jadwal-empty-doodle span{position:absolute;width:5px;height:5px;border-radius:50%;background:#93c5fd;top:18px}
+#view-jadwal .jadwal-empty-doodle span:nth-child(1){left:15px}.jadwal-empty-doodle span:nth-child(2){left:29px;top:25px;background:#86efac}.jadwal-empty-doodle span:nth-child(3){left:44px;top:16px;background:#fcd34d}
+#view-jadwal .jadwal-empty strong{font-size:12px;line-height:1.45;color:#0f172a;max-width:320px}
+#view-jadwal .jadwal-empty span{margin-top:5px;font-size:9px;color:#94a3b8}
+
+/* Dark mode */
+body.dark #view-jadwal .jadwal-eyebrow-dot{background:#60a5fa;box-shadow:0 0 0 4px rgba(96,165,250,.12)}
+body.dark #view-jadwal .jadwal-today-mark{background:#172554;border-color:#29406b;color:#bfdbfe}
+body.dark #view-jadwal .jadwal-pro-add{background:#3b82f6;border-color:#3b82f6;color:#fff;box-shadow:0 6px 18px rgba(59,130,246,.16)}
+body.dark #view-jadwal .jadwal-day-rail .day-chip{background:#111c2f;color:#cbd5e1;border-color:#334155}
+body.dark #view-jadwal .jadwal-day-rail .day-chip small{color:#93c5fd}
+body.dark #view-jadwal .jadwal-day-rail .day-chip.active{background:#f8fafc;color:#0f172a;border-color:#f8fafc}
+body.dark #view-jadwal .jadwal-day-rail .day-chip.active small{color:#1d4ed8}
+body.dark #view-jadwal .jadwal-next-banner{background:#0e192b;border-color:#29406b}
+body.dark #view-jadwal .jadwal-next-banner small{color:#94a3b8}
+body.dark #view-jadwal .jadwal-next-banner strong{color:#f8fafc}
+body.dark #view-jadwal .jadwal-next-icon{background:#172554;color:#93c5fd}
+body.dark #view-jadwal .jadwal-time-rail:after{box-shadow:0 0 0 4px #0f172a;background:#60a5fa}
+body.dark #view-jadwal .jadwal-timeline:before{background:#334155}
+body.dark #view-jadwal .jadwal-time-rail strong{color:#f8fafc}
+body.dark #view-jadwal .jadwal-time-rail span{color:#94a3b8}
+body.dark #view-jadwal .jadwal-card{background:#1e293b;border-color:#334155;box-shadow:0 4px 20px -2px rgba(2,6,23,.22)}
+body.dark #view-jadwal .jadwal-card:hover{border-color:#475569;box-shadow:0 8px 24px -4px rgba(2,6,23,.34)}
+body.dark #view-jadwal .jadwal-card.is-current{border-color:#4ade80;box-shadow:0 8px 26px -6px rgba(34,197,94,.16)}
+body.dark #view-jadwal .jadwal-card-routine{background:#16243a;border-color:#334155}
+body.dark #view-jadwal .jadwal-card-break{background:#1f1c13;border-color:#6b5a28}
+body.dark #view-jadwal .jadwal-card-title{color:#f8fafc}
+body.dark #view-jadwal .jadwal-card-subline{color:#cbd5e1}
+body.dark #view-jadwal .jadwal-card-subline span{color:#64748b}
+body.dark #view-jadwal .jadwal-card-footer{border-top-color:#334155}
+body.dark #view-jadwal .jadwal-teacher{color:#cbd5e1}
+body.dark #view-jadwal .jadwal-teacher-avatar{background:#16243a;color:#cbd5e1}
+body.dark #view-jadwal .jadwal-meta-chip{background:#16243a;color:#cbd5e1}
+body.dark #view-jadwal .jadwal-meta-chip.is-muted{color:#94a3b8}
+body.dark #view-jadwal .jadwal-break-icon{background:#332a10;color:#fbbf24}
+body.dark #view-jadwal .jadwal-break-ribbon small{color:#fbbf24}
+body.dark #view-jadwal .jadwal-break-ribbon strong{color:#fde68a}
+body.dark #view-jadwal .jadwal-duration{color:#fcd34d}
+body.dark #view-jadwal .jadwal-empty{background:#1e293b;border-color:#475569}
+body.dark #view-jadwal .jadwal-empty strong{color:#f8fafc}
+body.dark #view-jadwal .jadwal-empty span{color:#94a3b8}
+body.dark #view-jadwal .jadwal-empty-doodle:before,body.dark #view-jadwal .jadwal-empty-doodle:after{border-color:#475569}
+
+@media(max-width:640px){
+  #view-jadwal .jadwal-pro-head{align-items:flex-start;gap:11px}
+  #view-jadwal .jadwal-pro-title-row h2{font-size:18px}
+  #view-jadwal .jadwal-pro-add{padding:9px 11px;font-size:10px}
+  #view-jadwal .jadwal-timeline:before{left:50px}
+  #view-jadwal .jadwal-timeline-item{grid-template-columns:39px minmax(0,1fr);gap:12px}
+  #view-jadwal .jadwal-time-rail:after{right:-17px}
+  #view-jadwal .jadwal-card{padding:11px 11px}
+  #view-jadwal .jadwal-card-title{font-size:14px}
+  #view-jadwal .jadwal-card-footer{align-items:flex-start}
+  #view-jadwal .jadwal-next-banner{margin-bottom:12px}
+}
 </style>
