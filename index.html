@@ -22413,7 +22413,123 @@ body.kelasku-authenticated #view-jadwal > .mode-switch .mode-btn{
   }
 }
 </style>
-</body></html>`;
+
+<style id="hp-v82-mobile-grid-only">
+/* v82 — Mobile Pengumpulan HP: tampilkan mode Grid saja agar toolbar tidak penuh. */
+@media (max-width: 760px){
+  #view-hp .hp-view-switcher [data-hp-view="rack"],
+  #view-hp .hp-view-switcher [data-hp-view="table"]{
+    display:none !important;
+  }
+  #view-hp .hp-view-switcher{
+    width:auto !important;
+    flex:0 0 auto !important;
+  }
+  #view-hp .hp-view-switcher [data-hp-view="grid"]{
+    display:inline-flex !important;
+    min-width:76px !important;
+    justify-content:center !important;
+  }
+}
+</style>
+<script id="hp-v82-mobile-grid-logic">
+(function(){
+  function forceMobileGrid(){
+    if(window.matchMedia && window.matchMedia('(max-width: 760px)').matches){
+      try{
+        if(typeof hpCommandViewMode !== 'undefined' && hpCommandViewMode !== 'grid') hpCommandViewMode='grid';
+      }catch(e){}
+      var gridBtn=document.querySelector('#view-hp [data-hp-view="grid"]');
+      if(gridBtn && !gridBtn.classList.contains('is-active')){
+        document.querySelectorAll('#view-hp [data-hp-view]').forEach(function(btn){btn.classList.remove('is-active')});
+        gridBtn.classList.add('is-active');
+      }
+      if(typeof renderHpCommandCenter==='function'){
+        try{renderHpCommandCenter()}catch(e){}
+      }
+    }
+  }
+  document.addEventListener('DOMContentLoaded', forceMobileGrid);
+  window.addEventListener('resize', forceMobileGrid);
+})();
+</script>
+</body>
+
+<style id="dark-mode-readability-v83">
+/* v83 — Pastikan teks pada kontrol berlatar terang tetap kontras di Dark Mode. */
+body.dark #view-hp .hp-date-switcher .hp-date-main{
+  background:#f8fafc !important;
+  color:#172033 !important;
+  -webkit-text-fill-color:#172033 !important;
+  border-color:#f8fafc !important;
+  opacity:1 !important;
+  text-shadow:none !important;
+}
+body.dark #view-hp .hp-date-switcher .hp-date-main #hp-command-date-short{
+  color:#172033 !important;
+  -webkit-text-fill-color:#172033 !important;
+  font-weight:900 !important;
+}
+body.dark #view-hp .hp-date-switcher .hp-date-main .hp-date-main-chevron{
+  color:#475569 !important;
+  -webkit-text-fill-color:#475569 !important;
+  opacity:1 !important;
+}
+body.dark #view-hp .hp-filter-row button:not(.is-active){
+  background:#f8fafc !important;
+  color:#334155 !important;
+  -webkit-text-fill-color:#334155 !important;
+  border-color:#dbe3ef !important;
+  opacity:1 !important;
+}
+body.dark #view-hp .hp-filter-row button:not(.is-active) span{
+  background:#e2e8f0 !important;
+  color:#334155 !important;
+  -webkit-text-fill-color:#334155 !important;
+  opacity:1 !important;
+}
+body.dark #view-hp .hp-filter-row button.is-active{
+  background:#f8fafc !important;
+  color:#172033 !important;
+  -webkit-text-fill-color:#172033 !important;
+  border-color:#f8fafc !important;
+  opacity:1 !important;
+}
+body.dark #view-hp .hp-filter-row button.is-active span{
+  background:#e2e8f0 !important;
+  color:#334155 !important;
+  -webkit-text-fill-color:#334155 !important;
+  opacity:1 !important;
+}
+body.dark #view-tugas .task-pro-check-btn{
+  color:#172033 !important;
+  -webkit-text-fill-color:#172033 !important;
+  background:#eef2ff !important;
+  border-color:#c7d2fe !important;
+  opacity:1 !important;
+  text-shadow:none !important;
+}
+body.dark #view-tugas .task-pro-check-btn .task-pro-check-icon{
+  color:#172033 !important;
+  -webkit-text-fill-color:#172033 !important;
+  background:#ffffff !important;
+  border-color:#64748b !important;
+  opacity:1 !important;
+}
+body.dark #view-tugas .task-pro-check-btn.is-done{
+  color:#166534 !important;
+  -webkit-text-fill-color:#166534 !important;
+  background:#ecfdf5 !important;
+  border-color:#bbf7d0 !important;
+}
+body.dark #view-tugas .task-pro-check-btn.is-done .task-pro-check-icon{
+  color:#ffffff !important;
+  -webkit-text-fill-color:#ffffff !important;
+  background:#22c55e !important;
+  border-color:#22c55e !important;
+}
+</style>
+</html>`;
     const w=window.open('','_blank','width=900,height=700');if(!w){showNotification('Popup diblokir browser. Izinkan popup untuk mencetak PDF.','warning');return;}w.document.write(html);w.document.close();w.focus();setTimeout(()=>w.print(),250);
   };
 
