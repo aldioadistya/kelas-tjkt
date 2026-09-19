@@ -19539,3 +19539,81 @@ body.dark .task-pill-file{
   .task-pill-file{font-size:9px !important;}
 }
 </style>
+<style id="piket-toolbar-final-v64">
+  /* v64 — rapikan toolbar Statistik / Reset / Semua selesai */
+  .piket-integrated-toolbar{
+    margin-top:12px;
+    padding-top:0 !important;
+    border-top:0 !important;
+    align-items:center;
+  }
+  .piket-toolbar-group{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    border:0 !important;
+    overflow:visible;
+    background:transparent !important;
+  }
+  .piket-toolbar-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:5px;
+    min-height:31px;
+    padding:0 10px;
+    border:1px solid #E2E8F0 !important;
+    border-radius:9px;
+    background:#FFFFFF;
+    color:#475569;
+    font-size:8.8px;
+    font-weight:850;
+    line-height:1;
+    white-space:nowrap;
+    box-shadow:0 1px 2px rgba(15,23,42,.025);
+  }
+  .piket-toolbar-btn:last-child{border-right:1px solid #E2E8F0 !important}
+  .piket-toolbar-btn:hover{background:#F8FAFC;color:#0F172A;border-color:#CBD5E1 !important}
+  .piket-toolbar-btn-success{
+    color:#15803D;
+    background:#F6FDF8;
+    border-color:#BBF7D0 !important;
+  }
+  .piket-toolbar-btn-success:hover{
+    background:#F0FDF4;
+    color:#166534;
+    border-color:#86EFAC !important;
+  }
+  .piket-toolbar-btn span{
+    margin-right:0;
+    font-size:10px;
+    line-height:1;
+  }
+  body.dark .piket-integrated-toolbar{
+    border-top:0 !important;
+    padding-top:0 !important;
+  }
+  body.dark .piket-toolbar-group{background:transparent !important;border:0 !important}
+  body.dark .piket-toolbar-btn{
+    background:#0F192A;
+    border-color:#40516B !important;
+    color:#F8FAFC;
+  }
+  body.dark .piket-toolbar-btn:hover{background:#16243A;color:#FFFFFF;border-color:#526681 !important}
+  body.dark .piket-toolbar-btn-success{
+    background:#0D2417;
+    border-color:#24583A !important;
+    color:#4ADE80;
+  }
+  body.dark .piket-toolbar-btn-success:hover{background:#12301F;border-color:#326D49 !important;color:#86EFAC}
+  @media(max-width:760px){
+    .piket-integrated-toolbar{gap:8px}
+    .piket-toolbar-group{width:100%;display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:6px}
+    .piket-toolbar-btn{width:100%;min-width:0;padding:0 8px}
+  }
+  @media(max-width:520px){
+    .piket-toolbar-group{grid-template-columns:1fr 1fr 1.35fr}
+    .piket-toolbar-btn{font-size:8.2px;min-height:30px;padding:0 6px}
+    .piket-toolbar-btn span{font-size:9px}
+  }
+</style>
