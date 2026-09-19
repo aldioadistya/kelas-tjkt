@@ -9309,7 +9309,7 @@ Setelan
       <label>Daftar tugas</label>
       <div id="piket-task-editor" class="piket-task-editor"></div>
       <button type="button" class="btn btn-ghost piket-add-task-btn" onclick="addPiketTaskInput()">＋ Tambah tugas</button>
-      <div class="field-hint">Contoh: Bersihkan lantai, buang sampah. Satu tugas bisa dikerjakan beberapa siswa.</div>
+      <div class="field-hint">Atur jumlah orang per tugas. Bersihkan lantai default 2 orang; tugas lain 1 orang.</div>
     </div>
     <div class="field" id="piket-manual-assignment-wrap" style="display:none;">
       <label>Pembagian minggu ini</label>
@@ -9938,18 +9938,21 @@ Setelan
       'piket',
       'piketJadwal',
       'piketTaskList',
+      'piketTaskConfig',
       'piketRotationMode',
       'piketWeeklyAssignments',
       'tugas',
       'jadwal',
       'pengumuman',
-      'notifications'
+      'notifications',
+      '__kelaskuRevision'
   ];
 
   const ADMIN_STATE_KEYS = [
       'autoCleanReportDays',
       'activityLog',
-      'nameChangeLog'
+      'nameChangeLog',
+      '__kelaskuRevision'
   ];
 
   function pickStateKeys(source, keys) {
@@ -9990,6 +9993,7 @@ Setelan
       if (!Array.isArray(state.piketTaskList)) state.piketTaskList = [...DEFAULT_PIKET_TASKS];
       state.piketTaskList = state.piketTaskList.map(v => String(v || '').trim()).filter(Boolean).slice(0, 30);
       normalizePiketTaskList();
+      normalizePiketTaskConfig();
       if (!['auto', 'manual'].includes(state.piketRotationMode)) state.piketRotationMode = 'auto';
       if (!state.piketWeeklyAssignments || typeof state.piketWeeklyAssignments !== 'object' || Array.isArray(state.piketWeeklyAssignments)) state.piketWeeklyAssignments = {};
       if (!state.jadwal || typeof state.jadwal !== 'object' || Array.isArray(state.jadwal)) {
@@ -10380,13 +10384,28 @@ Setelan
                       const publicState = buildPublicState(state);
                       localStorage.setItem('kelasku-public-state', JSON.stringify(publicState));
                       localStorage.removeItem('kelasku-state');
+                      localStorage.removeItem('kelasku-pending-admin-state');
+                      localStorage.removeItem('kelasku-pending-admin-revision');
                       lastResult = { synced: true, localOnly: true, publicSynced: true, adminSynced: true, legacySynced: false };
                       continue;
                   }
 
+                  // Give every write a monotonic client revision. Live listeners use
+                  // this value to ignore older snapshots that can arrive after an import/save.
+                  const previousRevision = Number(state.__kelaskuRevision) || 0;
+                  state.__kelaskuRevision = Math.max(previousRevision + 1, Date.now());
+
                   const publicState = buildPublicState(state);
                   const adminState = buildAdminState(state);
                   const syncResults = [];
+
+                  // Keep a durable admin draft while a server write is in flight.
+                  // If the tab/app is reloaded during a transient Firestore failure,
+                  // loadState can recover this newer draft instead of reverting to old data.
+                  try {
+                      localStorage.setItem('kelasku-pending-admin-state', JSON.stringify(state));
+                      localStorage.setItem('kelasku-pending-admin-revision', String(state.__kelaskuRevision));
+                  } catch (_) {}
                   let publicSynced = false;
                   let legacySynced = false;
                   let adminSynced = false;
@@ -10454,6 +10473,15 @@ Setelan
                       legacySynced,
                       adminSynced
                   };
+
+                  // Only clear the recovery draft after both primary separated
+                  // documents confirm success. Otherwise keep it for reload recovery.
+                  if (publicSynced && adminSynced) {
+                      try {
+                          localStorage.removeItem('kelasku-pending-admin-state');
+                          localStorage.removeItem('kelasku-pending-admin-revision');
+                      } catch (_) {}
+                  }
                   console.log('Kelasku state save completed:', syncResults.join(', ') || 'local fallback');
               }
 
@@ -10485,6 +10513,29 @@ Setelan
           return result;
       } finally {
           window.__kelaskuSavePromise = null;
+      }
+  }
+
+  function restorePendingAdminDraft() {
+      if (!isAdmin()) return false;
+      try {
+          const raw = localStorage.getItem('kelasku-pending-admin-state');
+          if (!raw) return false;
+          const draft = JSON.parse(raw);
+          if (!draft || typeof draft !== 'object') return false;
+          const draftRevision = Number(draft.__kelaskuRevision) || Number(localStorage.getItem('kelasku-pending-admin-revision')) || 0;
+          const serverRevision = Number(state.__kelaskuRevision) || 0;
+          // Recover only a newer unsynced draft. A newer server revision always wins.
+          if (!draftRevision || draftRevision <= serverRevision) {
+              localStorage.removeItem('kelasku-pending-admin-state');
+              localStorage.removeItem('kelasku-pending-admin-revision');
+              return false;
+          }
+          state = Object.assign(state, draft);
+          hydrateLocalUiState();
+          return true;
+      } catch (_) {
+          return false;
       }
   }
 
@@ -10601,6 +10652,20 @@ Setelan
 
           await loadReportsForCurrentUser();
           await loadTargetedNotifications();
+
+          // Restore the pending draft only after report/notification loading,
+          // so a failed import cannot be partially overwritten by live server data.
+          const restoredPendingDraft = restorePendingAdminDraft();
+          if (restoredPendingDraft) {
+              Promise.resolve().then(async () => {
+                  try {
+                      const retry = await saveState();
+                      if (retry && retry.publicSynced && retry.adminSynced) {
+                          showNotification('Data lokal yang belum tersimpan berhasil dipulihkan ke Firebase.', 'success', 5000);
+                      }
+                  } catch (_) {}
+              });
+          }
           hydrateLocalUiState();
       } catch (e) {
           console.warn('Load separated state error, using safe defaults', e);
@@ -11038,6 +11103,7 @@ Setelan
           piket: {},
           piketJadwal: {},
           piketTaskList: ['Bersihkan lantai', 'Buang sampah', 'Tutup jendela', 'Rapikan meja dan kursi', 'Rapikan papan tulis', 'Matikan lampu', 'Susun kursi dengan rapi', 'Periksa kebersihan kelas'],
+          piketTaskConfig: { 'Bersihkan lantai': 2, 'Buang sampah': 1, 'Tutup jendela': 1, 'Rapikan meja dan kursi': 1, 'Rapikan papan tulis': 1, 'Matikan lampu': 1, 'Susun kursi dengan rapi': 1, 'Periksa kebersihan kelas': 1 },
           piketRotationMode: 'auto',
           piketWeeklyAssignments: {},
           tugas: [],
@@ -11110,6 +11176,11 @@ Setelan
   }
   function mergePublicAndCurrentState(saved){
       if (!saved || typeof saved !== 'object') return;
+      const incomingRevision = Number(saved.__kelaskuRevision) || 0;
+      const currentRevision = Number(state.__kelaskuRevision) || 0;
+      // Ignore an older onSnapshot event. This prevents a stale cached snapshot
+      // from replacing a freshly imported/saved state immediately after reload.
+      if (currentRevision > 0 && incomingRevision < currentRevision) return;
       const keepSensitive = {
           reports: state.reports,
           activityLog: state.activityLog,
@@ -11121,6 +11192,9 @@ Setelan
   }
   function mergeAdminState(saved){
       if (!saved || typeof saved !== 'object') return;
+      const incomingRevision = Number(saved.__kelaskuRevision) || 0;
+      const currentRevision = Number(state.__kelaskuRevision) || 0;
+      if (currentRevision > 0 && incomingRevision < currentRevision) return;
       state = Object.assign(state, saved);
       hydrateLocalUiState();
   }
@@ -11938,6 +12012,7 @@ Setelan
       for (let date in state.hp) { if (name in state.hp[date]) delete state.hp[date][name]; }
       for (let date in state.piket) { if (name in state.piket[date]) delete state.piket[date][name]; }
       for (let day in state.piketJadwal) { state.piketJadwal[day] = (state.piketJadwal[day] || []).filter(s => s !== name); }
+      removeNameFromPiketWeeklyAssignments(name);
       saveState(); renderHp(); renderPiket(); renderBeranda();
   }
   let _editingStudentName = null;
@@ -11991,6 +12066,7 @@ Setelan
       if(state.piketJadwal && typeof state.piketJadwal==='object' && newName!==oldName){
           Object.keys(state.piketJadwal).forEach(day=>{if(Array.isArray(state.piketJadwal[day])) state.piketJadwal[day]=state.piketJadwal[day].map(n=>n===oldName?newName:n);});
       }
+      replaceNameInPiketWeeklyAssignments(oldName, newName);
       saveState();
       closeModal('hp-edit');
       renderHp(); renderBeranda(); renderPiket();
@@ -12053,6 +12129,7 @@ Setelan
                   }
               });
           }
+          replaceNameInPiketWeeklyAssignments(oldName, nama);
           addActivity('Mengubah nama siswa', oldName + ' → ' + nama);
           _editingStudentName = null;
           saveState(); renderHp(); renderPiket(); renderBeranda(); closeModal('student');
@@ -12180,6 +12257,17 @@ Setelan
       saveState(); renderPiket(); renderPiketCalendar(); renderBeranda();
   }
   // ===== ROTASI TUGAS PIKET MINGGUAN =====
+  const DEFAULT_PIKET_TASKS = [
+      'Bersihkan lantai',
+      'Buang sampah',
+      'Tutup jendela',
+      'Rapikan meja dan kursi',
+      'Rapikan papan tulis',
+      'Matikan lampu',
+      'Susun kursi dengan rapi',
+      'Periksa kebersihan kelas'
+  ];
+
   function piketDateFromKey(key) {
       const parts = String(key || '').split('-').map(Number);
       if (parts.length !== 3 || parts.some(n => !Number.isFinite(n))) return new Date();
@@ -12203,6 +12291,23 @@ Setelan
       const fmt = d => d.toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' });
       return `${fmt(start)} – ${fmt(end)}`;
   }
+  function currentPiketDay() {
+      const date = state.piketSelectedDate || todayKey();
+      const day = dayNameOf(date);
+      return SCHOOL_DAYS.includes(day) ? day : SCHOOL_DAYS[0];
+  }
+  function piketRotationKey(weekKey, day) {
+      return `${weekKey}::${String(day || currentPiketDay())}`;
+  }
+  function parsePiketRotationKey(key) {
+      const raw = String(key || '');
+      const parts = raw.split('::');
+      if (parts.length >= 2) return { weekKey: parts[0], day: parts.slice(1).join('::') };
+      return { weekKey: raw || piketWeekStartKey(todayKey()), day: currentPiketDay() };
+  }
+  function currentPiketRotationKey() {
+      return piketRotationKey(currentPiketWeekKey(), currentPiketDay());
+  }
   function uniquePiketTasks(list) {
       const seen = new Set();
       return (Array.isArray(list) ? list : []).map(v => String(v || '').trim()).filter(v => {
@@ -12211,54 +12316,70 @@ Setelan
           seen.add(k); return true;
       }).slice(0, 30);
   }
-  const DEFAULT_PIKET_TASKS = ['Bersihkan lantai', 'Buang sampah', 'Tutup jendela', 'Rapikan meja dan kursi', 'Rapikan papan tulis', 'Matikan lampu', 'Susun kursi dengan rapi', 'Periksa kebersihan kelas'];
   function normalizePiketTaskList() {
       const current = uniquePiketTasks(state.piketTaskList);
-      const legacyOnly = current.length > 0
-          && current.length <= 2
+      const legacyOnly = current.length === 2
           && current.every(task => ['Bersihkan lantai', 'Buang sampah'].includes(task));
-      if (!current.length || legacyOnly) {
+      if (!current.length) {
           state.piketTaskList = [...DEFAULT_PIKET_TASKS];
+      } else if (legacyOnly) {
+          // Backup lama v57/v58 hanya punya dua tugas. Jangan menghapus pilihan lama;
+          // tambahkan kategori baru ke daftar yang sudah ada.
+          state.piketTaskList = [...current, ...DEFAULT_PIKET_TASKS.slice(2)];
       } else {
           state.piketTaskList = current;
       }
       return state.piketTaskList;
   }
-  function uniquePiketStudents() {
+  function normalizePiketTaskConfig() {
+      if (!state.piketTaskConfig || typeof state.piketTaskConfig !== 'object' || Array.isArray(state.piketTaskConfig)) {
+          state.piketTaskConfig = {};
+      }
+      const next = {};
+      uniquePiketTasks(state.piketTaskList).forEach(task => {
+          const lower = task.toLowerCase();
+          const raw = Number(state.piketTaskConfig[task]);
+          const legacyKey = Object.keys(state.piketTaskConfig).find(k => String(k).toLowerCase() === lower);
+          const legacyRaw = legacyKey ? Number(state.piketTaskConfig[legacyKey]) : NaN;
+          const count = Number.isFinite(raw) ? raw : (Number.isFinite(legacyRaw) ? legacyRaw : (lower === 'bersihkan lantai' ? 2 : 1));
+          next[task] = Math.max(1, Math.min(8, Math.round(count)));
+      });
+      state.piketTaskConfig = next;
+      return next;
+  }
+  function getPiketTaskQuota(task) {
+      normalizePiketTaskConfig();
+      const n = Number(state.piketTaskConfig[String(task || '')]);
+      return Number.isFinite(n) ? Math.max(1, Math.min(8, Math.round(n))) : (String(task || '').toLowerCase() === 'bersihkan lantai' ? 2 : 1);
+  }
+  function uniquePiketStudents(day) {
+      const selectedDay = day || currentPiketDay();
       const seen = new Set();
       const roster = [];
-      // Sumber peserta rotasi mengikuti nama yang sudah diatur admin pada
-      // Jadwal Piket per hari. Digabung dan dideduplikasi agar satu siswa
-      // yang muncul di beberapa hari tetap mendapat satu tugas mingguan.
       const daily = state.piketJadwal && typeof state.piketJadwal === 'object' ? state.piketJadwal : {};
-      Object.keys(daily).forEach(day => {
-          const names = Array.isArray(daily[day]) ? daily[day] : [];
-          names.forEach(value => {
-              const name = String(value || '').trim();
-              const key = name.toLowerCase();
-              if (!key || seen.has(key)) return;
-              seen.add(key);
-              roster.push(name);
-          });
+      const names = Array.isArray(daily[selectedDay]) ? daily[selectedDay] : [];
+      names.forEach(value => {
+          const name = String(value || '').trim();
+          const key = name.toLowerCase();
+          if (!key || seen.has(key)) return;
+          seen.add(key);
+          roster.push(name);
       });
-
-      // Fallback untuk data lama yang belum punya pengaturan Jadwal Piket.
-      // Begitu admin mengatur Jadwal Piket, daftar di atas menjadi sumber utama.
-      if (roster.length) return roster;
-
-      return (Array.isArray(state.students) ? state.students : []).map(v => String(v || '').trim()).filter(v => {
-          const k = v.toLowerCase();
-          if (!k || seen.has(k)) return false;
-          seen.add(k); return true;
-      });
+      return roster;
   }
-  function isPiketPlanRosterValid(plan) {
-      const students = uniquePiketStudents();
+  function isPiketPlanRosterValid(plan, day) {
+      const students = uniquePiketStudents(day);
       const map = piketPlanToStudentMap(plan);
       const keys = Object.keys(map).filter(name => String(name || '').trim());
       if (keys.length !== students.length) return false;
       const expected = new Set(students.map(name => name.toLowerCase()));
       return keys.every(name => expected.has(String(name).toLowerCase()));
+  }
+  function isPiketPlanTasksValid(plan) {
+      if (!plan || typeof plan !== 'object') return false;
+      const tasks = new Set(uniquePiketTasks(state.piketTaskList).map(task => task.toLowerCase()));
+      const map = piketPlanToStudentMap(plan);
+      return Object.values(map).every(task => task && tasks.has(String(task).toLowerCase()));
   }
   function shufflePiket(list) {
       const arr = [...list];
@@ -12268,18 +12389,58 @@ Setelan
       }
       return arr;
   }
-  function getPreviousPiketWeekPlan(weekKey) {
+  function getPreviousPiketWeekPlan(weekKey, day) {
+      const selectedDay = day || currentPiketDay();
       const keys = Object.keys(state.piketWeeklyAssignments || {})
-          .filter(k => k < weekKey && state.piketWeeklyAssignments[k] && typeof state.piketWeeklyAssignments[k] === 'object')
+          .filter(k => {
+              const parsed = parsePiketRotationKey(k);
+              return parsed.day === selectedDay
+                  && parsed.weekKey < weekKey
+                  && state.piketWeeklyAssignments[k]
+                  && typeof state.piketWeeklyAssignments[k] === 'object';
+          })
           .sort();
       if (!keys.length) return null;
       return state.piketWeeklyAssignments[keys[keys.length - 1]] || null;
+  }
+  function replaceNameInPiketWeeklyAssignments(oldName, newName) {
+      if (!oldName || !newName || oldName === newName || !state.piketWeeklyAssignments) return;
+      Object.values(state.piketWeeklyAssignments).forEach(plan => {
+          if (!plan || typeof plan !== 'object') return;
+          if (plan.assignmentByStudent && Object.prototype.hasOwnProperty.call(plan.assignmentByStudent, oldName)) {
+              if (!Object.prototype.hasOwnProperty.call(plan.assignmentByStudent, newName)) {
+                  plan.assignmentByStudent[newName] = plan.assignmentByStudent[oldName];
+              }
+              delete plan.assignmentByStudent[oldName];
+          }
+          if (plan.assignments && typeof plan.assignments === 'object') {
+              Object.keys(plan.assignments).forEach(task => {
+                  if (Array.isArray(plan.assignments[task])) {
+                      plan.assignments[task] = plan.assignments[task].map(name => name === oldName ? newName : name);
+                  }
+              });
+          }
+      });
+  }
+  function removeNameFromPiketWeeklyAssignments(name) {
+      if (!name || !state.piketWeeklyAssignments) return;
+      Object.values(state.piketWeeklyAssignments).forEach(plan => {
+          if (!plan || typeof plan !== 'object') return;
+          if (plan.assignmentByStudent && Object.prototype.hasOwnProperty.call(plan.assignmentByStudent, name)) delete plan.assignmentByStudent[name];
+          if (plan.assignments && typeof plan.assignments === 'object') {
+              Object.keys(plan.assignments).forEach(task => {
+                  if (Array.isArray(plan.assignments[task])) plan.assignments[task] = plan.assignments[task].filter(student => student !== name);
+              });
+          }
+      });
   }
   function piketPlanToStudentMap(plan) {
       const map = {};
       if (!plan || typeof plan !== 'object') return map;
       if (plan.assignmentByStudent && typeof plan.assignmentByStudent === 'object') {
-          Object.keys(plan.assignmentByStudent).forEach(name => { map[name] = String(plan.assignmentByStudent[name] || ''); });
+          Object.keys(plan.assignmentByStudent).forEach(name => {
+              map[name] = String(plan.assignmentByStudent[name] || '').trim();
+          });
           return map;
       }
       const groups = plan.assignments && typeof plan.assignments === 'object' ? plan.assignments : {};
@@ -12288,24 +12449,68 @@ Setelan
       });
       return map;
   }
-  function buildAutoPiketPlan(weekKey) {
+  function buildPiketTaskSlots(tasks, studentCount) {
+      const taskList = shufflePiket(tasks);
+      const slots = [];
+
+      // Quota di atas 1 diprioritaskan supaya "Bersihkan lantai" default benar-benar
+      // mendapat 2 siswa ketika peserta minimal 2 orang.
+      taskList.filter(task => getPiketTaskQuota(task) > 1).forEach(task => {
+          for (let i = 0; i < getPiketTaskQuota(task); i++) slots.push(task);
+      });
+      taskList.filter(task => getPiketTaskQuota(task) === 1).forEach(task => slots.push(task));
+
+      // Kalau jumlah kategori lebih sedikit dari jumlah siswa, isi slot sisanya dengan
+      // kategori tunggal lain. Jangan menambah "Bersihkan lantai" di atas quota-nya.
+      const fillOrder = shufflePiket(taskList.filter(task => getPiketTaskQuota(task) === 1));
+      let fi = 0;
+      while (slots.length < studentCount && fillOrder.length) {
+          slots.push(fillOrder[fi % fillOrder.length]);
+          fi++;
+      }
+
+      // Pastikan dua slot sapu tetap ada bila tugas itu aktif dan pesertanya cukup.
+      const floor = taskList.find(task => task.toLowerCase() === 'bersihkan lantai');
+      if (floor && studentCount >= 2) {
+          const floorCount = slots.slice(0, studentCount).filter(task => task.toLowerCase() === floor.toLowerCase()).length;
+          for (let need = floorCount; need < Math.min(2, getPiketTaskQuota(floor)); need++) {
+              const idx = slots.findIndex((task, i) => i < studentCount && task.toLowerCase() !== floor.toLowerCase());
+              if (idx >= 0) slots[idx] = floor;
+              else slots.unshift(floor);
+          }
+      }
+
+      return slots.slice(0, studentCount);
+  }
+  function buildAutoPiketPlan(rotationKey) {
+      const parsedKey = parsePiketRotationKey(rotationKey);
       const tasks = uniquePiketTasks(state.piketTaskList);
-      const students = uniquePiketStudents();
+      const students = uniquePiketStudents(parsedKey.day);
       if (!tasks.length || !students.length) return null;
+
+      normalizePiketTaskConfig();
       const shuffledStudents = shufflePiket(students);
-      const shuffledTasks = shufflePiket(tasks);
-      const previous = getPreviousPiketWeekPlan(weekKey);
+      const slots = buildPiketTaskSlots(tasks, students.length);
+      const previous = getPreviousPiketWeekPlan(parsedKey.weekKey, parsedKey.day);
       const previousMap = piketPlanToStudentMap(previous);
       const assignmentByStudent = {};
-      const offset = shuffledTasks.length > 1 ? Math.floor(Math.random() * shuffledTasks.length) : 0;
 
-      shuffledStudents.forEach((student, index) => {
-          let taskIndex = (index + offset) % shuffledTasks.length;
-          if (shuffledTasks.length > 1 && previousMap[student] === shuffledTasks[taskIndex]) {
-              taskIndex = (taskIndex + 1) % shuffledTasks.length;
+      // Hindari sebisa mungkin tugas yang sama dengan pekan sebelumnya, tanpa
+      // mengubah jumlah orang per tugas.
+      for (let i = 0; i < shuffledStudents.length; i++) {
+          if (!slots[i]) break;
+          if (previousMap[shuffledStudents[i]] && previousMap[shuffledStudents[i]].toLowerCase() === slots[i].toLowerCase()) {
+              let swap = -1;
+              for (let j = i + 1; j < slots.length; j++) {
+                  if (String(slots[j]).toLowerCase() !== String(previousMap[shuffledStudents[i]]).toLowerCase()) {
+                      swap = j;
+                      break;
+                  }
+              }
+              if (swap >= 0) [slots[i], slots[swap]] = [slots[swap], slots[i]];
           }
-          assignmentByStudent[student] = shuffledTasks[taskIndex];
-      });
+          assignmentByStudent[shuffledStudents[i]] = slots[i];
+      }
 
       const assignments = {};
       tasks.forEach(task => { assignments[task] = []; });
@@ -12316,23 +12521,34 @@ Setelan
       });
 
       return {
-          weekStart: weekKey,
+          rotationKey,
+          weekStart: parsedKey.weekKey,
+          day: parsedKey.day,
           mode: 'auto',
-          tasks: shuffledTasks,
+          tasks,
+          quotas: Object.fromEntries(tasks.map(task => [task, getPiketTaskQuota(task)])),
           assignments,
           assignmentByStudent,
           updatedAt: Date.now()
       };
   }
-  function ensurePiketWeeklyPlan(weekKey) {
-      if (!state.piketWeeklyAssignments || typeof state.piketWeeklyAssignments !== 'object') state.piketWeeklyAssignments = {};
-      if (state.piketRotationMode !== 'auto') return state.piketWeeklyAssignments[weekKey] || null;
-      const existing = state.piketWeeklyAssignments[weekKey];
-      const validExisting = existing && typeof existing === 'object' && existing.assignmentByStudent && Object.keys(existing.assignmentByStudent).length > 0 && isPiketPlanRosterValid(existing);
+  function ensurePiketWeeklyPlan(rotationKey) {
+      if (!state.piketWeeklyAssignments || typeof state.piketWeeklyAssignments !== 'object' || Array.isArray(state.piketWeeklyAssignments)) {
+          state.piketWeeklyAssignments = {};
+      }
+      const parsedKey = parsePiketRotationKey(rotationKey);
+      if (state.piketRotationMode !== 'auto') return state.piketWeeklyAssignments[rotationKey] || null;
+
+      const existing = state.piketWeeklyAssignments[rotationKey];
+      const validExisting = existing
+          && typeof existing === 'object'
+          && isPiketPlanRosterValid(existing, parsedKey.day)
+          && isPiketPlanTasksValid(existing);
       if (validExisting) return existing;
-      const plan = buildAutoPiketPlan(weekKey);
+
+      const plan = buildAutoPiketPlan(rotationKey);
       if (!plan) return null;
-      state.piketWeeklyAssignments[weekKey] = plan;
+      state.piketWeeklyAssignments[rotationKey] = plan;
       window.__piketWeeklyAutoSaveQueued = true;
       Promise.resolve().then(() => {
           if (!window.__piketWeeklyAutoSaveQueued) return;
@@ -12347,61 +12563,87 @@ Setelan
       const listEl = document.getElementById('piket-weekly-list');
       if (!listEl) return;
       const weekKey = piketWeekStartKey(state.piketSelectedDate || todayKey());
-      if (labelEl) labelEl.textContent = `Minggu ${formatPiketWeekLabel(weekKey)}`;
+      const day = currentPiketDay();
+      const rotationKey = piketRotationKey(weekKey, day);
+      const students = uniquePiketStudents(day);
+      if (labelEl) labelEl.textContent = `${day} • Minggu ${formatPiketWeekLabel(weekKey)} • ${students.length} siswa`;
       if (badgeEl) {
           const mode = state.piketRotationMode === 'manual' ? 'Manual' : 'Otomatis';
           badgeEl.textContent = mode;
           badgeEl.className = `piket-rotation-badge ${state.piketRotationMode === 'manual' ? 'manual' : 'auto'}`;
       }
-      const plan = ensurePiketWeeklyPlan(weekKey);
+      const plan = ensurePiketWeeklyPlan(rotationKey);
+      if (!students.length) {
+          listEl.innerHTML = `<div class="piket-weekly-empty">Belum ada siswa yang diatur untuk piket ${escapeHtml(day)}.</div>`;
+          return;
+      }
       if (!plan) {
-          listEl.innerHTML = `<div class="piket-weekly-empty">Belum ada rotasi untuk minggu ini.${isAdmin() ? ' Klik <b>Rotasi</b> untuk mengaturnya.' : ''}</div>`;
+          listEl.innerHTML = `<div class="piket-weekly-empty">Belum ada rotasi untuk ${escapeHtml(day)} minggu ini.${isAdmin() ? ' Klik <b>Rotasi</b> untuk mengaturnya.' : ''}</div>`;
           return;
       }
       const assignments = plan.assignments && typeof plan.assignments === 'object' ? plan.assignments : {};
-      const currentRoster = new Set(uniquePiketStudents().map(name => name.toLowerCase()));
       const tasks = uniquePiketTasks(plan.tasks && plan.tasks.length ? plan.tasks : state.piketTaskList);
       listEl.innerHTML = tasks.map((task, index) => {
-          const people = (Array.isArray(assignments[task]) ? assignments[task] : []).filter(name => currentRoster.has(String(name || '').toLowerCase()));
+          const people = Array.isArray(assignments[task]) ? assignments[task] : [];
+          if (!people.length) return '';
           return `<div class="piket-week-card">
               <div class="piket-week-task-index">${String(index + 1).padStart(2,'0')}</div>
               <div class="piket-week-task-main">
                   <div class="piket-week-task-name">${escapeHtml(task)}</div>
-                  <div class="piket-week-task-people">${people.length ? people.map(name => `<span class="piket-week-person">${escapeHtml(name)}</span>`).join('') : '<span class="piket-week-unassigned">Belum ada siswa</span>'}</div>
+                  <div class="piket-week-task-people">${people.map(name => `<span class="piket-week-person">${escapeHtml(name)}</span>`).join('')}</div>
               </div>
           </div>`;
-      }).join('');
+      }).join('') || `<div class="piket-weekly-empty">Belum ada pembagian tugas.</div>`;
   }
   function renderPiketTaskEditor() {
       const wrap = document.getElementById('piket-task-editor');
       if (!wrap) return;
+      normalizePiketTaskList();
+      normalizePiketTaskConfig();
       const tasks = uniquePiketTasks(state.piketTaskList);
-      state.piketTaskList = tasks;
       wrap.innerHTML = tasks.map((task, index) => `<div class="piket-task-editor-row">
           <input type="text" class="piket-task-input" data-piket-task-index="${index}" value="${escapeHtml(task)}" maxlength="80" placeholder="Nama tugas">
+          <label class="piket-task-count"><input type="number" class="piket-task-count-input" min="1" max="8" step="1" value="${getPiketTaskQuota(task)}" aria-label="Jumlah siswa untuk ${escapeHtml(task)}"><span>orang</span></label>
           <button type="button" class="piket-task-remove" aria-label="Hapus tugas" onclick="removePiketTaskInput(${index})">×</button>
       </div>`).join('');
   }
   function addPiketTaskInput() {
       const tasks = uniquePiketTasks(getPiketTaskEditorValues());
       if (tasks.length >= 30) { showNotification('Maksimal 30 tugas piket.', 'warning'); return; }
-      tasks.push('');
+      tasks.push('Tugas baru');
       state.piketTaskList = tasks;
+      normalizePiketTaskConfig();
+      state.piketTaskConfig['Tugas baru'] = 1;
       renderPiketTaskEditor();
       const inputs = document.querySelectorAll('#piket-task-editor .piket-task-input');
       const last = inputs[inputs.length - 1];
-      if (last) last.focus();
+      if (last) { last.focus(); last.select(); }
   }
   function removePiketTaskInput(index) {
-      const tasks = getPiketTaskEditorValues();
-      tasks.splice(index, 1);
-      state.piketTaskList = tasks.filter(Boolean);
+      const before = uniquePiketTasks(getPiketTaskEditorValues());
+      const removed = before[index];
+      before.splice(index, 1);
+      state.piketTaskList = before.filter(Boolean);
+      if (removed && state.piketTaskConfig) delete state.piketTaskConfig[removed];
+      normalizePiketTaskConfig();
       renderPiketTaskEditor();
       renderPiketManualAssignmentEditor();
   }
   function getPiketTaskEditorValues() {
       const inputs = document.querySelectorAll('#piket-task-editor .piket-task-input');
       return Array.from(inputs).map(el => String(el.value || '').trim()).filter(Boolean);
+  }
+  function getPiketTaskEditorConfig() {
+      const taskInputs = Array.from(document.querySelectorAll('#piket-task-editor .piket-task-input'));
+      const countInputs = Array.from(document.querySelectorAll('#piket-task-editor .piket-task-count-input'));
+      const config = {};
+      taskInputs.forEach((el, index) => {
+          const task = String(el.value || '').trim();
+          if (!task) return;
+          const raw = Number(countInputs[index]?.value);
+          config[task] = Math.max(1, Math.min(8, Number.isFinite(raw) ? Math.round(raw) : 1));
+      });
+      return config;
   }
   function currentPiketWeekKey() { return piketWeekStartKey(state.piketSelectedDate || todayKey()); }
   function setPiketRotationMode(mode) {
@@ -12417,11 +12659,14 @@ Setelan
   }
   function openPiketRotationModal() {
       if (guardReadOnly()) return;
-      const weekKey = currentPiketWeekKey();
-      const existing = state.piketWeeklyAssignments && state.piketWeeklyAssignments[weekKey];
-      if (existing && existing.tasks && existing.tasks.length && state.piketRotationMode === 'manual') {
+      const rotationKey = currentPiketRotationKey();
+      const existing = state.piketWeeklyAssignments && state.piketWeeklyAssignments[rotationKey];
+      if (existing && existing.tasks && existing.tasks.length) {
           state.piketTaskList = uniquePiketTasks(existing.tasks);
+          if (existing.quotas && typeof existing.quotas === 'object') state.piketTaskConfig = Object.assign({}, existing.quotas);
       }
+      normalizePiketTaskList();
+      normalizePiketTaskConfig();
       renderPiketTaskEditor();
       setPiketRotationMode(state.piketRotationMode);
       openModal('piket-rotasi');
@@ -12430,47 +12675,60 @@ Setelan
       const wrap = document.getElementById('piket-manual-assignment-list');
       if (!wrap || state.piketRotationMode !== 'manual') return;
       const tasks = uniquePiketTasks(getPiketTaskEditorValues());
-      const weekKey = currentPiketWeekKey();
-      const existing = state.piketWeeklyAssignments && state.piketWeeklyAssignments[weekKey];
+      const rotationKey = currentPiketRotationKey();
+      const existing = state.piketWeeklyAssignments && state.piketWeeklyAssignments[rotationKey];
       const previousMap = piketPlanToStudentMap(existing);
-      const students = uniquePiketStudents();
+      const students = uniquePiketStudents(currentPiketDay());
       wrap.innerHTML = students.length ? students.map(student => {
           const selected = previousMap[student] && tasks.includes(previousMap[student]) ? previousMap[student] : '';
-          return `<div class="piket-manual-row"><span class="piket-manual-name">${escapeHtml(student)}</span><select data-piket-student="${escapeHtml(student)}"><option value="">Pilih tugas</option>${tasks.map(task => `<option value="${escapeHtml(task)}" ${selected === task ? 'selected' : ''}>${escapeHtml(task)}</option>`).join('')}</select></div>`;
-      }).join('') : '<div class="empty">Belum ada siswa.</div>';
+          return `<div class="piket-manual-row"><span class="piket-manual-name">${escapeHtml(student)}</span><select data-piket-student="${escapeHtml(student)}"><option value="">Pilih tugas</option>${tasks.map(task => `<option value="${escapeHtml(task)}" ${selected === task ? 'selected' : ''}>${escapeHtml(task)} (${getPiketTaskQuota(task)} org.)</option>`).join('')}</select></div>`;
+      }).join('') : '<div class="empty">Belum ada siswa yang diatur untuk piket hari ini.</div>';
   }
   function renderPiketRotationPreview() {
       const el = document.getElementById('piket-rotation-preview');
       if (!el) return;
-      if (state.piketRotationMode === 'manual') {
-          el.textContent = 'Mode manual: setiap siswa harus mendapat satu tugas sebelum disimpan.';
+      const students = uniquePiketStudents(currentPiketDay());
+      if (!students.length) {
+          el.textContent = `Tidak ada siswa piket untuk ${currentPiketDay()}.`;
           return;
       }
-      const plan = buildAutoPiketPlan(currentPiketWeekKey());
-      if (!plan) { el.textContent = 'Tambahkan minimal satu tugas dan satu siswa.'; return; }
-      const preview = uniquePiketTasks(plan.tasks).map(task => `${task}: ${(plan.assignments[task] || []).length} siswa`).join(' • ');
-      el.textContent = 'Preview acak: ' + preview;
+      if (state.piketRotationMode === 'manual') {
+          el.textContent = `Manual: ${students.length} siswa • Bersihkan lantai maksimal ${getPiketTaskQuota('Bersihkan lantai')} orang.`;
+          return;
+      }
+      const plan = buildAutoPiketPlan(currentPiketRotationKey());
+      if (!plan) { el.textContent = 'Tambahkan minimal satu tugas dan atur siswa piket pada hari ini.'; return; }
+      const preview = uniquePiketTasks(plan.tasks).map(task => `${task}: ${(plan.assignments[task] || []).length}`).filter(Boolean).join(' • ');
+      el.textContent = `Preview ${students.length} siswa: ` + preview;
   }
   async function savePiketRotation() {
       if (guardReadOnly()) return;
       const tasks = uniquePiketTasks(getPiketTaskEditorValues());
       if (!tasks.length) { showNotification('Tambahkan minimal satu tugas piket.', 'warning'); return; }
-      const students = uniquePiketStudents();
-      if (!students.length) { showNotification('Belum ada data siswa untuk dibagi.', 'warning'); return; }
+      const students = uniquePiketStudents(currentPiketDay());
+      if (!students.length) { showNotification(`Belum ada siswa yang diatur untuk piket ${currentPiketDay()}.`, 'warning'); return; }
+
       state.piketTaskList = tasks;
-      if (!state.piketWeeklyAssignments || typeof state.piketWeeklyAssignments !== 'object') state.piketWeeklyAssignments = {};
-      const weekKey = currentPiketWeekKey();
+      state.piketTaskConfig = getPiketTaskEditorConfig();
+      normalizePiketTaskConfig();
+      if (!state.piketWeeklyAssignments || typeof state.piketWeeklyAssignments !== 'object' || Array.isArray(state.piketWeeklyAssignments)) state.piketWeeklyAssignments = {};
+      const rotationKey = currentPiketRotationKey();
+      const parsedKey = parsePiketRotationKey(rotationKey);
 
       if (state.piketRotationMode === 'auto') {
-          const plan = buildAutoPiketPlan(weekKey);
+          const plan = buildAutoPiketPlan(rotationKey);
           if (!plan) { showNotification('Rotasi otomatis belum bisa dibuat.', 'warning'); return; }
-          state.piketWeeklyAssignments[weekKey] = plan;
-          await saveState();
+          state.piketWeeklyAssignments[rotationKey] = plan;
+          const saveResult = await saveState();
+          if (!saveResult || saveResult.synced === false || !saveResult.publicSynced) {
+              showNotification('Rotasi dibuat, tetapi belum dikonfirmasi tersimpan ke Firebase.', 'error', 7000);
+              return;
+          }
           renderPiketWeeklyRotation();
           renderPiket();
           renderBeranda();
           closeModal('piket-rotasi');
-          showNotification('Rotasi piket minggu ini sudah diacak.', 'success');
+          showNotification(`Rotasi ${parsedKey.day} minggu ini sudah diacak dan tersimpan.`, 'success');
           return;
       }
 
@@ -12484,6 +12742,22 @@ Setelan
           if (!task) missing++;
       });
       if (missing) { showNotification(`${missing} siswa belum mendapat tugas piket.`, 'warning'); return; }
+
+      const counts = {};
+      Object.values(assignmentByStudent).forEach(task => { counts[task] = (counts[task] || 0) + 1; });
+      for (const task of Object.keys(counts)) {
+          const quota = getPiketTaskQuota(task);
+          if (counts[task] > quota) {
+              showNotification(`Tugas "${task}" maksimal ${quota} orang.`, 'warning');
+              return;
+          }
+      }
+      const floorTask = tasks.find(task => task.toLowerCase() === 'bersihkan lantai');
+      if (floorTask && students.length >= 2 && (counts[floorTask] || 0) < Math.min(2, getPiketTaskQuota(floorTask))) {
+          showNotification('Bersihkan lantai harus mendapat 2 siswa pada rotasi ini.', 'warning');
+          return;
+      }
+
       const assignments = {};
       tasks.forEach(task => { assignments[task] = []; });
       Object.keys(assignmentByStudent).forEach(student => {
@@ -12491,13 +12765,28 @@ Setelan
           if (!assignments[task]) assignments[task] = [];
           assignments[task].push(student);
       });
-      state.piketWeeklyAssignments[weekKey] = { weekStart: weekKey, mode:'manual', tasks, assignments, assignmentByStudent, updatedAt: Date.now() };
-      await saveState();
+      const plan = {
+          rotationKey,
+          weekStart: parsedKey.weekKey,
+          day: parsedKey.day,
+          mode: 'manual',
+          tasks,
+          quotas: Object.fromEntries(tasks.map(task => [task, getPiketTaskQuota(task)])),
+          assignments,
+          assignmentByStudent,
+          updatedAt: Date.now()
+      };
+      state.piketWeeklyAssignments[rotationKey] = plan;
+      const saveResult = await saveState();
+      if (!saveResult || saveResult.synced === false || !saveResult.publicSynced) {
+          showNotification('Rotasi manual sudah dibuat, tetapi belum dikonfirmasi tersimpan ke Firebase.', 'error', 7000);
+          return;
+      }
       renderPiketWeeklyRotation();
       renderPiket();
       renderBeranda();
       closeModal('piket-rotasi');
-      showNotification('Rotasi piket minggu ini sudah disimpan.', 'success');
+      showNotification(`Rotasi manual ${parsedKey.day} tersimpan.`, 'success');
   }
   // ===== JADWAL PELAJARAN =====
   function renderDayTabs() {
@@ -14074,6 +14363,9 @@ Setelan
               if (!imported || typeof imported !== 'object') throw new Error('Format backup tidak valid.');
 
               state = Object.assign(state, imported);
+              // Lock this import above any stale live-sync snapshot that may arrive
+              // while Drive attachments are being migrated.
+              state.__kelaskuRevision = Math.max((Number(state.__kelaskuRevision) || 0) + 1, Date.now());
               hydrateLocalUiState();
 
               // Backup lama dapat berisi Base64 yang membuat dokumen Firestore
@@ -14195,32 +14487,37 @@ Setelan
                   }
               }
 
-              // Normalize imported weekly rotation so every saved plan uses the
-              // current task roster and the current Jadwal Piket participants.
+              // Normalize imported weekly rotation without mixing different days.
+              // Plans from v57/v58 that do not contain `day` are kept intact for backward
+              // compatibility; new per-day plans are normalized against their own roster.
+              normalizePiketTaskList();
+              normalizePiketTaskConfig();
               if (state.piketWeeklyAssignments && typeof state.piketWeeklyAssignments === 'object') {
-                  Object.keys(state.piketWeeklyAssignments).forEach(weekKey => {
-                      const plan = state.piketWeeklyAssignments[weekKey];
+                  Object.keys(state.piketWeeklyAssignments).forEach(rotationKey => {
+                      const plan = state.piketWeeklyAssignments[rotationKey];
                       if (!plan || typeof plan !== 'object') return;
                       if (Array.isArray(plan.tasks)) plan.tasks = uniquePiketTasks(plan.tasks);
-                      const students = uniquePiketStudents();
-                      if (plan.assignmentByStudent && typeof plan.assignmentByStudent === 'object') {
-                          const normalized = {};
-                          students.forEach(name => {
-                              const task = String(plan.assignmentByStudent[name] || '').trim();
-                              if (task && (!Array.isArray(plan.tasks) || plan.tasks.includes(task))) normalized[name] = task;
-                          });
-                          plan.assignmentByStudent = normalized;
-                      }
-                      if (plan.assignments && typeof plan.assignments === 'object') {
+                      if (plan.day && SCHOOL_DAYS.includes(plan.day)) {
+                          const students = uniquePiketStudents(plan.day);
                           const expected = new Set(students.map(name => name.toLowerCase()));
-                          const cleaned = {};
-                          Object.keys(plan.assignments).forEach(task => {
-                              const names = Array.isArray(plan.assignments[task]) ? plan.assignments[task] : [];
-                              cleaned[task] = names
-                                  .map(name => String(name || '').trim())
-                                  .filter(name => expected.has(name.toLowerCase()));
-                          });
-                          plan.assignments = cleaned;
+                          if (plan.assignmentByStudent && typeof plan.assignmentByStudent === 'object') {
+                              const normalized = {};
+                              Object.keys(plan.assignmentByStudent).forEach(name => {
+                                  const cleanName = String(name || '').trim();
+                                  const task = String(plan.assignmentByStudent[name] || '').trim();
+                                  if (cleanName && expected.has(cleanName.toLowerCase()) && task && plan.tasks.includes(task)) normalized[cleanName] = task;
+                              });
+                              plan.assignmentByStudent = normalized;
+                          }
+                          if (plan.assignments && typeof plan.assignments === 'object') {
+                              const cleaned = {};
+                              Object.keys(plan.assignments).forEach(task => {
+                                  const names = Array.isArray(plan.assignments[task]) ? plan.assignments[task] : [];
+                                  cleaned[task] = names.map(name => String(name || '').trim()).filter(name => expected.has(name.toLowerCase()));
+                              });
+                              plan.assignments = cleaned;
+                          }
+                          plan.quotas = Object.fromEntries(uniquePiketTasks(plan.tasks).map(task => [task, getPiketTaskQuota(task)]));
                       }
                   });
               }
@@ -17360,6 +17657,9 @@ body.dark .cal-card .cal-nav-btn{color:#f8fafc !important;background:transparent
   .piket-task-editor{display:grid;gap:7px;margin-bottom:8px}
   .piket-task-editor-row{display:flex;gap:7px;align-items:center}
   .piket-task-input{flex:1;min-width:0;height:38px;border:1px solid var(--ui-border);background:var(--ui-surface);color:var(--ui-text);border-radius:10px;padding:0 10px;font-size:12px}
+  .piket-task-count{display:inline-flex;align-items:center;gap:5px;min-width:82px;height:38px;padding:0 7px;border:1px solid var(--ui-border);background:var(--ui-surface);color:var(--ui-muted);border-radius:10px;font-size:9px;font-weight:800;white-space:nowrap}
+  .piket-task-count-input{width:36px;height:28px;border:1px solid var(--ui-border);border-radius:7px;background:var(--ui-bg);color:var(--ui-text);font:800 11px inherit;text-align:center;outline:none}
+  .piket-task-count-input:focus{border-color:var(--ui-blue);box-shadow:0 0 0 2px rgba(37,99,235,.10)}
   .piket-task-remove{width:38px;height:38px;border:1px solid var(--ui-border);background:var(--ui-surface);color:var(--ui-red);border-radius:10px;font-size:18px;line-height:1;cursor:pointer}
   .piket-add-task-btn{font-size:10px;padding:7px 10px}
   .piket-manual-assignment-list{display:grid;gap:7px;max-height:300px;overflow:auto;padding-right:2px}
@@ -17367,7 +17667,8 @@ body.dark .cal-card .cal-nav-btn{color:#f8fafc !important;background:transparent
   .piket-manual-name{font-size:11px;font-weight:800;color:var(--ui-text);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .piket-manual-row select{height:36px;border:1px solid var(--ui-border);background:var(--ui-surface);color:var(--ui-text);border-radius:10px;padding:0 8px;font-size:10px}
   .piket-rotation-preview{margin-top:4px;padding:10px 12px;border-radius:10px;background:var(--ui-bg);border:1px solid var(--ui-border);font-size:10px;line-height:1.5;color:var(--ui-muted)}
-  body.dark .piket-week-card,body.dark .piket-rotation-mode-btn,body.dark .piket-task-input,body.dark .piket-task-remove,body.dark .piket-manual-row select{background:#111c2f;color:#f8fafc;border-color:#40516b}
+  body.dark .piket-week-card,body.dark .piket-rotation-mode-btn,body.dark .piket-task-input,body.dark .piket-task-remove,body.dark .piket-manual-row select,body.dark .piket-task-count,body.dark .piket-task-count-input{background:#111c2f;color:#f8fafc;border-color:#40516b}
+  body.dark .piket-task-count-input{background:#16243a}
   body.dark .piket-week-person{background:#16243a;border-color:#40516b;color:#f8fafc}
   body.dark .piket-week-task-name,body.dark .piket-manual-name{color:#f8fafc}
   body.dark .piket-rotation-mode-btn.active{color:#fff;background:#3b82f6;border-color:#3b82f6}
