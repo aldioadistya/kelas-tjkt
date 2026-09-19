@@ -12170,11 +12170,39 @@ Setelan
   }
   function uniquePiketStudents() {
       const seen = new Set();
+      const roster = [];
+      // Sumber peserta rotasi mengikuti nama yang sudah diatur admin pada
+      // Jadwal Piket per hari. Digabung dan dideduplikasi agar satu siswa
+      // yang muncul di beberapa hari tetap mendapat satu tugas mingguan.
+      const daily = state.piketJadwal && typeof state.piketJadwal === 'object' ? state.piketJadwal : {};
+      Object.keys(daily).forEach(day => {
+          const names = Array.isArray(daily[day]) ? daily[day] : [];
+          names.forEach(value => {
+              const name = String(value || '').trim();
+              const key = name.toLowerCase();
+              if (!key || seen.has(key)) return;
+              seen.add(key);
+              roster.push(name);
+          });
+      });
+
+      // Fallback untuk data lama yang belum punya pengaturan Jadwal Piket.
+      // Begitu admin mengatur Jadwal Piket, daftar di atas menjadi sumber utama.
+      if (roster.length) return roster;
+
       return (Array.isArray(state.students) ? state.students : []).map(v => String(v || '').trim()).filter(v => {
           const k = v.toLowerCase();
           if (!k || seen.has(k)) return false;
           seen.add(k); return true;
       });
+  }
+  function isPiketPlanRosterValid(plan) {
+      const students = uniquePiketStudents();
+      const map = piketPlanToStudentMap(plan);
+      const keys = Object.keys(map).filter(name => String(name || '').trim());
+      if (keys.length !== students.length) return false;
+      const expected = new Set(students.map(name => name.toLowerCase()));
+      return keys.every(name => expected.has(String(name).toLowerCase()));
   }
   function shufflePiket(list) {
       const arr = [...list];
@@ -12244,7 +12272,7 @@ Setelan
       if (!state.piketWeeklyAssignments || typeof state.piketWeeklyAssignments !== 'object') state.piketWeeklyAssignments = {};
       if (state.piketRotationMode !== 'auto') return state.piketWeeklyAssignments[weekKey] || null;
       const existing = state.piketWeeklyAssignments[weekKey];
-      const validExisting = existing && typeof existing === 'object' && existing.assignmentByStudent && Object.keys(existing.assignmentByStudent).length > 0;
+      const validExisting = existing && typeof existing === 'object' && existing.assignmentByStudent && Object.keys(existing.assignmentByStudent).length > 0 && isPiketPlanRosterValid(existing);
       if (validExisting) return existing;
       const plan = buildAutoPiketPlan(weekKey);
       if (!plan) return null;
@@ -12275,9 +12303,10 @@ Setelan
           return;
       }
       const assignments = plan.assignments && typeof plan.assignments === 'object' ? plan.assignments : {};
+      const currentRoster = new Set(uniquePiketStudents().map(name => name.toLowerCase()));
       const tasks = uniquePiketTasks(plan.tasks && plan.tasks.length ? plan.tasks : state.piketTaskList);
       listEl.innerHTML = tasks.map((task, index) => {
-          const people = Array.isArray(assignments[task]) ? assignments[task] : [];
+          const people = (Array.isArray(assignments[task]) ? assignments[task] : []).filter(name => currentRoster.has(String(name || '').toLowerCase()));
           return `<div class="piket-week-card">
               <div class="piket-week-task-index">${String(index + 1).padStart(2,'0')}</div>
               <div class="piket-week-task-main">
