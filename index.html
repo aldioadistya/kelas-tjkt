@@ -16,6 +16,7 @@
     <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Kelasku — X TJKT 1</title>
+  <!-- v73: HP card overlap/layout fix -->
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" sizes="192x192" href="icons-192.png">
   <!-- Runtime environment config. In production, generate this file during deployment. -->
@@ -8574,6 +8575,130 @@ body.kelasku-authenticated.dark .app-global-clock{background:#111c2f;border-colo
 /* Reduced motion respects accessibility */
 @media(prefers-reduced-motion:reduce){
   body.kelasku-authenticated *{scroll-behavior:auto !important;transition:none !important;animation:none !important}
+}
+</style>
+
+
+<style id="hp-layout-overlap-fix-v73">
+/* v73 — Pengumpulan HP: force a stable, non-overlapping card system. */
+#view-hp #hp-list.hp-command-list{
+  display:block !important;
+  width:100% !important;
+  min-width:0 !important;
+  max-width:none !important;
+  margin:0 !important;
+  padding:0 !important;
+  overflow:visible !important;
+}
+#view-hp #hp-list.hp-command-list > .hp-command-grid{
+  display:grid !important;
+  grid-template-columns:repeat(auto-fill,minmax(240px,1fr)) !important;
+  gap:16px !important;
+  width:100% !important;
+  min-width:0 !important;
+  align-items:stretch !important;
+}
+#view-hp .hp-student-card{
+  width:100% !important;
+  min-width:0 !important;
+  min-height:280px !important;
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:stretch !important;
+  gap:12px !important;
+  padding:16px !important;
+  position:static !important;
+  overflow:hidden !important;
+  box-sizing:border-box !important;
+}
+#view-hp .hp-student-card > *{
+  position:static !important;
+  min-width:0 !important;
+}
+#view-hp .hp-student-roll{
+  flex:0 0 auto !important;
+  width:100% !important;
+  font-size:9px !important;
+  line-height:1.2 !important;
+  font-weight:900 !important;
+  letter-spacing:.04em !important;
+  color:#64748b !important;
+}
+#view-hp .hp-student-avatar{
+  flex:0 0 auto !important;
+  width:48px !important;
+  height:48px !important;
+  border-radius:14px !important;
+  align-self:flex-start !important;
+  font-size:12px !important;
+}
+#view-hp .hp-student-copy{
+  width:100% !important;
+  flex:0 0 auto !important;
+  display:flex !important;
+  flex-direction:column !important;
+  gap:7px !important;
+}
+#view-hp .hp-student-name{
+  width:100% !important;
+  font-size:15px !important;
+  line-height:1.28 !important;
+  font-weight:900 !important;
+  white-space:normal !important;
+  overflow:visible !important;
+  text-overflow:clip !important;
+  overflow-wrap:anywhere !important;
+}
+#view-hp .hp-student-sub{
+  width:100% !important;
+  display:flex !important;
+  flex-direction:column !important;
+  gap:4px !important;
+  margin-top:0 !important;
+  font-size:9px !important;
+  line-height:1.4 !important;
+  white-space:normal !important;
+  overflow-wrap:anywhere !important;
+}
+#view-hp .hp-slot-tag{
+  align-self:flex-start !important;
+  flex:0 0 auto !important;
+  white-space:normal !important;
+  overflow-wrap:anywhere !important;
+  font-size:8px !important;
+  padding:6px 9px !important;
+}
+#view-hp .hp-student-footer{
+  width:100% !important;
+  margin-top:auto !important;
+  padding-top:12px !important;
+  border-top:1px solid #e2e8f0 !important;
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:stretch !important;
+  justify-content:flex-end !important;
+  gap:9px !important;
+}
+#view-hp .hp-status-chip{
+  align-self:flex-start !important;
+  font-size:8px !important;
+}
+#view-hp .hp-quick-btn{
+  width:100% !important;
+  min-height:38px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  font-size:9px !important;
+}
+body.dark #view-hp .hp-student-roll{color:#94a3b8 !important}
+body.dark #view-hp .hp-student-footer{border-top-color:#334155 !important}
+@media(max-width:560px){
+  #view-hp #hp-list.hp-command-list > .hp-command-grid{grid-template-columns:repeat(auto-fill,minmax(240px,1fr)) !important;gap:12px !important}
+  #view-hp .hp-student-card{min-height:260px !important;padding:14px !important}
+}
+@media(max-width:280px){
+  #view-hp #hp-list.hp-command-list > .hp-command-grid{grid-template-columns:1fr !important}
 }
 </style>
 
@@ -18766,8 +18891,27 @@ body.dark .cal-card .cal-nav-btn{color:#f8fafc !important;background:transparent
   function hpStatusLabel(status){return status==='sudah'?'Sudah Titip':status==='izin'?'Izin / Tidak Bawa':'Belum Titip';}
   function hpStatusClass(status){return status==='sudah'?'done':status==='izin'?'excused':'pending';}
   function hpCard(entry){
-    const {name,index,st,meta}=entry,safe=hpSafeName(name),initials=hpInitials(name),admin=isAdmin(), done=st.status==='sudah';
-    return `<article class="hp-student-card" data-name="${escapeHtml(name)}" ${admin?`onclick="toggleHpQuick(${safe})"`:``}>\n      <div class="hp-student-head"><span class="hp-student-roll">#${index+1} · ${escapeHtml(name)}</span><span class="hp-slot-tag ${done?'is-occupied':'is-pending'}">${done&&meta.slot?`Slot Rak #${meta.slot}`:'Slot belum ditempatkan'}</span></div>\n      <div class="hp-student-main"><div class="hp-student-avatar ${done?'occupied':st.status==='izin'?'excused':''}">${escapeHtml(initials)}</div><div class="hp-student-copy"><div class="hp-student-name">${escapeHtml(name)}</div><div class="hp-student-sub"><span>📱 ${escapeHtml(meta.device||'Model belum dicatat')}</span>${st.alasan?`<span class="hp-device-dot">• ${escapeHtml(st.alasan)}</span>`:''}</div></div></div>\n      <div class="hp-student-footer"><span class="hp-status-chip ${hpStatusClass(st.status)}">${done?'●':st.status==='izin'?'!':'○'} ${hpStatusLabel(st.status)}</span>${admin?`<button type="button" class="hp-quick-btn ${done?'done':st.status==='izin'?'izin':''}" onclick="event.stopPropagation();toggleHpQuick(${safe})">${done?'✓ Sudah':'Kumpul'}</button>`:''}</div>\n    </article>`;
+    const {name,index,st,meta}=entry;
+    const safe=hpSafeName(name);
+    const initials=hpInitials(name);
+    const admin=isAdmin();
+    const done=st.status==='sudah';
+    const statusClass=hpStatusClass(st.status);
+    const statusLabel=hpStatusLabel(st.status);
+    const roll=String(index+1).padStart(2,'0');
+    return `<article class="hp-student-card" data-name="${escapeHtml(name)}" ${admin?`onclick="toggleHpQuick(${safe})"`:``}>
+      <div class="hp-student-roll">Absen #${roll}</div>
+      <div class="hp-student-avatar ${done?'occupied':st.status==='izin'?'excused':''}">${escapeHtml(initials)}</div>
+      <div class="hp-student-copy">
+        <div class="hp-student-name" title="${escapeHtml(name)}">${escapeHtml(name)}</div>
+        <div class="hp-student-sub"><span>📱 ${escapeHtml(meta.device||'Model belum dicatat')}</span>${st.alasan?`<span class="hp-device-dot">${escapeHtml(st.alasan)}</span>`:''}</div>
+      </div>
+      <div class="hp-slot-tag ${done?'is-occupied':'is-pending'}">${done&&meta.slot?`Slot Rak #${meta.slot}`:'Slot belum ditempatkan'}</div>
+      <div class="hp-student-footer">
+        <span class="hp-status-chip ${statusClass}">${done?'●':st.status==='izin'?'!':'○'} ${statusLabel}</span>
+        ${admin?`<button type="button" class="hp-quick-btn ${done?'done':st.status==='izin'?'izin':''}" onclick="event.stopPropagation();toggleHpQuick(${safe})">${done?'✓ Sudah':st.status==='izin'?'Atur ulang':'Kumpul'}</button>`:''}
+      </div>
+    </article>`;
   }
   function hpTable(entries){
     const rows=entries.map(x=>`<tr><td><div class="hp-table-name">#${x.index+1} · ${escapeHtml(x.name)}</div></td><td>${x.st.status==='sudah'&&x.meta.slot?`Slot #${x.meta.slot}`:'—'}</td><td>${escapeHtml(x.meta.device||'—')}</td><td><span class="hp-status-chip ${hpStatusClass(x.st.status)}">${hpStatusLabel(x.st.status)}</span></td><td>${isAdmin()?`<button type="button" class="hp-quick-btn ${x.st.status==='sudah'?'done':''}" onclick="toggleHpQuick(${hpSafeName(x.name)})">${x.st.status==='sudah'?'✓ Sudah':'Kumpul'}</button>`:'—'}</td></tr>`).join('');
@@ -21663,8 +21807,8 @@ body.dark #view-kas .kas-folder-empty{background:#111c2f!important;border-color:
   display:grid !important;
   width:100% !important;
   min-width:0 !important;
-  grid-template-columns:repeat(4,minmax(0,1fr)) !important;
-  gap:10px !important;
+  grid-template-columns:repeat(auto-fill,minmax(240px,1fr)) !important;
+  gap:16px !important;
 }
 #view-hp .hp-slot-tag.is-pending{color:#64748b !important;background:#f8fafc !important;border-color:#e2e8f0 !important}
 #view-hp .hp-slot-tag.is-occupied{color:#047857 !important;background:#ecfdf5 !important;border-color:#a7dfc2 !important}
