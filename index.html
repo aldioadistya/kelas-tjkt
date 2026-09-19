@@ -8688,7 +8688,7 @@ X TJKT 1
       <div class="piket-toolbar-group" role="group" aria-label="Aksi piket hari ini">
         <button type="button" class="piket-toolbar-btn" onclick="openStatsModal('piket')"><span>▥</span> Statistik</button>
         <button type="button" class="piket-toolbar-btn admin-only" onclick="resetRoster('piket')"><span>↺</span> Reset</button>
-        <button type="button" class="piket-toolbar-btn piket-toolbar-btn-success admin-only" onclick="toggleAllRoster('piket')"><span>✓</span> Semua Sudah</button>
+        <button type="button" class="piket-toolbar-btn piket-toolbar-btn-success admin-only" onclick="markAllPiketDone()"><span>✓</span> Semua selesai</button>
       </div>
       <div class="piket-search-wrap">
         <span>⌕</span>
@@ -11955,8 +11955,82 @@ Setelan
           </div>
       `; }).join('');
   }
-  function toggleRosterStudent(type,name,checked){if(guardReadOnly())return;const date=type==='hp'?(state.hpSelectedDate||todayKey()):(state.piketSelectedDate||todayKey());const rec=ensureRecord(type==='hp'?state.hp:state.piket,date);rec[name]=checked?{status:'sudah',alasan:''}:{status:'belum',alasan:''};saveState();if(type==='hp'){renderHp();renderHpCalendar();}else{renderPiket();renderPiketCalendar();}renderBeranda();}
-  function toggleAllRoster(type){if(guardReadOnly())return;const date=type==='hp'?(state.hpSelectedDate||todayKey()):(state.piketSelectedDate||todayKey());const rec=ensureRecord(type==='hp'?state.hp:state.piket,date);const names=type==='hp'?(state.students||[]):(()=>{const day=dayNameOf(date);return state.piketJadwal&&Array.isArray(state.piketJadwal[day])?state.piketJadwal[day]:[]})();const allDone=names.length>0&&names.every(n=>rosterIsSudah(rec[n]));names.forEach(n=>rec[n]=allDone?{status:'belum',alasan:''}:{status:'sudah',alasan:''});saveState();if(type==='hp'){renderHp();renderHpCalendar();}else{renderPiket();renderPiketCalendar();}renderBeranda();}
+  async function toggleRosterStudent(type,name,checked){
+      if(guardReadOnly())return;
+      const date=type==='hp'?(state.hpSelectedDate||todayKey()):(state.piketSelectedDate||todayKey());
+      const rec=ensureRecord(type==='hp'?state.hp:state.piket,date);
+      rec[name]=checked?{status:'sudah',alasan:''}:{status:'belum',alasan:''};
+      try{
+          await saveState({requirePublic:true});
+      }catch(e){
+          showNotification('Status piket belum berhasil disimpan. Coba lagi.','error',5000);
+          return;
+      }
+      if(type==='hp'){renderHp();renderHpCalendar();}
+      else{renderPiket();renderPiketCalendar();renderPiketWeeklyRotation();}
+      renderBeranda();
+  }
+
+  async function markPiketDone(name,done=true){
+      if(guardReadOnly())return;
+      const student=String(name||'').trim();
+      if(!student)return;
+      const date=state.piketSelectedDate||todayKey();
+      const day=dayNameOf(date);
+      const scheduled=state.piketJadwal&&Array.isArray(state.piketJadwal[day])?state.piketJadwal[day]:[];
+      if(!scheduled.includes(student)){
+          showNotification('Nama ini tidak ada di jadwal piket hari ini.','warning');
+          return;
+      }
+      const rec=ensureRecord(state.piket,date);
+      rec[student]=done?{status:'sudah',alasan:''}:{status:'belum',alasan:''};
+      try{
+          await saveState({requirePublic:true});
+      }catch(e){
+          showNotification('Status piket belum berhasil disimpan. Coba lagi.','error',5000);
+          return;
+      }
+      renderPiket();
+      renderPiketCalendar();
+      renderPiketWeeklyRotation();
+      renderBeranda();
+  }
+
+  async function markAllPiketDone(){
+      if(guardReadOnly())return;
+      const date=state.piketSelectedDate||todayKey();
+      const day=dayNameOf(date);
+      const names=state.piketJadwal&&Array.isArray(state.piketJadwal[day])?state.piketJadwal[day]:[];
+      const rec=ensureRecord(state.piket,date);
+      if(!names.length){
+          showNotification('Belum ada siswa yang dijadwalkan piket hari ini.','warning');
+          return;
+      }
+      names.forEach(n=>{rec[n]={status:'sudah',alasan:''};});
+      try{
+          await saveState({requirePublic:true});
+      }catch(e){
+          showNotification('Status semua piket belum berhasil disimpan. Coba lagi.','error',5000);
+          return;
+      }
+      renderPiket();
+      renderPiketCalendar();
+      renderPiketWeeklyRotation();
+      renderBeranda();
+      showNotification(`Semua ${names.length} siswa piket hari ini ditandai selesai.`,'success',3200);
+  }
+
+  async function toggleAllRoster(type){
+      if(type==='piket') return markAllPiketDone();
+      if(guardReadOnly())return;
+      const date=state.hpSelectedDate||todayKey();
+      const rec=ensureRecord(state.hp,date);
+      const names=state.students||[];
+      const allDone=names.length>0&&names.every(n=>rosterIsSudah(rec[n]));
+      names.forEach(n=>rec[n]=allDone?{status:'belum',alasan:''}:{status:'sudah',alasan:''});
+      try{await saveState({requirePublic:true});}catch(e){showNotification('Status belum berhasil disimpan. Coba lagi.','error',5000);return;}
+      renderHp();renderHpCalendar();renderBeranda();
+  }
   function toggleRosterList(type) { rosterUI[type].minimized = !rosterUI[type].minimized; updateRosterListUI(type); }
   function updateRosterListUI(type) { const wrap = document.getElementById(type + '-list-wrap'); const btn = document.getElementById(type + '-list-toggle'); if (!wrap || !btn) return; wrap.classList.toggle('collapsed', rosterUI[type].minimized); btn.textContent = rosterUI[type].minimized ? '+' : '−'; }
   function onRosterSearch(type) { const input = document.getElementById(type + '-search'); rosterUI[type].search = input ? input.value : ''; if (type === 'hp') renderHp(); else renderPiket(); }
@@ -12648,10 +12722,7 @@ Setelan
               <span class="piket-person-avatar">${escapeHtml(initials||'•')}</span>
               <div class="piket-person-copy"><span class="piket-person-name">${escapeHtml(name)}</span><span class="piket-person-status">${done?'Sudah piket':'Belum ditandai'}</span></div>
             </div>
-            ${isAdmin()?`<label class="piket-quick-check" title="${done?'Batalkan selesai':'Tandai selesai'}">
-              <input type="checkbox" ${done?'checked':''} onchange="toggleRosterStudent('piket',${safeJson(name)},this.checked)">
-              <span class="piket-quick-check-box">✓</span><span class="piket-quick-check-label">${done?'Selesai':'Tandai selesai'}</span>
-            </label>`:`<span class="piket-status-pill ${done?'done':'todo'}">${done?'✓ Selesai':'Belum selesai'}</span>`}
+            ${isAdmin()?`<button type="button" class="piket-quick-check-btn ${done?'is-done':''}" onclick="event.stopPropagation();markPiketDone(${safeJson(name)},${done?'false':'true'})" aria-pressed="${done?'true':'false'}" title="${done?'Batalkan selesai':'Tandai selesai'}"><span class="piket-quick-check-icon">${done?'✓':'○'}</span><span>${done?'Sudah selesai':'Tandai selesai'}</span></button>`:`<span class="piket-status-pill ${done?'done':'todo'}">${done?'✓ Selesai':'Belum selesai'}</span>`}
           </div>`;
         }).join('');
         html+=`<article class="piket-week-card piket-week-card-pro ${entry.people.length>1?'multi-person':''}">
@@ -14796,6 +14867,8 @@ Setelan
   window.changePickerYear = changePickerYear;
   window.choosePickerMonth = choosePickerMonth;
   window.toggleRosterStudent = toggleRosterStudent;
+  window.markPiketDone = markPiketDone;
+  window.markAllPiketDone = markAllPiketDone;
   window.toggleAllRoster = toggleAllRoster;
   window.toggleRosterList = toggleRosterList;
   window.onRosterSearch = onRosterSearch;
@@ -18005,6 +18078,25 @@ body.dark .cal-card .cal-nav-btn{color:#f8fafc !important;background:transparent
     .piket-weekly-stat strong{font-size:12px}
     .piket-integrated-empty{flex-direction:column;text-align:center;padding:20px 14px}
   }
+</style>
+<style id="piket-quick-actions-pro-v63">
+  .piket-quick-check-btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:6px;min-width:112px;min-height:30px;padding:0 9px;
+    border:1px solid #D7DEE8;border-radius:10px;background:#FFFFFF;color:#475569;
+    font-size:8.5px;font-weight:850;line-height:1;cursor:pointer;white-space:nowrap;
+    box-shadow:0 1px 2px rgba(15,23,42,.03);transition:background .16s ease,border-color .16s ease,color .16s ease,transform .16s ease;
+  }
+  .piket-quick-check-btn:hover{background:#F8FAFC;border-color:#C8D2DF;color:#0F172A;transform:translateY(-1px)}
+  .piket-quick-check-icon{width:18px;height:18px;display:grid;place-items:center;border-radius:6px;border:1px solid #CBD5E1;background:#F8FAFC;color:#94A3B8;font-size:10px;font-weight:900;flex:0 0 auto}
+  .piket-quick-check-btn.is-done{background:#F0FDF4;border-color:#BBF7D0;color:#166534}
+  .piket-quick-check-btn.is-done .piket-quick-check-icon{background:#16A34A;border-color:#16A34A;color:#FFFFFF}
+  .piket-person-card.is-done .piket-quick-check-btn{background:#F0FDF4;border-color:#BBF7D0;color:#166534}
+  body.dark .piket-quick-check-btn{background:#16243A;border-color:#40516B;color:#AEB8CA}
+  body.dark .piket-quick-check-btn:hover{background:#1B2C46;border-color:#51657F;color:#F8FAFC}
+  body.dark .piket-quick-check-icon{background:#0F192A;border-color:#40516B;color:#71829A}
+  body.dark .piket-quick-check-btn.is-done,body.dark .piket-person-card.is-done .piket-quick-check-btn{background:#0D2417;border-color:#24583A;color:#4ADE80}
+  body.dark .piket-quick-check-btn.is-done .piket-quick-check-icon{background:#16A34A;border-color:#16A34A;color:#FFFFFF}
+  @media(max-width:520px){.piket-quick-check-btn{min-width:98px;padding:0 8px;font-size:8px}.piket-quick-check-icon{width:17px;height:17px}}
 </style>
 <style id="kelasku-light-text-visibility-final-v25">
 /* FINAL LIGHT TEXT VISIBILITY FIX
