@@ -8879,6 +8879,208 @@ body.dark #app-global-actions .kas71-global-actions .kas71-export{
 })();
 </script>
 
+
+<style id="global-top-spacing-v78">
+/* v78 — rapatkan jarak atas secara global tanpa mengganggu alur desktop/mobile. */
+@media (min-width:901px){
+  /* Header global dibuat lebih ringkas supaya area atas tidak terasa kosong. */
+  body.kelasku-authenticated .app-global-header{
+    min-height:68px !important;
+    height:68px !important;
+    box-sizing:border-box !important;
+    padding:9px 18px !important;
+  }
+
+  /* Konten cukup diberi ruang setara tinggi header, bukan 102px. */
+  body.kelasku-authenticated .screen{
+    padding-top:78px !important;
+  }
+
+  /* Hindari ruang vertikal tambahan dari view pertama. */
+  body.kelasku-authenticated .view{
+    padding-top:0 !important;
+  }
+}
+
+@media (min-width:1201px){
+  body.kelasku-authenticated .screen{
+    padding-top:78px !important;
+  }
+}
+</style>
+
+<style id="typography-v79-global">
+/* v79 — readability pass: enlarge microcopy and controls that were too small across the app */
+.phone,
+.phone input,
+.phone select,
+.phone textarea,
+.phone button { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+
+/* Global UI baseline */
+.phone { font-size: 14px; }
+.phone button,
+.phone input,
+.phone select,
+.phone textarea { font-size: 14px; }
+
+/* Shared small text */
+.phone .section-link { font-size: 12px !important; }
+.phone .row-time { font-size: 12px !important; }
+.phone .row-title { font-size: 14px !important; }
+.phone .row-sub { font-size: 12px !important; }
+.phone .empty { font-size: 13px !important; }
+.phone .pill { font-size: 10.5px !important; }
+.phone .day-chip { font-size: 11.5px !important; }
+.phone .htag { font-size: 11px !important; }
+.phone .field label { font-size: 11.5px !important; }
+.phone .field-hint { font-size: 11px !important; }
+.phone .toggle-btn { font-size: 11px !important; }
+.phone .settings-label { font-size: 11.5px !important; }
+.phone .section-kicker { font-size: 10.5px !important; }
+.phone .section-action { font-size: 11px !important; }
+
+/* Tabs / navigation */
+.phone .tab { font-size: 12px !important; }
+.phone .statusbar { font-size: 14px !important; }
+
+/* Stats and page headers */
+.phone .stat-label { font-size: 11px !important; }
+.phone .stat-value { font-size: 19px !important; }
+.phone .pagehead h1 { font-size: 22px !important; }
+.phone .pagehead p { font-size: 13px !important; }
+.phone .balance-label { font-size: 12px !important; }
+.phone .balance-value { font-size: 30px !important; }
+.phone .bf-item { font-size: 12px !important; }
+.phone .bf-item b { font-size: 16px !important; }
+
+/* Kas */
+.phone .tx-title { font-size: 14px !important; }
+.phone .tx-sub { font-size: 11.5px !important; }
+.phone .tx-amt { font-size: 14px !important; }
+.phone .kas-payment-badge { font-size: 10px !important; }
+.phone .kas-folder-note { font-size: 11px !important; }
+.phone .kas-summary-paid,
+.phone .kas-summary-unpaid,
+.phone .kas-summary-nominal { font-size: 11px !important; }
+.phone .kas-student-avatar { font-size: 11px !important; }
+.phone .kas-student-info strong { font-size: 12.5px !important; }
+.phone .kas-student-info small { font-size: 10.5px !important; }
+.phone .kas-payment-badge { font-size: 10px !important; }
+.phone .kas-folder-empty { font-size: 12px !important; }
+.phone .kas-pro-filters input,
+.phone .kas-pro-filters select { font-size: 13.5px !important; }
+.phone .kas-pro-table th { font-size: 10.5px !important; }
+.phone .kas-pro-table td { font-size: 13px !important; }
+.phone .kas-type-badge { font-size: 10.5px !important; }
+.phone .kas-pro-metric .kpm-label { font-size: 12px !important; }
+.phone .kas-pro-metric .kpm-note { font-size: 11px !important; }
+
+/* Home / notifications / activity */
+.phone .notify-title { font-size: 12px !important; }
+.phone .notify-text { font-size: 11.5px !important; }
+.phone .notify-time { font-size: 10.5px !important; }
+.phone .activity-main { font-size: 11.5px !important; }
+.phone .activity-meta { font-size: 10.5px !important; }
+.phone .global-search-item .gsi-title { font-size: 12px !important; }
+.phone .global-search-item .gsi-sub { font-size: 10.5px !important; }
+.phone .home-search-input { font-size: 13px !important; }
+
+/* Dashboard */
+.phone .dashboard-user-meta span { font-size: 11px !important; }
+.phone .dashboard-hero .htag { font-size: 11px !important; }
+.phone .dashboard-stat-card .stat-status { font-size: 10px !important; }
+.phone .dashboard-stat-card .stat-label { font-size: 12px !important; }
+.phone .dashboard-notify-badge { font-size: 9px !important; }
+.phone .dashboard-notification-card .empty { font-size: 11px !important; }
+.phone .dashboard-card .announce-description { font-size: 11.5px !important; }
+.phone .dashboard-card .announce-date { font-size: 10.5px !important; }
+.phone .dashboard-card .announce-file { font-size: 10.5px !important; }
+.phone .compact-list .empty { font-size: 11px !important; }
+.phone .dashboard-card .row-time { font-size: 11px !important; }
+.phone .dashboard-card .row-title { font-size: 12.5px !important; }
+.phone .dashboard-card .row-sub { font-size: 10.5px !important; }
+.phone .dashboard-card .task-title { font-size: 12.5px !important; }
+
+/* Tugas */
+.phone .task-filter-tab { font-size: 12px !important; }
+.phone .task-column-title { font-size: 12px !important; }
+.phone .task-pro-deadline { font-size: 10.5px !important; }
+.phone .task-pro-tag { font-size: 10.5px !important; }
+.phone .task-pro-desc { font-size: 11.5px !important; }
+.phone .task-pro-actions button { font-size: 11px !important; }
+.phone .task-drive-link a { font-size: 11px !important; }
+.phone #view-tugas .task-pro-summary-sub { font-size: 11.5px !important; }
+.phone #view-tugas .task-pro-clear-btn { font-size: 11px !important; }
+.phone #view-tugas .task-pro-subject-icon { font-size: 10px !important; }
+.phone #view-tugas .task-pro-status-dot { font-size: 10px !important; }
+.phone #view-tugas .task-pro-check-btn { font-size: 11px !important; }
+.phone #view-tugas .task-pro-empty-sub { font-size: 11px !important; }
+
+/* Laporan */
+.phone .report-meta { font-size: 10.5px !important; }
+.phone .report-status { font-size: 10px !important; }
+.phone .report-kpi .rk-label { font-size: 10px !important; }
+.phone .report-kpi .rk-value { font-size: 21px !important; }
+.phone .report-bar-label { font-size: 10px !important; }
+.phone .report-action-btn { font-size: 11px !important; }
+
+/* Jadwal / Piket */
+.phone .cal-day { font-size: 11px !important; }
+.phone .cal-nav-btn { font-size: 11px !important; }
+.phone .cal-month { font-size: 15px !important; }
+.phone .timeline-time { font-size: 12px !important; }
+.phone .timeline-sub { font-size: 11px !important; }
+.phone .piket-person .mini-avatar { font-size: 11px !important; }
+.phone .piket-person .mini-name { font-size: 12px !important; }
+
+/* Piket / forms / profile */
+.phone .s-avatar { font-size: 11px !important; }
+.phone .acc-row .acc-info .acc-email { font-size: 10.5px !important; }
+.phone .phone > .login-overlay .login-hero-sub { font-size: 11px !important; }
+.phone .phone > .login-overlay .login-sub { font-size: 12px !important; }
+
+/* Pengumpulan HP — specifically lift all 7–10px microcopy seen in cards */
+#view-hp .hp-command-kicker { font-size: 10.5px !important; }
+#view-hp .hp-command-status { font-size: 10px !important; }
+#view-hp .hp-command-heading > p { font-size: 12.5px !important; }
+#view-hp .hp-progress-meta { font-size: 12px !important; }
+#view-hp .hp-progress-kicker { font-size: 10px !important; }
+#view-hp .hp-progress-head strong { font-size: 13px !important; }
+#view-hp .hp-progress-note { font-size: 10px !important; }
+#view-hp .hp-view-switcher button { font-size: 10.5px !important; }
+#view-hp .hp-search-wrap input { font-size: 12px !important; }
+#view-hp .hp-filter-row button { font-size: 10.5px !important; }
+#view-hp .hp-filter-row button span { font-size: 9px !important; }
+#view-hp .hp-student-roll { font-size: 9.5px !important; }
+#view-hp .hp-slot-tag { font-size: 10px !important; }
+#view-hp .hp-student-avatar { font-size: 11.5px !important; }
+#view-hp .hp-student-name { font-size: 13px !important; }
+#view-hp .hp-student-sub { font-size: 10px !important; }
+#view-hp .hp-status-chip { font-size: 10px !important; }
+#view-hp .hp-quick-btn { font-size: 10px !important; }
+#view-hp .hp-command-table th { font-size: 9.5px !important; }
+#view-hp .hp-command-table td { font-size: 11px !important; }
+#view-hp .hp-table-name { font-size: 10.5px !important; }
+#view-hp .hp-rack-head span { font-size: 9.5px !important; }
+#view-hp .hp-rack-num { font-size: 9px !important; }
+#view-hp .hp-rack-name { font-size: 10.5px !important; }
+#view-hp .hp-rack-state { font-size: 8.5px !important; }
+#view-hp .hp-command-empty strong { font-size: 13px !important; }
+#view-hp .hp-command-empty span { font-size: 10px !important; }
+#view-hp .hp-calendar-drawer-head strong { font-size: 13px !important; }
+
+/* Keep tiny helper/metadata text readable everywhere while avoiding title inflation */
+.phone small { font-size: 11px; }
+.phone label { line-height: 1.3; }
+
+@media (max-width: 760px) {
+  .phone .pagehead h1 { font-size: 21px !important; }
+  .phone .stat-value { font-size: 18px !important; }
+  #view-hp .hp-command-grid { gap: 10px !important; }
+  #view-hp .hp-student-name { font-size: 12.5px !important; }
+}
+</style>
 </head>
 
 <body>
