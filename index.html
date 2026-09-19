@@ -2,7 +2,7 @@
   Kelasku — X TJKT 1
   Pengumpulan HP bugfix v72
   Frontend application
-  Version: v59 — Piket rotation + reliable backup import + expanded duties
+  Version: v75 — compact Jadwal flow / Pelajaran-Piket spacing fix
 
   Source conventions
   - Design tokens are centralized in :root.
@@ -16,7 +16,6 @@
     <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Kelasku — X TJKT 1</title>
-  <!-- v73: HP card overlap/layout fix -->
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" sizes="192x192" href="icons-192.png">
   <!-- Runtime environment config. In production, generate this file during deployment. -->
@@ -8579,128 +8578,306 @@ body.kelasku-authenticated.dark .app-global-clock{background:#111c2f;border-colo
 </style>
 
 
-<style id="hp-layout-overlap-fix-v73">
-/* v73 — Pengumpulan HP: force a stable, non-overlapping card system. */
-#view-hp #hp-list.hp-command-list{
-  display:block !important;
-  width:100% !important;
-  min-width:0 !important;
-  max-width:none !important;
+
+<style id="jadwal-v75-compact-flow">
+/* =========================================================
+   JADWAL v75 — compact vertical flow
+   Header -> Pelajaran/Piket -> Hari -> Banner -> Jadwal
+   ========================================================= */
+
+/* Use the authenticated global header as the page header; keep the view itself as
+   a tight vertical flow so hidden legacy heads cannot introduce visual whitespace. */
+body.kelasku-authenticated #view-jadwal.active{
+  display:flex !important;
+  flex-direction:column !important;
+  gap:16px !important;
+  align-items:stretch !important;
+  margin:0 !important;
+  padding-top:0 !important;
+}
+
+/* The old pagehead is intentionally hidden by the global shell. */
+body.kelasku-authenticated #view-jadwal > .pagehead{
+  display:none !important;
   margin:0 !important;
   padding:0 !important;
-  overflow:visible !important;
 }
-#view-hp #hp-list.hp-command-list > .hp-command-grid{
-  display:grid !important;
-  grid-template-columns:repeat(auto-fill,minmax(240px,1fr)) !important;
+
+/* Pelajaran / Piket switch: compact, left aligned, never full-width. */
+#view-jadwal > .mode-switch{
+  width:min(100%, 320px) !important;
+  max-width:320px !important;
+  margin:0 !important;
+  margin-top:16px !important;
+  align-self:flex-start !important;
+  flex:0 0 auto !important;
+  box-sizing:border-box !important;
+}
+
+#view-jadwal > .mode-switch .mode-btn{
+  min-width:0 !important;
+  flex:1 1 0 !important;
+}
+
+/* Active mode becomes a compact vertical stack.
+   :not([style*="display: none"]) prevents us from overriding the other mode's
+   inline display:none state. */
+#view-jadwal > #jadwal-mode-pelajaran:not([style*="display: none"]),
+#view-jadwal > #jadwal-mode-piket:not([style*="display: none"]){
+  display:flex !important;
+  flex-direction:column !important;
   gap:16px !important;
   width:100% !important;
   min-width:0 !important;
-  align-items:stretch !important;
+  margin:0 !important;
+  padding-top:0 !important;
 }
-#view-hp .hp-student-card{
+
+/* Legacy professional header is hidden in the authenticated shell and must not
+   reserve any visual spacing inside the active mode stack. */
+body.kelasku-authenticated #view-jadwal .jadwal-pro-head,
+body.kelasku-authenticated #view-jadwal .piket-actionbar{
+  display:none !important;
+  margin:0 !important;
+  padding:0 !important;
+}
+
+/* Remove old top margins/padding from the day switcher. */
+#view-jadwal .jadwal-day-rail-wrap{
+  margin:0 !important;
+  padding:0 !important;
   width:100% !important;
-  min-width:0 !important;
-  min-height:280px !important;
-  display:flex !important;
-  flex-direction:column !important;
-  align-items:stretch !important;
-  gap:12px !important;
-  padding:16px !important;
-  position:static !important;
-  overflow:hidden !important;
-  box-sizing:border-box !important;
 }
-#view-hp .hp-student-card > *{
-  position:static !important;
-  min-width:0 !important;
-}
-#view-hp .hp-student-roll{
-  flex:0 0 auto !important;
-  width:100% !important;
-  font-size:9px !important;
-  line-height:1.2 !important;
-  font-weight:900 !important;
-  letter-spacing:.04em !important;
-  color:#64748b !important;
-}
-#view-hp .hp-student-avatar{
-  flex:0 0 auto !important;
-  width:48px !important;
-  height:48px !important;
-  border-radius:14px !important;
-  align-self:flex-start !important;
-  font-size:12px !important;
-}
-#view-hp .hp-student-copy{
-  width:100% !important;
-  flex:0 0 auto !important;
-  display:flex !important;
-  flex-direction:column !important;
+
+#view-jadwal .jadwal-day-rail,
+#view-jadwal #day-tabs{
+  margin:0 !important;
+  padding:0 1px 2px !important;
   gap:7px !important;
 }
-#view-hp .hp-student-name{
-  width:100% !important;
-  font-size:15px !important;
-  line-height:1.28 !important;
-  font-weight:900 !important;
-  white-space:normal !important;
-  overflow:visible !important;
-  text-overflow:clip !important;
-  overflow-wrap:anywhere !important;
-}
-#view-hp .hp-student-sub{
-  width:100% !important;
-  display:flex !important;
-  flex-direction:column !important;
-  gap:4px !important;
+
+/* Remove legacy day-tab top spacing on all breakpoints. */
+#view-jadwal .day-tabs{
   margin-top:0 !important;
-  font-size:9px !important;
-  line-height:1.4 !important;
-  white-space:normal !important;
-  overflow-wrap:anywhere !important;
 }
-#view-hp .hp-slot-tag{
-  align-self:flex-start !important;
-  flex:0 0 auto !important;
-  white-space:normal !important;
-  overflow-wrap:anywhere !important;
-  font-size:8px !important;
-  padding:6px 9px !important;
+
+/* Banner and schedule list sit directly in the same vertical rhythm. */
+#view-jadwal .jadwal-next-banner,
+#view-jadwal .jadwal-pro-list{
+  margin-top:0 !important;
+  margin-bottom:0 !important;
 }
-#view-hp .hp-student-footer{
-  width:100% !important;
-  margin-top:auto !important;
-  padding-top:12px !important;
-  border-top:1px solid #e2e8f0 !important;
-  display:flex !important;
-  flex-direction:column !important;
-  align-items:stretch !important;
-  justify-content:flex-end !important;
-  gap:9px !important;
+
+/* Piket mode keeps its own internal spacing clean too. */
+#view-jadwal #jadwal-mode-piket .piket-integrated-panel{
+  margin-top:0 !important;
 }
-#view-hp .hp-status-chip{
-  align-self:flex-start !important;
-  font-size:8px !important;
-}
-#view-hp .hp-quick-btn{
-  width:100% !important;
-  min-height:38px !important;
-  display:flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-  font-size:9px !important;
-}
-body.dark #view-hp .hp-student-roll{color:#94a3b8 !important}
-body.dark #view-hp .hp-student-footer{border-top-color:#334155 !important}
-@media(max-width:560px){
-  #view-hp #hp-list.hp-command-list > .hp-command-grid{grid-template-columns:repeat(auto-fill,minmax(240px,1fr)) !important;gap:12px !important}
-  #view-hp .hp-student-card{min-height:260px !important;padding:14px !important}
-}
-@media(max-width:280px){
-  #view-hp #hp-list.hp-command-list > .hp-command-grid{grid-template-columns:1fr !important}
+
+/* Do not let mobile legacy rule stretch the switch to 100%. */
+@media(max-width:620px){
+  body.kelasku-authenticated #view-jadwal.active{
+    gap:16px !important;
+  }
+  #view-jadwal > .mode-switch{
+    width:min(100%, 320px) !important;
+    max-width:320px !important;
+    margin-top:16px !important;
+    margin-left:0 !important;
+    margin-right:0 !important;
+  }
+  #view-jadwal .jadwal-day-rail{
+    overflow-x:auto;
+    padding-bottom:2px !important;
+  }
 }
 </style>
+
+
+<style id="kas-v76-final-polish">
+/* =========================================================
+   KAS KELAS v76 — hierarchy + spacing polish
+   ========================================================= */
+
+/* Header actions: compact, clear, right-aligned. */
+#app-global-actions .kas71-global-actions{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:flex-end !important;
+  gap:8px !important;
+  flex-wrap:nowrap !important;
+}
+#app-global-actions .kas71-global-actions button{
+  min-height:36px !important;
+  padding:9px 13px !important;
+  border-radius:10px !important;
+  white-space:nowrap !important;
+}
+#app-global-actions .kas71-global-actions .kas71-export{
+  background:#111c2f !important;
+  color:#f8fafc !important;
+  border-color:#334155 !important;
+  box-shadow:0 4px 14px rgba(15,23,42,.06) !important;
+}
+#app-global-actions .kas71-global-actions .kas71-export:hover{
+  background:#16243a !important;
+  border-color:#475569 !important;
+}
+body.dark #app-global-actions .kas71-global-actions .kas71-export{
+  background:#111c2f !important;
+  color:#f8fafc !important;
+  border-color:#40516b !important;
+}
+
+/* History section: title first, toolbar directly underneath. */
+#view-kas .kas-history-section{
+  display:flex !important;
+  flex-direction:column !important;
+  gap:10px !important;
+  margin-top:18px !important;
+}
+#view-kas .kas-history-head{
+  order:1 !important;
+  margin:0 !important;
+}
+#view-kas #kas-pro-toolbar{
+  order:2 !important;
+  width:100% !important;
+  margin:0 !important;
+}
+#view-kas #kas-history-body{
+  order:3 !important;
+}
+
+/* Toolbar is a single logical row on desktop. */
+#view-kas #kas-pro-toolbar{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) 150px 150px !important;
+  gap:8px !important;
+  align-items:center !important;
+}
+#view-kas #kas-pro-toolbar .kas-pro-filters{
+  display:contents !important;
+}
+#view-kas #kas-pro-search,
+#view-kas #kas-pro-filter,
+#view-kas #kas-pro-period{
+  width:100% !important;
+  min-width:0 !important;
+  height:38px !important;
+}
+
+/* Kas Siswa heading + CTA. */
+#view-kas .kas-siswa-section{
+  margin-top:20px !important;
+}
+#view-kas .kas-siswa-section > .section-head{
+  margin-bottom:10px !important;
+}
+#view-kas .kas-siswa-section > .section-head .btn-primary{
+  min-height:36px !important;
+  padding:0 12px !important;
+  font-size:10px !important;
+  white-space:nowrap !important;
+}
+
+/* Elegant folder grid with a controlled card width. */
+#view-kas .kas-folder-list{
+  display:grid !important;
+  grid-template-columns:repeat(auto-fill,minmax(min(100%,380px),380px)) !important;
+  justify-content:start !important;
+  align-items:start !important;
+  gap:12px !important;
+}
+#view-kas .kas-folder{
+  width:100% !important;
+  max-width:380px !important;
+  justify-self:start !important;
+}
+
+/* Title Case without destroying user-entered capitalization. */
+#view-kas .kas-folder-name{
+  font-size:13px !important;
+  line-height:1.3 !important;
+}
+
+/* Mobile keeps the same hierarchy, but stacks toolbar controls cleanly. */
+@media(max-width:760px){
+  #app-global-actions .kas71-global-actions{
+    gap:6px !important;
+  }
+  #app-global-actions .kas71-global-actions button{
+    min-height:34px !important;
+    padding:8px 10px !important;
+    font-size:9px !important;
+  }
+  #view-kas #kas-pro-toolbar{
+    grid-template-columns:minmax(0,1fr) 1fr !important;
+  }
+  #view-kas #kas-pro-search{
+    grid-column:1/-1 !important;
+  }
+  #view-kas .kas-folder-list{
+    grid-template-columns:1fr !important;
+  }
+  #view-kas .kas-folder{
+    max-width:none !important;
+  }
+}
+@media(max-width:430px){
+  #app-global-actions .kas71-global-actions button{
+    font-size:8.5px !important;
+    padding:7px 9px !important;
+  }
+  #view-kas #kas-pro-toolbar{
+    grid-template-columns:1fr !important;
+  }
+  #view-kas #kas-pro-search{
+    grid-column:auto !important;
+  }
+}
+</style>
+<script id="kas-v76-final-logic">
+(function(){
+  'use strict';
+  function titleCaseWords(value){
+    return String(value || '').trim().replace(/(^|\s)([^\s])/g, function(_, space, ch){
+      return space + ch.toLocaleUpperCase('id-ID');
+    });
+  }
+  function normalizeFolderTitles(){
+    document.querySelectorAll('#view-kas .kas-folder-name').forEach(function(el){
+      var text = String(el.textContent || '').trim().replace(/^📁\s*/, '');
+      if(!text) return;
+      el.textContent = '📁 ' + titleCaseWords(text);
+    });
+  }
+  function reorderHistory(){
+    var section=document.getElementById('kas-history-section');
+    var head=section && section.querySelector('.kas-history-head');
+    var toolbar=document.getElementById('kas-pro-toolbar');
+    var body=document.getElementById('kas-history-body');
+    if(!section || !head || !toolbar || !body) return;
+    if(toolbar.parentElement !== section) section.appendChild(toolbar);
+    section.insertBefore(head, toolbar);
+    section.insertBefore(toolbar, body);
+  }
+  function polish(){
+    reorderHistory();
+    normalizeFolderTitles();
+    var add=document.querySelector('#view-kas .kas-siswa-section .btn-primary[onclick*="openKasFolderModal"]');
+    if(add && /(^|\s)＋?Folder\s*$/i.test((add.textContent||'').trim())) add.textContent='＋ Tambah Folder';
+  }
+  function init(){ polish(); setTimeout(polish,80); setTimeout(polish,450); }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init,{once:true}); else init();
+  window.addEventListener('load',function(){setTimeout(polish,80);});
+  var root=document.querySelector('.phone');
+  if(root){
+    new MutationObserver(function(){
+      if(document.querySelector('#view-kas.active')) polish();
+    }).observe(root,{subtree:true,childList:true,attributes:true,attributeFilter:['class']});
+  }
+})();
+</script>
 
 </head>
 
@@ -9191,7 +9368,7 @@ X TJKT 1
         Catatan pembayaran kas per anak. Siswa hanya dapat melihat.
       </div>
     </div>
-    <button class="btn btn-primary admin-only" style="padding:8px 11px;font-size:11px;" onclick="openKasFolderModal()">＋ Folder
+    <button class="btn btn-primary admin-only" style="padding:8px 11px;font-size:11px;" onclick="openKasFolderModal()">＋ Tambah Folder
   </button>
 </div>
 <div id="kas-folder-list" class="kas-folder-list">
@@ -18891,27 +19068,8 @@ body.dark .cal-card .cal-nav-btn{color:#f8fafc !important;background:transparent
   function hpStatusLabel(status){return status==='sudah'?'Sudah Titip':status==='izin'?'Izin / Tidak Bawa':'Belum Titip';}
   function hpStatusClass(status){return status==='sudah'?'done':status==='izin'?'excused':'pending';}
   function hpCard(entry){
-    const {name,index,st,meta}=entry;
-    const safe=hpSafeName(name);
-    const initials=hpInitials(name);
-    const admin=isAdmin();
-    const done=st.status==='sudah';
-    const statusClass=hpStatusClass(st.status);
-    const statusLabel=hpStatusLabel(st.status);
-    const roll=String(index+1).padStart(2,'0');
-    return `<article class="hp-student-card" data-name="${escapeHtml(name)}" ${admin?`onclick="toggleHpQuick(${safe})"`:``}>
-      <div class="hp-student-roll">Absen #${roll}</div>
-      <div class="hp-student-avatar ${done?'occupied':st.status==='izin'?'excused':''}">${escapeHtml(initials)}</div>
-      <div class="hp-student-copy">
-        <div class="hp-student-name" title="${escapeHtml(name)}">${escapeHtml(name)}</div>
-        <div class="hp-student-sub"><span>📱 ${escapeHtml(meta.device||'Model belum dicatat')}</span>${st.alasan?`<span class="hp-device-dot">${escapeHtml(st.alasan)}</span>`:''}</div>
-      </div>
-      <div class="hp-slot-tag ${done?'is-occupied':'is-pending'}">${done&&meta.slot?`Slot Rak #${meta.slot}`:'Slot belum ditempatkan'}</div>
-      <div class="hp-student-footer">
-        <span class="hp-status-chip ${statusClass}">${done?'●':st.status==='izin'?'!':'○'} ${statusLabel}</span>
-        ${admin?`<button type="button" class="hp-quick-btn ${done?'done':st.status==='izin'?'izin':''}" onclick="event.stopPropagation();toggleHpQuick(${safe})">${done?'✓ Sudah':st.status==='izin'?'Atur ulang':'Kumpul'}</button>`:''}
-      </div>
-    </article>`;
+    const {name,index,st,meta}=entry,safe=hpSafeName(name),initials=hpInitials(name),admin=isAdmin(), done=st.status==='sudah';
+    return `<article class="hp-student-card" data-name="${escapeHtml(name)}" ${admin?`onclick="toggleHpQuick(${safe})"`:``}>\n      <div class="hp-student-head"><span class="hp-student-roll">#${index+1} · ${escapeHtml(name)}</span><span class="hp-slot-tag ${done?'is-occupied':'is-pending'}">${done&&meta.slot?`Slot Rak #${meta.slot}`:'Slot belum ditempatkan'}</span></div>\n      <div class="hp-student-main"><div class="hp-student-avatar ${done?'occupied':st.status==='izin'?'excused':''}">${escapeHtml(initials)}</div><div class="hp-student-copy"><div class="hp-student-name">${escapeHtml(name)}</div><div class="hp-student-sub"><span>📱 ${escapeHtml(meta.device||'Model belum dicatat')}</span>${st.alasan?`<span class="hp-device-dot">• ${escapeHtml(st.alasan)}</span>`:''}</div></div></div>\n      <div class="hp-student-footer"><span class="hp-status-chip ${hpStatusClass(st.status)}">${done?'●':st.status==='izin'?'!':'○'} ${hpStatusLabel(st.status)}</span>${admin?`<button type="button" class="hp-quick-btn ${done?'done':st.status==='izin'?'izin':''}" onclick="event.stopPropagation();toggleHpQuick(${safe})">${done?'✓ Sudah':'Kumpul'}</button>`:''}</div>\n    </article>`;
   }
   function hpTable(entries){
     const rows=entries.map(x=>`<tr><td><div class="hp-table-name">#${x.index+1} · ${escapeHtml(x.name)}</div></td><td>${x.st.status==='sudah'&&x.meta.slot?`Slot #${x.meta.slot}`:'—'}</td><td>${escapeHtml(x.meta.device||'—')}</td><td><span class="hp-status-chip ${hpStatusClass(x.st.status)}">${hpStatusLabel(x.st.status)}</span></td><td>${isAdmin()?`<button type="button" class="hp-quick-btn ${x.st.status==='sudah'?'done':''}" onclick="toggleHpQuick(${hpSafeName(x.name)})">${x.st.status==='sudah'?'✓ Sudah':'Kumpul'}</button>`:'—'}</td></tr>`).join('');
@@ -19317,7 +19475,7 @@ body.dark #view-kas .kas-progress-track{background:#1d2a40!important}
     wrappers.forEach(w=>w.style.display='none');
     const group=document.createElement('div');
     group.className='kas71-global-actions';
-    group.innerHTML=`<button type="button" class="kas71-primary" onclick="openKasAddModal()"><span class="kas71-icon">＋</span> Catat Transaksi</button><button type="button" onclick="downloadKasExcel()"><span class="kas71-icon">↧</span> Excel</button><button type="button" onclick="printKasPdf()"><span class="kas71-icon">↗</span> PDF</button>`;
+    group.innerHTML=`<button type="button" class="kas71-primary" onclick="openKasAddModal()"><span class="kas71-icon">＋</span> Catat Transaksi</button><button type="button" class="kas71-export" onclick="printKasPdf()"><span class="kas71-icon">↗</span> Export PDF</button>`;
     actions.prepend(group);
     return true;
   }
@@ -21807,8 +21965,8 @@ body.dark #view-kas .kas-folder-empty{background:#111c2f!important;border-color:
   display:grid !important;
   width:100% !important;
   min-width:0 !important;
-  grid-template-columns:repeat(auto-fill,minmax(240px,1fr)) !important;
-  gap:16px !important;
+  grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+  gap:10px !important;
 }
 #view-hp .hp-slot-tag.is-pending{color:#64748b !important;background:#f8fafc !important;border-color:#e2e8f0 !important}
 #view-hp .hp-slot-tag.is-occupied{color:#047857 !important;background:#ecfdf5 !important;border-color:#a7dfc2 !important}
