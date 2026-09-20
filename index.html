@@ -19937,200 +19937,6 @@ body.kelasku-authenticated #view-jadwal.active{
   };
 })();
 </script>
-
-
-<!-- v81–v84 responsive/UI patches restored outside JavaScript templates -->
-<style id="jadwal-v81-mode-switch-length">
-/* v81 — Pelajaran/Piket kembali dibuat lebih panjang seperti layout sebelumnya. */
-body.kelasku-authenticated #view-jadwal > .mode-switch{
-  width:min(100%, 560px) !important;
-  max-width:560px !important;
-  flex:0 0 560px !important;
-}
-body.kelasku-authenticated #view-jadwal > .mode-switch .mode-btn{
-  min-width:0 !important;
-  flex:1 1 0 !important;
-  padding-left:24px !important;
-  padding-right:24px !important;
-}
-@media(max-width:620px){
-  body.kelasku-authenticated #view-jadwal > .mode-switch{
-    width:100% !important;
-    max-width:none !important;
-    flex:0 0 auto !important;
-  }
-}
-</style>
-
-<style id="hp-v82-mobile-grid-only">
-/* v82 — Mobile Pengumpulan HP: tampilkan mode Grid saja agar toolbar tidak penuh. */
-@media (max-width: 760px){
-  #view-hp .hp-view-switcher [data-hp-view="rack"],
-  #view-hp .hp-view-switcher [data-hp-view="table"]{
-    display:none !important;
-  }
-  #view-hp .hp-view-switcher{
-    width:auto !important;
-    flex:0 0 auto !important;
-  }
-  #view-hp .hp-view-switcher [data-hp-view="grid"]{
-    display:inline-flex !important;
-    min-width:76px !important;
-    justify-content:center !important;
-  }
-}
-</style>
-
-<script id="hp-v82-mobile-grid-logic">
-(function(){
-  function forceMobileGrid(){
-    if(window.matchMedia && window.matchMedia('(max-width: 760px)').matches){
-      try{
-        if(typeof hpCommandViewMode !== 'undefined' && hpCommandViewMode !== 'grid') hpCommandViewMode='grid';
-      }catch(e){}
-      var gridBtn=document.querySelector('#view-hp [data-hp-view="grid"]');
-      if(gridBtn && !gridBtn.classList.contains('is-active')){
-        document.querySelectorAll('#view-hp [data-hp-view]').forEach(function(btn){btn.classList.remove('is-active')});
-        gridBtn.classList.add('is-active');
-      }
-      if(typeof renderHpCommandCenter==='function'){
-        try{renderHpCommandCenter()}catch(e){}
-      }
-    }
-  }
-  document.addEventListener('DOMContentLoaded', forceMobileGrid);
-  window.addEventListener('resize', forceMobileGrid);
-})();
-</script>
-
-<style id="hp-v84-desktop-readability-mobile-simplify">
-/* v84 — Pengumpulan HP: desktop lebih terbaca, mobile lebih ringkas. */
-@media (min-width: 761px){
-  #view-hp .hp-command-kicker{font-size:11px !important;letter-spacing:.11em !important}
-  #view-hp .hp-command-title-row h1{font-size:28px !important;line-height:1.15 !important}
-  #view-hp .hp-command-status{font-size:11px !important}
-  #view-hp .hp-command-heading p{font-size:13px !important;line-height:1.5 !important}
-
-  #view-hp .hp-date-overline{font-size:10px !important;letter-spacing:.1em !important}
-  #view-hp .hp-date-context strong{font-size:15px !important;line-height:1.3 !important}
-  #view-hp .hp-date-switcher > button{font-size:18px !important}
-  #view-hp .hp-date-switcher .hp-date-main{min-width:84px !important;min-height:42px !important;font-size:13px !important}
-  #view-hp .hp-date-switcher .hp-date-main #hp-command-date-short{font-size:13px !important}
-  #view-hp .hp-date-main-chevron{font-size:12px !important}
-
-  #view-hp .hp-metric-card{min-height:88px !important;padding:16px 17px !important}
-  #view-hp .hp-metric-icon{width:34px !important;height:34px !important;font-size:16px !important}
-  #view-hp .hp-metric-copy span{font-size:11px !important;line-height:1.25 !important}
-  #view-hp .hp-metric-copy strong{font-size:25px !important;line-height:1.05 !important}
-
-  #view-hp .hp-progress-card{padding:17px 18px !important}
-  #view-hp .hp-progress-kicker{font-size:10px !important}
-  #view-hp .hp-progress-head strong{font-size:15px !important}
-  #view-hp .hp-progress-pct{font-size:23px !important}
-  #view-hp .hp-progress-note{font-size:11px !important}
-
-  #view-hp .hp-view-switcher button{min-height:40px !important;padding:0 12px !important;font-size:12px !important}
-  #view-hp .hp-search-wrap input{font-size:12px !important}
-  #view-hp .hp-filter-row button{min-height:36px !important;padding:0 11px !important;font-size:11px !important}
-  #view-hp .hp-filter-row button span{min-width:21px !important;height:21px !important;font-size:9px !important}
-
-  #view-hp .hp-student-card{padding:15px !important}
-  #view-hp .hp-student-roll{font-size:9px !important}
-  #view-hp .hp-slot-tag{font-size:9px !important;padding:5px 8px !important}
-  #view-hp .hp-student-main{gap:11px !important;margin-top:12px !important}
-  #view-hp .hp-student-avatar{width:42px !important;height:42px !important;flex-basis:42px !important;font-size:12px !important}
-  #view-hp .hp-student-name{font-size:14px !important}
-  #view-hp .hp-student-sub{font-size:9.5px !important;margin-top:5px !important}
-  #view-hp .hp-student-footer{margin-top:12px !important;padding-top:10px !important}
-  #view-hp .hp-status-chip{font-size:9px !important;padding:6px 9px !important}
-  #view-hp .hp-quick-btn{font-size:10px !important;padding:7px 10px !important}
-}
-
-@media (max-width: 760px){
-  /* Karena mobile memakai Grid saja, kontrol pemilihan mode tidak perlu ditampilkan. */
-  #view-hp .hp-view-switcher{display:none !important}
-  #view-hp .hp-view-toolbar{display:block !important;margin-top:10px !important}
-  #view-hp .hp-search-wrap{width:100% !important;max-width:none !important}
-  #view-hp .hp-filter-row{margin-top:8px !important;gap:6px !important;padding:1px 1px 3px !important;overflow-x:auto !important;white-space:nowrap !important}
-  #view-hp .hp-filter-row button{flex:0 0 auto !important;min-height:34px !important;font-size:10px !important;padding:0 10px !important}
-  #view-hp .hp-filter-row button span{font-size:8px !important;min-width:19px !important;height:19px !important}
-}
-</style>
-
-<style id="dark-mode-readability-v83">
-/* v83 — Pastikan teks pada kontrol berlatar terang tetap kontras di Dark Mode. */
-body.dark #view-hp .hp-date-switcher .hp-date-main{
-  background:#f8fafc !important;
-  color:#172033 !important;
-  -webkit-text-fill-color:#172033 !important;
-  border-color:#f8fafc !important;
-  opacity:1 !important;
-  text-shadow:none !important;
-}
-body.dark #view-hp .hp-date-switcher .hp-date-main #hp-command-date-short{
-  color:#172033 !important;
-  -webkit-text-fill-color:#172033 !important;
-  font-weight:900 !important;
-}
-body.dark #view-hp .hp-date-switcher .hp-date-main .hp-date-main-chevron{
-  color:#475569 !important;
-  -webkit-text-fill-color:#475569 !important;
-  opacity:1 !important;
-}
-body.dark #view-hp .hp-filter-row button:not(.is-active){
-  background:#f8fafc !important;
-  color:#334155 !important;
-  -webkit-text-fill-color:#334155 !important;
-  border-color:#dbe3ef !important;
-  opacity:1 !important;
-}
-body.dark #view-hp .hp-filter-row button:not(.is-active) span{
-  background:#e2e8f0 !important;
-  color:#334155 !important;
-  -webkit-text-fill-color:#334155 !important;
-  opacity:1 !important;
-}
-body.dark #view-hp .hp-filter-row button.is-active{
-  background:#f8fafc !important;
-  color:#172033 !important;
-  -webkit-text-fill-color:#172033 !important;
-  border-color:#f8fafc !important;
-  opacity:1 !important;
-}
-body.dark #view-hp .hp-filter-row button.is-active span{
-  background:#e2e8f0 !important;
-  color:#334155 !important;
-  -webkit-text-fill-color:#334155 !important;
-  opacity:1 !important;
-}
-body.dark #view-tugas .task-pro-check-btn{
-  color:#172033 !important;
-  -webkit-text-fill-color:#172033 !important;
-  background:#eef2ff !important;
-  border-color:#c7d2fe !important;
-  opacity:1 !important;
-  text-shadow:none !important;
-}
-body.dark #view-tugas .task-pro-check-btn .task-pro-check-icon{
-  color:#172033 !important;
-  -webkit-text-fill-color:#172033 !important;
-  background:#ffffff !important;
-  border-color:#64748b !important;
-  opacity:1 !important;
-}
-body.dark #view-tugas .task-pro-check-btn.is-done{
-  color:#166534 !important;
-  -webkit-text-fill-color:#166534 !important;
-  background:#ecfdf5 !important;
-  border-color:#bbf7d0 !important;
-}
-body.dark #view-tugas .task-pro-check-btn.is-done .task-pro-check-icon{
-  color:#ffffff !important;
-  -webkit-text-fill-color:#ffffff !important;
-  background:#22c55e !important;
-  border-color:#22c55e !important;
-}
-</style>
 </body>
 <!-- Kelasku compatibility patch: resilient Firestore sync + legacy fallback -->
 
@@ -22585,7 +22391,264 @@ body.dark #view-hp .hp-slot-tag.is-occupied{color:#86efac !important;background:
 @media(max-width:760px){#view-hp #hp-list.hp-command-list > .hp-command-grid{grid-template-columns:repeat(2,minmax(0,1fr)) !important}}
 @media(max-width:480px){#view-hp #hp-list.hp-command-list > .hp-command-grid{grid-template-columns:1fr !important}}
 </style>
-</head><body><h1>Kas Kelas — X TJKT 1</h1><p>Pencatatan kas transparan &amp; aman.</p><div class="metrics"><div class="m"><small>Total Kas Masuk</small><b>${money(masuk)}</b></div><div class="m"><small>Total Pengeluaran</small><b>${money(keluar)}</b></div><div class="m"><small>Sisa Saldo</small><b>${money(masuk-keluar)}</b></div></div><table><thead><tr><th>Tanggal</th><th>Keterangan</th><th>Jenis</th><th>Jumlah</th></tr></thead><tbody>${rows.map(t=>`<tr><td>${esc(t.tanggal||'-')}</td><td>${esc(t.ket||'-')}</td><td>${t.jenis==='masuk'?'Pemasukan':'Pengeluaran'}</td><td>${t.jenis==='masuk'?'+':'-'}${money(t.jumlah)}</td></tr>`).join('')}</tbody></table>${folders.map(f=>{const st=Array.isArray(f.students)?f.students:[],p=st.length?Math.round(st.filter(x=>x.status==='sudah').length/st.length*100):0;return `<div class="folder"><h3>${esc(f.name||'Kas Siswa')}</h3><p>${st.filter(x=>x.status==='sudah').length}/${st.length} siswa lunas</p><div class="bar"><div class="fill" style="width:${p}%"></div></div></div>`}).join('')}</body></html>`;
+</head><body><h1>Kas Kelas — X TJKT 1</h1><p>Pencatatan kas transparan &amp; aman.</p><div class="metrics"><div class="m"><small>Total Kas Masuk</small><b>${money(masuk)}</b></div><div class="m"><small>Total Pengeluaran</small><b>${money(keluar)}</b></div><div class="m"><small>Sisa Saldo</small><b>${money(masuk-keluar)}</b></div></div><table><thead><tr><th>Tanggal</th><th>Keterangan</th><th>Jenis</th><th>Jumlah</th></tr></thead><tbody>${rows.map(t=>`<tr><td>${esc(t.tanggal||'-')}</td><td>${esc(t.ket||'-')}</td><td>${t.jenis==='masuk'?'Pemasukan':'Pengeluaran'}</td><td>${t.jenis==='masuk'?'+':'-'}${money(t.jumlah)}</td></tr>`).join('')}</tbody></table>${folders.map(f=>{const st=Array.isArray(f.students)?f.students:[],p=st.length?Math.round(st.filter(x=>x.status==='sudah').length/st.length*100):0;return `<div class="folder"><h3>${esc(f.name||'Kas Siswa')}</h3><p>${st.filter(x=>x.status==='sudah').length}/${st.length} siswa lunas</p><div class="bar"><div class="fill" style="width:${p}%"></div></div></div>`}).join('')}
+<style id="jadwal-v81-mode-switch-length">
+/* v81 — Pelajaran/Piket kembali dibuat lebih panjang seperti layout sebelumnya. */
+body.kelasku-authenticated #view-jadwal > .mode-switch{
+  width:min(100%, 560px) !important;
+  max-width:560px !important;
+  flex:0 0 560px !important;
+}
+body.kelasku-authenticated #view-jadwal > .mode-switch .mode-btn{
+  min-width:0 !important;
+  flex:1 1 0 !important;
+  padding-left:24px !important;
+  padding-right:24px !important;
+}
+@media(max-width:620px){
+  body.kelasku-authenticated #view-jadwal > .mode-switch{
+    width:100% !important;
+    max-width:none !important;
+    flex:0 0 auto !important;
+  }
+}
+</style>
+
+<style id="hp-v82-mobile-grid-only">
+/* v82 — Mobile Pengumpulan HP: tampilkan mode Grid saja agar toolbar tidak penuh. */
+@media (max-width: 760px){
+  #view-hp .hp-view-switcher [data-hp-view="rack"],
+  #view-hp .hp-view-switcher [data-hp-view="table"]{
+    display:none !important;
+  }
+  #view-hp .hp-view-switcher{
+    width:auto !important;
+    flex:0 0 auto !important;
+  }
+  #view-hp .hp-view-switcher [data-hp-view="grid"]{
+    display:inline-flex !important;
+    min-width:76px !important;
+    justify-content:center !important;
+  }
+}
+</style>
+<script id="hp-v82-mobile-grid-logic">
+(function(){
+  function forceMobileGrid(){
+    if(window.matchMedia && window.matchMedia('(max-width: 760px)').matches){
+      try{
+        if(typeof hpCommandViewMode !== 'undefined' && hpCommandViewMode !== 'grid') hpCommandViewMode='grid';
+      }catch(e){}
+      var gridBtn=document.querySelector('#view-hp [data-hp-view="grid"]');
+      if(gridBtn && !gridBtn.classList.contains('is-active')){
+        document.querySelectorAll('#view-hp [data-hp-view]').forEach(function(btn){btn.classList.remove('is-active')});
+        gridBtn.classList.add('is-active');
+      }
+      if(typeof renderHpCommandCenter==='function'){
+        try{renderHpCommandCenter()}catch(e){}
+      }
+    }
+  }
+  document.addEventListener('DOMContentLoaded', forceMobileGrid);
+  window.addEventListener('resize', forceMobileGrid);
+})();
+</script>
+
+<style id="hp-v84-desktop-readability-mobile-simplify">
+/* v84 — Pengumpulan HP: desktop lebih terbaca, mobile lebih ringkas. */
+@media (min-width: 761px){
+  #view-hp .hp-command-kicker{font-size:11px !important;letter-spacing:.11em !important}
+  #view-hp .hp-command-title-row h1{font-size:28px !important;line-height:1.15 !important}
+  #view-hp .hp-command-status{font-size:11px !important}
+  #view-hp .hp-command-heading p{font-size:13px !important;line-height:1.5 !important}
+
+  #view-hp .hp-date-overline{font-size:10px !important;letter-spacing:.1em !important}
+  #view-hp .hp-date-context strong{font-size:15px !important;line-height:1.3 !important}
+  #view-hp .hp-date-switcher > button{font-size:18px !important}
+  #view-hp .hp-date-switcher .hp-date-main{min-width:84px !important;min-height:42px !important;font-size:13px !important}
+  #view-hp .hp-date-switcher .hp-date-main #hp-command-date-short{font-size:13px !important}
+  #view-hp .hp-date-main-chevron{font-size:12px !important}
+
+  #view-hp .hp-metric-card{min-height:88px !important;padding:16px 17px !important}
+  #view-hp .hp-metric-icon{width:34px !important;height:34px !important;font-size:16px !important}
+  #view-hp .hp-metric-copy span{font-size:11px !important;line-height:1.25 !important}
+  #view-hp .hp-metric-copy strong{font-size:25px !important;line-height:1.05 !important}
+
+  #view-hp .hp-progress-card{padding:17px 18px !important}
+  #view-hp .hp-progress-kicker{font-size:10px !important}
+  #view-hp .hp-progress-head strong{font-size:15px !important}
+  #view-hp .hp-progress-pct{font-size:23px !important}
+  #view-hp .hp-progress-note{font-size:11px !important}
+
+  #view-hp .hp-view-switcher button{min-height:40px !important;padding:0 12px !important;font-size:12px !important}
+  #view-hp .hp-search-wrap input{font-size:12px !important}
+  #view-hp .hp-filter-row button{min-height:36px !important;padding:0 11px !important;font-size:11px !important}
+  #view-hp .hp-filter-row button span{min-width:21px !important;height:21px !important;font-size:9px !important}
+
+  #view-hp .hp-student-card{padding:15px !important}
+  #view-hp .hp-student-roll{font-size:9px !important}
+  #view-hp .hp-slot-tag{font-size:9px !important;padding:5px 8px !important}
+  #view-hp .hp-student-main{gap:11px !important;margin-top:12px !important}
+  #view-hp .hp-student-avatar{width:42px !important;height:42px !important;flex-basis:42px !important;font-size:12px !important}
+  #view-hp .hp-student-name{font-size:14px !important}
+  #view-hp .hp-student-sub{font-size:9.5px !important;margin-top:5px !important}
+  #view-hp .hp-student-footer{margin-top:12px !important;padding-top:10px !important}
+  #view-hp .hp-status-chip{font-size:9px !important;padding:6px 9px !important}
+  #view-hp .hp-quick-btn{font-size:10px !important;padding:7px 10px !important}
+}
+
+@media (max-width: 760px){
+  /* Karena mobile memakai Grid saja, kontrol pemilihan mode tidak perlu ditampilkan. */
+  #view-hp .hp-view-switcher{display:none !important}
+  #view-hp .hp-view-toolbar{display:block !important;margin-top:10px !important}
+  #view-hp .hp-search-wrap{width:100% !important;max-width:none !important}
+  #view-hp .hp-filter-row{margin-top:8px !important;gap:6px !important;padding:1px 1px 3px !important;overflow-x:auto !important;white-space:nowrap !important}
+  #view-hp .hp-filter-row button{flex:0 0 auto !important;min-height:34px !important;font-size:10px !important;padding:0 10px !important}
+  #view-hp .hp-filter-row button span{font-size:8px !important;min-width:19px !important;height:19px !important}
+}
+</style>
+
+<style id="jadwal-v85-tab-switch-fix">
+/* =========================================================
+   JADWAL v85 — Pelajaran / Piket compact responsive switch
+   Fix tombol melebar/meninggi mengikuti container parent.
+   ========================================================= */
+#view-jadwal > .mode-switch{
+  display:inline-flex !important;
+  flex-direction:row !important;
+  align-items:center !important;
+  justify-content:stretch !important;
+  gap:3px !important;
+  width:fit-content !important;
+  max-width:100% !important;
+  height:40px !important;
+  min-height:40px !important;
+  padding:4px !important;
+  margin:16px 0 0 !important;
+  box-sizing:border-box !important;
+  border-radius:10px !important;
+  overflow:hidden !important;
+  align-self:flex-start !important;
+  flex:0 0 auto !important;
+}
+
+#view-jadwal > .mode-switch .mode-btn{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  flex:0 0 clamp(120px,24vw,260px) !important;
+  width:auto !important;
+  height:auto !important;
+  min-height:0 !important;
+  padding:0 20px !important;
+  margin:0 !important;
+  line-height:1 !important;
+  box-sizing:border-box !important;
+  white-space:nowrap !important;
+  align-self:center !important;
+  border-radius:8px !important;
+}
+
+/* Dark mode: keep the compact geometry while preserving contrast. */
+body.dark #view-jadwal > .mode-switch .mode-btn{
+  min-height:0 !important;
+  height:auto !important;
+}
+
+@media (max-width:620px){
+  #view-jadwal > .mode-switch{
+    width:fit-content !important;
+    max-width:100% !important;
+    height:40px !important;
+    min-height:40px !important;
+    padding:4px !important;
+    margin-top:16px !important;
+  }
+
+  #view-jadwal > .mode-switch .mode-btn{
+    flex-basis:clamp(120px, calc((100vw - 48px) / 2), 180px) !important;
+    padding:0 16px !important;
+    font-size:12px !important;
+  }
+}
+</style>
+</body>
+
+<style id="dark-mode-readability-v83">
+/* v83 — Pastikan teks pada kontrol berlatar terang tetap kontras di Dark Mode. */
+body.dark #view-hp .hp-date-switcher .hp-date-main{
+  background:#f8fafc !important;
+  color:#172033 !important;
+  -webkit-text-fill-color:#172033 !important;
+  border-color:#f8fafc !important;
+  opacity:1 !important;
+  text-shadow:none !important;
+}
+body.dark #view-hp .hp-date-switcher .hp-date-main #hp-command-date-short{
+  color:#172033 !important;
+  -webkit-text-fill-color:#172033 !important;
+  font-weight:900 !important;
+}
+body.dark #view-hp .hp-date-switcher .hp-date-main .hp-date-main-chevron{
+  color:#475569 !important;
+  -webkit-text-fill-color:#475569 !important;
+  opacity:1 !important;
+}
+body.dark #view-hp .hp-filter-row button:not(.is-active){
+  background:#f8fafc !important;
+  color:#334155 !important;
+  -webkit-text-fill-color:#334155 !important;
+  border-color:#dbe3ef !important;
+  opacity:1 !important;
+}
+body.dark #view-hp .hp-filter-row button:not(.is-active) span{
+  background:#e2e8f0 !important;
+  color:#334155 !important;
+  -webkit-text-fill-color:#334155 !important;
+  opacity:1 !important;
+}
+body.dark #view-hp .hp-filter-row button.is-active{
+  background:#f8fafc !important;
+  color:#172033 !important;
+  -webkit-text-fill-color:#172033 !important;
+  border-color:#f8fafc !important;
+  opacity:1 !important;
+}
+body.dark #view-hp .hp-filter-row button.is-active span{
+  background:#e2e8f0 !important;
+  color:#334155 !important;
+  -webkit-text-fill-color:#334155 !important;
+  opacity:1 !important;
+}
+body.dark #view-tugas .task-pro-check-btn{
+  color:#172033 !important;
+  -webkit-text-fill-color:#172033 !important;
+  background:#eef2ff !important;
+  border-color:#c7d2fe !important;
+  opacity:1 !important;
+  text-shadow:none !important;
+}
+body.dark #view-tugas .task-pro-check-btn .task-pro-check-icon{
+  color:#172033 !important;
+  -webkit-text-fill-color:#172033 !important;
+  background:#ffffff !important;
+  border-color:#64748b !important;
+  opacity:1 !important;
+}
+body.dark #view-tugas .task-pro-check-btn.is-done{
+  color:#166534 !important;
+  -webkit-text-fill-color:#166534 !important;
+  background:#ecfdf5 !important;
+  border-color:#bbf7d0 !important;
+}
+body.dark #view-tugas .task-pro-check-btn.is-done .task-pro-check-icon{
+  color:#ffffff !important;
+  -webkit-text-fill-color:#ffffff !important;
+  background:#22c55e !important;
+  border-color:#22c55e !important;
+}
+</style>
+</html>`;
     const w=window.open('','_blank','width=900,height=700');if(!w){showNotification('Popup diblokir browser. Izinkan popup untuk mencetak PDF.','warning');return;}w.document.write(html);w.document.close();w.focus();setTimeout(()=>w.print(),250);
   };
 
