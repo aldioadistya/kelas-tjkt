@@ -22359,82 +22359,10 @@ body.dark #view-kas .kas-folder-empty{background:#111c2f!important;border-color:
     const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='Rekap-Kas-Kelas-X-TJKT-1.csv';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500);showNotification('Rekap kas siap dibuka di Excel.','success');
   };
   window.printKasPdf=function(){
-    const rows=Array.isArray(state.kas)
-      ? state.kas.slice().sort((a,b)=>String(b.tanggal||'').localeCompare(String(a.tanggal||'')))
-      : [];
-    const masuk=rows.filter(t=>t.jenis==='masuk').reduce((a,t)=>a+Number(t.jumlah||0),0);
-    const keluar=rows.filter(t=>t.jenis==='keluar').reduce((a,t)=>a+Number(t.jumlah||0),0);
+    const rows=Array.isArray(state.kas)?state.kas.slice().sort((a,b)=>String(b.tanggal||'').localeCompare(String(a.tanggal||''))):[];
+    const masuk=rows.filter(t=>t.jenis==='masuk').reduce((a,t)=>a+Number(t.jumlah||0),0), keluar=rows.filter(t=>t.jenis==='keluar').reduce((a,t)=>a+Number(t.jumlah||0),0);
     const folders=Array.isArray(state.kasFolders)?state.kasFolders:[];
-
-    const rowHtml=rows.map(t=>[
-      '<tr><td>',esc(t.tanggal||'-'),'</td><td>',esc(t.ket||'-'),
-      '</td><td>',t.jenis==='masuk'?'Pemasukan':'Pengeluaran',
-      '</td><td>',t.jenis==='masuk'?'+':'-',money(t.jumlah),'</td></tr>'
-    ].join('')).join('');
-
-    const folderHtml=folders.map(f=>{
-      const students=Array.isArray(f.students)?f.students:[];
-      const paid=students.filter(x=>x.status==='sudah').length;
-      const pct=students.length?Math.round(paid/students.length*100):0;
-      return [
-        '<div class="folder"><h3>',esc(f.name||'Kas Siswa'),
-        '</h3><p>',paid,'/',students.length,' siswa lunas</p>',
-        '<div class="bar"><div class="fill" style="width:',pct,'%;"></div></div></div>'
-      ].join('');
-    }).join('');
-
-    const html=[
-      '<!doctype html><html lang="id"><head><meta charset="utf-8">',
-      '<title>Rekap Kas Kelas</title>',
-      '<style>',
-      'body{font-family:Arial,sans-serif;color:#0f172a;padding:28px}',
-      'h1{margin:0 0 4px;font-size:20px}',
-      'p{margin:0 0 18px;color:#64748b;font-size:11px}',
-      '.metrics{display:flex;gap:10px;margin-bottom:18px}',
-      '.m{flex:1;border:1px solid #e2e8f0;border-radius:10px;padding:10px}',
-      '.m small{display:block;color:#64748b;font-size:8px;text-transform:uppercase;font-weight:700}',
-      '.m b{display:block;margin-top:5px;font-size:15px}',
-      'table{width:100%;border-collapse:collapse;font-size:9px}',
-      'th,td{padding:8px;border-bottom:1px solid #e2e8f0;text-align:left}',
-      'th{background:#f8fafc;font-size:8px;text-transform:uppercase;color:#64748b}',
-      '.folder{margin-top:18px;border:1px solid #e2e8f0;border-radius:10px;padding:12px}',
-      '.folder h3{margin:0 0 6px;font-size:12px}',
-      '.folder p{margin:0 0 7px;font-size:9px}',
-      '.bar{height:6px;border-radius:999px;background:#eef2f7;overflow:hidden}',
-      '.fill{height:100%;background:#4338ca}',
-      '</style></head><body>',
-      '<h1>Kas Kelas — X TJKT 1</h1>',
-      '<p>Pencatatan kas transparan &amp; aman.</p>',
-      '<div class="metrics">',
-      '<div class="m"><small>Total Kas Masuk</small><b>',money(masuk),'</b></div>',
-      '<div class="m"><small>Total Pengeluaran</small><b>',money(keluar),'</b></div>',
-      '<div class="m"><small>Sisa Saldo</small><b>',money(masuk-keluar),'</b></div>',
-      '</div>',
-      '<table><thead><tr><th>Tanggal</th><th>Keterangan</th><th>Jenis</th><th>Jumlah</th></tr></thead>',
-      '<tbody>',rowHtml,'</tbody></table>',folderHtml,
-      '</body></html>'
-    ].join('');
-
-    const w=window.open('','_blank','width=900,height=700');
-    if(!w){
-      showNotification('Popup diblokir browser. Izinkan popup untuk mencetak PDF.','warning');
-      return;
-    }
-    w.document.open();
-    w.document.write(html);
-    w.document.close();
-    w.focus();
-    setTimeout(()=>w.print(),250);
-  };
-
-  window.renderKas=function(){renderKasWorld();};
-  window.renderKasSiswa=function(){ensureKasHeader();renderKasFoldersWorld();};
-
-  function boot(){try{renderKasWorld();}catch(e){console.warn('Kas world-class boot:',e)}}
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else setTimeout(boot,0);
-})();
-</script>
-
+    const html=`<!doctype html><html lang="id"><head><meta charset="utf-8"><title>Rekap Kas Kelas</title><style>body{font-family:Arial,sans-serif;color:#0f172a;padding:28px}h1{margin:0 0 4px;font-size:20px}p{margin:0 0 18px;color:#64748b;font-size:11px}.metrics{display:flex;gap:10px;margin-bottom:18px}.m{flex:1;border:1px solid #e2e8f0;border-radius:10px;padding:10px}.m small{display:block;color:#64748b;font-size:8px;text-transform:uppercase;font-weight:700}.m b{display:block;margin-top:5px;font-size:15px}table{width:100%;border-collapse:collapse;font-size:9px}th,td{padding:8px;border-bottom:1px solid #e2e8f0;text-align:left}th{background:#f8fafc;font-size:8px;text-transform:uppercase;color:#64748b}.folder{margin-top:18px;border:1px solid #e2e8f0;border-radius:10px;padding:12px}.folder h3{margin:0 0 6px;font-size:12px}.folder p{margin:0 0 7px;font-size:9px}.bar{height:6px;border-radius:999px;background:#eef2f7;overflow:hidden}.fill{height:100%;background:#4338ca}</style>
 <style id="hp-command-center-v72-layout-fix">
 /* v72 — Pengumpulan HP: legacy #hp-list membuat command center hanya mengambil 1/4 lebar layar. */
 #view-hp #hp-list.hp-command-list{
@@ -22464,6 +22392,85 @@ body.dark #view-hp .hp-slot-tag.is-occupied{color:#86efac !important;background:
 @media(max-width:480px){#view-hp #hp-list.hp-command-list > .hp-command-grid{grid-template-columns:1fr !important}}
 </style>
 
+<style id="settings-minimal-professional-mobile">
+@media (max-width: 900px) {
+  body.dark #view-settings { background:#0f172a !important; }
+  body.dark #view-settings .settings-nav {
+    display:flex !important; flex-wrap:nowrap !important; overflow-x:auto !important;
+    scrollbar-width:none !important; -ms-overflow-style:none !important;
+    gap:4px !important; padding:2px 0 8px !important; margin:0 0 18px !important;
+    border-bottom:1px solid rgba(255,255,255,.08) !important;
+  }
+  body.dark #view-settings .settings-nav::-webkit-scrollbar { display:none !important; }
+  body.dark #view-settings .settings-nav button {
+    flex:0 0 auto !important; min-height:36px !important; padding:8px 13px !important;
+    border:0 !important; border-radius:9px !important; background:transparent !important;
+    color:#94a3b8 !important; box-shadow:none !important; font-size:11px !important;
+    font-weight:700 !important; white-space:nowrap !important;
+  }
+  body.dark #view-settings .settings-nav button.active {
+    color:#60a5fa !important; background:rgba(59,130,246,.10) !important;
+    box-shadow:none !important; position:relative;
+  }
+  body.dark #view-settings .settings-nav button.active::after {
+    content:""; position:absolute; left:12px; right:12px; bottom:-8px; height:2px;
+    background:#3b82f6; border-radius:2px; box-shadow:0 0 7px rgba(59,130,246,.45);
+  }
+  body.dark #view-settings .settings-profile-card,
+  body.dark #view-settings .settings-section,
+  body.dark #view-settings .section > .card {
+    background:#1e293b !important; border:1px solid rgba(255,255,255,.08) !important;
+    box-shadow:none !important; border-radius:14px !important;
+  }
+  body.dark #view-settings .settings-section { margin-bottom:10px !important; }
+  body.dark #view-settings .settings-label { font-size:13px !important; font-weight:750 !important; }
+  body.dark #view-settings .field-hint,
+  body.dark #view-settings .settings-section p,
+  body.dark #view-settings small { color:#94a3b8 !important; }
+
+  /* Remove excess visual chrome inside settings. */
+  body.dark #view-settings .settings-section > .settings-head,
+  body.dark #view-settings .settings-section > .section-head { box-shadow:none !important; }
+  body.dark #view-settings .settings-section .btn,
+  body.dark #view-settings .settings-section button:not(.settings-nav button) {
+    box-shadow:none !important;
+  }
+
+  /* Compact profile: identity first, actions second. */
+  body.dark #view-settings .settings-profile-card {
+    display:flex !important; flex-direction:column !important; gap:14px !important;
+    padding:16px !important;
+  }
+  body.dark #view-settings .settings-profile-card .profile-main,
+  body.dark #view-settings .settings-profile-card .profile-info,
+  body.dark #view-settings .settings-profile-card .profile-header {
+    display:flex !important; align-items:center !important; gap:12px !important;
+  }
+  body.dark #view-settings .settings-profile-card .avatar,
+  body.dark #view-settings .settings-profile-card img { flex:0 0 auto; }
+  body.dark #view-settings .settings-profile-card .profile-actions,
+  body.dark #view-settings .settings-profile-card .actions {
+    display:flex !important; gap:8px !important; width:100% !important;
+  }
+  body.dark #view-settings .settings-profile-card .profile-actions > *,
+  body.dark #view-settings .settings-profile-card .actions > * {
+    flex:1 1 0 !important; min-width:0 !important;
+  }
+
+  /* Five-item bottom navigation: quiet, spacious, no heavy container. */
+  body.dark .tabbar {
+    display:grid !important; grid-template-columns:repeat(5,1fr) !important;
+    gap:0 !important; background:rgba(15,23,42,.96) !important;
+    border-top:1px solid rgba(255,255,255,.08) !important;
+    box-shadow:0 -4px 18px rgba(0,0,0,.18) !important;
+    padding:6px 4px max(7px,env(safe-area-inset-bottom)) !important;
+  }
+  body.dark .tabbar > * { min-width:0 !important; }
+  body.dark .tabbar .tabbar-item { background:transparent !important; border:0 !important; box-shadow:none !important; }
+  body.dark .tabbar .tabbar-item.active { color:#60a5fa !important; }
+}
+</style>
+</head><body><h1>Kas Kelas — X TJKT 1</h1><p>Pencatatan kas transparan &amp; aman.</p><div class="metrics"><div class="m"><small>Total Kas Masuk</small><b>${money(masuk)}</b></div><div class="m"><small>Total Pengeluaran</small><b>${money(keluar)}</b></div><div class="m"><small>Sisa Saldo</small><b>${money(masuk-keluar)}</b></div></div><table><thead><tr><th>Tanggal</th><th>Keterangan</th><th>Jenis</th><th>Jumlah</th></tr></thead><tbody>${rows.map(t=>`<tr><td>${esc(t.tanggal||'-')}</td><td>${esc(t.ket||'-')}</td><td>${t.jenis==='masuk'?'Pemasukan':'Pengeluaran'}</td><td>${t.jenis==='masuk'?'+':'-'}${money(t.jumlah)}</td></tr>`).join('')}</tbody></table>${folders.map(f=>{const st=Array.isArray(f.students)?f.students:[],p=st.length?Math.round(st.filter(x=>x.status==='sudah').length/st.length*100):0;return `<div class="folder"><h3>${esc(f.name||'Kas Siswa')}</h3><p>${st.filter(x=>x.status==='sudah').length}/${st.length} siswa lunas</p><div class="bar"><div class="fill" style="width:${p}%"></div></div></div>`}).join('')}
 <style id="jadwal-v81-mode-switch-length">
 /* v81 — Pelajaran/Piket kembali dibuat lebih panjang seperti layout sebelumnya. */
 body.kelasku-authenticated #view-jadwal > .mode-switch{
@@ -22504,7 +22511,6 @@ body.kelasku-authenticated #view-jadwal > .mode-switch .mode-btn{
   }
 }
 </style>
-
 <script id="hp-v82-mobile-grid-logic">
 (function(){
   function forceMobileGrid(){
@@ -22645,6 +22651,7 @@ body.dark #view-jadwal > .mode-switch .mode-btn{
   }
 }
 </style>
+</body>
 
 <style id="dark-mode-readability-v83">
 /* v83 — Pastikan teks pada kontrol berlatar terang tetap kontras di Dark Mode. */
@@ -22720,3 +22727,23 @@ body.dark #view-tugas .task-pro-check-btn.is-done .task-pro-check-icon{
   border-color:#22c55e !important;
 }
 </style>
+</html>`;
+    const w=window.open('','_blank','width=900,height=700');if(!w){showNotification('Popup diblokir browser. Izinkan popup untuk mencetak PDF.','warning');return;}w.document.write(html);w.document.close();w.focus();setTimeout(()=>w.print(),250);
+  };
+
+  function renderKasWorld(){
+    ensureKasHeader();
+    if(typeof original.renderKas==='function'){
+      try{original.renderKas();}catch(e){console.warn('legacy Kas render:',e)}
+    }
+    ensureKasHeader();
+    updateKasMetricNotes();
+    renderKasFoldersWorld();
+  }
+  window.renderKas=function(){renderKasWorld();};
+  window.renderKasSiswa=function(){ensureKasHeader();renderKasFoldersWorld();};
+
+  function boot(){try{renderKasWorld();}catch(e){console.warn('Kas world-class boot:',e)}}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else setTimeout(boot,0);
+})();
+</script>
