@@ -9081,536 +9081,6 @@ body.dark #app-global-actions .kas71-global-actions .kas71-export{
   #view-hp .hp-student-name { font-size: 12.5px !important; }
 }
 </style>
-
-<style id="mobile-dark-buttons-final">
-/* =========================================================
-   MOBILE DARK — tombol lebih terang & konsisten
-   Berlaku ke tombol umum, bukan hanya Pelajaran/Piket.
-   ========================================================= */
-@media (max-width:900px){
-  body.dark .view button:not(.fab-add):not(.btn-primary):not(.primary):not(.btn-danger):not(.danger),
-  body.dark .view .btn:not(.btn-primary):not(.primary):not(.btn-danger):not(.danger),
-  body.dark .view .section-action:not(.primary),
-  body.dark .view .section-link,
-  body.dark .view .toggle-btn,
-  body.dark .view .day-chip:not(.active),
-  body.dark .view .task-filter-tab:not(.active),
-  body.dark .view .report-action-btn:not(.primary),
-  body.dark .view .kas-history-toggle,
-  body.dark .view .bulk-all-btn,
-  body.dark .view .mode-btn:not(.active){
-    background:#1e293b !important;
-    color:#e2e8f0 !important;
-    -webkit-text-fill-color:#e2e8f0 !important;
-    border:1px solid #3b4b63 !important;
-    box-shadow:none !important;
-    text-shadow:none !important;
-  }
-
-  body.dark .view button:not(.fab-add):not(.btn-primary):not(.primary):not(.btn-danger):not(.danger):hover,
-  body.dark .view .btn:not(.btn-primary):not(.primary):not(.btn-danger):not(.danger):hover,
-  body.dark .view .section-action:not(.primary):hover,
-  body.dark .view .section-link:hover,
-  body.dark .view .toggle-btn:hover,
-  body.dark .view .day-chip:not(.active):hover,
-  body.dark .view .task-filter-tab:not(.active):hover,
-  body.dark .view .report-action-btn:not(.primary):hover,
-  body.dark .view .kas-history-toggle:hover,
-  body.dark .view .bulk-all-btn:hover,
-  body.dark .view .mode-btn:not(.active):hover{
-    background:#26364d !important;
-    color:#f8fafc !important;
-    -webkit-text-fill-color:#f8fafc !important;
-    border-color:#526783 !important;
-    box-shadow:none !important;
-  }
-
-  body.dark .view button:not(.fab-add):not(.btn-primary):not(.primary):not(.btn-danger):not(.danger):active,
-  body.dark .view .btn:not(.btn-primary):not(.primary):not(.btn-danger):not(.danger):active,
-  body.dark .view .section-action:not(.primary):active,
-  body.dark .view .section-link:active,
-  body.dark .view .toggle-btn:active,
-  body.dark .view .day-chip:not(.active):active,
-  body.dark .view .task-filter-tab:not(.active):active,
-  body.dark .view .report-action-btn:not(.primary):active,
-  body.dark .view .kas-history-toggle:active,
-  body.dark .view .bulk-all-btn:active,
-  body.dark .view .mode-btn:not(.active):active{
-    background:#334155 !important;
-    border-color:#64748b !important;
-  }
-
-  /* Tombol aktif: satu warna biru yang jelas. */
-  body.dark .view .mode-btn.active,
-  body.dark .view .day-chip.active,
-  body.dark .view .task-filter-tab.active,
-  body.dark .view .settings-nav button.active{
-    background:#2563eb !important;
-    color:#fff !important;
-    -webkit-text-fill-color:#fff !important;
-    border-color:#60a5fa !important;
-    box-shadow:0 0 0 2px rgba(37,99,235,.22) !important;
-  }
-
-  /* Khusus switch Pelajaran / Piket supaya tidak terlihat hitam. */
-  body.dark #view-jadwal > .mode-switch{
-    background:#17243a !important;
-    border:1px solid #334155 !important;
-    box-shadow:none !important;
-    border-radius:12px !important;
-    padding:4px !important;
-  }
-
-  body.dark #view-jadwal > .mode-switch .mode-btn{
-    min-height:34px !important;
-    background:#1e293b !important;
-    border:1px solid #3b4b63 !important;
-    color:#e2e8f0 !important;
-    -webkit-text-fill-color:#e2e8f0 !important;
-    box-shadow:none !important;
-  }
-
-  body.dark #view-jadwal > .mode-switch .mode-btn.active{
-    background:#2563eb !important;
-    border-color:#60a5fa !important;
-    color:#fff !important;
-    -webkit-text-fill-color:#fff !important;
-    box-shadow:0 0 0 2px rgba(37,99,235,.22) !important;
-  }
-}
-</style>
-
-<style id="hp-command-center-v72-layout-fix">
-/* v72 — Pengumpulan HP: legacy #hp-list membuat command center hanya mengambil 1/4 lebar layar. */
-#view-hp #hp-list.hp-command-list{
-  display:block !important;
-  width:100% !important;
-  min-width:0 !important;
-  max-width:none !important;
-  padding:0 !important;
-  margin:0 !important;
-  background:transparent !important;
-  border:0 !important;
-  box-sizing:border-box !important;
-}
-#view-hp #hp-list.hp-command-list > .hp-command-grid{
-  display:grid !important;
-  width:100% !important;
-  min-width:0 !important;
-  grid-template-columns:repeat(4,minmax(0,1fr)) !important;
-  gap:10px !important;
-}
-#view-hp .hp-slot-tag.is-pending{color:#64748b !important;background:#f8fafc !important;border-color:#e2e8f0 !important}
-#view-hp .hp-slot-tag.is-occupied{color:#047857 !important;background:#ecfdf5 !important;border-color:#a7dfc2 !important}
-body.dark #view-hp .hp-slot-tag.is-pending{color:#cbd5e1 !important;background:#16243a !important;border-color:#334155 !important}
-body.dark #view-hp .hp-slot-tag.is-occupied{color:#86efac !important;background:#052e22 !important;border-color:#24583a !important}
-@media(max-width:1100px){#view-hp #hp-list.hp-command-list > .hp-command-grid{grid-template-columns:repeat(3,minmax(0,1fr)) !important}}
-@media(max-width:760px){#view-hp #hp-list.hp-command-list > .hp-command-grid{grid-template-columns:repeat(2,minmax(0,1fr)) !important}}
-@media(max-width:480px){#view-hp #hp-list.hp-command-list > .hp-command-grid{grid-template-columns:1fr !important}}
-</style>
-
-<style id="settings-minimal-professional-mobile">
-@media (max-width: 900px) {
-  body.dark #view-settings { background:#0f172a !important; }
-  body.dark #view-settings .settings-nav {
-    display:flex !important; flex-wrap:nowrap !important; overflow-x:auto !important;
-    scrollbar-width:none !important; -ms-overflow-style:none !important;
-    gap:4px !important; padding:2px 0 8px !important; margin:0 0 18px !important;
-    border-bottom:1px solid rgba(255,255,255,.08) !important;
-  }
-  body.dark #view-settings .settings-nav::-webkit-scrollbar { display:none !important; }
-  body.dark #view-settings .settings-nav button {
-    flex:0 0 auto !important; min-height:36px !important; padding:8px 13px !important;
-    border:0 !important; border-radius:9px !important; background:transparent !important;
-    color:#94a3b8 !important; box-shadow:none !important; font-size:11px !important;
-    font-weight:700 !important; white-space:nowrap !important;
-  }
-  body.dark #view-settings .settings-nav button.active {
-    color:#60a5fa !important; background:rgba(59,130,246,.10) !important;
-    box-shadow:none !important; position:relative;
-  }
-  body.dark #view-settings .settings-nav button.active::after {
-    content:""; position:absolute; left:12px; right:12px; bottom:-8px; height:2px;
-    background:#3b82f6; border-radius:2px; box-shadow:0 0 7px rgba(59,130,246,.45);
-  }
-  body.dark #view-settings .settings-profile-card,
-  body.dark #view-settings .settings-section,
-  body.dark #view-settings .section > .card {
-    background:#1e293b !important; border:1px solid rgba(255,255,255,.08) !important;
-    box-shadow:none !important; border-radius:14px !important;
-  }
-  body.dark #view-settings .settings-section { margin-bottom:10px !important; }
-  body.dark #view-settings .settings-label { font-size:13px !important; font-weight:750 !important; }
-  body.dark #view-settings .field-hint,
-  body.dark #view-settings .settings-section p,
-  body.dark #view-settings small { color:#94a3b8 !important; }
-
-  /* Remove excess visual chrome inside settings. */
-  body.dark #view-settings .settings-section > .settings-head,
-  body.dark #view-settings .settings-section > .section-head { box-shadow:none !important; }
-  body.dark #view-settings .settings-section .btn,
-  body.dark #view-settings .settings-section button:not(.settings-nav button) {
-    box-shadow:none !important;
-  }
-
-  /* Compact profile: identity first, actions second. */
-  body.dark #view-settings .settings-profile-card {
-    display:flex !important; flex-direction:column !important; gap:14px !important;
-    padding:16px !important;
-  }
-  body.dark #view-settings .settings-profile-card .profile-main,
-  body.dark #view-settings .settings-profile-card .profile-info,
-  body.dark #view-settings .settings-profile-card .profile-header {
-    display:flex !important; align-items:center !important; gap:12px !important;
-  }
-  body.dark #view-settings .settings-profile-card .avatar,
-  body.dark #view-settings .settings-profile-card img { flex:0 0 auto; }
-  body.dark #view-settings .settings-profile-card .profile-actions,
-  body.dark #view-settings .settings-profile-card .actions {
-    display:flex !important; gap:8px !important; width:100% !important;
-  }
-  body.dark #view-settings .settings-profile-card .profile-actions > *,
-  body.dark #view-settings .settings-profile-card .actions > * {
-    flex:1 1 0 !important; min-width:0 !important;
-  }
-
-  /* Five-item bottom navigation: quiet, spacious, no heavy container. */
-  body.dark .tabbar {
-    display:grid !important; grid-template-columns:repeat(5,1fr) !important;
-    gap:0 !important; background:rgba(15,23,42,.96) !important;
-    border-top:1px solid rgba(255,255,255,.08) !important;
-    box-shadow:0 -4px 18px rgba(0,0,0,.18) !important;
-    padding:6px 4px max(7px,env(safe-area-inset-bottom)) !important;
-  }
-  body.dark .tabbar > * { min-width:0 !important; }
-  body.dark .tabbar .tabbar-item { background:transparent !important; border:0 !important; box-shadow:none !important; }
-  body.dark .tabbar .tabbar-item.active { color:#60a5fa !important; }
-}
-</style>
-
-<style id="jadwal-v81-mode-switch-length">
-/* v81 — Pelajaran/Piket kembali dibuat lebih panjang seperti layout sebelumnya. */
-body.kelasku-authenticated #view-jadwal > .mode-switch{
-  width:min(100%, 560px) !important;
-  max-width:560px !important;
-  flex:0 0 560px !important;
-}
-body.kelasku-authenticated #view-jadwal > .mode-switch .mode-btn{
-  min-width:0 !important;
-  flex:1 1 0 !important;
-  padding-left:24px !important;
-  padding-right:24px !important;
-}
-@media(max-width:620px){
-  body.kelasku-authenticated #view-jadwal > .mode-switch{
-    width:100% !important;
-    max-width:none !important;
-    flex:0 0 auto !important;
-  }
-}
-</style>
-
-<style id="hp-v82-mobile-grid-only">
-/* v82 — Mobile Pengumpulan HP: tampilkan mode Grid saja agar toolbar tidak penuh. */
-@media (max-width: 760px){
-  #view-hp .hp-view-switcher [data-hp-view="rack"],
-  #view-hp .hp-view-switcher [data-hp-view="table"]{
-    display:none !important;
-  }
-  #view-hp .hp-view-switcher{
-    width:auto !important;
-    flex:0 0 auto !important;
-  }
-  #view-hp .hp-view-switcher [data-hp-view="grid"]{
-    display:inline-flex !important;
-    min-width:76px !important;
-    justify-content:center !important;
-  }
-}
-</style>
-
-<script id="hp-v82-mobile-grid-logic">
-(function(){
-  function forceMobileGrid(){
-    if(window.matchMedia && window.matchMedia('(max-width: 760px)').matches){
-      try{
-        if(typeof hpCommandViewMode !== 'undefined' && hpCommandViewMode !== 'grid') hpCommandViewMode='grid';
-      }catch(e){}
-      var gridBtn=document.querySelector('#view-hp [data-hp-view="grid"]');
-      if(gridBtn && !gridBtn.classList.contains('is-active')){
-        document.querySelectorAll('#view-hp [data-hp-view]').forEach(function(btn){btn.classList.remove('is-active')});
-        gridBtn.classList.add('is-active');
-      }
-      if(typeof renderHpCommandCenter==='function'){
-        try{renderHpCommandCenter()}catch(e){}
-      }
-    }
-  }
-  document.addEventListener('DOMContentLoaded', forceMobileGrid);
-  window.addEventListener('resize', forceMobileGrid);
-})();
-</script>
-
-<style id="hp-v84-desktop-readability-mobile-simplify">
-/* v84 — Pengumpulan HP: desktop lebih terbaca, mobile lebih ringkas. */
-@media (min-width: 761px){
-  #view-hp .hp-command-kicker{font-size:11px !important;letter-spacing:.11em !important}
-  #view-hp .hp-command-title-row h1{font-size:28px !important;line-height:1.15 !important}
-  #view-hp .hp-command-status{font-size:11px !important}
-  #view-hp .hp-command-heading p{font-size:13px !important;line-height:1.5 !important}
-
-  #view-hp .hp-date-overline{font-size:10px !important;letter-spacing:.1em !important}
-  #view-hp .hp-date-context strong{font-size:15px !important;line-height:1.3 !important}
-  #view-hp .hp-date-switcher > button{font-size:18px !important}
-  #view-hp .hp-date-switcher .hp-date-main{min-width:84px !important;min-height:42px !important;font-size:13px !important}
-  #view-hp .hp-date-switcher .hp-date-main #hp-command-date-short{font-size:13px !important}
-  #view-hp .hp-date-main-chevron{font-size:12px !important}
-
-  #view-hp .hp-metric-card{min-height:88px !important;padding:16px 17px !important}
-  #view-hp .hp-metric-icon{width:34px !important;height:34px !important;font-size:16px !important}
-  #view-hp .hp-metric-copy span{font-size:11px !important;line-height:1.25 !important}
-  #view-hp .hp-metric-copy strong{font-size:25px !important;line-height:1.05 !important}
-
-  #view-hp .hp-progress-card{padding:17px 18px !important}
-  #view-hp .hp-progress-kicker{font-size:10px !important}
-  #view-hp .hp-progress-head strong{font-size:15px !important}
-  #view-hp .hp-progress-pct{font-size:23px !important}
-  #view-hp .hp-progress-note{font-size:11px !important}
-
-  #view-hp .hp-view-switcher button{min-height:40px !important;padding:0 12px !important;font-size:12px !important}
-  #view-hp .hp-search-wrap input{font-size:12px !important}
-  #view-hp .hp-filter-row button{min-height:36px !important;padding:0 11px !important;font-size:11px !important}
-  #view-hp .hp-filter-row button span{min-width:21px !important;height:21px !important;font-size:9px !important}
-
-  #view-hp .hp-student-card{padding:15px !important}
-  #view-hp .hp-student-roll{font-size:9px !important}
-  #view-hp .hp-slot-tag{font-size:9px !important;padding:5px 8px !important}
-  #view-hp .hp-student-main{gap:11px !important;margin-top:12px !important}
-  #view-hp .hp-student-avatar{width:42px !important;height:42px !important;flex-basis:42px !important;font-size:12px !important}
-  #view-hp .hp-student-name{font-size:14px !important}
-  #view-hp .hp-student-sub{font-size:9.5px !important;margin-top:5px !important}
-  #view-hp .hp-student-footer{margin-top:12px !important;padding-top:10px !important}
-  #view-hp .hp-status-chip{font-size:9px !important;padding:6px 9px !important}
-  #view-hp .hp-quick-btn{font-size:10px !important;padding:7px 10px !important}
-}
-
-@media (max-width: 760px){
-  /* Karena mobile memakai Grid saja, kontrol pemilihan mode tidak perlu ditampilkan. */
-  #view-hp .hp-view-switcher{display:none !important}
-  #view-hp .hp-view-toolbar{display:block !important;margin-top:10px !important}
-  #view-hp .hp-search-wrap{width:100% !important;max-width:none !important}
-  #view-hp .hp-filter-row{margin-top:8px !important;gap:6px !important;padding:1px 1px 3px !important;overflow-x:auto !important;white-space:nowrap !important}
-  #view-hp .hp-filter-row button{flex:0 0 auto !important;min-height:34px !important;font-size:10px !important;padding:0 10px !important}
-  #view-hp .hp-filter-row button span{font-size:8px !important;min-width:19px !important;height:19px !important}
-}
-</style>
-
-<style id="jadwal-v85-tab-switch-fix">
-/* =========================================================
-   JADWAL v85 — Pelajaran / Piket compact responsive switch
-   Fix tombol melebar/meninggi mengikuti container parent.
-   ========================================================= */
-#view-jadwal > .mode-switch{
-  display:inline-flex !important;
-  flex-direction:row !important;
-  align-items:center !important;
-  justify-content:stretch !important;
-  gap:3px !important;
-  width:fit-content !important;
-  max-width:100% !important;
-  height:40px !important;
-  min-height:40px !important;
-  padding:4px !important;
-  margin:16px 0 0 !important;
-  box-sizing:border-box !important;
-  border-radius:10px !important;
-  overflow:hidden !important;
-  align-self:flex-start !important;
-  flex:0 0 auto !important;
-}
-
-#view-jadwal > .mode-switch .mode-btn{
-  display:flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-  flex:0 0 clamp(120px,24vw,260px) !important;
-  width:auto !important;
-  height:auto !important;
-  min-height:0 !important;
-  padding:0 20px !important;
-  margin:0 !important;
-  line-height:1 !important;
-  box-sizing:border-box !important;
-  white-space:nowrap !important;
-  align-self:center !important;
-  border-radius:8px !important;
-}
-
-/* Dark mode: keep the compact geometry while preserving contrast. */
-body.dark #view-jadwal > .mode-switch .mode-btn{
-  min-height:0 !important;
-  height:auto !important;
-}
-
-@media (max-width:620px){
-  #view-jadwal > .mode-switch{
-    width:fit-content !important;
-    max-width:100% !important;
-    height:40px !important;
-    min-height:40px !important;
-    padding:4px !important;
-    margin-top:16px !important;
-  }
-
-  #view-jadwal > .mode-switch .mode-btn{
-    flex-basis:clamp(120px, calc((100vw - 48px) / 2), 180px) !important;
-    padding:0 16px !important;
-    font-size:12px !important;
-  }
-}
-</style>
-
-<style id="dark-mode-readability-v83">
-/* v83 — Pastikan teks pada kontrol berlatar terang tetap kontras di Dark Mode. */
-body.dark #view-hp .hp-date-switcher .hp-date-main{
-  background:#f8fafc !important;
-  color:#172033 !important;
-  -webkit-text-fill-color:#172033 !important;
-  border-color:#f8fafc !important;
-  opacity:1 !important;
-  text-shadow:none !important;
-}
-body.dark #view-hp .hp-date-switcher .hp-date-main #hp-command-date-short{
-  color:#172033 !important;
-  -webkit-text-fill-color:#172033 !important;
-  font-weight:900 !important;
-}
-body.dark #view-hp .hp-date-switcher .hp-date-main .hp-date-main-chevron{
-  color:#475569 !important;
-  -webkit-text-fill-color:#475569 !important;
-  opacity:1 !important;
-}
-body.dark #view-hp .hp-filter-row button:not(.is-active){
-  background:#f8fafc !important;
-  color:#334155 !important;
-  -webkit-text-fill-color:#334155 !important;
-  border-color:#dbe3ef !important;
-  opacity:1 !important;
-}
-body.dark #view-hp .hp-filter-row button:not(.is-active) span{
-  background:#e2e8f0 !important;
-  color:#334155 !important;
-  -webkit-text-fill-color:#334155 !important;
-  opacity:1 !important;
-}
-body.dark #view-hp .hp-filter-row button.is-active{
-  background:#f8fafc !important;
-  color:#172033 !important;
-  -webkit-text-fill-color:#172033 !important;
-  border-color:#f8fafc !important;
-  opacity:1 !important;
-}
-body.dark #view-hp .hp-filter-row button.is-active span{
-  background:#e2e8f0 !important;
-  color:#334155 !important;
-  -webkit-text-fill-color:#334155 !important;
-  opacity:1 !important;
-}
-body.dark #view-tugas .task-pro-check-btn{
-  color:#172033 !important;
-  -webkit-text-fill-color:#172033 !important;
-  background:#eef2ff !important;
-  border-color:#c7d2fe !important;
-  opacity:1 !important;
-  text-shadow:none !important;
-}
-body.dark #view-tugas .task-pro-check-btn .task-pro-check-icon{
-  color:#172033 !important;
-  -webkit-text-fill-color:#172033 !important;
-  background:#ffffff !important;
-  border-color:#64748b !important;
-  opacity:1 !important;
-}
-body.dark #view-tugas .task-pro-check-btn.is-done{
-  color:#166534 !important;
-  -webkit-text-fill-color:#166534 !important;
-  background:#ecfdf5 !important;
-  border-color:#bbf7d0 !important;
-}
-body.dark #view-tugas .task-pro-check-btn.is-done .task-pro-check-icon{
-  color:#ffffff !important;
-  -webkit-text-fill-color:#ffffff !important;
-  background:#22c55e !important;
-  border-color:#22c55e !important;
-}
-</style>
-
-<style id="jadwal-responsive-switch-final">
-/* Pelajaran / Piket — responsif penuh mengikuti lebar layar/container */
-#view-jadwal > .mode-switch{
-  width:100% !important;
-  max-width:none !important;
-  box-sizing:border-box !important;
-
-  display:flex !important;
-  flex:1 1 100% !important;
-  align-items:stretch !important;
-  gap:6px !important;
-
-  height:clamp(40px, 4vw, 46px) !important;
-  min-height:40px !important;
-  padding:4px !important;
-  margin-left:0 !important;
-  margin-right:0 !important;
-  overflow:hidden !important;
-}
-
-#view-jadwal > .mode-switch .mode-btn{
-  flex:1 1 0 !important;
-  width:auto !important;
-  min-width:0 !important;
-  max-width:none !important;
-
-  height:100% !important;
-  min-height:0 !important;
-  max-height:none !important;
-  margin:0 !important;
-  padding:0 12px !important;
-  box-sizing:border-box !important;
-
-  display:flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-  text-align:center !important;
-  line-height:1.1 !important;
-  white-space:nowrap !important;
-  font-size:clamp(11px, 1.15vw, 13px) !important;
-}
-
-/* Desktop */
-@media (min-width:621px){
-  #view-jadwal > .mode-switch{
-    width:100% !important;
-  }
-}
-
-/* Mobile */
-@media (max-width:620px){
-  #view-jadwal > .mode-switch{
-    width:100% !important;
-    height:40px !important;
-    min-height:40px !important;
-    gap:4px !important;
-    padding:3px !important;
-  }
-
-  #view-jadwal > .mode-switch .mode-btn{
-    height:100% !important;
-    padding:0 8px !important;
-    font-size:12px !important;
-  }
-}
-</style>
 </head>
 
 <body>
@@ -20467,6 +19937,7 @@ body.kelasku-authenticated #view-jadwal.active{
   };
 })();
 </script>
+</body>
 <!-- Kelasku compatibility patch: resilient Firestore sync + legacy fallback -->
 
 <style id="piket-weekly-pro-ui-v61">
@@ -21411,63 +20882,7 @@ body:not(.dark) .view .tx-item{
 }
 </style>
 
-
-<style id="jadwal-v86-tab-size-fix">
-/* v86 — Pelajaran / Piket: ukuran tombol dibuat pas dengan container */
-#view-jadwal > .mode-switch{
-  display:flex !important;
-  flex-direction:row !important;
-  align-items:center !important;
-  gap:4px !important;
-  width:min(100%, 560px) !important;
-  max-width:560px !important;
-  height:40px !important;
-  min-height:40px !important;
-  padding:4px !important;
-  box-sizing:border-box !important;
-  overflow:hidden !important;
-  border-radius:10px !important;
-}
-
-#view-jadwal > .mode-switch .mode-btn{
-  flex:1 1 0 !important;
-  width:0 !important;
-  height:32px !important;
-  min-height:32px !important;
-  max-height:32px !important;
-  padding:0 !important;
-  margin:0 !important;
-  box-sizing:border-box !important;
-  display:flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-  line-height:1 !important;
-  white-space:nowrap !important;
-  border-radius:8px !important;
-}
-
-@media (max-width:620px){
-  #view-jadwal > .mode-switch{
-    width:100% !important;
-    max-width:none !important;
-    height:40px !important;
-    min-height:40px !important;
-  }
-
-  #view-jadwal > .mode-switch .mode-btn{
-    flex:1 1 0 !important;
-    width:0 !important;
-    height:32px !important;
-    min-height:32px !important;
-    max-height:32px !important;
-    padding:0 !important;
-    font-size:12px !important;
-  }
-}
-</style>
-
-
-
+</html>
 
 <style id="kelasku-settings-tabs-fix">
 .settings-nav{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 18px;}
@@ -22948,21 +22363,1080 @@ body.dark #view-kas .kas-folder-empty{background:#111c2f!important;border-color:
     const masuk=rows.filter(t=>t.jenis==='masuk').reduce((a,t)=>a+Number(t.jumlah||0),0), keluar=rows.filter(t=>t.jenis==='keluar').reduce((a,t)=>a+Number(t.jumlah||0),0);
     const folders=Array.isArray(state.kasFolders)?state.kasFolders:[];
     const html=`<!doctype html><html lang="id"><head><meta charset="utf-8"><title>Rekap Kas Kelas</title><style>body{font-family:Arial,sans-serif;color:#0f172a;padding:28px}h1{margin:0 0 4px;font-size:20px}p{margin:0 0 18px;color:#64748b;font-size:11px}.metrics{display:flex;gap:10px;margin-bottom:18px}.m{flex:1;border:1px solid #e2e8f0;border-radius:10px;padding:10px}.m small{display:block;color:#64748b;font-size:8px;text-transform:uppercase;font-weight:700}.m b{display:block;margin-top:5px;font-size:15px}table{width:100%;border-collapse:collapse;font-size:9px}th,td{padding:8px;border-bottom:1px solid #e2e8f0;text-align:left}th{background:#f8fafc;font-size:8px;text-transform:uppercase;color:#64748b}.folder{margin-top:18px;border:1px solid #e2e8f0;border-radius:10px;padding:12px}.folder h3{margin:0 0 6px;font-size:12px}.folder p{margin:0 0 7px;font-size:9px}.bar{height:6px;border-radius:999px;background:#eef2f7;overflow:hidden}.fill{height:100%;background:#4338ca}</style>
-
-
-
+<style id="hp-command-center-v72-layout-fix">
+/* v72 — Pengumpulan HP: legacy #hp-list membuat command center hanya mengambil 1/4 lebar layar. */
+#view-hp #hp-list.hp-command-list{
+  display:block !important;
+  width:100% !important;
+  min-width:0 !important;
+  max-width:none !important;
+  padding:0 !important;
+  margin:0 !important;
+  background:transparent !important;
+  border:0 !important;
+  box-sizing:border-box !important;
+}
+#view-hp #hp-list.hp-command-list > .hp-command-grid{
+  display:grid !important;
+  width:100% !important;
+  min-width:0 !important;
+  grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+  gap:10px !important;
+}
+#view-hp .hp-slot-tag.is-pending{color:#64748b !important;background:#f8fafc !important;border-color:#e2e8f0 !important}
+#view-hp .hp-slot-tag.is-occupied{color:#047857 !important;background:#ecfdf5 !important;border-color:#a7dfc2 !important}
+body.dark #view-hp .hp-slot-tag.is-pending{color:#cbd5e1 !important;background:#16243a !important;border-color:#334155 !important}
+body.dark #view-hp .hp-slot-tag.is-occupied{color:#86efac !important;background:#052e22 !important;border-color:#24583a !important}
+@media(max-width:1100px){#view-hp #hp-list.hp-command-list > .hp-command-grid{grid-template-columns:repeat(3,minmax(0,1fr)) !important}}
+@media(max-width:760px){#view-hp #hp-list.hp-command-list > .hp-command-grid{grid-template-columns:repeat(2,minmax(0,1fr)) !important}}
+@media(max-width:480px){#view-hp #hp-list.hp-command-list > .hp-command-grid{grid-template-columns:1fr !important}}
+</style>
 </head><body><h1>Kas Kelas — X TJKT 1</h1><p>Pencatatan kas transparan &amp; aman.</p><div class="metrics"><div class="m"><small>Total Kas Masuk</small><b>${money(masuk)}</b></div><div class="m"><small>Total Pengeluaran</small><b>${money(keluar)}</b></div><div class="m"><small>Sisa Saldo</small><b>${money(masuk-keluar)}</b></div></div><table><thead><tr><th>Tanggal</th><th>Keterangan</th><th>Jenis</th><th>Jumlah</th></tr></thead><tbody>${rows.map(t=>`<tr><td>${esc(t.tanggal||'-')}</td><td>${esc(t.ket||'-')}</td><td>${t.jenis==='masuk'?'Pemasukan':'Pengeluaran'}</td><td>${t.jenis==='masuk'?'+':'-'}${money(t.jumlah)}</td></tr>`).join('')}</tbody></table>${folders.map(f=>{const st=Array.isArray(f.students)?f.students:[],p=st.length?Math.round(st.filter(x=>x.status==='sudah').length/st.length*100):0;return `<div class="folder"><h3>${esc(f.name||'Kas Siswa')}</h3><p>${st.filter(x=>x.status==='sudah').length}/${st.length} siswa lunas</p><div class="bar"><div class="fill" style="width:${p}%"></div></div></div>`}).join('')}
+<style id="jadwal-v81-mode-switch-length">
+/* v81 — Pelajaran/Piket kembali dibuat lebih panjang seperti layout sebelumnya. */
+body.kelasku-authenticated #view-jadwal > .mode-switch{
+  width:min(100%, 560px) !important;
+  max-width:560px !important;
+  flex:0 0 560px !important;
+}
+body.kelasku-authenticated #view-jadwal > .mode-switch .mode-btn{
+  min-width:0 !important;
+  flex:1 1 0 !important;
+  padding-left:24px !important;
+  padding-right:24px !important;
+}
+@media(max-width:620px){
+  body.kelasku-authenticated #view-jadwal > .mode-switch{
+    width:100% !important;
+    max-width:none !important;
+    flex:0 0 auto !important;
+  }
+}
+</style>
+
+<style id="hp-v82-mobile-grid-only">
+/* v82 — Mobile Pengumpulan HP: tampilkan mode Grid saja agar toolbar tidak penuh. */
+@media (max-width: 760px){
+  #view-hp .hp-view-switcher [data-hp-view="rack"],
+  #view-hp .hp-view-switcher [data-hp-view="table"]{
+    display:none !important;
+  }
+  #view-hp .hp-view-switcher{
+    width:auto !important;
+    flex:0 0 auto !important;
+  }
+  #view-hp .hp-view-switcher [data-hp-view="grid"]{
+    display:inline-flex !important;
+    min-width:76px !important;
+    justify-content:center !important;
+  }
+}
+</style>
+<script id="hp-v82-mobile-grid-logic">
+(function(){
+  function forceMobileGrid(){
+    if(window.matchMedia && window.matchMedia('(max-width: 760px)').matches){
+      try{
+        if(typeof hpCommandViewMode !== 'undefined' && hpCommandViewMode !== 'grid') hpCommandViewMode='grid';
+      }catch(e){}
+      var gridBtn=document.querySelector('#view-hp [data-hp-view="grid"]');
+      if(gridBtn && !gridBtn.classList.contains('is-active')){
+        document.querySelectorAll('#view-hp [data-hp-view]').forEach(function(btn){btn.classList.remove('is-active')});
+        gridBtn.classList.add('is-active');
+      }
+      if(typeof renderHpCommandCenter==='function'){
+        try{renderHpCommandCenter()}catch(e){}
+      }
+    }
+  }
+  document.addEventListener('DOMContentLoaded', forceMobileGrid);
+  window.addEventListener('resize', forceMobileGrid);
+})();
+</script>
+
+<style id="hp-v84-desktop-readability-mobile-simplify">
+/* v84 — Pengumpulan HP: desktop lebih terbaca, mobile lebih ringkas. */
+@media (min-width: 761px){
+  #view-hp .hp-command-kicker{font-size:11px !important;letter-spacing:.11em !important}
+  #view-hp .hp-command-title-row h1{font-size:28px !important;line-height:1.15 !important}
+  #view-hp .hp-command-status{font-size:11px !important}
+  #view-hp .hp-command-heading p{font-size:13px !important;line-height:1.5 !important}
+
+  #view-hp .hp-date-overline{font-size:10px !important;letter-spacing:.1em !important}
+  #view-hp .hp-date-context strong{font-size:15px !important;line-height:1.3 !important}
+  #view-hp .hp-date-switcher > button{font-size:18px !important}
+  #view-hp .hp-date-switcher .hp-date-main{min-width:84px !important;min-height:42px !important;font-size:13px !important}
+  #view-hp .hp-date-switcher .hp-date-main #hp-command-date-short{font-size:13px !important}
+  #view-hp .hp-date-main-chevron{font-size:12px !important}
+
+  #view-hp .hp-metric-card{min-height:88px !important;padding:16px 17px !important}
+  #view-hp .hp-metric-icon{width:34px !important;height:34px !important;font-size:16px !important}
+  #view-hp .hp-metric-copy span{font-size:11px !important;line-height:1.25 !important}
+  #view-hp .hp-metric-copy strong{font-size:25px !important;line-height:1.05 !important}
+
+  #view-hp .hp-progress-card{padding:17px 18px !important}
+  #view-hp .hp-progress-kicker{font-size:10px !important}
+  #view-hp .hp-progress-head strong{font-size:15px !important}
+  #view-hp .hp-progress-pct{font-size:23px !important}
+  #view-hp .hp-progress-note{font-size:11px !important}
+
+  #view-hp .hp-view-switcher button{min-height:40px !important;padding:0 12px !important;font-size:12px !important}
+  #view-hp .hp-search-wrap input{font-size:12px !important}
+  #view-hp .hp-filter-row button{min-height:36px !important;padding:0 11px !important;font-size:11px !important}
+  #view-hp .hp-filter-row button span{min-width:21px !important;height:21px !important;font-size:9px !important}
+
+  #view-hp .hp-student-card{padding:15px !important}
+  #view-hp .hp-student-roll{font-size:9px !important}
+  #view-hp .hp-slot-tag{font-size:9px !important;padding:5px 8px !important}
+  #view-hp .hp-student-main{gap:11px !important;margin-top:12px !important}
+  #view-hp .hp-student-avatar{width:42px !important;height:42px !important;flex-basis:42px !important;font-size:12px !important}
+  #view-hp .hp-student-name{font-size:14px !important}
+  #view-hp .hp-student-sub{font-size:9.5px !important;margin-top:5px !important}
+  #view-hp .hp-student-footer{margin-top:12px !important;padding-top:10px !important}
+  #view-hp .hp-status-chip{font-size:9px !important;padding:6px 9px !important}
+  #view-hp .hp-quick-btn{font-size:10px !important;padding:7px 10px !important}
+}
+
+@media (max-width: 760px){
+  /* Karena mobile memakai Grid saja, kontrol pemilihan mode tidak perlu ditampilkan. */
+  #view-hp .hp-view-switcher{display:none !important}
+  #view-hp .hp-view-toolbar{display:block !important;margin-top:10px !important}
+  #view-hp .hp-search-wrap{width:100% !important;max-width:none !important}
+  #view-hp .hp-filter-row{margin-top:8px !important;gap:6px !important;padding:1px 1px 3px !important;overflow-x:auto !important;white-space:nowrap !important}
+  #view-hp .hp-filter-row button{flex:0 0 auto !important;min-height:34px !important;font-size:10px !important;padding:0 10px !important}
+  #view-hp .hp-filter-row button span{font-size:8px !important;min-width:19px !important;height:19px !important}
+}
+</style>
+
+<style id="jadwal-v85-tab-switch-fix">
+/* =========================================================
+   JADWAL v85 — Pelajaran / Piket compact responsive switch
+   Fix tombol melebar/meninggi mengikuti container parent.
+   ========================================================= */
+#view-jadwal > .mode-switch{
+  display:inline-flex !important;
+  flex-direction:row !important;
+  align-items:center !important;
+  justify-content:stretch !important;
+  gap:3px !important;
+  width:fit-content !important;
+  max-width:100% !important;
+  height:40px !important;
+  min-height:40px !important;
+  padding:4px !important;
+  margin:16px 0 0 !important;
+  box-sizing:border-box !important;
+  border-radius:10px !important;
+  overflow:hidden !important;
+  align-self:flex-start !important;
+  flex:0 0 auto !important;
+}
+
+#view-jadwal > .mode-switch .mode-btn{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  flex:0 0 clamp(120px,24vw,260px) !important;
+  width:auto !important;
+  height:auto !important;
+  min-height:0 !important;
+  padding:0 20px !important;
+  margin:0 !important;
+  line-height:1 !important;
+  box-sizing:border-box !important;
+  white-space:nowrap !important;
+  align-self:center !important;
+  border-radius:8px !important;
+}
+
+/* Dark mode: keep the compact geometry while preserving contrast. */
+body.dark #view-jadwal > .mode-switch .mode-btn{
+  min-height:0 !important;
+  height:auto !important;
+}
+
+@media (max-width:620px){
+  #view-jadwal > .mode-switch{
+    width:fit-content !important;
+    max-width:100% !important;
+    height:40px !important;
+    min-height:40px !important;
+    padding:4px !important;
+    margin-top:16px !important;
+  }
+
+  #view-jadwal > .mode-switch .mode-btn{
+    flex-basis:clamp(120px, calc((100vw - 48px) / 2), 180px) !important;
+    padding:0 16px !important;
+    font-size:12px !important;
+  }
+}
+</style>
 
 
+<style id="kelasku-worldclass-redesign-v1">
+/* ==========================================================
+   KELASKU — WORLD-CLASS UI/UX REDESIGN
+   Visual layer only: existing data/state/handlers are preserved.
+   ========================================================== */
+:root{
+  --wc-bg:#f8fafc;
+  --wc-surface:#ffffff;
+  --wc-surface-2:#f1f5f9;
+  --wc-surface-3:#eaf0f7;
+  --wc-border:#dbe3ee;
+  --wc-border-strong:#cbd5e1;
+  --wc-text:#0f172a;
+  --wc-text-2:#334155;
+  --wc-muted:#64748b;
+  --wc-placeholder:#94a3b8;
+  --wc-primary:#2563eb;
+  --wc-primary-hover:#1d4ed8;
+  --wc-primary-soft:rgba(37,99,235,.10);
+  --wc-success:#15803d;
+  --wc-warning:#b45309;
+  --wc-danger:#b91c1c;
+  --wc-radius-sm:8px;
+  --wc-radius-md:12px;
+  --wc-radius-lg:16px;
+  --wc-radius-xl:20px;
+  --wc-shadow:0 8px 28px rgba(15,23,42,.07);
+  --wc-shadow-hover:0 12px 32px rgba(15,23,42,.10);
+  --wc-ease:cubic-bezier(.2,.7,.2,1);
+}
 
+body.dark{
+  --wc-bg:#0f172a;
+  --wc-surface:#1e293b;
+  --wc-surface-2:#172235;
+  --wc-surface-3:#243248;
+  --wc-border:rgba(255,255,255,.08);
+  --wc-border-strong:rgba(255,255,255,.14);
+  --wc-text:#f8fafc;
+  --wc-text-2:#e2e8f0;
+  --wc-muted:#a7b4c7;
+  --wc-placeholder:#94a3b8;
+  --wc-primary:#3b82f6;
+  --wc-primary-hover:#60a5fa;
+  --wc-primary-soft:rgba(59,130,246,.14);
+  --wc-success:#4ade80;
+  --wc-warning:#fbbf24;
+  --wc-danger:#f87171;
+  --wc-shadow:0 10px 30px rgba(0,0,0,.16);
+  --wc-shadow-hover:0 14px 36px rgba(0,0,0,.22);
+}
 
+/* ---------- global canvas ---------- */
+html,body{
+  max-width:100%;
+  overflow-x:hidden !important;
+  background:var(--wc-bg);
+}
+body,
+button,input,select,textarea{
+  font-family:inherit;
+}
 
+body.dark .phone,
+body.dark .screen,
+body.dark .content,
+body.dark .main-content,
+body.dark .view{
+  background:var(--wc-bg) !important;
+}
 
+.phone,
+.screen,
+.content,
+.main-content,
+.view{
+  min-width:0 !important;
+  max-width:100% !important;
+  box-sizing:border-box !important;
+}
 
+.content,
+.main-content{
+  overflow-x:hidden !important;
+}
 
+.view{
+  overflow:visible !important;
+  overflow-wrap:anywhere;
+}
+
+/* ---------- desktop canvas ---------- */
+@media (min-width:901px){
+  .phone>.screen{
+    min-width:0 !important;
+    padding:28px clamp(24px,3vw,48px) 40px !important;
+  }
+
+  .screen .view{
+    width:100% !important;
+    max-width:1280px !important;
+    margin-inline:auto !important;
+  }
+}
+
+/* ---------- typography ---------- */
+.view h1,.view h2,.view h3,.view h4,
+.pagehead h1,.section-title{
+  color:var(--wc-text) !important;
+  letter-spacing:-.025em;
+}
+
+.view p,
+.pagehead p,
+.section-subtitle,
+.muted,
+.text-muted{
+  color:var(--wc-muted) !important;
+}
+
+.view strong,
+.view b,
+.view label,
+.view .settings-label,
+.view .section-title{
+  color:var(--wc-text) !important;
+}
+
+/* Never hide meaningful text merely because a desktop width is smaller. */
+.view .card,
+.view .panel,
+.view .section,
+.view .settings-section,
+.view .dashboard-card,
+.view .task-column,
+.view .task-pro-card,
+.view .report-item,
+.view .timeline-card,
+.view .summary-box,
+.view .piket-jadwal-row{
+  min-width:0 !important;
+  max-width:100% !important;
+  overflow-wrap:anywhere;
+}
+
+/* ---------- unified surfaces ---------- */
+.view .card,
+.view .panel,
+.view .section>.card,
+.view .dashboard-card,
+.view .settings-section,
+.view .task-column,
+.view .task-pro-card,
+.view .report-item,
+.view .report-chart-card,
+.view .report-kpi-card,
+.view .summary-box,
+.view .timeline-card,
+.view .piket-person,
+.view .piket-jadwal-row{
+  border:1px solid var(--wc-border) !important;
+  border-radius:var(--wc-radius-lg) !important;
+  box-shadow:var(--wc-shadow) !important;
+  background:var(--wc-surface) !important;
+}
+
+body.dark .view .card,
+body.dark .view .panel,
+body.dark .view .section>.card,
+body.dark .view .dashboard-card,
+body.dark .view .settings-section,
+body.dark .view .task-column,
+body.dark .view .task-pro-card,
+body.dark .view .report-item,
+body.dark .view .report-chart-card,
+body.dark .view .report-kpi-card,
+body.dark .view .summary-box,
+body.dark .view .timeline-card,
+body.dark .view .piket-person,
+body.dark .view .piket-jadwal-row{
+  background:var(--wc-surface) !important;
+  border-color:var(--wc-border) !important;
+  box-shadow:var(--wc-shadow) !important;
+}
+
+.view .card:hover,
+.view .panel:hover,
+.view .dashboard-card:hover,
+.view .task-pro-card:hover,
+.view .report-item:hover{
+  border-color:var(--wc-border-strong) !important;
+  box-shadow:var(--wc-shadow-hover) !important;
+}
+
+/* ---------- consistent rhythm ---------- */
+.view .pagehead{
+  margin-bottom:18px !important;
+}
+.view .section{
+  margin-top:18px !important;
+  margin-bottom:18px !important;
+}
+.view .section:first-child{
+  margin-top:0 !important;
+}
+.view .section-head{
+  min-width:0 !important;
+  margin-bottom:10px !important;
+  gap:10px !important;
+}
+
+/* ---------- buttons: fit content, never stretched ---------- */
+.view button,
+.view .btn,
+.view .section-link,
+.view .day-chip,
+.view .mode-btn,
+.view .bulk-all-btn,
+.view .kas-history-toggle,
+.view .fab-add{
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+  font-family:inherit;
+}
+
+.view .btn,
+.view .section-link,
+.view .day-chip,
+.view .mode-btn,
+.view .bulk-all-btn,
+.view .kas-history-toggle{
+  min-height:40px !important;
+  padding:9px 13px !important;
+  border-radius:10px !important;
+  white-space:normal !important;
+  overflow-wrap:anywhere !important;
+}
+
+.view button:not(:disabled),
+.view .btn:not(:disabled),
+.view .section-link:not(:disabled){
+  cursor:pointer;
+}
+
+.view button:disabled,
+.view .btn:disabled{
+  cursor:not-allowed;
+  opacity:.58;
+}
+
+/* ---------- inputs: WCAG-friendly contrast ---------- */
+.view input,
+.view select,
+.view textarea{
+  min-width:0 !important;
+  max-width:100% !important;
+  color:var(--wc-text) !important;
+  background:var(--wc-surface) !important;
+  border-color:var(--wc-border-strong) !important;
+}
+
+.view input::placeholder,
+.view textarea::placeholder{
+  color:var(--wc-placeholder) !important;
+  opacity:1 !important;
+}
+
+.view input:focus,
+.view select:focus,
+.view textarea:focus{
+  outline:none !important;
+  border-color:var(--wc-primary) !important;
+  box-shadow:0 0 0 3px var(--wc-primary-soft) !important;
+}
+
+/* Light mode buttons with light backgrounds must use dark text. */
+body:not(.dark) .view .btn:not(.btn-primary):not(.fab-add),
+body:not(.dark) .view .section-link,
+body:not(.dark) .view .day-chip,
+body:not(.dark) .view .mode-btn:not(.active),
+body:not(.dark) .view .kas-history-toggle{
+  color:#1e293b !important;
+  -webkit-text-fill-color:#1e293b !important;
+}
+
+body.dark .view .btn:not(.btn-primary):not(.fab-add),
+body.dark .view .section-link,
+body.dark .view .day-chip,
+body.dark .view .mode-btn:not(.active),
+body.dark .view .kas-history-toggle{
+  color:#f8fafc !important;
+  -webkit-text-fill-color:#f8fafc !important;
+}
+
+/* ---------- tab groups ---------- */
+.view .day-tabs,
+.view .settings-nav,
+.view .mode-switch{
+  display:flex !important;
+  align-items:center !important;
+  gap:5px !important;
+  min-width:0 !important;
+  max-width:100% !important;
+  box-sizing:border-box !important;
+}
+
+.view .day-tabs,
+.view .settings-nav{
+  flex-wrap:nowrap !important;
+  overflow-x:auto !important;
+  overflow-y:hidden !important;
+  scrollbar-width:none !important;
+  -webkit-overflow-scrolling:touch;
+}
+.view .day-tabs::-webkit-scrollbar,
+.view .settings-nav::-webkit-scrollbar{
+  display:none !important;
+}
+
+.view .day-tabs>* ,
+.view .settings-nav>*{
+  flex:0 0 auto !important;
+  width:fit-content !important;
+  max-width:none !important;
+  white-space:nowrap !important;
+}
+
+/* Jadwal Pelajaran/Piket: compact segmented control. */
+#view-jadwal .mode-switch{
+  width:fit-content !important;
+  max-width:100% !important;
+  flex:0 0 auto !important;
+  flex-wrap:nowrap !important;
+  padding:4px !important;
+  border:1px solid var(--wc-border) !important;
+  border-radius:12px !important;
+  background:var(--wc-surface-2) !important;
+}
+#view-jadwal .mode-switch .mode-btn{
+  flex:0 0 auto !important;
+  width:fit-content !important;
+  min-width:100px !important;
+  min-height:34px !important;
+  padding:7px 16px !important;
+  border-radius:8px !important;
+  white-space:nowrap !important;
+}
+#view-jadwal .mode-switch .mode-btn.active{
+  color:#fff !important;
+  background:var(--wc-primary) !important;
+  border-color:var(--wc-primary) !important;
+  box-shadow:0 4px 14px rgba(37,99,235,.22) !important;
+}
+
+/* ---------- Jadwal: responsive structure ---------- */
+#view-jadwal .jadwal-pro-grid,
+#view-jadwal .jadwal-grid,
+#view-jadwal .lesson-grid{
+  width:100% !important;
+  min-width:0 !important;
+}
+
+#view-jadwal .jadwal-pro-grid,
+#view-jadwal .jadwal-grid{
+  grid-template-columns:repeat(5,minmax(0,1fr)) !important;
+  gap:12px !important;
+}
+
+#view-jadwal .timeline-card,
+#view-jadwal .jadwal-card,
+#view-jadwal .schedule-card{
+  min-width:0 !important;
+  overflow-wrap:anywhere !important;
+}
+
+#view-jadwal .day-chip{
+  flex:0 0 auto !important;
+  width:fit-content !important;
+  min-width:fit-content !important;
+  white-space:nowrap !important;
+}
+
+/* ---------- Kas ---------- */
+#view-kas .summary-row,
+#view-kas .kas-summary,
+#view-kas .kas-actions{
+  min-width:0 !important;
+  max-width:100% !important;
+}
+#view-kas .summary-row{
+  display:grid !important;
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  gap:10px !important;
+}
+#view-kas .balance-value{
+  overflow-wrap:anywhere !important;
+}
+
+/* ---------- HP ---------- */
+#view-hp .summary-row{
+  display:grid !important;
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  gap:10px !important;
+}
+#view-hp .hp-command-actions,
+#view-hp .hp-slot,
+#view-hp .hp-card{
+  min-width:0 !important;
+  max-width:100% !important;
+}
+
+/* ---------- Tugas ---------- */
+#view-tugas .task-columns,
+#view-tugas .task-board,
+#view-tugas .task-grid{
+  min-width:0 !important;
+  max-width:100% !important;
+}
+#view-tugas .task-column{
+  min-width:0 !important;
+}
+#view-tugas .task-pro-title,
+#view-tugas .task-pro-desc,
+#view-tugas .task-pro-meta{
+  overflow-wrap:anywhere !important;
+  white-space:normal !important;
+}
+
+/* ---------- Laporan ---------- */
+#view-laporan .section-head > div:last-child,
+#view-laporan .report-toolbar,
+#view-laporan .report-actions{
+  min-width:0 !important;
+  max-width:100% !important;
+}
+#view-laporan #report-search{
+  width:min(260px,100%) !important;
+  min-width:0 !important;
+}
+#view-laporan .report-item *{
+  max-width:100%;
+  overflow-wrap:anywhere;
+}
+
+/* ---------- Settings ---------- */
+#view-settings .settings-nav{
+  width:fit-content !important;
+  max-width:100% !important;
+  padding-bottom:2px !important;
+}
+#view-settings .settings-nav button{
+  flex:0 0 auto !important;
+  width:fit-content !important;
+  min-width:max-content !important;
+  min-height:38px !important;
+  padding:8px 13px !important;
+  border-radius:10px !important;
+  white-space:nowrap !important;
+}
+#view-settings .settings-section,
+#view-settings .settings-profile-card{
+  min-width:0 !important;
+  max-width:100% !important;
+}
+
+/* ---------- tables / dense lists ---------- */
+.view table{
+  width:100% !important;
+  max-width:100% !important;
+  border-collapse:separate !important;
+  border-spacing:0 !important;
+}
+.view .table-wrap,
+.view .table-responsive,
+.view .overflow-x-auto{
+  max-width:100% !important;
+  overflow-x:auto !important;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:thin;
+}
+.view th,
+.view td{
+  overflow-wrap:anywhere;
+}
+
+/* ---------- desktop sidebar ---------- */
+@media (min-width:901px){
+  .desktop-sidebar{
+    border-right:1px solid var(--wc-border) !important;
+    background:var(--wc-surface) !important;
+  }
+  body.dark .desktop-sidebar{
+    background:#111c2f !important;
+  }
+  .desktop-nav-item{
+    min-height:42px !important;
+    margin:3px 8px !important;
+    padding:9px 12px !important;
+    border-radius:10px !important;
+  }
+  .desktop-nav-item.active{
+    background:var(--wc-primary-soft) !important;
+    color:var(--wc-primary) !important;
+  }
+}
+
+/* ---------- mobile canvas ---------- */
+@media (max-width:900px){
+  .phone,
+  .phone>.screen,
+  .content,
+  .main-content{
+    width:100% !important;
+    max-width:100vw !important;
+    min-width:0 !important;
+  }
+
+  .phone>.screen{
+    overflow-x:hidden !important;
+  }
+
+  .view{
+    width:100% !important;
+    max-width:100% !important;
+    padding-inline:0 !important;
+  }
+
+  .view .pagehead{
+    margin-bottom:14px !important;
+  }
+
+  .view .pagehead h1{
+    font-size:clamp(20px,5.5vw,25px) !important;
+    line-height:1.2 !important;
+  }
+
+  .view .section{
+    margin-top:14px !important;
+    margin-bottom:14px !important;
+  }
+
+  .view .card,
+  .view .panel,
+  .view .section>.card,
+  .view .settings-section,
+  .view .task-column,
+  .view .task-pro-card,
+  .view .report-item{
+    border-radius:14px !important;
+  }
+
+  /* Buttons stay content-sized instead of becoming giant bars. */
+  .view .btn,
+  .view .section-link,
+  .view .day-chip,
+  .view .mode-btn,
+  .view .bulk-all-btn,
+  .view .kas-history-toggle{
+    min-height:38px !important;
+  }
+
+  /* Main bottom navigation: five roomy primary destinations.
+     Tugas + Laporan are moved to the More item by the small JS below. */
+  .tabbar{
+    display:grid !important;
+    grid-template-columns:repeat(5,minmax(0,1fr)) !important;
+    align-items:stretch !important;
+    gap:4px !important;
+    width:100% !important;
+    min-width:0 !important;
+    padding:6px 7px max(7px,env(safe-area-inset-bottom)) !important;
+    background:var(--wc-surface) !important;
+    border-top:1px solid var(--wc-border) !important;
+    box-shadow:0 -8px 24px rgba(15,23,42,.08) !important;
+  }
+  body.dark .tabbar{
+    background:#111c2f !important;
+    border-top-color:var(--wc-border) !important;
+    box-shadow:0 -8px 24px rgba(0,0,0,.18) !important;
+  }
+  .tabbar .tab{
+    min-width:0 !important;
+    width:100% !important;
+    min-height:52px !important;
+    padding:6px 3px !important;
+    border-radius:10px !important;
+    color:var(--wc-muted) !important;
+    background:transparent !important;
+    white-space:normal !important;
+  }
+  .tabbar .tab svg{
+    width:21px !important;
+    height:21px !important;
+  }
+  .tabbar .tab.active{
+    color:var(--wc-primary) !important;
+    background:var(--wc-primary-soft) !important;
+  }
+
+  /* More menu created by JS */
+  .wc-more-menu{
+    position:fixed;
+    right:10px;
+    bottom:calc(72px + env(safe-area-inset-bottom));
+    z-index:10050;
+    width:min(230px,calc(100vw - 20px));
+    padding:7px;
+    border:1px solid var(--wc-border-strong);
+    border-radius:14px;
+    background:var(--wc-surface);
+    box-shadow:0 18px 45px rgba(15,23,42,.22);
+  }
+  .wc-more-menu[hidden]{display:none !important;}
+  .wc-more-menu button{
+    width:100%;
+    min-height:42px;
+    padding:9px 11px;
+    border:0;
+    border-radius:9px;
+    background:transparent;
+    color:var(--wc-text);
+    text-align:left;
+    font:inherit;
+    font-size:12px;
+    font-weight:700;
+  }
+  .wc-more-menu button:hover,
+  .wc-more-menu button:focus-visible{
+    background:var(--wc-primary-soft);
+    color:var(--wc-primary);
+    outline:none;
+  }
+
+  /* Stats never force a page wider than the phone. */
+  #view-kas .summary-row,
+  #view-hp .summary-row{
+    grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  }
+}
+
+@media (max-width:520px){
+  .view .section-head{
+    align-items:flex-start !important;
+  }
+
+  .view .section-head,
+  .view .toolbar,
+  .view .actions,
+  .view .section-actions{
+    flex-wrap:wrap !important;
+  }
+
+  #view-jadwal .mode-switch{
+    max-width:100% !important;
+  }
+  #view-jadwal .mode-switch .mode-btn{
+    min-width:88px !important;
+    padding-inline:12px !important;
+  }
+
+  #view-settings .settings-nav{
+    width:100% !important;
+  }
+
+  #view-laporan .section-head > div:last-child{
+    width:100% !important;
+    flex-wrap:wrap !important;
+  }
+  #view-laporan #report-search{
+    flex:1 1 150px !important;
+  }
+}
+
+@media (max-width:390px){
+  .view .card,
+  .view .panel,
+  .view .section>.card{
+    border-radius:12px !important;
+  }
+  .tabbar .tab{
+    min-height:50px !important;
+    font-size:9px !important;
+  }
+  .tabbar .tab svg{
+    width:20px !important;
+    height:20px !important;
+  }
+}
+
+/* Landscape phones: use horizontal control rows without forcing width. */
+@media (max-width:900px) and (orientation:landscape){
+  .view .pagehead{
+    margin-bottom:10px !important;
+  }
+  .view .section{
+    margin-top:12px !important;
+    margin-bottom:12px !important;
+  }
+  .tabbar .tab{
+    min-height:46px !important;
+  }
+}
+
+/* Accessibility */
+:focus-visible{
+  outline:2px solid var(--wc-primary) !important;
+  outline-offset:2px !important;
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.001ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.001ms !important;
+    scroll-behavior:auto !important;
+  }
+}
+</style>
+
+<script id="kelasku-worldclass-mobile-more-v1">
+(function(){
+  'use strict';
+  function initMoreNav(){
+    const bar=document.querySelector('.tabbar');
+    if(!bar || bar.dataset.wcMoreReady==='1') return;
+    const tugas=bar.querySelector('.tab[data-tab="tugas"]');
+    const laporan=bar.querySelector('.tab[data-tab="laporan"]');
+    if(!tugas || !laporan) return;
+
+    bar.dataset.wcMoreReady='1';
+
+    const more=document.createElement('button');
+    more.type='button';
+    more.className='tab wc-more-tab';
+    more.setAttribute('aria-haspopup','menu');
+    more.setAttribute('aria-expanded','false');
+    more.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.6" fill="currentColor" stroke="none"></circle><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"></circle><circle cx="19" cy="12" r="1.6" fill="currentColor" stroke="none"></circle></svg><span>Lainnya</span>';
+
+    const menu=document.createElement('div');
+    menu.className='wc-more-menu';
+    menu.hidden=true;
+    menu.setAttribute('role','menu');
+    menu.innerHTML='<button type="button" role="menuitem" data-more-target="tugas">Tugas</button><button type="button" role="menuitem" data-more-target="laporan">Laporan</button>';
+    document.body.appendChild(menu);
+
+    function close(){
+      menu.hidden=true;
+      more.setAttribute('aria-expanded','false');
+    }
+    function open(){
+      menu.hidden=false;
+      more.setAttribute('aria-expanded','true');
+    }
+
+    more.addEventListener('click',function(e){
+      e.stopPropagation();
+      menu.hidden ? open() : close();
+    });
+
+    menu.addEventListener('click',function(e){
+      const btn=e.target.closest('[data-more-target]');
+      if(!btn) return;
+      const target=btn.dataset.moreTarget;
+      close();
+      if(typeof window.goTo==='function') window.goTo(target);
+    });
+
+    document.addEventListener('click',function(e){
+      if(!menu.hidden && !menu.contains(e.target) && e.target!==more) close();
+    });
+
+    window.addEventListener('resize',function(){
+      if(window.innerWidth>900) close();
+    });
+
+    bar.insertBefore(more,tugas);
+    tugas.style.display='none';
+    laporan.style.display='none';
+  }
+
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',initMoreNav,{once:true});
+  }else{
+    initMoreNav();
+  }
+})();
+</script>
 </body>
 
-
+<style id="dark-mode-readability-v83">
+/* v83 — Pastikan teks pada kontrol berlatar terang tetap kontras di Dark Mode. */
+body.dark #view-hp .hp-date-switcher .hp-date-main{
+  background:#f8fafc !important;
+  color:#172033 !important;
+  -webkit-text-fill-color:#172033 !important;
+  border-color:#f8fafc !important;
+  opacity:1 !important;
+  text-shadow:none !important;
+}
+body.dark #view-hp .hp-date-switcher .hp-date-main #hp-command-date-short{
+  color:#172033 !important;
+  -webkit-text-fill-color:#172033 !important;
+  font-weight:900 !important;
+}
+body.dark #view-hp .hp-date-switcher .hp-date-main .hp-date-main-chevron{
+  color:#475569 !important;
+  -webkit-text-fill-color:#475569 !important;
+  opacity:1 !important;
+}
+body.dark #view-hp .hp-filter-row button:not(.is-active){
+  background:#f8fafc !important;
+  color:#334155 !important;
+  -webkit-text-fill-color:#334155 !important;
+  border-color:#dbe3ef !important;
+  opacity:1 !important;
+}
+body.dark #view-hp .hp-filter-row button:not(.is-active) span{
+  background:#e2e8f0 !important;
+  color:#334155 !important;
+  -webkit-text-fill-color:#334155 !important;
+  opacity:1 !important;
+}
+body.dark #view-hp .hp-filter-row button.is-active{
+  background:#f8fafc !important;
+  color:#172033 !important;
+  -webkit-text-fill-color:#172033 !important;
+  border-color:#f8fafc !important;
+  opacity:1 !important;
+}
+body.dark #view-hp .hp-filter-row button.is-active span{
+  background:#e2e8f0 !important;
+  color:#334155 !important;
+  -webkit-text-fill-color:#334155 !important;
+  opacity:1 !important;
+}
+body.dark #view-tugas .task-pro-check-btn{
+  color:#172033 !important;
+  -webkit-text-fill-color:#172033 !important;
+  background:#eef2ff !important;
+  border-color:#c7d2fe !important;
+  opacity:1 !important;
+  text-shadow:none !important;
+}
+body.dark #view-tugas .task-pro-check-btn .task-pro-check-icon{
+  color:#172033 !important;
+  -webkit-text-fill-color:#172033 !important;
+  background:#ffffff !important;
+  border-color:#64748b !important;
+  opacity:1 !important;
+}
+body.dark #view-tugas .task-pro-check-btn.is-done{
+  color:#166534 !important;
+  -webkit-text-fill-color:#166534 !important;
+  background:#ecfdf5 !important;
+  border-color:#bbf7d0 !important;
+}
+body.dark #view-tugas .task-pro-check-btn.is-done .task-pro-check-icon{
+  color:#ffffff !important;
+  -webkit-text-fill-color:#ffffff !important;
+  background:#22c55e !important;
+  border-color:#22c55e !important;
+}
+</style>
 </html>`;
     const w=window.open('','_blank','width=900,height=700');if(!w){showNotification('Popup diblokir browser. Izinkan popup untuk mencetak PDF.','warning');return;}w.document.write(html);w.document.close();w.focus();setTimeout(()=>w.print(),250);
   };
@@ -22983,5 +23457,3 @@ body.dark #view-kas .kas-folder-empty{background:#111c2f!important;border-color:
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else setTimeout(boot,0);
 })();
 </script>
-</body>
-</html>
