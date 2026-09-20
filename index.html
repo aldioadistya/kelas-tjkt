@@ -9081,6 +9081,105 @@ body.dark #app-global-actions .kas71-global-actions .kas71-export{
   #view-hp .hp-student-name { font-size: 12.5px !important; }
 }
 </style>
+
+<style id="mobile-dark-buttons-final">
+/* =========================================================
+   MOBILE DARK — tombol lebih terang & konsisten
+   Berlaku ke tombol umum, bukan hanya Pelajaran/Piket.
+   ========================================================= */
+@media (max-width:900px){
+  body.dark .view button:not(.fab-add):not(.btn-primary):not(.primary):not(.btn-danger):not(.danger),
+  body.dark .view .btn:not(.btn-primary):not(.primary):not(.btn-danger):not(.danger),
+  body.dark .view .section-action:not(.primary),
+  body.dark .view .section-link,
+  body.dark .view .toggle-btn,
+  body.dark .view .day-chip:not(.active),
+  body.dark .view .task-filter-tab:not(.active),
+  body.dark .view .report-action-btn:not(.primary),
+  body.dark .view .kas-history-toggle,
+  body.dark .view .bulk-all-btn,
+  body.dark .view .mode-btn:not(.active){
+    background:#1e293b !important;
+    color:#e2e8f0 !important;
+    -webkit-text-fill-color:#e2e8f0 !important;
+    border:1px solid #3b4b63 !important;
+    box-shadow:none !important;
+    text-shadow:none !important;
+  }
+
+  body.dark .view button:not(.fab-add):not(.btn-primary):not(.primary):not(.btn-danger):not(.danger):hover,
+  body.dark .view .btn:not(.btn-primary):not(.primary):not(.btn-danger):not(.danger):hover,
+  body.dark .view .section-action:not(.primary):hover,
+  body.dark .view .section-link:hover,
+  body.dark .view .toggle-btn:hover,
+  body.dark .view .day-chip:not(.active):hover,
+  body.dark .view .task-filter-tab:not(.active):hover,
+  body.dark .view .report-action-btn:not(.primary):hover,
+  body.dark .view .kas-history-toggle:hover,
+  body.dark .view .bulk-all-btn:hover,
+  body.dark .view .mode-btn:not(.active):hover{
+    background:#26364d !important;
+    color:#f8fafc !important;
+    -webkit-text-fill-color:#f8fafc !important;
+    border-color:#526783 !important;
+    box-shadow:none !important;
+  }
+
+  body.dark .view button:not(.fab-add):not(.btn-primary):not(.primary):not(.btn-danger):not(.danger):active,
+  body.dark .view .btn:not(.btn-primary):not(.primary):not(.btn-danger):not(.danger):active,
+  body.dark .view .section-action:not(.primary):active,
+  body.dark .view .section-link:active,
+  body.dark .view .toggle-btn:active,
+  body.dark .view .day-chip:not(.active):active,
+  body.dark .view .task-filter-tab:not(.active):active,
+  body.dark .view .report-action-btn:not(.primary):active,
+  body.dark .view .kas-history-toggle:active,
+  body.dark .view .bulk-all-btn:active,
+  body.dark .view .mode-btn:not(.active):active{
+    background:#334155 !important;
+    border-color:#64748b !important;
+  }
+
+  /* Tombol aktif: satu warna biru yang jelas. */
+  body.dark .view .mode-btn.active,
+  body.dark .view .day-chip.active,
+  body.dark .view .task-filter-tab.active,
+  body.dark .view .settings-nav button.active{
+    background:#2563eb !important;
+    color:#fff !important;
+    -webkit-text-fill-color:#fff !important;
+    border-color:#60a5fa !important;
+    box-shadow:0 0 0 2px rgba(37,99,235,.22) !important;
+  }
+
+  /* Khusus switch Pelajaran / Piket supaya tidak terlihat hitam. */
+  body.dark #view-jadwal > .mode-switch{
+    background:#17243a !important;
+    border:1px solid #334155 !important;
+    box-shadow:none !important;
+    border-radius:12px !important;
+    padding:4px !important;
+  }
+
+  body.dark #view-jadwal > .mode-switch .mode-btn{
+    min-height:34px !important;
+    background:#1e293b !important;
+    border:1px solid #3b4b63 !important;
+    color:#e2e8f0 !important;
+    -webkit-text-fill-color:#e2e8f0 !important;
+    box-shadow:none !important;
+  }
+
+  body.dark #view-jadwal > .mode-switch .mode-btn.active{
+    background:#2563eb !important;
+    border-color:#60a5fa !important;
+    color:#fff !important;
+    -webkit-text-fill-color:#fff !important;
+    box-shadow:0 0 0 2px rgba(37,99,235,.22) !important;
+  }
+}
+</style>
+
 </head>
 
 <body>
@@ -20879,6 +20978,129 @@ body:not(.dark) .view .tx-item{
 /* Reduced motion tetap dihormati. */
 @media (prefers-reduced-motion:reduce){
   .view *, .view *::before, .view *::after{scroll-behavior:auto !important;transition-duration:0.01ms !important;animation-duration:0.01ms !important;}
+}
+</style>
+
+
+<style id="jadwal-v86-tab-size-fix">
+/* v86 — Pelajaran / Piket: ukuran tombol dibuat pas dengan container */
+#view-jadwal > .mode-switch{
+  display:flex !important;
+  flex-direction:row !important;
+  align-items:center !important;
+  gap:4px !important;
+  width:min(100%, 560px) !important;
+  max-width:560px !important;
+  height:40px !important;
+  min-height:40px !important;
+  padding:4px !important;
+  box-sizing:border-box !important;
+  overflow:hidden !important;
+  border-radius:10px !important;
+}
+
+#view-jadwal > .mode-switch .mode-btn{
+  flex:1 1 0 !important;
+  width:0 !important;
+  height:32px !important;
+  min-height:32px !important;
+  max-height:32px !important;
+  padding:0 !important;
+  margin:0 !important;
+  box-sizing:border-box !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  line-height:1 !important;
+  white-space:nowrap !important;
+  border-radius:8px !important;
+}
+
+@media (max-width:620px){
+  #view-jadwal > .mode-switch{
+    width:100% !important;
+    max-width:none !important;
+    height:40px !important;
+    min-height:40px !important;
+  }
+
+  #view-jadwal > .mode-switch .mode-btn{
+    flex:1 1 0 !important;
+    width:0 !important;
+    height:32px !important;
+    min-height:32px !important;
+    max-height:32px !important;
+    padding:0 !important;
+    font-size:12px !important;
+  }
+}
+</style>
+
+
+<style id="jadwal-responsive-switch-final">
+/* Pelajaran / Piket — responsif penuh mengikuti lebar layar/container */
+#view-jadwal > .mode-switch{
+  width:100% !important;
+  max-width:none !important;
+  box-sizing:border-box !important;
+
+  display:flex !important;
+  flex:1 1 100% !important;
+  align-items:stretch !important;
+  gap:6px !important;
+
+  height:clamp(40px, 4vw, 46px) !important;
+  min-height:40px !important;
+  padding:4px !important;
+  margin-left:0 !important;
+  margin-right:0 !important;
+  overflow:hidden !important;
+}
+
+#view-jadwal > .mode-switch .mode-btn{
+  flex:1 1 0 !important;
+  width:auto !important;
+  min-width:0 !important;
+  max-width:none !important;
+
+  height:100% !important;
+  min-height:0 !important;
+  max-height:none !important;
+  margin:0 !important;
+  padding:0 12px !important;
+  box-sizing:border-box !important;
+
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  text-align:center !important;
+  line-height:1.1 !important;
+  white-space:nowrap !important;
+  font-size:clamp(11px, 1.15vw, 13px) !important;
+}
+
+/* Desktop */
+@media (min-width:621px){
+  #view-jadwal > .mode-switch{
+    width:100% !important;
+  }
+}
+
+/* Mobile */
+@media (max-width:620px){
+  #view-jadwal > .mode-switch{
+    width:100% !important;
+    height:40px !important;
+    min-height:40px !important;
+    gap:4px !important;
+    padding:3px !important;
+  }
+
+  #view-jadwal > .mode-switch .mode-btn{
+    height:100% !important;
+    padding:0 8px !important;
+    font-size:12px !important;
+  }
 }
 </style>
 
