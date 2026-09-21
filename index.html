@@ -10540,6 +10540,25 @@ body.dark .dashboard-user-avatar{
 }
 </style>
 
+
+<style id="home-mobile-final-fix">
+@media (max-width:900px){
+html,body{width:100%;max-width:100%;overflow-x:hidden!important}
+.phone,.screen,#view-beranda,#view-beranda>*{width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important}
+#view-beranda{overflow-x:hidden!important}
+#view-beranda .dashboard-topbar{width:100%!important;max-width:100%!important;min-width:0!important}
+#view-beranda .dashboard-search{min-width:0!important;max-width:100%!important;flex:1 1 auto!important}
+#view-beranda .dashboard-search .home-search-input{width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important}
+#view-beranda .dashboard-hero{width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important;overflow:hidden!important}
+#view-beranda .stat-grid,#view-beranda .dashboard-stat-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;width:100%!important;max-width:100%!important;min-width:0!important;gap:8px!important}
+#view-beranda .stat-card,#view-beranda .dashboard-stat-card{width:auto!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important;overflow:hidden!important}
+#view-beranda .dashboard-main-grid,#view-beranda .dashboard-secondary-grid{display:grid!important;grid-template-columns:minmax(0,1fr)!important;width:100%!important;max-width:100%!important;min-width:0!important}
+#view-beranda .dashboard-panel,#view-beranda .dashboard-card{width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important;overflow:hidden!important}
+#view-beranda .dashboard-card *,#view-beranda .stat-card *{min-width:0!important;max-width:100%!important}
+}
+@media(max-width:380px){#view-beranda .stat-grid,#view-beranda .dashboard-stat-grid{gap:6px!important}#view-beranda .stat-card,#view-beranda .dashboard-stat-card{padding:9px!important}}
+@media(max-width:900px) and (orientation:landscape){#view-beranda .stat-grid,#view-beranda .dashboard-stat-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}#view-beranda .dashboard-main-grid,#view-beranda .dashboard-secondary-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+</style>
 </head>
 
 <body>
@@ -11222,7 +11241,6 @@ X TJKT 1
     <div class="piket-integrated-toolbar">
       <div class="piket-toolbar-group" role="group" aria-label="Aksi piket hari ini">
         <button type="button" class="piket-toolbar-btn" onclick="openStatsModal('piket')"><span>▥</span> Statistik</button>
-        <button type="button" id="piket-edit-inline" class="piket-toolbar-btn piket-edit-inline" onclick="openPiketJadwalModal()"><span>✎</span> Edit Jadwal</button>
         <button type="button" class="piket-toolbar-btn admin-only" onclick="resetRoster('piket')"><span>↺</span> Reset</button>
         <button type="button" class="piket-toolbar-btn piket-toolbar-btn-success admin-only" onclick="markAllPiketDone()"><span>✓</span> Semua selesai</button>
       </div>
@@ -21301,6 +21319,122 @@ body.kelasku-authenticated #view-jadwal.active{
 </style>
 
 
+<script id="kelasku-mobile-more-menu">
+(function(){
+  function setupMoreMenu(){
+    if(document.getElementById('kelasku-mobile-more')) return;
+    var bar=document.querySelector('.tabbar');
+    if(!bar) return;
+
+    var tabs=[].slice.call(bar.querySelectorAll('.tab'));
+    if(tabs.length<5) return;
+
+    /* Mobile navigation reference: Beranda / Tugas / Laporan / Kas / Lainnya.
+       Existing actions remain accessible through the More sheet. */
+    var byTab=function(name){ return bar.querySelector('.tab[data-tab="'+name+'"]'); };
+    var beranda=byTab('beranda'), tugas=byTab('tugas'), laporan=byTab('laporan'), kas=byTab('kas');
+
+    function setLabel(btn,label){
+      if(!btn) return;
+      var nodes=btn.childNodes;
+      for(var i=nodes.length-1;i>=0;i--){
+        if(nodes[i].nodeType===3 && String(nodes[i].textContent).trim()){
+          nodes[i].textContent='\n'+label+'\n';
+          return;
+        }
+      }
+    }
+
+    /* Keep four most useful destinations visible. */
+    [beranda,tugas,laporan,kas].forEach(function(btn){
+      if(btn) btn.style.display='';
+    });
+
+    tabs.forEach(function(btn){
+      if([beranda,tugas,laporan,kas].indexOf(btn)===-1){
+        btn.style.display='none';
+      }
+    });
+
+    var more=document.createElement('button');
+    more.type='button';
+    more.className='tab';
+    more.dataset.tab='mobile-more';
+    more.setAttribute('aria-label','Lainnya');
+    more.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="19" cy="12" r="1.7"/></svg>Lainnya';
+    bar.appendChild(more);
+
+    var sheet=document.createElement('div');
+    sheet.id='kelasku-mobile-more';
+    sheet.innerHTML=
+      '<div class="km-more-backdrop" data-close="1"></div>'+
+      '<div class="km-more-sheet" role="dialog" aria-modal="true" aria-label="Menu lainnya">'+
+        '<div class="km-more-handle"></div>'+
+        '<div class="km-more-head"><strong>Lainnya</strong><button type="button" class="km-more-close" data-close="1">×</button></div>'+
+        '<div class="km-more-grid">'+
+          '<button type="button" data-go="jadwal"><span>◫</span><b>Jadwal</b><small>Pelajaran &amp; piket</small></button>'+
+          '<button type="button" data-go="hp"><span>▣</span><b>Pengumpulan HP</b><small>Catatan masuk &amp; tidak masuk</small></button>'+
+          '<button type="button" data-go="settings"><span>⚙</span><b>Setelan</b><small>Pengaturan aplikasi</small></button>'+
+          '<button type="button" data-go="profile"><span>◯</span><b>Profil</b><small>Akun dan preferensi</small></button>'+
+        '</div>'+
+      '</div>';
+    document.body.appendChild(sheet);
+
+    var style=document.createElement('style');
+    style.textContent=
+      '#kelasku-mobile-more{display:none;position:fixed;inset:0;z-index:1200;}'+
+      '#kelasku-mobile-more.open{display:block;}'+
+      '.km-more-backdrop{position:absolute;inset:0;background:rgba(15,23,42,.38);backdrop-filter:blur(5px);}'+
+      '.km-more-sheet{position:absolute;left:10px;right:10px;bottom:calc(72px + env(safe-area-inset-bottom,0px));padding:10px;border:1px solid #dbe5f0;border-radius:18px;background:#fff;box-shadow:0 18px 50px rgba(15,23,42,.18);}'+
+      'body.dark .km-more-sheet{background:#102236;border-color:rgba(148,163,184,.16);box-shadow:0 18px 50px rgba(0,0,0,.35);}'+
+      '.km-more-handle{width:34px;height:4px;border-radius:99px;background:#cbd5e1;margin:0 auto 8px;}'+
+      '.km-more-head{display:flex;align-items:center;justify-content:space-between;padding:3px 4px 9px;color:#0f172a;}'+
+      'body.dark .km-more-head{color:#f8fafc;}'+
+      '.km-more-close{width:30px!important;height:30px!important;min-height:30px!important;border:0!important;background:#f1f5f9!important;border-radius:9px!important;font-size:20px!important;color:#475569!important;}'+
+      'body.dark .km-more-close{background:#172d44!important;color:#cbd5e1!important;}'+
+      '.km-more-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;}'+
+      '.km-more-grid button{min-height:72px!important;text-align:left!important;padding:10px!important;border:1px solid #dbe5f0!important;border-radius:12px!important;background:#f8fbff!important;color:#0f172a!important;display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:2px!important;}'+
+      'body.dark .km-more-grid button{background:#0c1b2c!important;border-color:rgba(148,163,184,.16)!important;color:#f8fafc!important;}'+
+      '.km-more-grid button span{font-size:18px;color:#2563eb;}'+
+      '.km-more-grid button b{font-size:11px;}'+
+      '.km-more-grid button small{font-size:8.5px;color:#64748b;}'+
+      'body.dark .km-more-grid button small{color:#91a4ba;}'+
+      '@media(min-width:901px){#kelasku-mobile-more{display:none!important;}}';
+    document.head.appendChild(style);
+
+    function openSheet(){
+      sheet.classList.add('open');
+      more.classList.add('active');
+    }
+    function closeSheet(){
+      sheet.classList.remove('open');
+      more.classList.remove('active');
+    }
+    more.addEventListener('click',openSheet);
+    sheet.addEventListener('click',function(e){
+      var close=e.target.closest('[data-close]');
+      if(close){closeSheet();return;}
+      var go=e.target.closest('[data-go]');
+      if(go){
+        var target=go.dataset.go;
+        closeSheet();
+        if(typeof window.goTo==='function') window.goTo(target);
+      }
+    });
+
+    /* If the app navigates directly to settings/profile, More stays available. */
+    window.addEventListener('resize',function(){
+      if(window.innerWidth>900) closeSheet();
+    });
+  }
+
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',setupMoreMenu);
+  else setupMoreMenu();
+})();
+</script>
+
+
+
 <script id="kelasku-reference-more-nav-v2">
 (function(){
   function setup(){
@@ -21411,32 +21545,235 @@ body.kelasku-authenticated #view-jadwal.active{
 })();
 </script>
 
-<style id="kelasku-mobile-final-clean">
-@media (max-width:900px){
-  .phone .tabbar{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;width:100%!important;max-width:100%!important;min-width:0!important;gap:3px!important;padding:5px 6px calc(5px + env(safe-area-inset-bottom,0px))!important;box-sizing:border-box!important;overflow:hidden!important;}
-  .phone .tabbar .tab{display:flex!important;min-width:0!important;width:100%!important;max-width:100%!important;flex:1 1 0!important;box-sizing:border-box!important;overflow:hidden!important;white-space:nowrap!important;text-overflow:ellipsis!important;align-items:center!important;justify-content:center!important;padding:4px 1px!important;height:46px!important;border-radius:10px!important;font-size:8px!important;line-height:1!important;gap:2px!important;}
-  .phone .tabbar .tab svg{width:17px!important;height:17px!important;flex:0 0 auto!important;}
-  .phone .tabbar .tab[data-tab="hp"],.phone .tabbar .tab[data-tab="jadwal"],.phone .tabbar .tab[data-tab="settings"],.phone .tabbar .tab[data-tab="mobile-more"]{display:none!important;}
-  .phone .tabbar .tab[data-tab="beranda"]{order:1!important}.phone .tabbar .tab[data-tab="tugas"]{order:2!important}.phone .tabbar .tab[data-tab="laporan"]{order:3!important}.phone .tabbar .tab[data-tab="kas"]{order:4!important}.phone .tabbar .tab[data-tab="kelasku-more"]{order:5!important;display:flex!important;}
+
+<style id="kelasku-global-mobile-containment-fix">
+/* =========================================================
+   GLOBAL MOBILE CONTAINMENT FIX
+   Berlaku untuk SEMUA menu/view, bukan hanya Beranda.
+   Mencegah konten/card/form melebar atau terpotong di HP.
+   ========================================================= */
+@media (max-width: 900px){
+  html, body{
+    width:100%;
+    max-width:100%;
+    min-width:0;
+    overflow-x:hidden !important;
+  }
+
+  .phone,
+  .screen,
+  .screen > *,
+  .view,
+  .view > *,
+  .section,
+  .section > *,
+  .card,
+  .dashboard-card,
+  .settings-section,
+  .panel,
+  .modal-card,
+  .modal-content{
+    box-sizing:border-box;
+    min-width:0;
+    max-width:100%;
+  }
+
+  .phone{
+    width:100vw !important;
+    max-width:100vw !important;
+    overflow:hidden !important;
+  }
+
+  .screen{
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    overflow-x:hidden !important;
+  }
+
+  .view,
+  .view.active,
+  .section{
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    overflow-x:hidden;
+  }
+
+  /* Semua layout grid/flex boleh mengecil mengikuti viewport. */
+  .view > *,
+  .section > *,
+  .card > *,
+  .dashboard-card > *,
+  .settings-section > *,
+  .panel > *{
+    min-width:0;
+    max-width:100%;
+    box-sizing:border-box;
+  }
+
+  /* Form controls tidak boleh memaksa container melebar. */
+  input,
+  select,
+  textarea,
+  button,
+  .input,
+  .select,
+  .textarea{
+    max-width:100%;
+    box-sizing:border-box;
+  }
+
+  input[type="text"],
+  input[type="search"],
+  input[type="email"],
+  input[type="number"],
+  input[type="date"],
+  input[type="time"],
+  input[type="password"],
+  select,
+  textarea{
+    width:100%;
+    min-width:0;
+  }
+
+  img,
+  svg,
+  video,
+  canvas,
+  iframe{
+    max-width:100%;
+    height:auto;
+  }
+
+  /* Baris/grid umum: jangan biarkan child dengan min-width bawaan
+     membuat seluruh halaman menjadi lebih lebar dari HP. */
+  .row,
+  .toolbar,
+  .action-bar,
+  .actions,
+  .form-row,
+  .form-grid,
+  .grid,
+  .list,
+  .list-item,
+  .row-item,
+  .item,
+  .setting-row,
+  .settings-row{
+    min-width:0;
+    max-width:100%;
+    box-sizing:border-box;
+  }
+
+  /* Teks panjang tetap terbaca dan turun baris, bukan keluar layar. */
+  .view h1,
+  .view h2,
+  .view h3,
+  .view h4,
+  .view p,
+  .view label,
+  .view .title,
+  .view .subtitle,
+  .view .description,
+  .view .name,
+  .view .text,
+  .view .row-title,
+  .view .item-title,
+  .view .setting-title,
+  .view .setting-description{
+    min-width:0;
+    max-width:100%;
+    overflow-wrap:anywhere;
+    word-break:normal;
+  }
+
+  /* Tabel besar tetap bisa digeser di dalam area tabel saja,
+     tidak membuat seluruh aplikasi ikut melebar. */
+  .table-wrap,
+  .table-container,
+  .data-table-wrap,
+  .responsive-table{
+    width:100%;
+    max-width:100%;
+    min-width:0;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+  }
+
+  /* Horizontal pill/tab hanya scroll di area pill-nya. */
+  .tabs,
+  .tab-bar,
+  .segmented,
+  .segmented-control,
+  .pill-group,
+  .filter-tabs{
+    max-width:100%;
+    min-width:0;
+    overflow-x:auto;
+    overflow-y:hidden;
+    scrollbar-width:none;
+  }
+  .tabs::-webkit-scrollbar,
+  .tab-bar::-webkit-scrollbar,
+  .segmented::-webkit-scrollbar,
+  .segmented-control::-webkit-scrollbar,
+  .pill-group::-webkit-scrollbar,
+  .filter-tabs::-webkit-scrollbar{
+    display:none;
+  }
+
+  /* Modal tidak boleh keluar sisi layar. */
+  .modal,
+  .modal-overlay,
+  .dialog,
+  [role="dialog"]{
+    max-width:100vw;
+    box-sizing:border-box;
+  }
+
+  .modal-card,
+  .dialog-card,
+  [role="dialog"] > *{
+    width:min(100% - 24px, 520px);
+    max-width:calc(100vw - 24px);
+    box-sizing:border-box;
+  }
+
+  /* Navigation tetap berada di dalam viewport. */
+  .bottom-nav,
+  .mobile-nav,
+  .app-bottom-nav{
+    width:100% !important;
+    max-width:100vw !important;
+    min-width:0 !important;
+    box-sizing:border-box;
+  }
 }
-@media (max-width:380px){.phone .tabbar{gap:2px!important;padding-left:3px!important;padding-right:3px!important}.phone .tabbar .tab{height:44px!important;font-size:7px!important}.phone .tabbar .tab svg{width:16px!important;height:16px!important}}
-.mode-switch,.task-filter-tabs,.task-pro-filter-tabs,.report-filter-tabs,#view-settings .settings-nav,#view-jadwal .day-tabs,#piket-jadwal-day-tabs{min-width:0!important;max-width:100%!important;overflow-x:auto!important;overflow-y:hidden!important;flex-wrap:nowrap!important;scrollbar-width:none!important;-ms-overflow-style:none!important;}
-.mode-switch::-webkit-scrollbar,.task-filter-tabs::-webkit-scrollbar,.task-pro-filter-tabs::-webkit-scrollbar,.report-filter-tabs::-webkit-scrollbar,#view-settings .settings-nav::-webkit-scrollbar,#view-jadwal .day-tabs::-webkit-scrollbar,#piket-jadwal-day-tabs::-webkit-scrollbar{display:none!important}
-.mode-switch>*,.task-filter-tabs>*,.task-pro-filter-tabs>*,.report-filter-tabs>*,#view-settings .settings-nav>button,#view-jadwal .day-tabs>*,#piket-jadwal-day-tabs>*{flex:0 0 auto!important;min-width:max-content!important;max-width:calc(100vw - 32px)!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;box-sizing:border-box!important;}
-.piket-edit-inline{display:none!important;align-items:center!important;justify-content:center!important;gap:5px!important;white-space:nowrap!important;}
-body.is-admin .piket-edit-inline,body.is-superadmin .piket-edit-inline{display:inline-flex!important;}
-.piket-edit-inline:active{transform:scale(.97)!important}
-@media(max-width:620px){#view-jadwal .piket-integrated-toolbar{display:flex!important;flex-direction:column!important;gap:7px!important}#view-jadwal .piket-toolbar-group{display:flex!important;width:100%!important;max-width:100%!important;overflow-x:auto!important;flex-wrap:nowrap!important;scrollbar-width:none!important}#view-jadwal .piket-toolbar-group::-webkit-scrollbar{display:none!important}#view-jadwal .piket-toolbar-btn{flex:0 0 auto!important;min-width:max-content!important}#view-jadwal .piket-search-wrap{width:100%!important;max-width:none!important}}
+
+@media (max-width: 380px){
+  .screen{
+    padding-left:10px !important;
+    padding-right:10px !important;
+  }
+
+  .card,
+  .dashboard-card,
+  .settings-section{
+    max-width:100% !important;
+  }
+}
+
+@media (max-width: 900px) and (orientation:landscape){
+  .phone,
+  .screen,
+  .view{
+    width:100vw !important;
+    max-width:100vw !important;
+  }
+}
 </style>
-<script id="kelasku-mobile-final-clean">
-(function(){
-'use strict';
-function setupMore(){var bar=document.querySelector('.phone .tabbar');if(!bar)return;bar.querySelectorAll('[data-tab="mobile-more"],[data-tab="kelasku-more"]').forEach(function(x){x.remove()});var more=document.createElement('button');more.type='button';more.className='tab';more.dataset.tab='kelasku-more';more.setAttribute('aria-label','Lainnya');more.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.7"></circle><circle cx="12" cy="12" r="1.7"></circle><circle cx="19" cy="12" r="1.7"></circle></svg><span>Lainnya</span>';more.addEventListener('click',function(){var sheet=document.getElementById('kelasku-mobile-more');if(sheet)sheet.classList.add('open')});bar.appendChild(more);['beranda','tugas','laporan','kas'].forEach(function(key){var el=bar.querySelector('[data-tab="'+key+'"]');if(el)bar.appendChild(el)});bar.appendChild(more)}
-function makeMoreSheet(){if(document.getElementById('kelasku-mobile-more'))return;var sheet=document.createElement('div');sheet.id='kelasku-mobile-more';sheet.innerHTML='<div class="km-more-backdrop"></div><div class="km-more-sheet"><div class="km-more-head"><strong>Lainnya</strong><button type="button" class="km-more-close">×</button></div><div class="km-more-grid"><button type="button" data-go="jadwal"><span>◫</span><b>Jadwal</b></button><button type="button" data-go="hp"><span>▣</span><b>Pengumpulan HP</b></button><button type="button" data-go="settings"><span>⚙</span><b>Setelan</b></button><button type="button" data-go="profile"><span>◯</span><b>Profil</b></button></div></div>';document.body.appendChild(sheet);sheet.addEventListener('click',function(e){if(e.target.closest('.km-more-backdrop,.km-more-close')){sheet.classList.remove('open');return}var btn=e.target.closest('[data-go]');if(!btn)return;sheet.classList.remove('open');var dest=btn.dataset.go;if(dest==='profile')dest='settings';if(typeof window.goTo==='function')window.goTo(dest)})}
-function sync(){setupMore();makeMoreSheet()}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',sync);else sync();setTimeout(sync,200);setTimeout(sync,800);setTimeout(sync,1800);window.addEventListener('resize',sync,{passive:true});
-})();
-</script>
+
 </body>
 <!-- Kelasku compatibility patch: resilient Firestore sync + legacy fallback -->
 
@@ -23891,7 +24228,369 @@ body.dark #view-hp .hp-slot-tag.is-occupied{color:#86efac !important;background:
 @media(max-width:760px){#view-hp #hp-list.hp-command-list > .hp-command-grid{grid-template-columns:repeat(2,minmax(0,1fr)) !important}}
 @media(max-width:480px){#view-hp #hp-list.hp-command-list > .hp-command-grid{grid-template-columns:1fr !important}}
 </style>
-</head><body><h1>Kas Kelas — X TJKT 1</h1><p>Pencatatan kas transparan &amp; aman.</p><div class="metrics"><div class="m"><small>Total Kas Masuk</small><b>${money(masuk)}</b></div><div class="m"><small>Total Pengeluaran</small><b>${money(keluar)}</b></div><div class="m"><small>Sisa Saldo</small><b>${money(masuk-keluar)}</b></div></div><table><thead><tr><th>Tanggal</th><th>Keterangan</th><th>Jenis</th><th>Jumlah</th></tr></thead><tbody>${rows.map(t=>`<tr><td>${esc(t.tanggal||'-')}</td><td>${esc(t.ket||'-')}</td><td>${t.jenis==='masuk'?'Pemasukan':'Pengeluaran'}</td><td>${t.jenis==='masuk'?'+':'-'}${money(t.jumlah)}</td></tr>`).join('')}</tbody></table>${folders.map(f=>{const st=Array.isArray(f.students)?f.students:[],p=st.length?Math.round(st.filter(x=>x.status==='sudah').length/st.length*100):0;return `<div class="folder"><h3>${esc(f.name||'Kas Siswa')}</h3><p>${st.filter(x=>x.status==='sudah').length}/${st.length} siswa lunas</p><div class="bar"><div class="fill" style="width:${p}%"></div></div></div>`}).join('')}</body></html>`;
+</head><body><h1>Kas Kelas — X TJKT 1</h1><p>Pencatatan kas transparan &amp; aman.</p><div class="metrics"><div class="m"><small>Total Kas Masuk</small><b>${money(masuk)}</b></div><div class="m"><small>Total Pengeluaran</small><b>${money(keluar)}</b></div><div class="m"><small>Sisa Saldo</small><b>${money(masuk-keluar)}</b></div></div><table><thead><tr><th>Tanggal</th><th>Keterangan</th><th>Jenis</th><th>Jumlah</th></tr></thead><tbody>${rows.map(t=>`<tr><td>${esc(t.tanggal||'-')}</td><td>${esc(t.ket||'-')}</td><td>${t.jenis==='masuk'?'Pemasukan':'Pengeluaran'}</td><td>${t.jenis==='masuk'?'+':'-'}${money(t.jumlah)}</td></tr>`).join('')}</tbody></table>${folders.map(f=>{const st=Array.isArray(f.students)?f.students:[],p=st.length?Math.round(st.filter(x=>x.status==='sudah').length/st.length*100):0;return `<div class="folder"><h3>${esc(f.name||'Kas Siswa')}</h3><p>${st.filter(x=>x.status==='sudah').length}/${st.length} siswa lunas</p><div class="bar"><div class="fill" style="width:${p}%"></div></div></div>`}).join('')}
+<!-- =========================================================
+     FINAL MOBILE NAV + PIKET EDIT FIX
+     - Exactly 5 primary mobile destinations
+     - Removes duplicate "Lainnya" buttons
+     - Keeps every pill label inside its pill
+     - Restores an explicit "Edit Jadwal" action for admin
+     ========================================================= -->
+<style id="kelasku-final-mobile-nav-piket-fix">
+  /* ---------- Pills: never let labels escape their container ---------- */
+  .mode-switch,
+  .task-filter-tabs,
+  .task-pro-filter-tabs,
+  .report-filter-tabs,
+  .settings-nav,
+  .day-tabs,
+  .day-tabs-wrap,
+  .day-chip-group,
+  .piket-toolbar-group,
+  .piket-integrated-toolbar,
+  .piket-actionbar-actions {
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .mode-switch,
+  .task-filter-tabs,
+  .task-pro-filter-tabs,
+  .report-filter-tabs,
+  #view-settings .settings-nav {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+
+  .mode-switch::-webkit-scrollbar,
+  .task-filter-tabs::-webkit-scrollbar,
+  .task-pro-filter-tabs::-webkit-scrollbar,
+  .report-filter-tabs::-webkit-scrollbar,
+  #view-settings .settings-nav::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .mode-switch > *,
+  .task-filter-tabs > *,
+  .task-pro-filter-tabs > *,
+  .report-filter-tabs > *,
+  #view-settings .settings-nav > button,
+  .day-chip {
+    flex: 0 0 auto !important;
+    min-width: max-content !important;
+    max-width: calc(100vw - 32px) !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    box-sizing: border-box !important;
+  }
+
+  @media (max-width: 900px) {
+    .mode-switch,
+    .task-filter-tabs,
+    .task-pro-filter-tabs,
+    .report-filter-tabs,
+    #view-settings .settings-nav {
+      width: fit-content !important;
+      max-width: 100% !important;
+      gap: 5px !important;
+    }
+
+    .mode-switch > *,
+    .task-filter-tabs > *,
+    .task-pro-filter-tabs > *,
+    .report-filter-tabs > *,
+    #view-settings .settings-nav > button {
+      height: 34px !important;
+      min-height: 34px !important;
+      padding: 0 11px !important;
+      border-radius: 10px !important;
+      font-size: 9px !important;
+      line-height: 1 !important;
+    }
+
+    .day-chip {
+      padding: 7px 10px !important;
+      font-size: 9px !important;
+    }
+  }
+
+  /* ---------- Exactly five mobile nav items ---------- */
+  @media (max-width: 900px) {
+    .phone > .tabbar {
+      display: grid !important;
+      grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+      gap: 3px !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+      padding: 5px 6px calc(5px + env(safe-area-inset-bottom, 0px)) !important;
+      min-height: 60px !important;
+      overflow: hidden !important;
+    }
+
+    .phone > .tabbar .tab {
+      width: 100% !important;
+      min-width: 0 !important;
+      max-width: 100% !important;
+      height: 46px !important;
+      min-height: 46px !important;
+      padding: 3px 1px !important;
+      box-sizing: border-box !important;
+      overflow: hidden !important;
+      white-space: nowrap !important;
+      text-overflow: ellipsis !important;
+      gap: 2px !important;
+      border-radius: 10px !important;
+      font-size: 8px !important;
+      line-height: 1 !important;
+    }
+
+    .phone > .tabbar .tab svg {
+      width: 17px !important;
+      height: 17px !important;
+      flex: 0 0 auto !important;
+    }
+
+    /* Original destinations moved into Lainnya */
+    .phone > .tabbar .tab[data-tab="hp"],
+    .phone > .tabbar .tab[data-tab="jadwal"],
+    .phone > .tabbar .tab[data-tab="settings"],
+    .phone > .tabbar .tab[data-tab="mobile-more"] {
+      display: none !important;
+    }
+
+    /* Only the canonical Lainnya button is visible */
+    .phone > .tabbar #kelasku-more-nav-btn {
+      display: flex !important;
+      width: 100% !important;
+      min-width: 0 !important;
+      max-width: 100% !important;
+      order: 5 !important;
+    }
+
+    /* Any accidental duplicate generated by an older navigation patch */
+    .phone > .tabbar .tab[data-tab="mobile-more"] {
+      display: none !important;
+    }
+  }
+
+  @media (max-width: 380px) {
+    .phone > .tabbar {
+      gap: 2px !important;
+      padding-left: 4px !important;
+      padding-right: 4px !important;
+    }
+
+    .phone > .tabbar .tab {
+      font-size: 7px !important;
+      height: 45px !important;
+      min-height: 45px !important;
+    }
+
+    .phone > .tabbar .tab svg {
+      width: 16px !important;
+      height: 16px !important;
+    }
+  }
+
+  /* ---------- Piket: explicit admin edit control ---------- */
+  .piket-edit-schedule-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    min-height: 32px !important;
+    padding: 0 11px !important;
+    border-radius: 10px !important;
+    border: 1px solid #bfdbfe !important;
+    background: #eff6ff !important;
+    color: #1d4ed8 !important;
+    font-size: 9px !important;
+    font-weight: 850 !important;
+    white-space: nowrap !important;
+    box-sizing: border-box !important;
+    cursor: pointer !important;
+  }
+
+  .piket-edit-schedule-btn:hover {
+    background: #dbeafe !important;
+    border-color: #93c5fd !important;
+  }
+
+  body.dark .piket-edit-schedule-btn {
+    background: #102d4e !important;
+    border-color: #28588a !important;
+    color: #93c5fd !important;
+  }
+
+  body.dark .piket-edit-schedule-btn:hover {
+    background: #14395f !important;
+    border-color: #3b82f6 !important;
+  }
+
+  .piket-edit-schedule-btn:active {
+    transform: scale(.97) !important;
+  }
+
+  @media (max-width: 620px) {
+    #view-jadwal .piket-integrated-toolbar {
+      display: grid !important;
+      grid-template-columns: 1fr !important;
+      gap: 7px !important;
+    }
+
+    #view-jadwal .piket-toolbar-group {
+      width: 100% !important;
+      display: flex !important;
+      overflow-x: auto !important;
+      scrollbar-width: none !important;
+    }
+
+    #view-jadwal .piket-toolbar-group::-webkit-scrollbar {
+      display: none !important;
+    }
+
+    #view-jadwal .piket-edit-schedule-btn {
+      flex: 0 0 auto !important;
+      min-width: max-content !important;
+    }
+
+    #view-jadwal .piket-search-wrap {
+      width: 100% !important;
+      max-width: none !important;
+      margin: 0 !important;
+    }
+  }
+</style>
+
+<script id="kelasku-final-mobile-nav-piket-fix">
+(function(){
+  'use strict';
+
+  function fixMobileNavigation(){
+    const bar = document.querySelector('.phone > .tabbar');
+    if(!bar) return;
+
+    /* Remove the first/legacy dynamically-created More button. */
+    bar.querySelectorAll('.tab[data-tab="mobile-more"]').forEach(el => el.remove());
+
+    /* Hide every non-primary original destination. */
+    ['hp','jadwal','settings'].forEach(key => {
+      const el = bar.querySelector('.tab[data-tab="'+key+'"]');
+      if(el) el.style.display = 'none';
+    });
+
+    ['beranda','tugas','laporan','kas'].forEach(key => {
+      const el = bar.querySelector('.tab[data-tab="'+key+'"]');
+      if(el) el.style.display = '';
+    });
+
+    /* Keep only ONE canonical Lainnya button. */
+    let moreButtons = Array.from(bar.querySelectorAll('#kelasku-more-nav-btn'));
+    let more = moreButtons.shift();
+
+    moreButtons.forEach(el => el.remove());
+
+    if(!more){
+      more = document.createElement('button');
+      more.type = 'button';
+      more.id = 'kelasku-more-nav-btn';
+      more.className = 'tab';
+      more.setAttribute('aria-label','Lainnya');
+      more.innerHTML =
+        '<svg viewBox="0 0 24 24" aria-hidden="true">' +
+        '<circle cx="5" cy="12" r="1.7"></circle>' +
+        '<circle cx="12" cy="12" r="1.7"></circle>' +
+        '<circle cx="19" cy="12" r="1.7"></circle>' +
+        '</svg><span>Lainnya</span>';
+
+      more.addEventListener('click', function(){
+        const sheet = document.getElementById('kelasku-more-sheet') ||
+                      document.getElementById('kelasku-mobile-more');
+        if(sheet) sheet.classList.add('open');
+      });
+
+      bar.appendChild(more);
+    }
+
+    /* Always force the exact visual order. */
+    ['beranda','tugas','laporan','kas'].forEach(key => {
+      const el = bar.querySelector('.tab[data-tab="'+key+'"]');
+      if(el) bar.appendChild(el);
+    });
+    bar.appendChild(more);
+  }
+
+  function fixPiketEditButton(){
+    const toolbar = document.querySelector('#view-jadwal .piket-integrated-toolbar');
+    if(!toolbar) return;
+
+    const group = toolbar.querySelector('.piket-toolbar-group');
+    if(!group) return;
+
+    if(!group.querySelector('.piket-edit-schedule-btn')){
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'piket-toolbar-btn piket-edit-schedule-btn admin-only';
+      btn.innerHTML = '<span>✎</span> Edit Jadwal';
+      btn.title = 'Edit jadwal piket per hari';
+      btn.addEventListener('click', function(){
+        if(typeof window.openPiketJadwalModal === 'function'){
+          window.openPiketJadwalModal();
+        }
+      });
+      group.insertBefore(btn, group.firstChild);
+    }
+
+    /* The old global-shell rule hid the actionbar. Keep it hidden,
+       but expose the actual edit action inside the Piket panel. */
+    const admin = typeof window.isAdmin === 'function' ? window.isAdmin() : false;
+    const btn = group.querySelector('.piket-edit-schedule-btn');
+    if(btn) btn.style.display = admin ? 'inline-flex' : 'none';
+  }
+
+  function run(){
+    fixMobileNavigation();
+    fixPiketEditButton();
+  }
+
+  function boot(){
+    run();
+    setTimeout(run, 100);
+    setTimeout(run, 500);
+    setTimeout(run, 1200);
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', boot);
+  }else{
+    boot();
+  }
+
+  window.addEventListener('resize', run, {passive:true});
+
+  /* Re-apply after navigation/render functions update the DOM. */
+  const observer = new MutationObserver(function(){
+    if(!observer.__scheduled){
+      observer.__scheduled = true;
+      requestAnimationFrame(function(){
+        observer.__scheduled = false;
+        run();
+      });
+    }
+  });
+
+  document.addEventListener('DOMContentLoaded', function(){
+    observer.observe(document.body, {childList:true, subtree:true});
+  });
+})();
+</script>
+
+</body></html>`;
     const w=window.open('','_blank','width=900,height=700');if(!w){showNotification('Popup diblokir browser. Izinkan popup untuk mencetak PDF.','warning');return;}w.document.write(html);w.document.close();w.focus();setTimeout(()=>w.print(),250);
   };
 
