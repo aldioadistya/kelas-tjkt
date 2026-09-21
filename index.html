@@ -23794,5 +23794,178 @@ body.dark #view-jadwal .piket-task-progress-badge.is-complete{background:#14532d
 })();
 
 </script>
+<style id="kelasku-mobile-role-theme-final">
+/* =========================================================
+   FINAL MOBILE ROLE + CONTRAST FIX
+   - Siswa: only Profil & Tampilan in Settings
+   - Admin/Super Admin: can see operational Piket options
+   - Pelajaran/Piket switch centered on mobile
+   - HP "Belum Titip" is always readable in dark/light mode
+   ========================================================= */
+
+@media (max-width: 900px){
+  /* ---------- SETELAN: SISWA HANYA MELIHAT PROFIL ---------- */
+  body:not(.is-admin) #view-settings #settings-nav [data-cat="members"],
+  body:not(.is-admin) #view-settings #settings-nav [data-cat="security"]{
+    display:none !important;
+  }
+
+  /* Keep the remaining Profile tab centered and touchable. */
+  body:not(.is-admin) #view-settings #settings-nav{
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    width:100% !important;
+    max-width:100% !important;
+    overflow:visible !important;
+    pointer-events:auto !important;
+    position:relative !important;
+    z-index:100 !important;
+  }
+
+  body:not(.is-admin) #view-settings #settings-nav [data-cat="profile"]{
+    display:flex !important;
+    flex:0 0 auto !important;
+    min-width:0 !important;
+    width:auto !important;
+    pointer-events:auto !important;
+    touch-action:manipulation !important;
+    cursor:pointer !important;
+  }
+
+  /* Admin/Super Admin: keep only allowed tabs according to existing JS.
+     Super Admin gets Members + Security; Admin gets Security. */
+  body.is-admin #view-settings #settings-nav{
+    pointer-events:auto !important;
+    position:relative !important;
+    z-index:100 !important;
+  }
+
+  /* ---------- JADWAL: PELAJARAN / PIKET DI TENGAH ---------- */
+  body.kelasku-authenticated #view-jadwal > .mode-switch{
+    display:flex !important;
+    align-items:stretch !important;
+    justify-content:center !important;
+    width:min(100%, 360px) !important;
+    max-width:360px !important;
+    min-height:42px !important;
+    height:42px !important;
+    margin:14px auto 18px !important;
+    box-sizing:border-box !important;
+  }
+
+  body.kelasku-authenticated #view-jadwal > .mode-switch .mode-btn{
+    flex:1 1 0 !important;
+    width:auto !important;
+    min-width:0 !important;
+    max-width:none !important;
+    min-height:36px !important;
+    height:36px !important;
+    margin:0 !important;
+    padding:0 14px !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    white-space:nowrap !important;
+    box-sizing:border-box !important;
+  }
+
+  /* ---------- PIKET: ADMIN / SUPER ADMIN ONLY ---------- */
+  #view-jadwal .piket-admin-menu-wrap{
+    display:none !important;
+  }
+  body.is-admin #view-jadwal .piket-admin-menu-wrap{
+    display:flex !important;
+  }
+
+  /* If an old rule/script accidentally leaves the menu open for siswa,
+     keep it inaccessible and invisible. */
+  body:not(.is-admin) #view-jadwal #piket-admin-menu,
+  body:not(.is-admin) #view-jadwal .piket-admin-menu-trigger{
+    display:none !important;
+  }
+
+  /* ---------- PENGUMPULAN HP: BELUM TITIP ---------- */
+  #view-hp .hp-slot-status.todo,
+  #view-hp .hp-status-chip.todo,
+  #view-hp .hp-command-card .hp-slot-status.todo,
+  #view-hp [data-status="belum"] .hp-slot-status,
+  #view-hp .hp-filter-row [data-hp-filter="belum"]{
+    background:#dc2626 !important;
+    border:1px solid #b91c1c !important;
+    color:#ffffff !important;
+    -webkit-text-fill-color:#ffffff !important;
+    opacity:1 !important;
+    text-shadow:none !important;
+    font-weight:900 !important;
+  }
+
+  body.dark #view-hp .hp-slot-status.todo,
+  body.dark #view-hp .hp-status-chip.todo,
+  body.dark #view-hp .hp-command-card .hp-slot-status.todo,
+  body.dark #view-hp [data-status="belum"] .hp-slot-status,
+  body.dark #view-hp .hp-filter-row [data-hp-filter="belum"]{
+    background:#dc2626 !important;
+    border-color:#f87171 !important;
+    color:#ffffff !important;
+    -webkit-text-fill-color:#ffffff !important;
+  }
+
+  #view-hp .hp-slot-status.todo{
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    min-height:30px !important;
+    padding:0 12px !important;
+    border-radius:999px !important;
+    line-height:1 !important;
+  }
+}
+</style>
+
+<script id="kelasku-mobile-role-final-js">
+(function(){
+  /* Hard guard: Piket operational menu can never be opened by Siswa. */
+  const originalToggle = window.togglePiketAdminMenu;
+  window.togglePiketAdminMenu = function(event){
+    if (typeof window.isAdmin === 'function' && !window.isAdmin()) {
+      if (event) event.preventDefault();
+      if (typeof window.closePiketAdminMenu === 'function') window.closePiketAdminMenu();
+      return;
+    }
+    if (typeof originalToggle === 'function') return originalToggle(event);
+  };
+
+  function syncMobileRoleUI(){
+    const body=document.body;
+    if(!body) return;
+
+    const student=!body.classList.contains('is-admin');
+    const members=document.querySelector('#view-settings #settings-nav [data-cat="members"]');
+    const security=document.querySelector('#view-settings #settings-nav [data-cat="security"]');
+
+    if(student){
+      if(members) members.style.display='none';
+      if(security) security.style.display='none';
+    }
+
+    const menu=document.getElementById('piket-admin-menu');
+    const trigger=document.querySelector('#view-jadwal .piket-admin-menu-trigger');
+    if(student){
+      if(menu) menu.hidden=true;
+      if(trigger) trigger.setAttribute('aria-expanded','false');
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded',syncMobileRoleUI);
+  setTimeout(syncMobileRoleUI,300);
+  setTimeout(syncMobileRoleUI,1000);
+
+  const observer=new MutationObserver(syncMobileRoleUI);
+  observer.observe(document.documentElement,{subtree:false,attributes:true,attributeFilter:['class']});
+})();
+</script>
+
+
 </body>
 </html>
