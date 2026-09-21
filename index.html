@@ -8909,178 +8909,612 @@ body.dark #app-global-actions .kas71-global-actions .kas71-export{
 }
 </style>
 
-<style id="typography-v79-global">
-/* v79 — readability pass: enlarge microcopy and controls that were too small across the app */
-.phone,
-.phone input,
-.phone select,
-.phone textarea,
-.phone button { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+<style id="kelasku-ui-reference-2026">
+/* =========================================================
+   KELASKU — MOBILE UI REFERENCE SYSTEM
+   Reference: supplied UI board (light + dark)
+   Goal: compact, calm, consistent, touch-friendly.
+   ========================================================= */
 
-/* Global UI baseline */
-.phone { font-size: 14px; }
-.phone button,
-.phone input,
-.phone select,
-.phone textarea { font-size: 14px; }
+:root{
+  --ref-blue:#2563eb;
+  --ref-blue-2:#3b82f6;
+  --ref-ink:#0f172a;
+  --ref-muted:#64748b;
+  --ref-bg:#f7faff;
+  --ref-card:#ffffff;
+  --ref-line:#dbe5f0;
+  --ref-soft:#eff6ff;
+  --ref-green:#10b981;
+  --ref-red:#f43f5e;
+  --ref-radius:14px;
+  --ref-shadow:0 3px 12px rgba(15,23,42,.055);
+}
 
-/* Shared small text */
-.phone .section-link { font-size: 12px !important; }
-.phone .row-time { font-size: 12px !important; }
-.phone .row-title { font-size: 14px !important; }
-.phone .row-sub { font-size: 12px !important; }
-.phone .empty { font-size: 13px !important; }
-.phone .pill { font-size: 10.5px !important; }
-.phone .day-chip { font-size: 11.5px !important; }
-.phone .htag { font-size: 11px !important; }
-.phone .field label { font-size: 11.5px !important; }
-.phone .field-hint { font-size: 11px !important; }
-.phone .toggle-btn { font-size: 11px !important; }
-.phone .settings-label { font-size: 11.5px !important; }
-.phone .section-kicker { font-size: 10.5px !important; }
-.phone .section-action { font-size: 11px !important; }
+body:not(.dark){
+  --ref-bg:#f7faff;
+  --ref-card:#fff;
+  --ref-line:#dbe5f0;
+  --ref-ink:#0f172a;
+  --ref-muted:#64748b;
+}
 
-/* Tabs / navigation */
-.phone .tab { font-size: 12px !important; }
-.phone .statusbar { font-size: 14px !important; }
+body.dark{
+  --ref-bg:#081321;
+  --ref-card:#102236;
+  --ref-line:rgba(148,163,184,.16);
+  --ref-ink:#f8fafc;
+  --ref-muted:#9fb0c4;
+}
 
-/* Stats and page headers */
-.phone .stat-label { font-size: 11px !important; }
-.phone .stat-value { font-size: 19px !important; }
-.phone .pagehead h1 { font-size: 22px !important; }
-.phone .pagehead p { font-size: 13px !important; }
-.phone .balance-label { font-size: 12px !important; }
-.phone .balance-value { font-size: 30px !important; }
-.phone .bf-item { font-size: 12px !important; }
-.phone .bf-item b { font-size: 16px !important; }
+@media (max-width:900px){
+  html,body{
+    width:100%;
+    max-width:100%;
+    overflow-x:hidden !important;
+  }
+  body{
+    background:var(--ref-bg) !important;
+    color:var(--ref-ink);
+  }
+  .screen,.content,.main-content,.view{
+    min-width:0 !important;
+    width:100% !important;
+    max-width:100% !important;
+    overflow-x:clip !important;
+  }
 
-/* Kas */
-.phone .tx-title { font-size: 14px !important; }
-.phone .tx-sub { font-size: 11.5px !important; }
-.phone .tx-amt { font-size: 14px !important; }
-.phone .kas-payment-badge { font-size: 10px !important; }
-.phone .kas-folder-note { font-size: 11px !important; }
-.phone .kas-summary-paid,
-.phone .kas-summary-unpaid,
-.phone .kas-summary-nominal { font-size: 11px !important; }
-.phone .kas-student-avatar { font-size: 11px !important; }
-.phone .kas-student-info strong { font-size: 12.5px !important; }
-.phone .kas-student-info small { font-size: 10.5px !important; }
-.phone .kas-payment-badge { font-size: 10px !important; }
-.phone .kas-folder-empty { font-size: 12px !important; }
-.phone .kas-pro-filters input,
-.phone .kas-pro-filters select { font-size: 13.5px !important; }
-.phone .kas-pro-table th { font-size: 10.5px !important; }
-.phone .kas-pro-table td { font-size: 13px !important; }
-.phone .kas-type-badge { font-size: 10.5px !important; }
-.phone .kas-pro-metric .kpm-label { font-size: 12px !important; }
-.phone .kas-pro-metric .kpm-note { font-size: 11px !important; }
+  /* App canvas */
+  .view{
+    padding:14px 14px calc(84px + env(safe-area-inset-bottom,0px)) !important;
+  }
+  .pagehead{
+    display:flex !important;
+    align-items:flex-start !important;
+    justify-content:space-between !important;
+    gap:10px !important;
+    margin:0 0 12px !important;
+  }
+  .pagehead h1{
+    margin:0 !important;
+    font-size:19px !important;
+    line-height:1.18 !important;
+    letter-spacing:-.02em !important;
+    color:var(--ref-ink) !important;
+  }
+  .pagehead p{
+    margin:4px 0 0 !important;
+    font-size:10.5px !important;
+    line-height:1.45 !important;
+    color:var(--ref-muted) !important;
+  }
 
-/* Home / notifications / activity */
-.phone .notify-title { font-size: 12px !important; }
-.phone .notify-text { font-size: 11.5px !important; }
-.phone .notify-time { font-size: 10.5px !important; }
-.phone .activity-main { font-size: 11.5px !important; }
-.phone .activity-meta { font-size: 10.5px !important; }
-.phone .global-search-item .gsi-title { font-size: 12px !important; }
-.phone .global-search-item .gsi-sub { font-size: 10.5px !important; }
-.phone .home-search-input { font-size: 13px !important; }
+  /* Universal surface: one clean layer, not nested boxes */
+  .card,.section,.dashboard-card,.dashboard-panel,.task-pro-list-wrap,
+  .report-kpi-card,.timeline-card,.hp-slot,.calendar-card,.cal-card,
+  .kas-pro-table,.settings-section,.settings-profile-card{
+    border:1px solid var(--ref-line) !important;
+    border-radius:var(--ref-radius) !important;
+    background:var(--ref-card) !important;
+    box-shadow:var(--ref-shadow) !important;
+    color:var(--ref-ink) !important;
+  }
+  body.dark .card,body.dark .section,body.dark .dashboard-card,
+  body.dark .dashboard-panel,body.dark .task-pro-list-wrap,
+  body.dark .report-kpi-card,body.dark .timeline-card,body.dark .hp-slot,
+  body.dark .calendar-card,body.dark .cal-card,body.dark .kas-pro-table,
+  body.dark .settings-section,body.dark .settings-profile-card{
+    background:#102236 !important;
+    border-color:rgba(148,163,184,.16) !important;
+    box-shadow:0 4px 14px rgba(0,0,0,.14) !important;
+  }
 
-/* Dashboard */
-.phone .dashboard-user-meta span { font-size: 11px !important; }
-.phone .dashboard-hero .htag { font-size: 11px !important; }
-.phone .dashboard-stat-card .stat-status { font-size: 10px !important; }
-.phone .dashboard-stat-card .stat-label { font-size: 12px !important; }
-.phone .dashboard-notify-badge { font-size: 9px !important; }
-.phone .dashboard-notification-card .empty { font-size: 11px !important; }
-.phone .dashboard-card .announce-description { font-size: 11.5px !important; }
-.phone .dashboard-card .announce-date { font-size: 10.5px !important; }
-.phone .dashboard-card .announce-file { font-size: 10.5px !important; }
-.phone .compact-list .empty { font-size: 11px !important; }
-.phone .dashboard-card .row-time { font-size: 11px !important; }
-.phone .dashboard-card .row-title { font-size: 12.5px !important; }
-.phone .dashboard-card .row-sub { font-size: 10.5px !important; }
-.phone .dashboard-card .task-title { font-size: 12.5px !important; }
+  /* Remove unnecessary double containers */
+  .section{
+    margin:0 0 12px !important;
+    padding:0 !important;
+    background:transparent !important;
+    border:0 !important;
+    box-shadow:none !important;
+  }
+  .section > .card{
+    padding:12px !important;
+  }
 
-/* Tugas */
-.phone .task-filter-tab { font-size: 12px !important; }
-.phone .task-column-title { font-size: 12px !important; }
-.phone .task-pro-deadline { font-size: 10.5px !important; }
-.phone .task-pro-tag { font-size: 10.5px !important; }
-.phone .task-pro-desc { font-size: 11.5px !important; }
-.phone .task-pro-actions button { font-size: 11px !important; }
-.phone .task-drive-link a { font-size: 11px !important; }
-.phone #view-tugas .task-pro-summary-sub { font-size: 11.5px !important; }
-.phone #view-tugas .task-pro-clear-btn { font-size: 11px !important; }
-.phone #view-tugas .task-pro-subject-icon { font-size: 10px !important; }
-.phone #view-tugas .task-pro-status-dot { font-size: 10px !important; }
-.phone #view-tugas .task-pro-check-btn { font-size: 11px !important; }
-.phone #view-tugas .task-pro-empty-sub { font-size: 11px !important; }
+  /* Typography */
+  .section-title,.task-pro-summary-title,.jadwal-pro-title-row h2,
+  .piket-integrated-title,.hero-name{
+    color:var(--ref-ink) !important;
+  }
+  .section-kicker,.section-label,.settings-label{
+    color:var(--ref-muted) !important;
+  }
 
-/* Laporan */
-.phone .report-meta { font-size: 10.5px !important; }
-.phone .report-status { font-size: 10px !important; }
-.phone .report-kpi .rk-label { font-size: 10px !important; }
-.phone .report-kpi .rk-value { font-size: 21px !important; }
-.phone .report-bar-label { font-size: 10px !important; }
-.phone .report-action-btn { font-size: 11px !important; }
+  /* Touch targets */
+  button,.btn,.mode-btn,.task-filter-tab,.section-action,.fab-add,
+  .piket-toolbar-btn,.jadwal-pro-add{
+    min-height:38px;
+    font-size:11px;
+    border-radius:10px;
+    transition:transform .15s cubic-bezier(.16,1,.3,1),background .15s,border-color .15s;
+  }
+  button:active,.btn:active,.mode-btn:active,.task-filter-tab:active,
+  .section-action:active,.fab-add:active,.piket-toolbar-btn:active{
+    transform:scale(.97);
+  }
 
-/* Jadwal / Piket */
-.phone .cal-day { font-size: 11px !important; }
-.phone .cal-nav-btn { font-size: 11px !important; }
-.phone .cal-month { font-size: 15px !important; }
-.phone .timeline-time { font-size: 12px !important; }
-.phone .timeline-sub { font-size: 11px !important; }
-.phone .piket-person .mini-avatar { font-size: 11px !important; }
-.phone .piket-person .mini-name { font-size: 12px !important; }
+  /* ================= DASHBOARD ================= */
+  .dashboard-topbar{
+    display:flex !important;
+    align-items:center !important;
+    gap:8px !important;
+    margin-bottom:10px !important;
+  }
+  .dashboard-search{
+    flex:1 1 auto !important;
+    min-width:0 !important;
+  }
+  .dashboard-search input{
+    width:100% !important;
+    min-width:0 !important;
+    height:38px !important;
+    font-size:11px !important;
+  }
+  .dashboard-search-kbd{display:none !important;}
+  .dashboard-user-meta{display:none !important;}
+  .dashboard-user-avatar{
+    width:38px !important;height:38px !important;min-width:38px !important;
+    border-radius:12px !important;
+  }
 
-/* Piket / forms / profile */
-.phone .s-avatar { font-size: 11px !important; }
-.phone .acc-row .acc-info .acc-email { font-size: 10.5px !important; }
-.phone .phone > .login-overlay .login-hero-sub { font-size: 11px !important; }
-.phone .phone > .login-overlay .login-sub { font-size: 12px !important; }
+  .dashboard-hero{
+    margin:0 0 10px !important;
+    padding:14px !important;
+    border-radius:16px !important;
+    min-height:0 !important;
+  }
+  .dashboard-hero .hero-top{
+    gap:8px !important;
+  }
+  .dashboard-hero .hero-eyebrow{
+    font-size:9px !important;
+    opacity:.82;
+  }
+  .dashboard-hero .hero-name{
+    font-size:18px !important;
+    line-height:1.2 !important;
+  }
+  .dashboard-hero .hero-copy{
+    font-size:10px !important;
+    line-height:1.35 !important;
+  }
+  .dashboard-hero .hero-tags{
+    margin-top:10px !important;
+    gap:5px !important;
+    overflow-x:auto !important;
+    scrollbar-width:none !important;
+  }
+  .dashboard-hero .hero-tags::-webkit-scrollbar{display:none;}
+  .dashboard-hero .htag{
+    flex:0 0 auto !important;
+    font-size:9px !important;
+    padding:5px 8px !important;
+  }
 
-/* Pengumpulan HP — specifically lift all 7–10px microcopy seen in cards */
-#view-hp .hp-command-kicker { font-size: 10.5px !important; }
-#view-hp .hp-command-status { font-size: 10px !important; }
-#view-hp .hp-command-heading > p { font-size: 12.5px !important; }
-#view-hp .hp-progress-meta { font-size: 12px !important; }
-#view-hp .hp-progress-kicker { font-size: 10px !important; }
-#view-hp .hp-progress-head strong { font-size: 13px !important; }
-#view-hp .hp-progress-note { font-size: 10px !important; }
-#view-hp .hp-view-switcher button { font-size: 10.5px !important; }
-#view-hp .hp-search-wrap input { font-size: 12px !important; }
-#view-hp .hp-filter-row button { font-size: 10.5px !important; }
-#view-hp .hp-filter-row button span { font-size: 9px !important; }
-#view-hp .hp-student-roll { font-size: 9.5px !important; }
-#view-hp .hp-slot-tag { font-size: 10px !important; }
-#view-hp .hp-student-avatar { font-size: 11.5px !important; }
-#view-hp .hp-student-name { font-size: 13px !important; }
-#view-hp .hp-student-sub { font-size: 10px !important; }
-#view-hp .hp-status-chip { font-size: 10px !important; }
-#view-hp .hp-quick-btn { font-size: 10px !important; }
-#view-hp .hp-command-table th { font-size: 9.5px !important; }
-#view-hp .hp-command-table td { font-size: 11px !important; }
-#view-hp .hp-table-name { font-size: 10.5px !important; }
-#view-hp .hp-rack-head span { font-size: 9.5px !important; }
-#view-hp .hp-rack-num { font-size: 9px !important; }
-#view-hp .hp-rack-name { font-size: 10.5px !important; }
-#view-hp .hp-rack-state { font-size: 8.5px !important; }
-#view-hp .hp-command-empty strong { font-size: 13px !important; }
-#view-hp .hp-command-empty span { font-size: 10px !important; }
-#view-hp .hp-calendar-drawer-head strong { font-size: 13px !important; }
+  .dashboard-stat-grid{
+    display:grid !important;
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:8px !important;
+    margin-bottom:12px !important;
+  }
+  .dashboard-stat-card{
+    min-width:0 !important;
+    padding:10px !important;
+    border-radius:12px !important;
+  }
+  .dashboard-stat-card .stat-icon{
+    width:27px !important;height:27px !important;
+    border-radius:9px !important;
+  }
+  .dashboard-stat-card .stat-label{
+    font-size:9px !important;
+    margin-top:5px !important;
+  }
+  .dashboard-stat-card .stat-value{
+    font-size:16px !important;
+    line-height:1.15 !important;
+  }
+  .dashboard-stat-card .stat-status{
+    font-size:8px !important;
+  }
 
-/* Keep tiny helper/metadata text readable everywhere while avoiding title inflation */
-.phone small { font-size: 11px; }
-.phone label { line-height: 1.3; }
+  .dashboard-main-grid,.dashboard-secondary-grid{
+    display:grid !important;
+    grid-template-columns:minmax(0,1fr) !important;
+    gap:10px !important;
+  }
+  .dashboard-panel .section-head{
+    padding:10px 11px !important;
+  }
+  .dashboard-panel .section-title{
+    font-size:13px !important;
+  }
+  .dashboard-panel .section-kicker{
+    font-size:8px !important;
+  }
+  .dashboard-panel > .card{
+    border-radius:12px !important;
+    box-shadow:none !important;
+  }
 
-@media (max-width: 760px) {
-  .phone .pagehead h1 { font-size: 21px !important; }
-  .phone .stat-value { font-size: 18px !important; }
-  #view-hp .hp-command-grid { gap: 10px !important; }
-  #view-hp .hp-student-name { font-size: 12.5px !important; }
+  /* ================= TABS ================= */
+  .mode-switch,.task-filter-tabs,.day-tabs,.settings-nav{
+    width:max-content !important;
+    max-width:100% !important;
+    display:flex !important;
+    flex-wrap:nowrap !important;
+    overflow-x:auto !important;
+    scrollbar-width:none !important;
+    -webkit-overflow-scrolling:touch;
+  }
+  .mode-switch::-webkit-scrollbar,.task-filter-tabs::-webkit-scrollbar,
+  .day-tabs::-webkit-scrollbar,.settings-nav::-webkit-scrollbar{display:none;}
+  .mode-btn,.task-filter-tab,.day-tabs button,.settings-nav button{
+    flex:0 0 auto !important;
+    white-space:nowrap !important;
+  }
+
+  .mode-switch{
+    padding:3px !important;
+    gap:3px !important;
+    border:1px solid var(--ref-line) !important;
+    border-radius:12px !important;
+    background:var(--ref-card) !important;
+    margin-bottom:10px !important;
+  }
+  .mode-btn{
+    min-height:32px !important;
+    padding:5px 14px !important;
+    border:0 !important;
+    border-radius:9px !important;
+    background:transparent !important;
+    color:var(--ref-muted) !important;
+  }
+  .mode-btn.active{
+    background:var(--ref-blue) !important;
+    color:#fff !important;
+    box-shadow:0 3px 10px rgba(37,99,235,.22) !important;
+  }
+
+  /* ================= JADWAL ================= */
+  .jadwal-pro-head{
+    display:flex !important;
+    align-items:flex-start !important;
+    gap:8px !important;
+    margin-bottom:10px !important;
+  }
+  .jadwal-pro-title-row h2{
+    font-size:17px !important;
+    margin:2px 0 0 !important;
+  }
+  .jadwal-pro-head-copy p{
+    font-size:9.5px !important;
+    margin-top:4px !important;
+  }
+  .jadwal-pro-add{
+    flex:0 0 auto !important;
+    padding:6px 10px !important;
+  }
+  .jadwal-day-rail-wrap{
+    overflow-x:auto !important;
+    scrollbar-width:none !important;
+    margin:0 -2px 10px !important;
+  }
+  .jadwal-day-rail-wrap::-webkit-scrollbar{display:none;}
+  .jadwal-day-rail{
+    width:max-content !important;
+    min-width:100% !important;
+    gap:5px !important;
+  }
+  .jadwal-day-rail button{
+    min-width:54px !important;
+    min-height:34px !important;
+    padding:5px 9px !important;
+    border-radius:10px !important;
+  }
+  .jadwal-pro-list{
+    display:grid !important;
+    grid-template-columns:minmax(0,1fr) !important;
+    gap:7px !important;
+  }
+
+  /* ================= PIKET ================= */
+  .piket-actionbar{
+    margin-bottom:9px !important;
+  }
+  .piket-actionbar-main{
+    display:block !important;
+  }
+  .piket-actionbar-actions{
+    display:flex !important;
+    gap:5px !important;
+    overflow-x:auto !important;
+    scrollbar-width:none !important;
+    margin-top:8px !important;
+  }
+  .piket-actionbar-actions::-webkit-scrollbar{display:none;}
+  .piket-action-btn{flex:0 0 auto !important;}
+  .piket-integrated-panel{
+    padding:11px !important;
+    border-radius:14px !important;
+    background:var(--ref-card) !important;
+    border:1px solid var(--ref-line) !important;
+    box-shadow:var(--ref-shadow) !important;
+  }
+  body.dark .piket-integrated-panel{
+    background:#102236 !important;
+    border-color:rgba(148,163,184,.16) !important;
+  }
+  .piket-integrated-head{
+    gap:8px !important;
+  }
+  .piket-integrated-title{
+    font-size:17px !important;
+  }
+  .piket-integrated-progress{
+    gap:4px !important;
+  }
+  .piket-integrated-progress > div{
+    min-width:45px !important;
+    padding:5px !important;
+    border-radius:9px !important;
+  }
+  .piket-integrated-toolbar{
+    display:flex !important;
+    flex-direction:column !important;
+    gap:7px !important;
+  }
+  .piket-toolbar-group{
+    display:flex !important;
+    gap:5px !important;
+    overflow-x:auto !important;
+    scrollbar-width:none !important;
+  }
+  .piket-toolbar-group::-webkit-scrollbar{display:none;}
+  .piket-toolbar-btn{flex:0 0 auto !important;}
+  .piket-search-wrap{
+    width:100% !important;
+  }
+  .piket-weekly-stats{
+    grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+    gap:6px !important;
+  }
+  .piket-weekly-stat{
+    padding:8px !important;
+    min-width:0 !important;
+  }
+  .piket-weekly-stat-label{
+    font-size:8px !important;
+  }
+  .piket-weekly-stat strong{
+    font-size:15px !important;
+  }
+  .piket-weekly-list{
+    grid-template-columns:minmax(0,1fr) !important;
+    gap:7px !important;
+  }
+  .piket-task-card{
+    min-width:0 !important;
+  }
+
+  /* ================= TUGAS / LAPORAN ================= */
+  .task-pro-pagehead{
+    align-items:flex-start !important;
+    gap:7px !important;
+  }
+  .task-pro-pagehead h1{
+    font-size:19px !important;
+  }
+  .task-pro-primary{
+    flex:0 0 auto !important;
+    padding:7px 10px !important;
+  }
+  .task-pro-toolbar{
+    display:flex !important;
+    flex-direction:column !important;
+    gap:7px !important;
+    margin-bottom:10px !important;
+  }
+  .task-pro-search-wrap{
+    width:100% !important;
+  }
+  .task-filter-tabs{
+    width:100% !important;
+    padding-bottom:2px !important;
+  }
+  .task-filter-tab{
+    padding:6px 11px !important;
+    min-height:32px !important;
+    font-size:9px !important;
+  }
+  .task-pro-smart-list{
+    display:grid !important;
+    grid-template-columns:minmax(0,1fr) !important;
+    gap:7px !important;
+  }
+
+  #view-laporan .section:first-of-type{
+    display:flex !important;
+    justify-content:flex-end !important;
+  }
+  #view-laporan .fab-add{
+    width:auto !important;
+    margin:0 0 2px !important;
+  }
+  #view-laporan .section-head{
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:stretch !important;
+    gap:7px !important;
+  }
+  #view-laporan .section-head > div:last-child{
+    display:flex !important;
+    width:100% !important;
+    gap:6px !important;
+  }
+  #report-search{
+    flex:1 1 auto !important;
+    width:auto !important;
+    min-width:0 !important;
+    height:34px !important;
+  }
+  #report-filter{
+    width:auto !important;
+    min-width:92px !important;
+    height:34px !important;
+  }
+
+  /* ================= KAS ================= */
+  #view-kas .kas-pro-head,
+  #view-kas .kas-toolbar,
+  #view-kas .kas-summary{
+    min-width:0 !important;
+  }
+  .kas-pro-table-wrap,.table-wrap,.table-scroll{
+    width:100% !important;
+    max-width:100% !important;
+    overflow-x:auto !important;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:thin;
+  }
+  .kas-pro-table{
+    min-width:620px !important;
+  }
+
+  /* ================= HP ================= */
+  #view-hp .hp-command-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:7px !important;
+  }
+  #view-hp .hp-slot{
+    min-width:0 !important;
+  }
+
+  /* ================= SETTINGS ================= */
+  #view-settings .pagehead{
+    margin-bottom:9px !important;
+  }
+  #view-settings .section > .card{
+    padding:11px !important;
+  }
+  #view-settings .acc-row{
+    min-width:0 !important;
+  }
+  #view-settings .settings-nav{
+    max-width:calc(100vw - 28px) !important;
+    margin:0 0 10px !important;
+  }
+  #view-settings .settings-nav button{
+    padding:7px 11px !important;
+    font-size:9.5px !important;
+  }
+  #view-settings .settings-section{
+    padding:10px !important;
+    margin-bottom:8px !important;
+  }
+
+  /* ================= BOTTOM NAV ================= */
+  .tabbar{
+    position:fixed !important;
+    z-index:1000 !important;
+    left:0 !important;
+    right:0 !important;
+    bottom:0 !important;
+    width:100% !important;
+    height:64px !important;
+    padding:5px 8px calc(5px + env(safe-area-inset-bottom,0px)) !important;
+    display:grid !important;
+    grid-template-columns:repeat(5,minmax(0,1fr)) !important;
+    gap:3px !important;
+    background:rgba(255,255,255,.96) !important;
+    border-top:1px solid var(--ref-line) !important;
+    box-shadow:0 -5px 18px rgba(15,23,42,.06) !important;
+    backdrop-filter:blur(12px) !important;
+  }
+  body.dark .tabbar{
+    background:rgba(8,19,33,.96) !important;
+    border-top-color:rgba(148,163,184,.16) !important;
+    box-shadow:0 -5px 18px rgba(0,0,0,.18) !important;
+  }
+  .tabbar .tab{
+    min-width:0 !important;
+    min-height:50px !important;
+    padding:5px 2px !important;
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:center !important;
+    justify-content:center !important;
+    gap:3px !important;
+    border:0 !important;
+    border-radius:11px !important;
+    background:transparent !important;
+    color:#64748b !important;
+    font-size:8px !important;
+    white-space:nowrap !important;
+  }
+  body.dark .tabbar .tab{color:#91a4ba !important;}
+  .tabbar .tab svg{
+    width:18px !important;height:18px !important;
+    flex:0 0 auto !important;
+  }
+  .tabbar .tab.active{
+    color:var(--ref-blue) !important;
+    background:#eff6ff !important;
+  }
+  body.dark .tabbar .tab.active{
+    color:#60a5fa !important;
+    background:rgba(37,99,235,.14) !important;
+  }
+  .tabbar .tab:nth-child(3),.tabbar .tab:nth-child(4),.tabbar .tab:nth-child(5){
+    /* visibility controlled below by JS clone menu */
+  }
+
+  /* Hide desktop-only navigation on phones */
+  .desktop-nav,.sidebar,.desktop-only-nav{display:none !important;}
+}
+
+@media (max-width:420px){
+  .view{padding-left:12px !important;padding-right:12px !important;}
+  .dashboard-stat-grid{gap:6px !important;}
+  .dashboard-stat-card{padding:9px !important;}
+  .dashboard-stat-card .stat-value{font-size:15px !important;}
+  .pagehead h1{font-size:18px !important;}
+  .piket-weekly-stats{gap:5px !important;}
+  .tabbar{padding-left:5px !important;padding-right:5px !important;}
+}
+
+@media (max-width:900px) and (orientation:landscape){
+  .view{
+    padding:10px 16px calc(72px + env(safe-area-inset-bottom,0px)) !important;
+  }
+  .dashboard-stat-grid{
+    grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+  }
+  .dashboard-main-grid,.dashboard-secondary-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  }
+  .jadwal-pro-list,.piket-weekly-list{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  }
+  .piket-integrated-toolbar{
+    flex-direction:row !important;
+    align-items:center !important;
+  }
+  .piket-search-wrap{max-width:230px !important;margin-left:auto;}
+  .tabbar{height:58px !important;}
 }
 </style>
+
 </head>
 
 <body>
@@ -9607,7 +10041,7 @@ X TJKT 1
       </div>
       <div class="hp-date-switcher" role="group" aria-label="Navigasi tanggal pengumpulan HP">
         <button type="button" onclick="shiftHpSelectedDate(-1)" aria-label="Tanggal sebelumnya">‹</button>
-        <button type="button" class="hp-date-main" onclick="openHpDateCalendar(event)">
+        <button type="button" class="hp-date-main" onclick="toggleCalendar('hp', event)">
           <span id="hp-command-date-short">19 Sep</span><span class="hp-date-main-chevron">⌄</span>
         </button>
         <button type="button" onclick="shiftHpSelectedDate(1)" aria-label="Tanggal berikutnya">›</button>
@@ -9874,8 +10308,8 @@ X TJKT 1
   </div>
   <div class="section">
     <div class="card">
-      <div class="acc-row settings-profile-row" style="margin-bottom:10px; align-items:center;">
-        <div class="settings-profile-identity" style="display:flex; align-items:center; gap:10px; min-width:0;">
+      <div class="acc-row" style="margin-bottom:10px; align-items:center;">
+        <div style="display:flex; align-items:center; gap:10px; min-width:0;">
           <button type="button" class="profile-avatar-editor" id="profile-avatar-editor" onclick="openAvatarPicker()" aria-label="Ubah avatar profil" title="Ubah avatar profil">
             <span id="profile-avatar-preview">TJ</span>
             <span class="profile-avatar-edit-badge" aria-hidden="true">✎</span>
@@ -9889,7 +10323,7 @@ X TJKT 1
             </div>
           </div>
         </div>
-        <div class="settings-profile-actions" style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; justify-content:flex-end;">
+        <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; justify-content:flex-end;">
           <input type="file" id="profile-avatar-input" accept="image/png,image/jpeg,image/webp,image/gif" style="display:none;" onchange="handleAvatarFile(this.files && this.files[0])">
           <button type="button" class="btn btn-ghost avatar-reset-btn" id="profile-avatar-reset" onclick="removeAvatar()">Hapus avatar
           </button>
@@ -19841,102 +20275,120 @@ body.kelasku-authenticated #view-jadwal.active{
 </style>
 
 
-<style id="v80-hp-readability-calendar-fix">
-/* v80 — Pengumpulan HP: perbesar tipografi + perbaiki tombol tanggal agar membuka kalender dengan konsisten. */
-#view-hp .hp-date-overline{font-size:10px !important;letter-spacing:.11em !important;line-height:1.2 !important}
-#view-hp .hp-date-context strong{font-size:13.5px !important;line-height:1.25 !important}
-#view-hp .hp-date-switcher{padding:4px !important;gap:3px !important}
-#view-hp .hp-date-switcher button{width:32px !important;height:31px !important;font-size:19px !important}
-#view-hp .hp-date-switcher .hp-date-main{min-width:88px !important;min-height:31px !important;padding:0 11px !important;font-size:11.5px !important;gap:7px !important}
-#view-hp .hp-date-main-chevron{font-size:11px !important}
-#view-hp .hp-metric-card{min-height:76px !important;padding:13px !important;gap:11px !important}
-#view-hp .hp-metric-icon{width:34px !important;height:34px !important;flex-basis:34px !important;font-size:15px !important}
-#view-hp .hp-metric-copy{gap:4px !important}
-#view-hp .hp-metric-copy span{font-size:10px !important;line-height:1.25 !important}
-#view-hp .hp-metric-copy strong{font-size:23px !important;line-height:1 !important}
-#view-hp .hp-progress-card{padding:15px 16px !important}
-#view-hp .hp-progress-kicker{font-size:9px !important;line-height:1.2 !important}
-#view-hp .hp-progress-head strong{font-size:13px !important;line-height:1.25 !important}
-#view-hp .hp-progress-pct{font-size:20px !important}
-#view-hp .hp-progress-note{font-size:10px !important;line-height:1.3 !important}
-#view-hp .hp-view-switcher button{font-size:11.5px !important;min-height:33px !important;padding:0 10px !important}
-#view-hp .hp-search-wrap{height:39px !important;min-width:260px !important}
-#view-hp .hp-search-wrap input{font-size:13px !important}
-#view-hp .hp-filter-row button{font-size:11px !important;min-height:33px !important;padding:0 10px !important}
-#view-hp .hp-filter-row button span{font-size:9px !important;min-width:19px !important;height:19px !important}
-#view-hp .hp-student-roll{font-size:10px !important}
-#view-hp .hp-slot-tag{font-size:10px !important;padding:4px 8px !important}
-#view-hp .hp-student-main{gap:11px !important;margin-top:11px !important}
-#view-hp .hp-student-avatar{font-size:12px !important}
-#view-hp .hp-student-name{font-size:14px !important;line-height:1.25 !important}
-#view-hp .hp-student-sub{font-size:10.5px !important;line-height:1.35 !important}
-#view-hp .hp-status-chip{font-size:10px !important}
-#view-hp .hp-quick-btn{font-size:10.5px !important}
-#view-hp .hp-calendar-drawer-head{margin-bottom:9px !important}
-#view-hp .hp-calendar-drawer-head strong{font-size:14px !important}
-#view-hp .cal-month{font-size:16px !important}
-#view-hp .cal-day{font-size:12px !important}
-#view-hp .cal-nav-btn{font-size:13px !important}
-#view-hp .cal-picker-months button{font-size:12px !important}
-@media(max-width:760px){
-  #view-hp .hp-date-context strong{font-size:12.5px !important}
-  #view-hp .hp-metric-copy span{font-size:9.5px !important}
-  #view-hp .hp-metric-copy strong{font-size:21px !important}
-  #view-hp .hp-search-wrap{min-width:0 !important;width:100% !important}
-  #view-hp .hp-student-name{font-size:13px !important}
-}
-</style>
-
-<script id="v80-hp-calendar-click-fix">
+<script id="kelasku-mobile-more-menu">
 (function(){
-  'use strict';
+  function setupMoreMenu(){
+    if(document.getElementById('kelasku-mobile-more')) return;
+    var bar=document.querySelector('.tabbar');
+    if(!bar) return;
 
-  function openHpDateCalendar(evt){
-    if(evt){ evt.preventDefault(); evt.stopPropagation(); }
-    if(!window.state) return;
-    if(!state.calMinimized || typeof state.calMinimized !== 'object') state.calMinimized={hp:true,piket:true};
-    state.calMinimized.hp = !state.calMinimized.hp;
-    var drawer=document.getElementById('hp-calendar-drawer');
-    if(drawer) drawer.classList.toggle('is-open', !state.calMinimized.hp);
-    try{ if(typeof updateCalendarUI==='function') updateCalendarUI('hp'); }catch(_){ }
-    try{ if(typeof renderHpCalendar==='function') renderHpCalendar(); }catch(_){ }
-    try{ if(typeof renderHpCommandCenter==='function') renderHpCommandCenter(); }catch(_){ }
-    try{ saveState(); }catch(_){ }
-  }
+    var tabs=[].slice.call(bar.querySelectorAll('.tab'));
+    if(tabs.length<5) return;
 
-  window.openHpDateCalendar=openHpDateCalendar;
+    /* Mobile navigation reference: Beranda / Tugas / Laporan / Kas / Lainnya.
+       Existing actions remain accessible through the More sheet. */
+    var byTab=function(name){ return bar.querySelector('.tab[data-tab="'+name+'"]'); };
+    var beranda=byTab('beranda'), tugas=byTab('tugas'), laporan=byTab('laporan'), kas=byTab('kas');
 
-  var btn=document.querySelector('#view-hp .hp-date-main');
-  if(btn){
-    btn.setAttribute('onclick','openHpDateCalendar(event)');
-    btn.style.cursor='pointer';
-    btn.setAttribute('aria-label','Buka atau tutup kalender tanggal');
-    btn.setAttribute('title','Buka kalender');
-  }
-
-  /* Keep the legacy global toggle reliable for HP/Piket as well. */
-  var previousToggle=window.toggleCalendar;
-  window.toggleCalendar=function(type,evt){
-    if(type==='hp' || type==='piket'){
-      if(evt){ evt.preventDefault(); evt.stopPropagation(); }
-      if(!window.state) return;
-      if(!state.calMinimized || typeof state.calMinimized !== 'object') state.calMinimized={hp:true,piket:true};
-      var key=type==='hp'?'hp':'piket';
-      state.calMinimized[key]=!state.calMinimized[key];
-      var drawer=document.getElementById(key==='hp'?'hp-calendar-drawer':'piket-calendar-drawer');
-      if(drawer) drawer.classList.toggle('is-open', !state.calMinimized[key]);
-      try{ if(typeof updateCalendarUI==='function') updateCalendarUI(type); }catch(_){ }
-      try{ if(type==='hp' && typeof renderHpCalendar==='function') renderHpCalendar(); }catch(_){ }
-      try{ if(type==='piket' && typeof renderPiketCalendar==='function') renderPiketCalendar(); }catch(_){ }
-      try{ if(type==='hp' && typeof renderHpCommandCenter==='function') renderHpCommandCenter(); }catch(_){ }
-      try{ if(type==='piket' && typeof renderPiket==='function') renderPiket(); }catch(_){ }
-      try{ saveState(); }catch(_){ }
-      return;
+    function setLabel(btn,label){
+      if(!btn) return;
+      var nodes=btn.childNodes;
+      for(var i=nodes.length-1;i>=0;i--){
+        if(nodes[i].nodeType===3 && String(nodes[i].textContent).trim()){
+          nodes[i].textContent='\n'+label+'\n';
+          return;
+        }
+      }
     }
-    return typeof previousToggle==='function' ? previousToggle.apply(this,arguments) : undefined;
-  };
+
+    /* Keep four most useful destinations visible. */
+    [beranda,tugas,laporan,kas].forEach(function(btn){
+      if(btn) btn.style.display='';
+    });
+
+    tabs.forEach(function(btn){
+      if([beranda,tugas,laporan,kas].indexOf(btn)===-1){
+        btn.style.display='none';
+      }
+    });
+
+    var more=document.createElement('button');
+    more.type='button';
+    more.className='tab';
+    more.dataset.tab='mobile-more';
+    more.setAttribute('aria-label','Lainnya');
+    more.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="19" cy="12" r="1.7"/></svg>Lainnya';
+    bar.appendChild(more);
+
+    var sheet=document.createElement('div');
+    sheet.id='kelasku-mobile-more';
+    sheet.innerHTML=
+      '<div class="km-more-backdrop" data-close="1"></div>'+
+      '<div class="km-more-sheet" role="dialog" aria-modal="true" aria-label="Menu lainnya">'+
+        '<div class="km-more-handle"></div>'+
+        '<div class="km-more-head"><strong>Lainnya</strong><button type="button" class="km-more-close" data-close="1">×</button></div>'+
+        '<div class="km-more-grid">'+
+          '<button type="button" data-go="jadwal"><span>◫</span><b>Jadwal</b><small>Pelajaran &amp; piket</small></button>'+
+          '<button type="button" data-go="hp"><span>▣</span><b>Pengumpulan HP</b><small>Catatan masuk &amp; tidak masuk</small></button>'+
+          '<button type="button" data-go="settings"><span>⚙</span><b>Setelan</b><small>Pengaturan aplikasi</small></button>'+
+          '<button type="button" data-go="profile"><span>◯</span><b>Profil</b><small>Akun dan preferensi</small></button>'+
+        '</div>'+
+      '</div>';
+    document.body.appendChild(sheet);
+
+    var style=document.createElement('style');
+    style.textContent=
+      '#kelasku-mobile-more{display:none;position:fixed;inset:0;z-index:1200;}'+
+      '#kelasku-mobile-more.open{display:block;}'+
+      '.km-more-backdrop{position:absolute;inset:0;background:rgba(15,23,42,.38);backdrop-filter:blur(5px);}'+
+      '.km-more-sheet{position:absolute;left:10px;right:10px;bottom:calc(72px + env(safe-area-inset-bottom,0px));padding:10px;border:1px solid #dbe5f0;border-radius:18px;background:#fff;box-shadow:0 18px 50px rgba(15,23,42,.18);}'+
+      'body.dark .km-more-sheet{background:#102236;border-color:rgba(148,163,184,.16);box-shadow:0 18px 50px rgba(0,0,0,.35);}'+
+      '.km-more-handle{width:34px;height:4px;border-radius:99px;background:#cbd5e1;margin:0 auto 8px;}'+
+      '.km-more-head{display:flex;align-items:center;justify-content:space-between;padding:3px 4px 9px;color:#0f172a;}'+
+      'body.dark .km-more-head{color:#f8fafc;}'+
+      '.km-more-close{width:30px!important;height:30px!important;min-height:30px!important;border:0!important;background:#f1f5f9!important;border-radius:9px!important;font-size:20px!important;color:#475569!important;}'+
+      'body.dark .km-more-close{background:#172d44!important;color:#cbd5e1!important;}'+
+      '.km-more-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;}'+
+      '.km-more-grid button{min-height:72px!important;text-align:left!important;padding:10px!important;border:1px solid #dbe5f0!important;border-radius:12px!important;background:#f8fbff!important;color:#0f172a!important;display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:2px!important;}'+
+      'body.dark .km-more-grid button{background:#0c1b2c!important;border-color:rgba(148,163,184,.16)!important;color:#f8fafc!important;}'+
+      '.km-more-grid button span{font-size:18px;color:#2563eb;}'+
+      '.km-more-grid button b{font-size:11px;}'+
+      '.km-more-grid button small{font-size:8.5px;color:#64748b;}'+
+      'body.dark .km-more-grid button small{color:#91a4ba;}'+
+      '@media(min-width:901px){#kelasku-mobile-more{display:none!important;}}';
+    document.head.appendChild(style);
+
+    function openSheet(){
+      sheet.classList.add('open');
+      more.classList.add('active');
+    }
+    function closeSheet(){
+      sheet.classList.remove('open');
+      more.classList.remove('active');
+    }
+    more.addEventListener('click',openSheet);
+    sheet.addEventListener('click',function(e){
+      var close=e.target.closest('[data-close]');
+      if(close){closeSheet();return;}
+      var go=e.target.closest('[data-go]');
+      if(go){
+        var target=go.dataset.go;
+        closeSheet();
+        if(typeof window.goTo==='function') window.goTo(target);
+      }
+    });
+
+    /* If the app navigates directly to settings/profile, More stays available. */
+    window.addEventListener('resize',function(){
+      if(window.innerWidth>900) closeSheet();
+    });
+  }
+
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',setupMoreMenu);
+  else setupMoreMenu();
 })();
 </script>
+
 </body>
 <!-- Kelasku compatibility patch: resilient Firestore sync + legacy fallback -->
 
@@ -20882,102 +21334,6 @@ body:not(.dark) .view .tx-item{
 }
 </style>
 
-
-<style id="kelasku-settings-mobile-v85">
-/* Setelan mobile: tab horizontal-scroll, profil bertumpuk rapi, bottom-nav maksimal 5 menu. */
-@media (max-width:620px){
-  #view-settings .settings-nav{
-    display:flex !important;
-    align-items:center !important;
-    flex-wrap:nowrap !important;
-    width:100% !important;
-    max-width:100% !important;
-    overflow-x:auto !important;
-    overflow-y:hidden !important;
-    gap:6px !important;
-    padding:2px 2px 8px !important;
-    margin:10px 0 14px !important;
-    box-sizing:border-box !important;
-    scrollbar-width:none !important;
-    -webkit-overflow-scrolling:touch !important;
-  }
-  #view-settings .settings-nav::-webkit-scrollbar{display:none !important;}
-  #view-settings .settings-nav button{
-    flex:0 0 auto !important;
-    min-width:max-content !important;
-    min-height:40px !important;
-    padding:9px 13px !important;
-    white-space:nowrap !important;
-    font-size:11px !important;
-    line-height:1.15 !important;
-    border-radius:10px !important;
-  }
-
-  #view-settings .settings-profile-row{
-    display:flex !important;
-    flex-direction:column !important;
-    align-items:stretch !important;
-    gap:12px !important;
-    margin-bottom:10px !important;
-  }
-  #view-settings .settings-profile-identity{
-    width:100% !important;
-    min-width:0 !important;
-    display:flex !important;
-    align-items:center !important;
-    gap:11px !important;
-  }
-  #view-settings .settings-profile-actions{
-    width:100% !important;
-    display:flex !important;
-    align-items:stretch !important;
-    justify-content:stretch !important;
-    gap:8px !important;
-    flex-wrap:nowrap !important;
-  }
-  #view-settings .settings-profile-actions .avatar-reset-btn,
-  #view-settings .settings-profile-actions button[onclick="logout()"]{
-    flex:1 1 0 !important;
-    min-width:0 !important;
-    min-height:40px !important;
-    padding:9px 10px !important;
-    font-size:11px !important;
-    white-space:nowrap !important;
-  }
-
-  .phone > .tabbar{
-    display:grid !important;
-    grid-template-columns:repeat(5,minmax(0,1fr)) !important;
-    align-items:stretch !important;
-    gap:0 !important;
-    min-height:64px !important;
-    padding:5px 4px max(6px,env(safe-area-inset-bottom)) !important;
-    box-sizing:border-box !important;
-  }
-  .phone > .tabbar .tab:nth-child(5),
-  .phone > .tabbar .tab:nth-child(6){
-    display:none !important;
-  }
-  .phone > .tabbar .tab{
-    min-width:0 !important;
-    min-height:54px !important;
-    padding:6px 2px !important;
-    display:flex !important;
-    flex-direction:column !important;
-    align-items:center !important;
-    justify-content:center !important;
-    gap:3px !important;
-    font-size:10.5px !important;
-    line-height:1.1 !important;
-    white-space:nowrap !important;
-  }
-  .phone > .tabbar .tab svg{
-    width:22px !important;
-    height:22px !important;
-    flex:0 0 auto !important;
-  }
-}
-</style>
 </html>
 
 <style id="kelasku-settings-tabs-fix">
@@ -22487,503 +22843,7 @@ body.dark #view-hp .hp-slot-tag.is-occupied{color:#86efac !important;background:
 @media(max-width:760px){#view-hp #hp-list.hp-command-list > .hp-command-grid{grid-template-columns:repeat(2,minmax(0,1fr)) !important}}
 @media(max-width:480px){#view-hp #hp-list.hp-command-list > .hp-command-grid{grid-template-columns:1fr !important}}
 </style>
-
-<style id="kelasku-mobile-dashboard-worldclass">
-/* =========================================================
-   Kelasku — Mobile Dashboard UX
-   Only visual/layout overrides; existing JS/features preserved.
-   ========================================================= */
-@media (max-width: 900px){
-  #view-beranda{
-    width:100%!important;
-    max-width:none!important;
-    min-width:0!important;
-    overflow-x:hidden!important;
-    padding:12px 12px calc(88px + env(safe-area-inset-bottom))!important;
-    box-sizing:border-box!important;
-  }
-
-  #view-beranda > *{
-    max-width:100%!important;
-    min-width:0!important;
-    box-sizing:border-box!important;
-  }
-
-  /* Header/search: compact, never forces horizontal overflow */
-  #view-beranda .dashboard-topbar{
-    display:flex!important;
-    align-items:center!important;
-    gap:8px!important;
-    width:100%!important;
-    min-width:0!important;
-    margin:0 0 12px!important;
-  }
-
-  #view-beranda .dashboard-search{
-    flex:1 1 auto!important;
-    min-width:0!important;
-    width:auto!important;
-    max-width:none!important;
-    height:42px!important;
-  }
-
-  #view-beranda .dashboard-search input,
-  #view-beranda .home-search-input{
-    min-width:0!important;
-    width:100%!important;
-    font-size:13px!important;
-    padding-left:38px!important;
-    padding-right:12px!important;
-  }
-
-  #view-beranda .dashboard-user-menu{
-    flex:0 0 auto!important;
-  }
-
-  #view-beranda .dashboard-user-avatar{
-    width:40px!important;
-    height:40px!important;
-    min-width:40px!important;
-    border-radius:12px!important;
-  }
-
-  /* Hero becomes compact information header, not a giant card */
-  #view-beranda .dashboard-hero,
-  #view-beranda .hero.dashboard-hero{
-    width:100%!important;
-    padding:16px!important;
-    margin:0 0 12px!important;
-    border-radius:16px!important;
-    overflow:hidden!important;
-  }
-
-  #view-beranda .dashboard-hero .hero-top{
-    display:flex!important;
-    align-items:center!important;
-    justify-content:space-between!important;
-    gap:12px!important;
-  }
-
-  #view-beranda .dashboard-hero .hero-name{
-    font-size:20px!important;
-    line-height:1.2!important;
-    overflow-wrap:anywhere!important;
-  }
-
-  #view-beranda .dashboard-hero .hero-copy{
-    margin-top:5px!important;
-    font-size:11px!important;
-    line-height:1.45!important;
-    max-width:38ch!important;
-  }
-
-  #view-beranda .dashboard-hero .avatar,
-  #view-beranda .dashboard-hero #hero-avatar{
-    flex:0 0 44px!important;
-    width:44px!important;
-    height:44px!important;
-    border-radius:14px!important;
-  }
-
-  #view-beranda .dashboard-hero .hero-tags{
-    display:flex!important;
-    gap:6px!important;
-    max-width:100%!important;
-    overflow-x:auto!important;
-    scrollbar-width:none!important;
-    padding-top:10px!important;
-  }
-  #view-beranda .dashboard-hero .hero-tags::-webkit-scrollbar{display:none!important}
-  #view-beranda .dashboard-hero .htag{
-    flex:0 0 auto!important;
-    white-space:nowrap!important;
-    font-size:10px!important;
-  }
-
-  /* Stats: 2 columns, equal width, no cramped 4-column desktop leftovers */
-  #view-beranda .dashboard-stat-grid,
-  #view-beranda .stat-grid{
-    display:grid!important;
-    grid-template-columns:repeat(2,minmax(0,1fr))!important;
-    gap:8px!important;
-    width:100%!important;
-    margin:0 0 12px!important;
-  }
-
-  #view-beranda .dashboard-stat-card,
-  #view-beranda .stat-card{
-    min-width:0!important;
-    width:auto!important;
-    padding:12px!important;
-    border-radius:14px!important;
-    overflow:hidden!important;
-  }
-
-  #view-beranda .dashboard-stat-card .stat-top{
-    display:flex!important;
-    align-items:center!important;
-    justify-content:space-between!important;
-    gap:6px!important;
-  }
-
-  #view-beranda .dashboard-stat-card .stat-icon{
-    width:30px!important;
-    height:30px!important;
-    flex:0 0 30px!important;
-  }
-
-  #view-beranda .dashboard-stat-card .stat-label{
-    margin-top:8px!important;
-    font-size:10px!important;
-    line-height:1.25!important;
-  }
-
-  #view-beranda .dashboard-stat-card .stat-value{
-    margin-top:3px!important;
-    font-size:17px!important;
-    line-height:1.2!important;
-    overflow-wrap:anywhere!important;
-  }
-
-  #view-beranda .dashboard-stat-card .stat-status{
-    max-width:70px!important;
-    font-size:8px!important;
-    white-space:nowrap!important;
-    overflow:hidden!important;
-    text-overflow:ellipsis!important;
-  }
-
-  /* Main dashboard sections: one column, content-first */
-  #view-beranda .dashboard-main-grid,
-  #view-beranda .dashboard-secondary-grid{
-    display:grid!important;
-    grid-template-columns:minmax(0,1fr)!important;
-    width:100%!important;
-    gap:10px!important;
-    margin:0 0 10px!important;
-  }
-
-  #view-beranda .dashboard-card,
-  #view-beranda .dashboard-panel{
-    width:100%!important;
-    min-width:0!important;
-    box-sizing:border-box!important;
-    padding:14px!important;
-    border-radius:15px!important;
-    overflow:hidden!important;
-  }
-
-  /* Section headers stack gracefully */
-  #view-beranda .dashboard-card .section-head,
-  #view-beranda .dashboard-panel .section-head{
-    display:flex!important;
-    align-items:center!important;
-    justify-content:space-between!important;
-    gap:8px!important;
-    min-width:0!important;
-    flex-wrap:wrap!important;
-  }
-
-  #view-beranda .dashboard-card .section-title,
-  #view-beranda .dashboard-panel .section-title{
-    min-width:0!important;
-    font-size:14px!important;
-    line-height:1.3!important;
-  }
-
-  #view-beranda .dashboard-card .section-action,
-  #view-beranda .dashboard-panel .section-action{
-    flex:0 0 auto!important;
-    width:fit-content!important;
-    max-width:100%!important;
-    min-height:34px!important;
-    padding:7px 10px!important;
-    font-size:10px!important;
-  }
-
-  /* Lists: remove desktop density and avoid clipped rows */
-  #view-beranda .dashboard-card .row-item,
-  #view-beranda .dashboard-panel .row-item,
-  #view-beranda .dashboard-card .task-item,
-  #view-beranda .dashboard-panel .task-item{
-    min-width:0!important;
-    display:flex!important;
-    align-items:flex-start!important;
-    gap:9px!important;
-  }
-
-  #view-beranda .dashboard-card .row-time,
-  #view-beranda .dashboard-panel .row-time{
-    flex:0 0 56px!important;
-    min-width:56px!important;
-    font-size:10px!important;
-  }
-
-  #view-beranda .dashboard-card .row-main,
-  #view-beranda .dashboard-panel .row-main,
-  #view-beranda .dashboard-card .task-main,
-  #view-beranda .dashboard-panel .task-main{
-    min-width:0!important;
-    flex:1 1 auto!important;
-  }
-
-  #view-beranda .dashboard-card .row-title,
-  #view-beranda .dashboard-panel .row-title,
-  #view-beranda .dashboard-card .task-title,
-  #view-beranda .dashboard-panel .task-title{
-    white-space:normal!important;
-    overflow-wrap:anywhere!important;
-    line-height:1.35!important;
-  }
-
-  /* Never let tables make the entire phone viewport wider */
-  #view-beranda table{
-    width:100%!important;
-    max-width:100%!important;
-  }
-  #view-beranda .table-wrap,
-  #view-beranda .dashboard-table-wrap{
-    width:100%!important;
-    max-width:100%!important;
-    overflow-x:auto!important;
-    -webkit-overflow-scrolling:touch!important;
-  }
-}
-
-@media (max-width:390px){
-  #view-beranda{padding-left:10px!important;padding-right:10px!important}
-  #view-beranda .dashboard-topbar{gap:6px!important}
-  #view-beranda .dashboard-user-avatar{width:38px!important;height:38px!important;min-width:38px!important}
-  #view-beranda .dashboard-hero{padding:14px!important}
-  #view-beranda .dashboard-hero .hero-name{font-size:18px!important}
-  #view-beranda .dashboard-stat-card{padding:10px!important}
-  #view-beranda .dashboard-stat-card .stat-value{font-size:16px!important}
-  #view-beranda .dashboard-card,#view-beranda .dashboard-panel{padding:12px!important}
-}
-
-@media (orientation:landscape) and (max-width:900px){
-  #view-beranda{
-    padding:10px 14px calc(76px + env(safe-area-inset-bottom))!important;
-  }
-  #view-beranda .dashboard-topbar{margin-bottom:10px!important}
-  #view-beranda .dashboard-hero{
-    padding:13px 16px!important;
-  }
-  #view-beranda .dashboard-stat-grid,
-  #view-beranda .stat-grid{
-    grid-template-columns:repeat(4,minmax(0,1fr))!important;
-    gap:8px!important;
-  }
-  #view-beranda .dashboard-stat-card{padding:10px!important}
-  #view-beranda .dashboard-stat-card .stat-value{font-size:16px!important}
-  #view-beranda .dashboard-main-grid,
-  #view-beranda .dashboard-secondary-grid{
-    grid-template-columns:repeat(2,minmax(0,1fr))!important;
-    gap:10px!important;
-  }
-}
-
-@media (min-width:901px){
-  #view-beranda{
-    min-width:0!important;
-    max-width:1180px!important;
-    margin-inline:auto!important;
-  }
-}
-</style>
-</head><body><h1>Kas Kelas — X TJKT 1</h1><p>Pencatatan kas transparan &amp; aman.</p><div class="metrics"><div class="m"><small>Total Kas Masuk</small><b>${money(masuk)}</b></div><div class="m"><small>Total Pengeluaran</small><b>${money(keluar)}</b></div><div class="m"><small>Sisa Saldo</small><b>${money(masuk-keluar)}</b></div></div><table><thead><tr><th>Tanggal</th><th>Keterangan</th><th>Jenis</th><th>Jumlah</th></tr></thead><tbody>${rows.map(t=>`<tr><td>${esc(t.tanggal||'-')}</td><td>${esc(t.ket||'-')}</td><td>${t.jenis==='masuk'?'Pemasukan':'Pengeluaran'}</td><td>${t.jenis==='masuk'?'+':'-'}${money(t.jumlah)}</td></tr>`).join('')}</tbody></table>${folders.map(f=>{const st=Array.isArray(f.students)?f.students:[],p=st.length?Math.round(st.filter(x=>x.status==='sudah').length/st.length*100):0;return `<div class="folder"><h3>${esc(f.name||'Kas Siswa')}</h3><p>${st.filter(x=>x.status==='sudah').length}/${st.length} siswa lunas</p><div class="bar"><div class="fill" style="width:${p}%"></div></div></div>`}).join('')}
-<style id="jadwal-v81-mode-switch-length">
-/* v81 — Pelajaran/Piket kembali dibuat lebih panjang seperti layout sebelumnya. */
-body.kelasku-authenticated #view-jadwal > .mode-switch{
-  width:min(100%, 560px) !important;
-  max-width:560px !important;
-  flex:0 0 560px !important;
-}
-body.kelasku-authenticated #view-jadwal > .mode-switch .mode-btn{
-  min-width:0 !important;
-  flex:1 1 0 !important;
-  padding-left:24px !important;
-  padding-right:24px !important;
-}
-@media(max-width:620px){
-  body.kelasku-authenticated #view-jadwal > .mode-switch{
-    width:100% !important;
-    max-width:none !important;
-    flex:0 0 auto !important;
-  }
-}
-</style>
-
-<style id="hp-v82-mobile-grid-only">
-/* v82 — Mobile Pengumpulan HP: tampilkan mode Grid saja agar toolbar tidak penuh. */
-@media (max-width: 760px){
-  #view-hp .hp-view-switcher [data-hp-view="rack"],
-  #view-hp .hp-view-switcher [data-hp-view="table"]{
-    display:none !important;
-  }
-  #view-hp .hp-view-switcher{
-    width:auto !important;
-    flex:0 0 auto !important;
-  }
-  #view-hp .hp-view-switcher [data-hp-view="grid"]{
-    display:inline-flex !important;
-    min-width:76px !important;
-    justify-content:center !important;
-  }
-}
-</style>
-<script id="hp-v82-mobile-grid-logic">
-(function(){
-  function forceMobileGrid(){
-    if(window.matchMedia && window.matchMedia('(max-width: 760px)').matches){
-      try{
-        if(typeof hpCommandViewMode !== 'undefined' && hpCommandViewMode !== 'grid') hpCommandViewMode='grid';
-      }catch(e){}
-      var gridBtn=document.querySelector('#view-hp [data-hp-view="grid"]');
-      if(gridBtn && !gridBtn.classList.contains('is-active')){
-        document.querySelectorAll('#view-hp [data-hp-view]').forEach(function(btn){btn.classList.remove('is-active')});
-        gridBtn.classList.add('is-active');
-      }
-      if(typeof renderHpCommandCenter==='function'){
-        try{renderHpCommandCenter()}catch(e){}
-      }
-    }
-  }
-  document.addEventListener('DOMContentLoaded', forceMobileGrid);
-  window.addEventListener('resize', forceMobileGrid);
-})();
-</script>
-
-<style id="hp-v84-desktop-readability-mobile-simplify">
-/* v84 — Pengumpulan HP: desktop lebih terbaca, mobile lebih ringkas. */
-@media (min-width: 761px){
-  #view-hp .hp-command-kicker{font-size:11px !important;letter-spacing:.11em !important}
-  #view-hp .hp-command-title-row h1{font-size:28px !important;line-height:1.15 !important}
-  #view-hp .hp-command-status{font-size:11px !important}
-  #view-hp .hp-command-heading p{font-size:13px !important;line-height:1.5 !important}
-
-  #view-hp .hp-date-overline{font-size:10px !important;letter-spacing:.1em !important}
-  #view-hp .hp-date-context strong{font-size:15px !important;line-height:1.3 !important}
-  #view-hp .hp-date-switcher > button{font-size:18px !important}
-  #view-hp .hp-date-switcher .hp-date-main{min-width:84px !important;min-height:42px !important;font-size:13px !important}
-  #view-hp .hp-date-switcher .hp-date-main #hp-command-date-short{font-size:13px !important}
-  #view-hp .hp-date-main-chevron{font-size:12px !important}
-
-  #view-hp .hp-metric-card{min-height:88px !important;padding:16px 17px !important}
-  #view-hp .hp-metric-icon{width:34px !important;height:34px !important;font-size:16px !important}
-  #view-hp .hp-metric-copy span{font-size:11px !important;line-height:1.25 !important}
-  #view-hp .hp-metric-copy strong{font-size:25px !important;line-height:1.05 !important}
-
-  #view-hp .hp-progress-card{padding:17px 18px !important}
-  #view-hp .hp-progress-kicker{font-size:10px !important}
-  #view-hp .hp-progress-head strong{font-size:15px !important}
-  #view-hp .hp-progress-pct{font-size:23px !important}
-  #view-hp .hp-progress-note{font-size:11px !important}
-
-  #view-hp .hp-view-switcher button{min-height:40px !important;padding:0 12px !important;font-size:12px !important}
-  #view-hp .hp-search-wrap input{font-size:12px !important}
-  #view-hp .hp-filter-row button{min-height:36px !important;padding:0 11px !important;font-size:11px !important}
-  #view-hp .hp-filter-row button span{min-width:21px !important;height:21px !important;font-size:9px !important}
-
-  #view-hp .hp-student-card{padding:15px !important}
-  #view-hp .hp-student-roll{font-size:9px !important}
-  #view-hp .hp-slot-tag{font-size:9px !important;padding:5px 8px !important}
-  #view-hp .hp-student-main{gap:11px !important;margin-top:12px !important}
-  #view-hp .hp-student-avatar{width:42px !important;height:42px !important;flex-basis:42px !important;font-size:12px !important}
-  #view-hp .hp-student-name{font-size:14px !important}
-  #view-hp .hp-student-sub{font-size:9.5px !important;margin-top:5px !important}
-  #view-hp .hp-student-footer{margin-top:12px !important;padding-top:10px !important}
-  #view-hp .hp-status-chip{font-size:9px !important;padding:6px 9px !important}
-  #view-hp .hp-quick-btn{font-size:10px !important;padding:7px 10px !important}
-}
-
-@media (max-width: 760px){
-  /* Karena mobile memakai Grid saja, kontrol pemilihan mode tidak perlu ditampilkan. */
-  #view-hp .hp-view-switcher{display:none !important}
-  #view-hp .hp-view-toolbar{display:block !important;margin-top:10px !important}
-  #view-hp .hp-search-wrap{width:100% !important;max-width:none !important}
-  #view-hp .hp-filter-row{margin-top:8px !important;gap:6px !important;padding:1px 1px 3px !important;overflow-x:auto !important;white-space:nowrap !important}
-  #view-hp .hp-filter-row button{flex:0 0 auto !important;min-height:34px !important;font-size:10px !important;padding:0 10px !important}
-  #view-hp .hp-filter-row button span{font-size:8px !important;min-width:19px !important;height:19px !important}
-}
-</style>
-</body>
-
-<style id="dark-mode-readability-v83">
-/* v83 — Pastikan teks pada kontrol berlatar terang tetap kontras di Dark Mode. */
-body.dark #view-hp .hp-date-switcher .hp-date-main{
-  background:#f8fafc !important;
-  color:#172033 !important;
-  -webkit-text-fill-color:#172033 !important;
-  border-color:#f8fafc !important;
-  opacity:1 !important;
-  text-shadow:none !important;
-}
-body.dark #view-hp .hp-date-switcher .hp-date-main #hp-command-date-short{
-  color:#172033 !important;
-  -webkit-text-fill-color:#172033 !important;
-  font-weight:900 !important;
-}
-body.dark #view-hp .hp-date-switcher .hp-date-main .hp-date-main-chevron{
-  color:#475569 !important;
-  -webkit-text-fill-color:#475569 !important;
-  opacity:1 !important;
-}
-body.dark #view-hp .hp-filter-row button:not(.is-active){
-  background:#f8fafc !important;
-  color:#334155 !important;
-  -webkit-text-fill-color:#334155 !important;
-  border-color:#dbe3ef !important;
-  opacity:1 !important;
-}
-body.dark #view-hp .hp-filter-row button:not(.is-active) span{
-  background:#e2e8f0 !important;
-  color:#334155 !important;
-  -webkit-text-fill-color:#334155 !important;
-  opacity:1 !important;
-}
-body.dark #view-hp .hp-filter-row button.is-active{
-  background:#f8fafc !important;
-  color:#172033 !important;
-  -webkit-text-fill-color:#172033 !important;
-  border-color:#f8fafc !important;
-  opacity:1 !important;
-}
-body.dark #view-hp .hp-filter-row button.is-active span{
-  background:#e2e8f0 !important;
-  color:#334155 !important;
-  -webkit-text-fill-color:#334155 !important;
-  opacity:1 !important;
-}
-body.dark #view-tugas .task-pro-check-btn{
-  color:#172033 !important;
-  -webkit-text-fill-color:#172033 !important;
-  background:#eef2ff !important;
-  border-color:#c7d2fe !important;
-  opacity:1 !important;
-  text-shadow:none !important;
-}
-body.dark #view-tugas .task-pro-check-btn .task-pro-check-icon{
-  color:#172033 !important;
-  -webkit-text-fill-color:#172033 !important;
-  background:#ffffff !important;
-  border-color:#64748b !important;
-  opacity:1 !important;
-}
-body.dark #view-tugas .task-pro-check-btn.is-done{
-  color:#166534 !important;
-  -webkit-text-fill-color:#166534 !important;
-  background:#ecfdf5 !important;
-  border-color:#bbf7d0 !important;
-}
-body.dark #view-tugas .task-pro-check-btn.is-done .task-pro-check-icon{
-  color:#ffffff !important;
-  -webkit-text-fill-color:#ffffff !important;
-  background:#22c55e !important;
-  border-color:#22c55e !important;
-}
-</style>
-</html>`;
+</head><body><h1>Kas Kelas — X TJKT 1</h1><p>Pencatatan kas transparan &amp; aman.</p><div class="metrics"><div class="m"><small>Total Kas Masuk</small><b>${money(masuk)}</b></div><div class="m"><small>Total Pengeluaran</small><b>${money(keluar)}</b></div><div class="m"><small>Sisa Saldo</small><b>${money(masuk-keluar)}</b></div></div><table><thead><tr><th>Tanggal</th><th>Keterangan</th><th>Jenis</th><th>Jumlah</th></tr></thead><tbody>${rows.map(t=>`<tr><td>${esc(t.tanggal||'-')}</td><td>${esc(t.ket||'-')}</td><td>${t.jenis==='masuk'?'Pemasukan':'Pengeluaran'}</td><td>${t.jenis==='masuk'?'+':'-'}${money(t.jumlah)}</td></tr>`).join('')}</tbody></table>${folders.map(f=>{const st=Array.isArray(f.students)?f.students:[],p=st.length?Math.round(st.filter(x=>x.status==='sudah').length/st.length*100):0;return `<div class="folder"><h3>${esc(f.name||'Kas Siswa')}</h3><p>${st.filter(x=>x.status==='sudah').length}/${st.length} siswa lunas</p><div class="bar"><div class="fill" style="width:${p}%"></div></div></div>`}).join('')}</body></html>`;
     const w=window.open('','_blank','width=900,height=700');if(!w){showNotification('Popup diblokir browser. Izinkan popup untuk mencetak PDF.','warning');return;}w.document.write(html);w.document.close();w.focus();setTimeout(()=>w.print(),250);
   };
 
@@ -23003,304 +22863,3 @@ body.dark #view-tugas .task-pro-check-btn.is-done .task-pro-check-icon{
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else setTimeout(boot,0);
 })();
 </script>
-
-<style id="kelasku-mobile-worldclass-declutter-v1">
-/* =========================================================
-   KELASKU — MOBILE WORLD-CLASS / DECLUTTER SYSTEM v1
-   Mobile only: keeps desktop layout/functionality intact.
-   ========================================================= */
-:root{
-  --mobile-bg:#f8fafc;
-  --mobile-surface:#ffffff;
-  --mobile-surface-2:#f1f5f9;
-  --mobile-text:#0f172a;
-  --mobile-muted:#64748b;
-  --mobile-border:rgba(15,23,42,.09);
-  --mobile-accent:#2563eb;
-  --mobile-radius:14px;
-  --mobile-gap:10px;
-}
-body.dark{
-  --mobile-bg:#0b1220;
-  --mobile-surface:#111c2f;
-  --mobile-surface-2:#17243a;
-  --mobile-text:#f8fafc;
-  --mobile-muted:#a9b7ca;
-  --mobile-border:rgba(255,255,255,.10);
-}
-
-@media (max-width:760px){
-  html,body{max-width:100%;overflow-x:hidden!important;}
-  body{background:var(--mobile-bg)!important;color:var(--mobile-text)!important;}
-  body *{box-sizing:border-box;}
-  img,svg,video,canvas{max-width:100%;}
-
-  /* Main mobile canvas */
-  .phone,.screen,.content,.main-content,.view{max-width:100%!important;min-width:0!important;}
-  .phone .content,.phone .main-content{padding-left:12px!important;padding-right:12px!important;}
-  .phone .view{padding-bottom:82px!important;min-width:0!important;}
-
-  /* One consistent border language */
-  .phone .card,
-  .phone .panel,
-  .phone .section,
-  .phone .dashboard-card,
-  .phone .dashboard-panel,
-  .phone .settings-section,
-  .phone .settings-profile-card,
-  .phone .hp-metric-card,
-  .phone .hp-progress-card,
-  .phone .hp-student-card{
-    border:1px solid var(--mobile-border)!important;
-    border-radius:var(--mobile-radius)!important;
-    box-shadow:none!important;
-    background:var(--mobile-surface)!important;
-  }
-  body.dark .phone .card,
-  body.dark .phone .panel,
-  body.dark .phone .section,
-  body.dark .phone .dashboard-card,
-  body.dark .phone .dashboard-panel,
-  body.dark .phone .settings-section,
-  body.dark .phone .settings-profile-card,
-  body.dark .phone .hp-metric-card,
-  body.dark .phone .hp-progress-card,
-  body.dark .phone .hp-student-card{
-    background:var(--mobile-surface)!important;
-    border-color:var(--mobile-border)!important;
-  }
-
-  /* Reduce nested-box feeling */
-  .phone .card .card,
-  .phone .panel .panel,
-  .phone .section .card,
-  .phone .dashboard-card .card,
-  .phone .dashboard-panel .card{
-    box-shadow:none!important;
-  }
-
-  /* Page headers: clear hierarchy, not oversized */
-  .phone .pagehead,
-  .phone .page-header,
-  .phone .view-head{
-    min-width:0!important;
-    gap:8px!important;
-    margin-bottom:12px!important;
-  }
-  .phone .pagehead h1,
-  .phone .page-header h1,
-  .phone .view-head h1{
-    font-size:20px!important;
-    line-height:1.22!important;
-    letter-spacing:-.02em!important;
-    overflow-wrap:anywhere!important;
-  }
-  .phone .pagehead p,
-  .phone .page-header p,
-  .phone .view-head p{
-    font-size:11px!important;
-    line-height:1.45!important;
-    color:var(--mobile-muted)!important;
-  }
-
-  /* Actions are compact, tactile and never full-width unless they are forms. */
-  .phone button,
-  .phone .btn,
-  .phone [role="button"]{
-    max-width:100%!important;
-  }
-  .phone .pagehead button,
-  .phone .page-header button,
-  .phone .view-head button,
-  .phone .section-action,
-  .phone .page-action{
-    width:fit-content!important;
-    max-width:100%!important;
-    min-height:36px!important;
-    padding:8px 11px!important;
-    border-radius:10px!important;
-    white-space:normal!important;
-  }
-  .phone button:active,
-  .phone .btn:active,
-  .phone [role="button"]:active{transform:scale(.97)!important;}
-
-  /* Search / controls */
-  .phone input,.phone select,.phone textarea{
-    min-width:0!important;
-    max-width:100%!important;
-    border-radius:10px!important;
-  }
-  .phone input::placeholder,.phone textarea::placeholder{color:var(--mobile-muted)!important;opacity:1!important;}
-
-  /* Tabs / segmented controls: content width, horizontal scroll when needed. */
-  .phone .mode-switch,
-  .phone .tabbar-secondary,
-  .phone .settings-nav,
-  .phone .segmented,
-  .phone .view-switcher{
-    width:max-content!important;
-    max-width:100%!important;
-    flex:0 0 auto!important;
-    flex-wrap:nowrap!important;
-    overflow-x:auto!important;
-    overflow-y:hidden!important;
-    scrollbar-width:none!important;
-    -ms-overflow-style:none!important;
-  }
-  .phone .mode-switch::-webkit-scrollbar,
-  .phone .tabbar-secondary::-webkit-scrollbar,
-  .phone .settings-nav::-webkit-scrollbar,
-  .phone .segmented::-webkit-scrollbar,
-  .phone .view-switcher::-webkit-scrollbar{display:none!important;}
-  .phone .mode-switch .mode-btn,
-  .phone .settings-nav button,
-  .phone .segmented > button,
-  .phone .view-switcher > button{
-    width:auto!important;
-    min-width:max-content!important;
-    flex:0 0 auto!important;
-    white-space:nowrap!important;
-  }
-
-  /* Jadwal: Pelajaran/Piket should fit the content on phones. */
-  #view-jadwal > .mode-switch{
-    width:max-content!important;
-    max-width:100%!important;
-    flex:0 0 auto!important;
-    margin-left:0!important;
-    margin-right:0!important;
-  }
-  #view-jadwal > .mode-switch .mode-btn{
-    width:auto!important;
-    flex:0 0 auto!important;
-    min-width:112px!important;
-    padding-left:16px!important;
-    padding-right:16px!important;
-  }
-
-  /* Dashboard: show only the information people need first. */
-  #view-beranda .dashboard-topbar{gap:8px!important;margin-bottom:10px!important;}
-  #view-beranda .dashboard-topbar > *{min-width:0!important;}
-  #view-beranda .dashboard-user-avatar{width:40px!important;height:40px!important;flex:0 0 40px!important;}
-  #view-beranda .dashboard-hero{padding:14px!important;border-radius:16px!important;}
-  #view-beranda .dashboard-hero .hero-name{font-size:18px!important;line-height:1.2!important;}
-  #view-beranda .dashboard-hero .hero-subtitle{font-size:11px!important;line-height:1.4!important;}
-  #view-beranda .dashboard-stat-grid,
-  #view-beranda .stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;}
-  #view-beranda .dashboard-stat-card,
-  #view-beranda .stat-card{min-width:0!important;padding:11px!important;border-radius:13px!important;}
-  #view-beranda .dashboard-stat-card .stat-value,
-  #view-beranda .stat-card .stat-value{font-size:17px!important;line-height:1.15!important;}
-  #view-beranda .dashboard-stat-card .stat-label,
-  #view-beranda .stat-card .stat-label{font-size:9px!important;line-height:1.25!important;}
-  #view-beranda .dashboard-main-grid,
-  #view-beranda .dashboard-secondary-grid{grid-template-columns:minmax(0,1fr)!important;gap:10px!important;}
-  #view-beranda .dashboard-card,
-  #view-beranda .dashboard-panel{min-width:0!important;padding:13px!important;}
-  #view-beranda .dashboard-card .section-head,
-  #view-beranda .dashboard-panel .section-head{gap:8px!important;align-items:flex-start!important;}
-  #view-beranda .dashboard-card .section-title,
-  #view-beranda .dashboard-panel .section-title{font-size:13px!important;line-height:1.3!important;}
-  #view-beranda .dashboard-card .section-action,
-  #view-beranda .dashboard-panel .section-action{font-size:10px!important;white-space:nowrap!important;}
-  #view-beranda .dashboard-card .row-item,
-  #view-beranda .dashboard-panel .row-item,
-  #view-beranda .dashboard-card .task-item,
-  #view-beranda .dashboard-panel .task-item{min-width:0!important;padding:9px 0!important;}
-  #view-beranda .dashboard-card .row-title,
-  #view-beranda .dashboard-panel .row-title,
-  #view-beranda .dashboard-card .task-title,
-  #view-beranda .dashboard-panel .task-title{overflow-wrap:anywhere!important;}
-
-  /* Avoid duplicate/secondary chrome on very small phones. */
-  @media(max-width:390px){
-    #view-beranda .dashboard-stat-grid,
-    #view-beranda .stat-grid{gap:7px!important;}
-    #view-beranda .dashboard-stat-card,
-    #view-beranda .stat-card{padding:9px!important;}
-    #view-beranda .dashboard-card,
-    #view-beranda .dashboard-panel{padding:11px!important;}
-  }
-
-  /* Piket: information hierarchy first, no cramped 2-column cards. */
-  #view-jadwal .piket-grid,
-  #view-jadwal .piket-task-grid,
-  #view-jadwal .piket-cards,
-  #view-jadwal .piket-list{grid-template-columns:minmax(0,1fr)!important;display:grid!important;gap:10px!important;}
-  #view-jadwal .piket-card,
-  #view-jadwal .piket-task-card{min-width:0!important;border-radius:14px!important;box-shadow:none!important;}
-
-  /* HP collection: one clean vertical flow. */
-  #view-hp .hp-view-toolbar{min-width:0!important;}
-  #view-hp .hp-student-grid{grid-template-columns:minmax(0,1fr)!important;gap:8px!important;}
-  #view-hp .hp-student-card{min-width:0!important;padding:12px!important;}
-
-  /* Tugas: compact list, actions don't consume the whole row. */
-  #view-tugas .task-pro-card,
-  #view-tugas .task-card{min-width:0!important;border-radius:14px!important;box-shadow:none!important;}
-  #view-tugas .task-pro-card{padding:12px!important;}
-  #view-tugas .task-pro-check-btn{width:auto!important;min-width:0!important;max-width:100%!important;}
-
-  /* Laporan: no huge desktop table on phones. */
-  #view-laporan .table-wrap,
-  #view-laporan .table-responsive,
-  #view-laporan .report-table-wrap{width:100%!important;max-width:100%!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch!important;}
-  #view-laporan table{min-width:620px!important;}
-
-  /* Kas: wide data stays inside its own area, never widens the page. */
-  #view-kas .table-wrap,
-  #view-kas .table-responsive,
-  #view-kas .kas-table-wrap,
-  #view-kas .kas-world-table-wrap{width:100%!important;max-width:100%!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch!important;}
-  #view-kas table{max-width:none!important;}
-
-  /* Settings: one calm hierarchy. */
-  #view-settings .settings-nav{margin:8px 0 12px!important;gap:5px!important;}
-  #view-settings .settings-nav button{min-height:34px!important;padding:7px 10px!important;font-size:10px!important;border-radius:9px!important;}
-  #view-settings .settings-section{padding:12px!important;margin-bottom:9px!important;}
-  #view-settings .settings-label{font-size:12px!important;}
-  #view-settings .settings-help,
-  #view-settings .settings-description{font-size:10px!important;line-height:1.45!important;color:var(--mobile-muted)!important;}
-
-  /* Bottom navigation: five clear targets, no crowded labels. */
-  .phone > .tabbar{
-    display:grid!important;
-    grid-template-columns:repeat(5,minmax(0,1fr))!important;
-    gap:0!important;
-    min-height:62px!important;
-    padding:4px 4px max(5px,env(safe-area-inset-bottom))!important;
-    border-top:1px solid var(--mobile-border)!important;
-    box-shadow:none!important;
-    background:var(--mobile-surface)!important;
-  }
-  .phone > .tabbar .tab{
-    min-width:0!important;
-    min-height:52px!important;
-    padding:5px 2px!important;
-    gap:3px!important;
-    font-size:9.5px!important;
-    line-height:1.1!important;
-    white-space:nowrap!important;
-  }
-  .phone > .tabbar .tab svg{width:20px!important;height:20px!important;}
-
-  /* Remove accidental horizontal scrolling caused by long labels/IDs. */
-  #view-beranda *,#view-kas *,#view-hp *,#view-jadwal *,#view-tugas *,#view-laporan *,#view-settings *{min-width:0;}
-  #view-beranda .nowrap,#view-kas .nowrap,#view-hp .nowrap,#view-jadwal .nowrap{white-space:normal!important;}
-
-  /* Landscape phones: use width, not giant vertical cards. */
-  @media (orientation:landscape) and (max-width:900px){
-    .phone .content,.phone .main-content{padding-left:14px!important;padding-right:14px!important;}
-    .phone .view{padding-bottom:76px!important;}
-    #view-beranda .dashboard-stat-grid,
-    #view-beranda .stat-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;}
-    #view-beranda .dashboard-main-grid,
-    #view-beranda .dashboard-secondary-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
-    #view-jadwal .piket-grid,
-    #view-jadwal .piket-task-grid,
-    #view-jadwal .piket-cards,
-    #view-jadwal .piket-list{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
-  }
-}
-</style>
