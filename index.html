@@ -6774,125 +6774,7 @@ body.dark .view textarea{
 </style>
 
 
-<style id="kelasku-desktop-fullscreen-fix">
-/* =========================================================
-   DESKTOP FULLSCREEN FIX
-   Desktop gets the full available browser width.
-   The existing mobile layout remains untouched.
-   The pointer rule also keeps desktop mode when a desktop
-   browser window is temporarily narrow.
-   ========================================================= */
 
-@media (min-width: 768px), (hover: hover) and (pointer: fine) {
-  html,
-  body{
-    width:100%;
-    min-width:0;
-    height:100%;
-    margin:0;
-  }
-
-  body{
-    display:block;
-    overflow:hidden;
-  }
-
-  .phone{
-    position:relative;
-    width:100vw !important;
-    max-width:none !important;
-    min-width:0;
-    height:100vh !important;
-    height:100dvh !important;
-    max-height:none !important;
-    margin:0 !important;
-    border:0 !important;
-    border-radius:0 !important;
-    box-shadow:none !important;
-    display:grid !important;
-    grid-template-columns:255px minmax(0,1fr) !important;
-    grid-template-rows:100vh !important;
-    overflow:hidden;
-  }
-
-  .phone > .statusbar,
-  .phone > .tabbar{
-    display:none !important;
-  }
-
-  .desktop-sidebar{
-    display:flex !important;
-    grid-column:1;
-    grid-row:1;
-    width:255px;
-    min-width:255px;
-    height:100vh;
-    overflow-y:auto;
-    overflow-x:hidden;
-  }
-
-  .phone > .screen{
-    grid-column:2;
-    grid-row:1;
-    width:100%;
-    min-width:0;
-    height:100vh;
-    overflow-y:auto;
-    overflow-x:hidden;
-    box-sizing:border-box;
-  }
-
-  /* Content can use the desktop canvas naturally, but remains
-     comfortably readable on very wide monitors. */
-  .screen .view{
-    width:100%;
-    max-width:1180px;
-    margin-left:auto;
-    margin-right:auto;
-    box-sizing:border-box;
-  }
-}
-
-@media (min-width:768px) and (max-width:1200px),
-       (hover: hover) and (pointer: fine) and (max-width:1200px){
-  .phone{
-    grid-template-columns:225px minmax(0,1fr) !important;
-  }
-
-  .desktop-sidebar{
-    width:225px;
-    min-width:225px;
-  }
-
-  .phone > .screen{
-    padding-left:26px;
-    padding-right:26px;
-  }
-}
-
-/* Narrow desktop windows: keep desktop navigation usable
-   instead of reverting to the phone shell. */
-@media (min-width:768px) and (max-width:900px),
-       (hover: hover) and (pointer: fine) and (max-width:900px){
-  .phone{
-    grid-template-columns:210px minmax(0,1fr) !important;
-  }
-
-  .desktop-sidebar{
-    width:210px;
-    min-width:210px;
-  }
-
-  .phone > .screen{
-    padding:18px 18px 24px;
-  }
-
-  .desktop-nav-item{
-    padding-left:10px;
-    padding-right:10px;
-  }
-}
-</style>
 
 
 <style id="kelasku-button-final-polish">
@@ -21301,142 +21183,70 @@ body.kelasku-authenticated #view-jadwal.active{
 </style>
 
 
-<script id="kelasku-reference-more-nav-v2">
-(function(){
-  function setup(){
-    const bar=document.querySelector('.phone>.tabbar');
-    if(!bar || document.getElementById('kelasku-more-nav-btn')) return;
-    const b=document.createElement('button');
-    b.type='button';
-    b.id='kelasku-more-nav-btn';
-    b.className='tab';
-    b.innerHTML='<span aria-hidden="true">⋯</span><span>Lainnya</span>';
-    b.addEventListener('click',function(){
-      let sheet=document.getElementById('kelasku-more-sheet');
-      if(!sheet){
-        sheet=document.createElement('div');
-        sheet.id='kelasku-more-sheet';
-        sheet.innerHTML='<div class="kelasku-more-backdrop"></div>'+
-          '<div class="kelasku-more-panel"><div class="kelasku-more-handle"></div>'+
-          '<div class="kelasku-more-title">Lainnya</div>'+
-          '<div class="kelasku-more-grid">'+
-          '<button data-more="jadwal"><span>🗓</span><b>Jadwal & Piket</b></button>'+
-          '<button data-more="hp"><span>📱</span><b>Pengumpulan HP</b></button>'+
-          '<button data-more="settings"><span>⚙</span><b>Setelan</b></button>'+
-          '</div></div>';
-        document.body.appendChild(sheet);
-        sheet.addEventListener('click',function(e){
-          if(e.target.classList.contains('kelasku-more-backdrop')){
-            sheet.classList.remove('open'); return;
-          }
-          const item=e.target.closest('[data-more]');
-          if(item){
-            const t=item.dataset.more;
-            sheet.classList.remove('open');
-            const real=bar.querySelector('.tab[data-tab="'+t+'"]');
-            if(real) real.click();
-          }
-        });
-      }
-      sheet.classList.add('open');
-    });
-    bar.appendChild(b);
-  }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',setup);
-  else setup();
-})();
-</script>
 
 
-<script id="kelasku-concept-nav-order">
-(function(){
-  function arrange(){
-    const bar=document.querySelector('.phone>.tabbar');
-    if(!bar) return;
 
-    const get=k=>bar.querySelector('.tab[data-tab="'+k+'"]');
-    const primary=['beranda','tugas','laporan','kas'];
-    primary.forEach(k=>{const el=get(k);if(el)bar.appendChild(el);});
 
-    let more=document.getElementById('kelasku-more-nav-btn');
-    if(!more){
-      more=document.createElement('button');
-      more.type='button';
-      more.id='kelasku-more-nav-btn';
-      more.className='tab';
-      more.setAttribute('aria-label','Lainnya');
-      more.innerHTML='<span aria-hidden="true">⋯</span><span>Lainnya</span>';
-      bar.appendChild(more);
 
-      more.addEventListener('click',function(){
-        let sheet=document.getElementById('kelasku-more-sheet');
-        if(sheet){sheet.classList.add('open');return;}
-        sheet=document.createElement('div');
-        sheet.id='kelasku-more-sheet';
-        sheet.innerHTML=
-          '<div class="kelasku-more-backdrop"></div>'+
-          '<div class="kelasku-more-panel">'+
-            '<div class="kelasku-more-handle"></div>'+
-            '<div class="kelasku-more-title">Lainnya</div>'+
-            '<div class="kelasku-more-grid">'+
-              '<button data-more="jadwal"><span>🗓</span><b>Jadwal & Piket</b></button>'+
-              '<button data-more="hp"><span>📱</span><b>Pengumpulan HP</b></button>'+
-              '<button data-more="settings"><span>⚙</span><b>Setelan</b></button>'+
-            '</div>'+
-          '</div>';
-        document.body.appendChild(sheet);
 
-        sheet.addEventListener('click',function(e){
-          if(e.target.classList.contains('kelasku-more-backdrop')){
-            sheet.classList.remove('open'); return;
-          }
-          const item=e.target.closest('[data-more]');
-          if(item){
-            const tab=get(item.dataset.more);
-            sheet.classList.remove('open');
-            if(tab) tab.click();
-          }
-        });
-      });
-    }
-    bar.appendChild(more);
-  }
 
-  function boot(){
-    setTimeout(arrange,50);
-    setTimeout(arrange,500);
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);
-  else boot();
-})();
-</script>
 
-<style id="kelasku-mobile-final-clean">
+<style id="kelasku-mobile-shell-final-fix">
+/* Mobile/tablet shell: keep the app full-width until the real desktop breakpoint. */
 @media (max-width:900px){
-  .phone .tabbar{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;width:100%!important;max-width:100%!important;min-width:0!important;gap:3px!important;padding:5px 6px calc(5px + env(safe-area-inset-bottom,0px))!important;box-sizing:border-box!important;overflow:hidden!important;}
-  .phone .tabbar .tab{display:flex!important;min-width:0!important;width:100%!important;max-width:100%!important;flex:1 1 0!important;box-sizing:border-box!important;overflow:hidden!important;white-space:nowrap!important;text-overflow:ellipsis!important;align-items:center!important;justify-content:center!important;padding:4px 1px!important;height:46px!important;border-radius:10px!important;font-size:8px!important;line-height:1!important;gap:2px!important;}
-  .phone .tabbar .tab svg{width:17px!important;height:17px!important;flex:0 0 auto!important;}
-  .phone .tabbar .tab[data-tab="hp"],.phone .tabbar .tab[data-tab="jadwal"],.phone .tabbar .tab[data-tab="settings"],.phone .tabbar .tab[data-tab="mobile-more"]{display:none!important;}
-  .phone .tabbar .tab[data-tab="beranda"]{order:1!important}.phone .tabbar .tab[data-tab="tugas"]{order:2!important}.phone .tabbar .tab[data-tab="laporan"]{order:3!important}.phone .tabbar .tab[data-tab="kas"]{order:4!important}.phone .tabbar .tab[data-tab="kelasku-more"]{order:5!important;display:flex!important;}
+  html,body{width:100%;min-width:0;max-width:100%;overflow-x:hidden!important;}
+  .phone{
+    display:flex!important;
+    flex-direction:column!important;
+    width:100vw!important;
+    max-width:none!important;
+    min-width:0!important;
+    height:100dvh!important;
+    max-height:none!important;
+    margin:0!important;
+    border:0!important;
+    border-radius:0!important;
+    overflow:hidden!important;
+  }
+  .desktop-sidebar{display:none!important;}
+  .phone>.statusbar{display:flex!important;width:100%!important;flex:0 0 auto!important;}
+  .phone>.screen{
+    display:block!important;
+    grid-column:auto!important;
+    grid-row:auto!important;
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    flex:1 1 auto!important;
+    padding-left:12px!important;
+    padding-right:12px!important;
+    overflow-x:hidden!important;
+    box-sizing:border-box!important;
+  }
+  .phone>.screen>.view{
+    display:none;
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    margin-left:0!important;
+    margin-right:0!important;
+    box-sizing:border-box!important;
+  }
+  .phone>.screen>.view.active{display:block;}
+  .phone>.tabbar{
+    display:flex!important;
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    flex:0 0 auto!important;
+    position:fixed!important;
+    left:0!important;right:0!important;bottom:0!important;
+    box-sizing:border-box!important;
+  }
+  .view>*{max-width:100%!important;min-width:0!important;box-sizing:border-box;}
+  img,video,canvas,svg,input,select,textarea,button{max-width:100%;box-sizing:border-box;}
 }
-@media (max-width:380px){.phone .tabbar{gap:2px!important;padding-left:3px!important;padding-right:3px!important}.phone .tabbar .tab{height:44px!important;font-size:7px!important}.phone .tabbar .tab svg{width:16px!important;height:16px!important}}
-.mode-switch,.task-filter-tabs,.task-pro-filter-tabs,.report-filter-tabs,#view-settings .settings-nav,#view-jadwal .day-tabs,#piket-jadwal-day-tabs{min-width:0!important;max-width:100%!important;overflow-x:auto!important;overflow-y:hidden!important;flex-wrap:nowrap!important;scrollbar-width:none!important;-ms-overflow-style:none!important;}
-.mode-switch::-webkit-scrollbar,.task-filter-tabs::-webkit-scrollbar,.task-pro-filter-tabs::-webkit-scrollbar,.report-filter-tabs::-webkit-scrollbar,#view-settings .settings-nav::-webkit-scrollbar,#view-jadwal .day-tabs::-webkit-scrollbar,#piket-jadwal-day-tabs::-webkit-scrollbar{display:none!important}
-.mode-switch>*,.task-filter-tabs>*,.task-pro-filter-tabs>*,.report-filter-tabs>*,#view-settings .settings-nav>button,#view-jadwal .day-tabs>*,#piket-jadwal-day-tabs>*{flex:0 0 auto!important;min-width:max-content!important;max-width:calc(100vw - 32px)!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;box-sizing:border-box!important;}
-.piket-edit-inline{display:none!important;align-items:center!important;justify-content:center!important;gap:5px!important;white-space:nowrap!important;}
-body.is-admin .piket-edit-inline,body.is-superadmin .piket-edit-inline{display:inline-flex!important;}
-.piket-edit-inline:active{transform:scale(.97)!important}
-@media(max-width:620px){#view-jadwal .piket-integrated-toolbar{display:flex!important;flex-direction:column!important;gap:7px!important}#view-jadwal .piket-toolbar-group{display:flex!important;width:100%!important;max-width:100%!important;overflow-x:auto!important;flex-wrap:nowrap!important;scrollbar-width:none!important}#view-jadwal .piket-toolbar-group::-webkit-scrollbar{display:none!important}#view-jadwal .piket-toolbar-btn{flex:0 0 auto!important;min-width:max-content!important}#view-jadwal .piket-search-wrap{width:100%!important;max-width:none!important}}
 </style>
-<script id="kelasku-mobile-final-clean">
-(function(){
-'use strict';
-function setupMore(){var bar=document.querySelector('.phone .tabbar');if(!bar)return;bar.querySelectorAll('[data-tab="mobile-more"],[data-tab="kelasku-more"]').forEach(function(x){x.remove()});var more=document.createElement('button');more.type='button';more.className='tab';more.dataset.tab='kelasku-more';more.setAttribute('aria-label','Lainnya');more.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.7"></circle><circle cx="12" cy="12" r="1.7"></circle><circle cx="19" cy="12" r="1.7"></circle></svg><span>Lainnya</span>';more.addEventListener('click',function(){var sheet=document.getElementById('kelasku-mobile-more');if(sheet)sheet.classList.add('open')});bar.appendChild(more);['beranda','tugas','laporan','kas'].forEach(function(key){var el=bar.querySelector('[data-tab="'+key+'"]');if(el)bar.appendChild(el)});bar.appendChild(more)}
-function makeMoreSheet(){if(document.getElementById('kelasku-mobile-more'))return;var sheet=document.createElement('div');sheet.id='kelasku-mobile-more';sheet.innerHTML='<div class="km-more-backdrop"></div><div class="km-more-sheet"><div class="km-more-head"><strong>Lainnya</strong><button type="button" class="km-more-close">×</button></div><div class="km-more-grid"><button type="button" data-go="jadwal"><span>◫</span><b>Jadwal</b></button><button type="button" data-go="hp"><span>▣</span><b>Pengumpulan HP</b></button><button type="button" data-go="settings"><span>⚙</span><b>Setelan</b></button><button type="button" data-go="profile"><span>◯</span><b>Profil</b></button></div></div>';document.body.appendChild(sheet);sheet.addEventListener('click',function(e){if(e.target.closest('.km-more-backdrop,.km-more-close')){sheet.classList.remove('open');return}var btn=e.target.closest('[data-go]');if(!btn)return;sheet.classList.remove('open');var dest=btn.dataset.go;if(dest==='profile')dest='settings';if(typeof window.goTo==='function')window.goTo(dest)})}
-function sync(){setupMore();makeMoreSheet()}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',sync);else sync();setTimeout(sync,200);setTimeout(sync,800);setTimeout(sync,1800);window.addEventListener('resize',sync,{passive:true});
-})();
-</script>
 </body>
 <!-- Kelasku compatibility patch: resilient Firestore sync + legacy fallback -->
 
