@@ -9171,6 +9171,82 @@ img,svg,video,canvas,input,select,textarea,button{max-width:100%;}
   .dashboard-main-grid,.dashboard-secondary-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
 }
 </style>
+
+<style id="piket-edit-access-final">
+/* =========================================================
+   PIKET EDIT ACCESS
+   - Admin/super admin dapat membuka pengaturan jadwal.
+   - Siswa tetap hanya melihat jadwal/status.
+   ========================================================= */
+
+/* Override legacy shell rule yang sebelumnya menyembunyikan actionbar. */
+body.kelasku-authenticated #view-jadwal .piket-actionbar{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:12px !important;
+  width:100% !important;
+  min-width:0 !important;
+  margin:0 !important;
+  padding:12px 14px !important;
+  box-sizing:border-box !important;
+}
+
+body.kelasku-authenticated #view-jadwal .piket-actionbar-main{
+  min-width:0 !important;
+}
+
+body.kelasku-authenticated #view-jadwal .piket-actionbar-actions{
+  display:flex !important;
+  flex-wrap:wrap !important;
+  align-items:center !important;
+  justify-content:flex-end !important;
+  gap:7px !important;
+}
+
+body.kelasku-authenticated #view-jadwal .piket-actionbar-actions.admin-only{
+  /* Visibility role tetap mengikuti aturan admin-only yang sudah ada. */
+  min-width:0 !important;
+}
+
+@media (max-width:900px){
+  body.kelasku-authenticated #view-jadwal .piket-actionbar{
+    flex-direction:column !important;
+    align-items:stretch !important;
+    padding:10px 0 !important;
+  }
+
+  body.kelasku-authenticated #view-jadwal .piket-actionbar-actions{
+    justify-content:flex-start !important;
+    width:100% !important;
+  }
+
+  body.kelasku-authenticated #view-jadwal .piket-actionbar .piket-action-btn{
+    min-height:38px !important;
+    padding:8px 11px !important;
+    font-size:12px !important;
+  }
+
+  body.kelasku-authenticated #view-jadwal .piket-actionbar .piket-action-btn span:last-child{
+    display:inline !important;
+  }
+}
+
+@media (max-width:480px){
+  body.kelasku-authenticated #view-jadwal .piket-actionbar-actions{
+    display:grid !important;
+    grid-template-columns:1fr 1fr !important;
+  }
+
+  body.kelasku-authenticated #view-jadwal .piket-actionbar .piket-action-btn{
+    width:100% !important;
+  }
+
+  body.kelasku-authenticated #view-jadwal .piket-actionbar .piket-action-primary{
+    grid-column:1 / -1 !important;
+  }
+}
+</style>
 </head>
 
 <body>
@@ -19361,7 +19437,7 @@ body.dark .cal-card .cal-nav-btn{color:#f8fafc !important;background:transparent
   function hpStatusClass(status){return status==='sudah'?'done':status==='izin'?'excused':'pending';}
   function hpCard(entry){
     const {name,index,st,meta}=entry,safe=hpSafeName(name),initials=hpInitials(name),admin=isAdmin(), done=st.status==='sudah';
-    return `<article class="hp-student-card" data-name="${escapeHtml(name)}" ${admin?`onclick="toggleHpQuick(${safe})"`:``}>\n      <div class="hp-student-head"><span class="hp-student-roll">#${index+1} · ${escapeHtml(name)}</span><span class="hp-slot-tag ${done?'is-occupied':'is-pending'}">${done&&meta.slot?`Slot Rak #${meta.slot}`:'Slot belum ditempatkan'}</span></div>\n      <div class="hp-student-main"><div class="hp-student-avatar ${done?'occupied':st.status==='izin'?'excused':''}">${escapeHtml(initials)}</div><div class="hp-student-copy"><div class="hp-student-name">${escapeHtml(name)}</div><div class="hp-student-sub"><span>📱 ${escapeHtml(meta.device||'Model belum dicatat')}</span>${st.alasan?`<span class="hp-device-dot">• ${escapeHtml(st.alasan)}</span>`:''}</div></div></div>\n      <div class="hp-student-footer"><span class="hp-status-chip ${hpStatusClass(st.status)}">${done?'●':st.status==='izin'?'!':'○'} ${hpStatusLabel(st.status)}</span>${admin?`<button type="button" class="hp-quick-btn ${done?'done':st.status==='izin'?'izin':''}" onclick="event.stopPropagation();toggleHpQuick(${safe})">${done?'✓ Sudah':'Kumpul'}</button>`:''}</div>\n    </article>`;
+    return `<article class="hp-student-card" data-name="${escapeHtml(name)}" ${admin?`onclick="toggleHpQuick(${safe})"`:``}> <div class="hp-student-head"><span class="hp-student-roll">#${index+1} · ${escapeHtml(name)}</span><span class="hp-slot-tag ${done?'is-occupied':'is-pending'}">${done&&meta.slot?`Slot Rak #${meta.slot}`:'Slot belum ditempatkan'}</span></div> <div class="hp-student-main"><div class="hp-student-avatar ${done?'occupied':st.status==='izin'?'excused':''}">${escapeHtml(initials)}</div><div class="hp-student-copy"><div class="hp-student-name">${escapeHtml(name)}</div><div class="hp-student-sub"><span>📱 ${escapeHtml(meta.device||'Model belum dicatat')}</span>${st.alasan?`<span class="hp-device-dot">• ${escapeHtml(st.alasan)}</span>`:''}</div></div></div> <div class="hp-student-footer"><span class="hp-status-chip ${hpStatusClass(st.status)}">${done?'●':st.status==='izin'?'!':'○'} ${hpStatusLabel(st.status)}</span>${admin?`<button type="button" class="hp-quick-btn ${done?'done':st.status==='izin'?'izin':''}" onclick="event.stopPropagation();toggleHpQuick(${safe})">${done?'✓ Sudah':'Kumpul'}</button>`:''}</div> </article>`;
   }
   function hpTable(entries){
     const rows=entries.map(x=>`<tr><td><div class="hp-table-name">#${x.index+1} · ${escapeHtml(x.name)}</div></td><td>${x.st.status==='sudah'&&x.meta.slot?`Slot #${x.meta.slot}`:'—'}</td><td>${escapeHtml(x.meta.device||'—')}</td><td><span class="hp-status-chip ${hpStatusClass(x.st.status)}">${hpStatusLabel(x.st.status)}</span></td><td>${isAdmin()?`<button type="button" class="hp-quick-btn ${x.st.status==='sudah'?'done':''}" onclick="toggleHpQuick(${hpSafeName(x.name)})">${x.st.status==='sudah'?'✓ Sudah':'Kumpul'}</button>`:'—'}</td></tr>`).join('');
@@ -22467,7 +22543,63 @@ body.dark #view-kas .kas-folder-empty{background:#111c2f!important;border-color:
     }).join('');
     const html='<!doctype html><html lang="id"><head><meta charset="utf-8"><title>Rekap Kas Kelas</title><style>'+
       'body{font-family:Arial,sans-serif;color:#0f172a;padding:28px}h1{margin:0 0 4px;font-size:20px}p{margin:0 0 18px;color:#64748b;font-size:11px}.metrics{display:flex;gap:10px;margin-bottom:18px}.m{flex:1;border:1px solid #e2e8f0;border-radius:10px;padding:10px}.m small{display:block;color:#64748b;font-size:8px;text-transform:uppercase;font-weight:700}.m b{display:block;margin-top:5px;font-size:15px}table{width:100%;border-collapse:collapse;font-size:9px}th,td{padding:8px;border-bottom:1px solid #e2e8f0;text-align:left}th{background:#f8fafc;font-size:8px;text-transform:uppercase;color:#64748b}.folder{margin-top:18px;border:1px solid #e2e8f0;border-radius:10px;padding:12px}.folder h3{margin:0 0 6px;font-size:12px}.folder p{margin:0 0 7px;font-size:9px}.bar{height:6px;border-radius:999px;background:#eef2f7;overflow:hidden}.fill{height:100%;background:#4338ca}' +
-      '</style></head><body><h1>Kas Kelas — X TJKT 1</h1><p>Pencatatan kas transparan &amp; aman.</p><div class="metrics"><div class="m"><small>Total Kas Masuk</small><b>'+moneySafe(masuk)+'</b></div><div class="m"><small>Total Pengeluaran</small><b>'+moneySafe(keluar)+'</b></div><div class="m"><small>Sisa Saldo</small><b>'+moneySafe(masuk-keluar)+'</b></div></div><table><thead><tr><th>Tanggal</th><th>Keterangan</th><th>Jenis</th><th>Jumlah</th></tr></thead><tbody>'+transactionRows+'</tbody></table>'+folderRows+'</body></html>';
+      '</style>
+<style id="responsive-final-cleanup">
+/* Final responsive cleanup: prevent escaped text and clipped task filters */
+#view-tugas .task-pro-filter-tabs,
+#view-tugas .task-filter-tabs {
+  box-sizing:border-box;
+  min-width:0;
+}
+#view-tugas .task-pro-filter-tabs .task-filter-tab,
+#view-tugas .task-filter-tabs .task-filter-tab {
+  box-sizing:border-box;
+  flex:0 0 auto;
+  min-width:max-content;
+  white-space:nowrap;
+  overflow:visible;
+  text-overflow:clip;
+}
+@media (max-width:900px){
+  #view-tugas .task-pro-filter-tabs {
+    width:100%;
+    max-width:100%;
+    overflow-x:auto;
+    overflow-y:hidden;
+    flex-wrap:nowrap;
+    padding:2px 2px 5px;
+    gap:6px;
+    -webkit-overflow-scrolling:touch;
+  }
+  #view-tugas .task-pro-filter-tabs .task-filter-tab {
+    min-height:40px;
+    height:40px;
+    padding:0 13px;
+    font-size:12px !important;
+    line-height:1;
+  }
+}
+@media (max-width:420px){
+  #view-tugas .task-pro-filter-tabs {
+    gap:5px;
+    padding-right:8px;
+  }
+  #view-tugas .task-pro-filter-tabs .task-filter-tab {
+    min-height:38px;
+    height:38px;
+    padding:0 11px;
+    font-size:11px !important;
+    border-radius:10px !important;
+  }
+}
+
+/* Penitipan HP student cards: never show source escape sequences */
+#view-hp .hp-student-card,
+#view-hp .hp-student-card * {
+  box-sizing:border-box;
+}
+</style>
+</head><body><h1>Kas Kelas — X TJKT 1</h1><p>Pencatatan kas transparan &amp; aman.</p><div class="metrics"><div class="m"><small>Total Kas Masuk</small><b>'+moneySafe(masuk)+'</b></div><div class="m"><small>Total Pengeluaran</small><b>'+moneySafe(keluar)+'</b></div><div class="m"><small>Sisa Saldo</small><b>'+moneySafe(masuk-keluar)+'</b></div></div><table><thead><tr><th>Tanggal</th><th>Keterangan</th><th>Jenis</th><th>Jumlah</th></tr></thead><tbody>'+transactionRows+'</tbody></table>'+folderRows+'</body></html>';
     const w=window.open('','_blank','width=900,height=700');
     if(!w){showNotification('Popup diblokir browser. Izinkan popup untuk mencetak PDF.','warning');return;}
     w.document.open();
