@@ -23127,6 +23127,223 @@ html[data-theme="light"] *, html[data-theme="dark"] * { color-scheme: inherit; }
   #view-beranda .dashboard-card .row-item{padding-top:10px;padding-bottom:10px;}
 }
 </style>
+
+<style id="kelasku-worldclass-ui">
+/* =========================================================
+   KELASKU — WORLD-CLASS UI POLISH
+   Visual-only layer: no JS/functionality changes.
+   ========================================================= */
+:root{
+  --ui-bg:#f5f7fb;
+  --ui-surface:#ffffff;
+  --ui-surface-2:#f8fafc;
+  --ui-surface-3:#eef3f9;
+  --ui-border:#dbe3ee;
+  --ui-border-strong:#c7d3e3;
+  --ui-text:#0f172a;
+  --ui-text-2:#334155;
+  --ui-muted:#64748b;
+  --ui-blue:#2563eb;
+  --ui-blue-2:#3b82f6;
+  --ui-blue-soft:#eaf2ff;
+  --ui-green:#15803d;
+  --ui-green-soft:#eaf8ef;
+  --ui-red:#b42318;
+  --ui-red-soft:#fff0ef;
+  --ui-amber:#a16207;
+  --ui-amber-soft:#fff8df;
+  --ui-shadow:0 8px 28px rgba(15,23,42,.06);
+  --ui-shadow-hover:0 14px 34px rgba(15,23,42,.10);
+}
+[data-theme="dark"],body.dark-mode{
+  --ui-bg:#0b0f19;
+  --ui-surface:#111827;
+  --ui-surface-2:#161e2e;
+  --ui-surface-3:#1b2639;
+  --ui-border:#2c3a50;
+  --ui-border-strong:#3a4b64;
+  --ui-text:#f8fafc;
+  --ui-text-2:#e2e8f0;
+  --ui-muted:#a9b6c9;
+  --ui-blue:#60a5fa;
+  --ui-blue-2:#3b82f6;
+  --ui-blue-soft:rgba(59,130,246,.18);
+  --ui-green:#4ade80;
+  --ui-green-soft:rgba(34,197,94,.14);
+  --ui-red:#ff8b86;
+  --ui-red-soft:rgba(239,68,68,.16);
+  --ui-amber:#facc15;
+  --ui-amber-soft:rgba(234,179,8,.14);
+  --ui-shadow:0 10px 30px rgba(0,0,0,.20);
+  --ui-shadow-hover:0 16px 38px rgba(0,0,0,.28);
+}
+
+/* Shared page rhythm */
+.view{color:var(--ui-text);}
+.view .pagehead{margin-bottom:18px;}
+.view .pagehead h1{margin:0;font-size:clamp(22px,2.2vw,30px);line-height:1.15;letter-spacing:-.035em;color:var(--ui-text);}
+.view .pagehead p{margin:7px 0 0;color:var(--ui-muted);font-size:13px;line-height:1.55;}
+.view .section{margin-top:14px;}
+.view .card,
+.view .balance-card,
+.view .dashboard-card,
+.view .dashboard-stat-card,
+.view .settings-section,
+.view .hp-command-shell,
+.view .task-pro-list-wrap,
+.view .task-pro-toolbar,
+.view .task-pro-summary-row{
+  border-color:var(--ui-border)!important;
+  background:var(--ui-surface)!important;
+  color:var(--ui-text);
+  box-shadow:var(--ui-shadow);
+}
+.view .card{border-radius:18px;}
+.view .section-head{gap:12px;align-items:center;}
+.view .section-title{color:var(--ui-text);font-weight:800;letter-spacing:-.02em;}
+.view .field-hint,.view .task-pro-summary-sub{color:var(--ui-muted)!important;}
+.view input,.view select,.view textarea{
+  color:var(--ui-text)!important;
+  background:var(--ui-surface-2)!important;
+  border-color:var(--ui-border-strong)!important;
+}
+.view input::placeholder,.view textarea::placeholder{color:var(--ui-muted)!important;opacity:.9;}
+.view button,.view .btn,.view .fab-add{font-family:inherit;}
+.view button:not(:disabled),.view .btn:not(:disabled),.view .fab-add:not(:disabled){transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease,background .16s ease;}
+.view button:not(:disabled):active,.view .btn:not(:disabled):active,.view .fab-add:not(:disabled):active{transform:scale(.975);}
+.view button:focus-visible,.view input:focus-visible,.view select:focus-visible,.view textarea:focus-visible{outline:3px solid rgba(59,130,246,.28);outline-offset:2px;}
+
+/* ---------------- Dashboard ---------------- */
+#view-beranda .dashboard-topbar{margin-bottom:14px;}
+#view-beranda .dashboard-search{border:1px solid var(--ui-border);background:var(--ui-surface);box-shadow:var(--ui-shadow);border-radius:14px;}
+#view-beranda .dashboard-search .home-search-input{color:var(--ui-text)!important;}
+#view-beranda .dashboard-user-avatar{border:1px solid var(--ui-border-strong);background:var(--ui-surface-2);color:var(--ui-text);}
+#view-beranda .dashboard-hero{border:1px solid var(--ui-border)!important;background:linear-gradient(145deg,var(--ui-surface),var(--ui-surface-2))!important;box-shadow:var(--ui-shadow);border-radius:22px;}
+#view-beranda .dashboard-hero .hero-eyebrow{color:var(--ui-muted);font-weight:800;letter-spacing:.1em;}
+#view-beranda .dashboard-hero .hero-name{color:var(--ui-text);letter-spacing:-.04em;}
+#view-beranda .dashboard-hero .hero-copy{color:var(--ui-text-2);}
+#view-beranda .dashboard-hero .htag{background:var(--ui-surface-3);border-color:var(--ui-border);color:var(--ui-text-2);}
+#view-beranda .dashboard-stat-card{border-radius:17px!important;box-shadow:none!important;}
+#view-beranda .dashboard-stat-card:hover{box-shadow:var(--ui-shadow-hover)!important;transform:translateY(-1px);}
+#view-beranda .dashboard-stat-card .stat-label,#view-beranda .dashboard-stat-card .stat-status{color:var(--ui-muted);}
+#view-beranda .dashboard-stat-card .stat-value{color:var(--ui-text);}
+#view-beranda .dashboard-card{border-radius:18px!important;box-shadow:none!important;}
+#view-beranda .dashboard-card .card-title{color:var(--ui-text);}
+#view-beranda .row-item,#view-beranda .announce-item,#view-beranda .notification-item{border-color:var(--ui-border)!important;}
+#view-beranda .row-title,#view-beranda .announce-title{color:var(--ui-text);}
+#view-beranda .row-sub,#view-beranda .announce-meta,#view-beranda .notification-meta{color:var(--ui-muted);}
+
+/* ---------------- Kas ---------------- */
+#view-kas .balance-card{border:1px solid var(--ui-border)!important;border-radius:22px!important;background:linear-gradient(145deg,var(--ui-surface),var(--ui-surface-2))!important;box-shadow:var(--ui-shadow);}
+#view-kas .balance-label{color:var(--ui-muted);font-weight:700;}
+#view-kas .balance-value{color:var(--ui-text);letter-spacing:-.045em;}
+#view-kas .balance-foot{border-top-color:var(--ui-border)!important;}
+#view-kas .bf-item{color:var(--ui-muted);}
+#view-kas .bf-item b{color:var(--ui-text);}
+#view-kas .kas-history-section,#view-kas .kas-siswa-section{border-color:var(--ui-border)!important;}
+#view-kas .kas-history-head{padding-bottom:10px;border-bottom:1px solid var(--ui-border);}
+#view-kas .kas-history-actions{gap:8px;}
+#view-kas .section-link{color:var(--ui-blue);font-weight:800;}
+#view-kas .kas-history-toggle{border:1px solid var(--ui-border-strong)!important;background:var(--ui-surface-2)!important;color:var(--ui-text)!important;border-radius:10px!important;}
+#view-kas .kas-siswa-section .section-head{align-items:flex-start;}
+#view-kas .kas-folder-list{display:grid;gap:10px;}
+#view-kas .kas-folder-list>*{border-color:var(--ui-border)!important;background:var(--ui-surface)!important;border-radius:16px!important;}
+#view-kas .number-input-clean{background:var(--ui-surface-2)!important;color:var(--ui-text)!important;border-color:var(--ui-border-strong)!important;}
+
+/* ---------------- Tugas ---------------- */
+#view-tugas .task-pro-pagehead{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;}
+#view-tugas .task-pro-toolbar{padding:10px!important;border-radius:16px!important;box-shadow:none!important;display:flex;gap:10px;align-items:center;}
+#view-tugas .task-pro-search-wrap{background:var(--ui-surface-2)!important;border-color:var(--ui-border)!important;}
+#view-tugas .task-pro-search-wrap input{background:transparent!important;border:0!important;}
+#view-tugas .task-filter-tabs{gap:6px;}
+#view-tugas .task-filter-tab{border:1px solid var(--ui-border)!important;background:var(--ui-surface-2)!important;color:var(--ui-text-2)!important;border-radius:11px!important;font-weight:800;}
+#view-tugas .task-filter-tab.active{background:var(--ui-blue)!important;border-color:var(--ui-blue)!important;color:#fff!important;box-shadow:0 5px 16px rgba(37,99,235,.22);}
+#view-tugas .task-pro-summary-row{margin-top:12px;padding:14px 16px!important;border-radius:16px!important;box-shadow:none!important;}
+#view-tugas .task-pro-summary-title{color:var(--ui-text);font-weight:850;}
+#view-tugas .task-pro-smart-list{display:grid;gap:10px;margin-top:12px;}
+#view-tugas .task-pro-smart-list>*{border:1px solid var(--ui-border)!important;background:var(--ui-surface)!important;border-radius:17px!important;box-shadow:0 5px 18px rgba(15,23,42,.04);}
+[data-theme="dark"] #view-tugas .task-pro-smart-list>*,body.dark-mode #view-tugas .task-pro-smart-list>*{box-shadow:0 8px 24px rgba(0,0,0,.18);}
+
+/* ---------------- Laporan ---------------- */
+#view-laporan .section{margin-top:12px;}
+#view-laporan .section-head{padding:12px 0;}
+#view-laporan #report-search{min-width:180px!important;}
+#view-laporan #report-filter{min-height:34px;}
+#view-laporan #report-stats{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px!important;}
+#view-laporan #report-stats>*{border:1px solid var(--ui-border)!important;background:var(--ui-surface)!important;color:var(--ui-text)!important;border-radius:14px!important;padding:11px 12px!important;box-shadow:none!important;}
+#view-laporan #report-list{margin-top:10px;}
+#view-laporan #report-list>*{border-color:var(--ui-border)!important;}
+
+/* ---------------- Settings ---------------- */
+#view-settings>.section>.card{border-radius:22px!important;padding:18px!important;background:var(--ui-surface)!important;box-shadow:var(--ui-shadow);}
+#view-settings .acc-row{border-color:var(--ui-border)!important;}
+#view-settings .profile-avatar-editor{border:1px solid var(--ui-border-strong)!important;background:var(--ui-surface-2)!important;}
+#view-settings .settings-section{border:1px solid var(--ui-border)!important;background:var(--ui-surface-2)!important;border-radius:16px!important;padding:14px!important;margin-top:12px!important;box-shadow:none!important;}
+#view-settings .settings-label{color:var(--ui-text);font-size:12px;font-weight:900;letter-spacing:.07em;text-transform:uppercase;}
+#view-settings .manage-details,.manage-details{border-color:var(--ui-border)!important;}
+#view-settings .manage-toggle{color:var(--ui-text)!important;}
+#view-settings .role-group{border-color:var(--ui-border)!important;background:var(--ui-surface)!important;border-radius:13px!important;}
+#view-settings .btn-ghost{background:var(--ui-surface-2)!important;border-color:var(--ui-border-strong)!important;color:var(--ui-text)!important;}
+#view-settings .btn-danger{color:#fff!important;background:#b42318!important;border-color:#b42318!important;}
+#view-settings .number-input-clean{min-height:34px;border-radius:10px!important;}
+
+/* ---------------- Buttons / semantic status ---------------- */
+.view .fab-add,.view .btn-primary{background:var(--ui-blue)!important;border-color:var(--ui-blue)!important;color:#fff!important;box-shadow:0 6px 16px rgba(37,99,235,.18);}
+.view .fab-add:hover,.view .btn-primary:hover{box-shadow:0 10px 22px rgba(37,99,235,.24);}
+.view .btn-ghost{background:var(--ui-surface-2)!important;color:var(--ui-text)!important;border-color:var(--ui-border-strong)!important;}
+
+/* ---------------- Bottom navigation ---------------- */
+.bottom-nav,.mobile-bottom-nav,.app-bottom-nav{background:var(--ui-surface)!important;border-top:1px solid var(--ui-border)!important;box-shadow:0 -8px 26px rgba(15,23,42,.08)!important;}
+.bottom-nav button,.mobile-bottom-nav button,.app-bottom-nav button{color:var(--ui-muted)!important;}
+.bottom-nav button.active,.mobile-bottom-nav button.active,.app-bottom-nav button.active{color:var(--ui-blue)!important;}
+
+/* Tablet / desktop */
+@media (min-width:901px){
+  .view{max-width:1180px;margin-inline:auto;}
+  #view-beranda .dashboard-main-grid{align-items:start;}
+  #view-kas .balance-card{max-width:100%;}
+  #view-tugas .task-pro-list-wrap{max-width:100%;}
+  #view-settings>.section>.card{max-width:920px;}
+}
+
+/* Mobile */
+@media (max-width:900px){
+  .view{width:100%;max-width:100%;min-width:0;box-sizing:border-box;}
+  .view *{box-sizing:border-box;min-width:0;}
+  .view .pagehead{margin-bottom:14px;}
+  .view .pagehead h1{font-size:23px;}
+  .view .pagehead p{font-size:12px;}
+  #view-beranda .dashboard-hero{border-radius:19px;}
+  #view-beranda .dashboard-stat-grid{gap:8px;}
+  #view-kas .balance-card{border-radius:18px!important;padding:17px!important;}
+  #view-kas .balance-value{font-size:30px!important;}
+  #view-kas .kas-siswa-section .section-head{gap:10px;}
+  #view-tugas .task-pro-pagehead{align-items:stretch;flex-direction:column;gap:10px;}
+  #view-tugas .task-pro-primary{width:100%;justify-content:center;}
+  #view-tugas .task-pro-toolbar{flex-direction:column;align-items:stretch;}
+  #view-tugas .task-filter-tabs{display:flex;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;}
+  #view-tugas .task-filter-tabs::-webkit-scrollbar{display:none;}
+  #view-tugas .task-filter-tab{flex:0 0 auto;white-space:nowrap;}
+  #view-tugas .task-pro-summary-row{padding:12px!important;}
+  #view-laporan .section-head{align-items:stretch;flex-direction:column;}
+  #view-laporan .section-head>div:last-child{display:grid!important;grid-template-columns:minmax(0,1fr) auto;gap:7px!important;}
+  #view-laporan #report-search{width:100%!important;min-width:0!important;}
+  #view-laporan #report-stats{grid-template-columns:repeat(2,minmax(0,1fr));}
+  #view-settings>.section>.card{padding:14px!important;border-radius:19px!important;}
+  #view-settings .acc-row{gap:12px;}
+  #view-settings .acc-row>div:last-child{max-width:55%;}
+  #view-settings .settings-section{padding:12px!important;}
+}
+@media (max-width:520px){
+  #view-beranda .dashboard-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
+  #view-laporan #report-stats>*{padding:10px!important;}
+  #view-kas .balance-foot{gap:8px;}
+  #view-settings .acc-row{align-items:flex-start!important;}
+}
+@media (prefers-reduced-motion:reduce){
+  .view *, .view *::before, .view *::after{scroll-behavior:auto!important;transition:none!important;animation:none!important;}
+}
+</style>
 </head><body><h1>Kas Kelas — X TJKT 1</h1><p>Pencatatan kas transparan &amp; aman.</p><div class="metrics"><div class="m"><small>Total Kas Masuk</small><b>${moneySafe(masuk)}</b></div><div class="m"><small>Total Pengeluaran</small><b>${moneySafe(keluar)}</b></div><div class="m"><small>Sisa Saldo</small><b>${moneySafe(masuk-keluar)}</b></div></div><table><thead><tr><th>Tanggal</th><th>Keterangan</th><th>Jenis</th><th>Jumlah</th></tr></thead><tbody>${transactionRows}</tbody></table>${folderRows}
 <style id="jadwal-piket-worldclass-v1">
 /* =========================================================
@@ -23217,6 +23434,79 @@ body.dark #view-jadwal .piket-task-progress-badge.is-complete{background:#14532d
   #view-jadwal .piket-actionbar-title span:not(.piket-actionbar-dot){font-size:9px!important}
 }
 </style>
+
+
+<style id="kelasku-student-piket-admin-hide-final">
+/* Siswa: seluruh kontrol pengaturan Jadwal Piket benar-benar disembunyikan. */
+body:not(.is-admin) #view-jadwal .piket-admin-menu-wrap,
+body:not(.is-admin) #view-jadwal .piket-admin-menu-trigger,
+body:not(.is-admin) #view-jadwal .piket-admin-menu,
+body:not(.is-admin) #view-jadwal .piket-actionbar-actions .admin-only,
+body:not(.is-admin) #view-jadwal .piket-toolbar-btn.admin-only {
+  display:none !important;
+}
+
+/* Jangan meninggalkan ruang kosong bekas toolbar admin. */
+body:not(.is-admin) #view-jadwal .piket-actionbar-actions:empty,
+body:not(.is-admin) #view-jadwal .piket-actionbar-actions:not(:has(*)) {
+  display:none !important;
+}
+</style>
+
+
+<script id="kelasku-student-piket-admin-hide-final-js">
+(function(){
+  function syncStudentPiketControls(){
+    const user = window.currentUser;
+    const admin = !!(user && (user.role === 'admin' || user.role === 'superadmin'));
+    const view = document.getElementById('view-jadwal');
+    if (!view) return;
+
+    const controls = view.querySelectorAll(
+      '.piket-admin-menu-wrap, .piket-admin-menu-trigger, .piket-admin-menu, ' +
+      '.piket-actionbar-actions .admin-only, .piket-toolbar-btn.admin-only'
+    );
+
+    controls.forEach(function(el){
+      if (admin) {
+        el.style.removeProperty('display');
+      } else {
+        el.style.setProperty('display','none','important');
+        if (el.id === 'piket-admin-menu') el.hidden = true;
+      }
+    });
+
+    if (!admin) {
+      const trigger = view.querySelector('.piket-admin-menu-trigger');
+      if (trigger) trigger.setAttribute('aria-expanded','false');
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', syncStudentPiketControls);
+  [100,300,700,1500,3000].forEach(function(ms){
+    setTimeout(syncStudentPiketControls, ms);
+  });
+
+  const originalApplyRole = window.applyRole;
+  if (typeof originalApplyRole === 'function') {
+    window.applyRole = function(role){
+      const result = originalApplyRole.apply(this, arguments);
+      setTimeout(syncStudentPiketControls, 0);
+      return result;
+    };
+  }
+
+  const observer = new MutationObserver(function(){
+    syncStudentPiketControls();
+  });
+  observer.observe(document.body, {
+    subtree:true,
+    childList:true,
+    attributes:true,
+    attributeFilter:['class','style','hidden']
+  });
+})();
+</script>
 
 </body></html>`;
     const w=window.open('','_blank','width=900,height=700');
@@ -24085,5 +24375,130 @@ body.dark #view-jadwal .piket-task-progress-badge.is-complete{background:#14532d
 </script>
 
 
+
+<style id="kelasku-siswa-settings-access-final">
+/* =========================================================
+   AKSES SETELAN BERDASARKAN ROLE
+   Siswa hanya mendapatkan Profil & Tampilan.
+   Admin tetap mendapatkan Security & Database.
+   Super Admin mendapatkan semua kategori yang memang diizinkan.
+   ========================================================= */
+body:not(.is-superadmin) #view-settings #settings-nav [data-cat="members"]{
+  display:none !important;
+}
+body:not(.is-admin) #view-settings #settings-nav [data-cat="security"]{
+  display:none !important;
+}
+
+/* Jangan biarkan kategori terlarang tampil walaupun state/tab
+   sebelumnya tersimpan atau render ulang terjadi. */
+body:not(.is-superadmin) #view-settings [data-setting-cat="members"]{
+  display:none !important;
+}
+body:not(.is-admin) #view-settings [data-setting-cat="security"]{
+  display:none !important;
+}
+
+/* Di HP tab yang tersedia untuk siswa hanya satu, jadi tetap rapi. */
+@media (max-width:900px){
+  body:not(.is-superadmin) #view-settings #settings-nav [data-cat="members"],
+  body:not(.is-admin) #view-settings #settings-nav [data-cat="security"]{
+    display:none !important;
+  }
+  body:not(.is-superadmin):not(.is-admin) #view-settings #settings-nav{
+    justify-content:flex-start !important;
+  }
+  body:not(.is-superadmin):not(.is-admin) #view-settings #settings-nav [data-cat="profile"]{
+    flex:0 0 auto !important;
+    width:auto !important;
+  }
+}
+</style>
+
+<script id="kelasku-siswa-settings-access-final-js">
+(function(){
+  'use strict';
+
+  function roleIs(role){
+    try{
+      return !!window.currentUser && window.currentUser.role === role;
+    }catch(e){ return false; }
+  }
+
+  function isAdminRole(){
+    try{
+      return !!window.currentUser &&
+        (window.currentUser.role === 'admin' || window.currentUser.role === 'superadmin');
+    }catch(e){ return false; }
+  }
+
+  function syncStudentSettingsAccess(){
+    const nav=document.getElementById('settings-nav');
+    const view=document.getElementById('view-settings');
+    if(!nav || !view) return;
+
+    const superAdmin=roleIs('superadmin');
+    const admin=isAdminRole();
+    const student=roleIs('siswa');
+
+    const members=nav.querySelector('[data-cat="members"]');
+    const security=nav.querySelector('[data-cat="security"]');
+    if(members) members.style.display=superAdmin?'':'none';
+    if(security) security.style.display=admin?'':'none';
+
+    const memberSections=view.querySelectorAll('[data-setting-cat="members"]');
+    const securitySections=view.querySelectorAll('[data-setting-cat="security"]');
+    memberSections.forEach(el=>{ el.style.display=superAdmin?'':'none'; });
+    securitySections.forEach(el=>{ el.style.display=admin?'':'none'; });
+
+    /* Siswa selalu dipaksa kembali ke Profil & Tampilan jika
+       sebelumnya halaman pernah dibuka sebagai role lain. */
+    if(student){
+      const profileBtn=nav.querySelector('[data-cat="profile"]');
+      const active=nav.querySelector('[data-cat].active');
+      if(active && active.dataset.cat!=='profile' && profileBtn){
+        profileBtn.click();
+      }
+      nav.querySelectorAll('[data-cat="members"],[data-cat="security"]').forEach(btn=>{
+        btn.setAttribute('aria-hidden','true');
+        btn.tabIndex=-1;
+      });
+    }else{
+      nav.querySelectorAll('[data-cat="members"],[data-cat="security"]').forEach(btn=>{
+        if(btn.style.display!=='none'){
+          btn.removeAttribute('aria-hidden');
+          btn.removeAttribute('tabindex');
+        }
+      });
+    }
+  }
+
+  function boot(){
+    syncStudentSettingsAccess();
+    /* Role pada aplikasi dapat berubah setelah Firebase/session selesai.
+       Sinkronkan tanpa mengubah fungsi yang sudah ada. */
+    setTimeout(syncStudentSettingsAccess,100);
+    setTimeout(syncStudentSettingsAccess,500);
+    setTimeout(syncStudentSettingsAccess,1200);
+  }
+
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',boot,{once:true});
+  }else{
+    boot();
+  }
+
+  /* applyRole biasanya mengganti class body. Pantau perubahan itu supaya
+     menu langsung mengikuti role terbaru. */
+  try{
+    const observer=new MutationObserver(function(mutations){
+      if(mutations.some(m=>m.type==='attributes' && m.attributeName==='class')){
+        syncStudentSettingsAccess();
+      }
+    });
+    observer.observe(document.body,{attributes:true,attributeFilter:['class']});
+  }catch(e){}
+})();
+</script>
 </body>
 </html>
