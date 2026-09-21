@@ -12832,7 +12832,38 @@ X TJKT 1
   }
   function getMyNotifications(){
       ensureAppFeatures();
-      return state.notifications.filter(notificationForMe).sort((a,b)=>b.at-a.at);
+      return state.notifications.filter(notificationForMe).sort((a,b)=>Number(b.at||0)-Number(a.at||0));
+  }
+  function formatShortDateId(value){
+      const raw=String(value==null?'':value).trim();
+      if(!raw)return '';
+      let d=null;
+      if(/^\d{4}-\d{2}-\d{2}$/.test(raw)){
+          const parts=raw.split('-').map(Number);
+          d=new Date(parts[0],parts[1]-1,parts[2]);
+      }else{
+          const parsed=new Date(raw);
+          if(!Number.isNaN(parsed.getTime())) d=parsed;
+      }
+      if(!d || Number.isNaN(d.getTime()))return raw;
+      return d.toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});
+  }
+  function formatNotificationText(value){
+      let text=String(value==null?'':value);
+      // Repair common legacy concatenation such as 252026-09-21.
+      text=text.replace(/\b(\d{1,2})(20\d{2})-(\d{2})-(\d{2})\b/g,(_,day,year,month)=>{
+          const n=Number(day);
+          return (n>=1&&n<=31) ? `${n} ${['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'][Number(month)-1]||month} ${year}` : `${year}-${month}-${n}`;
+      });
+      // Convert remaining ISO dates to a compact, human-readable Indonesian date.
+      text=text.replace(/\b20\d{2}-\d{2}-\d{2}\b/g,match=>formatShortDateId(match));
+      return text;
+  }
+  function formatNotificationTime(value){
+      const ms=Number(value);
+      const d=Number.isFinite(ms)?new Date(ms):new Date(value);
+      if(Number.isNaN(d.getTime()))return '';
+      return d.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit',hour12:false});
   }
   function renderNotifications(){
       const list=document.getElementById('home-notifications'),badge=document.getElementById('home-notify-badge');
@@ -12841,9 +12872,13 @@ X TJKT 1
       const unread=items.filter(n=>!(n.readBy||[]).includes(currentUser?currentUser.uid:'')).length;
       if(badge){badge.textContent=unread+' baru';badge.style.display=unread?'inline-block':'none';}
       if(!items.length){list.innerHTML='<div class="empty">Belum ada notifikasi.</div>';return;}
-      list.innerHTML=items.slice(0,6).map(n=>{
+      // Beranda hanya menampilkan tiga notifikasi terbaru; halaman/fitur lain tetap memakai data lengkap.
+      list.innerHTML=items.slice(0,3).map(n=>{
           const read=(n.readBy||[]).includes(currentUser?currentUser.uid:'');
-          return `<div class="notify-item ${read?'read':'unread'}" onclick="markNotificationRead('${String(n.id).replace(/'/g,"\\'")}')"><div class="notify-dot"></div><div style="flex:1;min-width:0"><div class="notify-title">${escapeHtml(n.title)}</div><div class="notify-text">${escapeHtml(n.text)}</div><div class="notify-time">${escapeHtml(new Date(n.at).toLocaleString('id-ID'))}</div></div></div>`;
+          const safeId=String(n.id).replace(/'/g,"\\'");
+          const timeLabel=formatNotificationTime(n.at);
+          const textLabel=formatNotificationText(n.text);
+          return `<div class="notify-item ${read?'read':'unread'}" onclick="markNotificationRead('${safeId}')"><div class="notify-dot"></div><div style="flex:1;min-width:0"><div class="notify-title">${escapeHtml(n.title)}</div><div class="notify-text">${escapeHtml(textLabel)}</div><div class="notify-time">${escapeHtml(timeLabel)}</div></div></div>`;
       }).join('');
   }
   async function markNotificationRead(id){
@@ -13164,9 +13199,44 @@ X TJKT 1
       const reportEl = document.getElementById('home-reports');
       if (reportEl) reportEl.textContent = reportCounts.pending + reportCounts.reviewed;
       renderNotifications();
-      const todayJadwal = state.jadwal[DAY_NAMES[new Date().getDay() - 1]] || [];
-      document.getElementById('home-jadwal-list').innerHTML = todayJadwal.length ? todayJadwal.map(j => `
-          <div class="row-item"><div class="row-time">${escapeHtml(j.jam)}</div><div><div class="row-title">${escapeHtml(j.mapel)}</div><div class="row-sub">${escapeHtml(j.guru)}</div></div></div>
+      const todayIndex = new Date().getDay();
+      const todayName = FULL_DAY_NAMES[todayIndex];
+      const todayJadwal = Array.isArray(state.jadwal?.[todayName]) ? state.jadwal[todayName] : [];
+      const parseJamRange = value => {
+          const m=String(value||'').match(/(\d{1,2}):(\d{2})\s*[-–—]\s*(\d{1,2}):(\d{2})/);
+          if(!m)return null;
+          const start=Number(m[1])*60+Number(m[2]);
+          const end=Number(m[3])*60+Number(m[4]);
+          if(end<=start)return null;
+          return {start,end,startText:`${String(m[1]).padStart(2,'0')}:${m[2]}`,endText:`${String(m[3]).padStart(2,'0')}:${m[4]}`};
+      };
+      const scheduleGroups=[];
+      todayJadwal.forEach(item=>{
+          const last=scheduleGroups[scheduleGroups.length-1];
+          const mapelA=String(last?.mapel||'').trim().toLocaleLowerCase('id-ID');
+          const mapelB=String(item?.mapel||'').trim().toLocaleLowerCase('id-ID');
+          const guruA=String(last?.guru||'').trim().toLocaleLowerCase('id-ID');
+          const guruB=String(item?.guru||'').trim().toLocaleLowerCase('id-ID');
+          const prevRange=last?parseJamRange(last.jam):null;
+          const nextRange=parseJamRange(item?.jam);
+          if(last && prevRange && nextRange && prevRange.end===nextRange.start && mapelA===mapelB && guruA===guruB){
+              last.jam=`${prevRange.startText} - ${nextRange.endText}`;
+          }else{
+              scheduleGroups.push({...item});
+          }
+      });
+      const formatMapelName = value => {
+          const raw=String(value||'').trim();
+          if(!raw)return '';
+          const acronyms=new Set(['ppkn','pai','ipa','ips','pjok','informatika','tjkt','tkj','dpk','simdig','btq','seni budaya']);
+          return raw.split(/\s+/).map(word=>{
+              const lower=word.toLocaleLowerCase('id-ID');
+              if(acronyms.has(lower)) return lower==='seni budaya' ? 'Seni Budaya' : lower.toUpperCase();
+              return lower.charAt(0).toLocaleUpperCase('id-ID')+lower.slice(1);
+          }).join(' ');
+      };
+      document.getElementById('home-jadwal-list').innerHTML = scheduleGroups.length ? scheduleGroups.map(j => `
+          <div class="row-item"><div class="row-time">${escapeHtml(j.jam)}</div><div><div class="row-title">${escapeHtml(formatMapelName(j.mapel))}</div><div class="row-sub">${escapeHtml(j.guru||'Guru belum diatur')}</div></div></div>
       `).join('') : `<div class="empty">Tidak ada pelajaran hari ini.</div>`;
       document.getElementById('home-piket-list').innerHTML = piketTodayAssigned.length ? `
           <div style="display:flex; flex-wrap:wrap; gap:4px;">
@@ -13175,6 +13245,16 @@ X TJKT 1
       ` : `<div class="empty">Belum ada jadwal piket untuk hari ini.</div>`;
       renderHomeTugas();
       renderPengumuman();
+  }
+  function formatDashboardMapel(value){
+      const raw=String(value||'').trim();
+      if(!raw)return '';
+      const acronyms=new Set(['ppkn','pai','ipa','ips','pjok','tjkt','tkj','dpk','simdig','btq','html','css','sql','ui/ux']);
+      return raw.split(/\s+/).map(word=>{
+          const lower=word.toLocaleLowerCase('id-ID');
+          if(acronyms.has(lower))return lower.toUpperCase();
+          return lower.charAt(0).toLocaleUpperCase('id-ID')+lower.slice(1);
+      }).join(' ');
   }
   function renderHomeTugas() {
       const list = document.getElementById('home-tugas-list');
@@ -13206,7 +13286,7 @@ X TJKT 1
                   <div class="checkbox" aria-hidden="true"></div>
                   <div style="flex:1; min-width:0;">
                       <div class="task-title">${escapeHtml(t.nama || 'Tugas tanpa nama')}</div>
-                      <div class="task-meta"><span class="pill ${dueClass}">${dueText}</span>${t.mapel ? `<span class="pill">${escapeHtml(t.mapel)}</span>` : ''}</div>
+                      <div class="task-meta"><span class="pill ${dueClass}">${dueText}</span>${t.mapel ? `<span class="pill">${escapeHtml(formatDashboardMapel(t.mapel))}</span>` : ''}</div>
                       ${t.deskripsi ? `<div class="task-desc">${escapeHtml(cleanTaskText(t.deskripsi))}</div>` : ''}
                       ${renderTaskFiles(t)}
                   </div>
@@ -23008,6 +23088,44 @@ html[data-theme="dark"] body, body[data-theme="dark"] { background-color: #0b0f1
 
 /* Explicit manual theme must beat OS preference. */
 html[data-theme="light"] *, html[data-theme="dark"] * { color-scheme: inherit; }
+</style>
+
+<style id="dashboard-worldclass-final">
+/* Dashboard final polish: containment, readable metadata, and compact notifications. */
+#view-beranda .dashboard-notification-card{
+  min-width:0;
+  overflow:hidden;
+}
+#view-beranda .dashboard-notification-card .notify-item{
+  min-width:0;
+}
+#view-beranda .dashboard-notification-card .notify-title,
+#view-beranda .dashboard-notification-card .notify-text{
+  overflow-wrap:anywhere;
+  word-break:normal;
+}
+#view-beranda .dashboard-notification-card .notify-time{
+  font-variant-numeric:tabular-nums;
+  letter-spacing:.01em;
+}
+#view-beranda .dashboard-card .row-item{
+  min-width:0;
+}
+#view-beranda .dashboard-card .row-title,
+#view-beranda .dashboard-card .row-sub{
+  min-width:0;
+  overflow-wrap:anywhere;
+}
+#view-beranda .home-task-item .task-meta{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:6px;
+}
+@media (max-width:900px){
+  #view-beranda .dashboard-notification-card .notify-item{padding-top:10px;padding-bottom:10px;}
+  #view-beranda .dashboard-card .row-item{padding-top:10px;padding-bottom:10px;}
+}
 </style>
 </head><body><h1>Kas Kelas — X TJKT 1</h1><p>Pencatatan kas transparan &amp; aman.</p><div class="metrics"><div class="m"><small>Total Kas Masuk</small><b>${moneySafe(masuk)}</b></div><div class="m"><small>Total Pengeluaran</small><b>${moneySafe(keluar)}</b></div><div class="m"><small>Sisa Saldo</small><b>${moneySafe(masuk-keluar)}</b></div></div><table><thead><tr><th>Tanggal</th><th>Keterangan</th><th>Jenis</th><th>Jumlah</th></tr></thead><tbody>${transactionRows}</tbody></table>${folderRows}
 <style id="jadwal-piket-worldclass-v1">
