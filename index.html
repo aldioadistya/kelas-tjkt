@@ -23980,7 +23980,369 @@ body.dark #view-hp .hp-slot-tag.is-occupied{color:#86efac !important;background:
 @media(max-width:760px){#view-hp #hp-list.hp-command-list > .hp-command-grid{grid-template-columns:repeat(2,minmax(0,1fr)) !important}}
 @media(max-width:480px){#view-hp #hp-list.hp-command-list > .hp-command-grid{grid-template-columns:1fr !important}}
 </style>
-</head><body><h1>Kas Kelas — X TJKT 1</h1><p>Pencatatan kas transparan &amp; aman.</p><div class="metrics"><div class="m"><small>Total Kas Masuk</small><b>${money(masuk)}</b></div><div class="m"><small>Total Pengeluaran</small><b>${money(keluar)}</b></div><div class="m"><small>Sisa Saldo</small><b>${money(masuk-keluar)}</b></div></div><table><thead><tr><th>Tanggal</th><th>Keterangan</th><th>Jenis</th><th>Jumlah</th></tr></thead><tbody>${rows.map(t=>`<tr><td>${esc(t.tanggal||'-')}</td><td>${esc(t.ket||'-')}</td><td>${t.jenis==='masuk'?'Pemasukan':'Pengeluaran'}</td><td>${t.jenis==='masuk'?'+':'-'}${money(t.jumlah)}</td></tr>`).join('')}</tbody></table>${folders.map(f=>{const st=Array.isArray(f.students)?f.students:[],p=st.length?Math.round(st.filter(x=>x.status==='sudah').length/st.length*100):0;return `<div class="folder"><h3>${esc(f.name||'Kas Siswa')}</h3><p>${st.filter(x=>x.status==='sudah').length}/${st.length} siswa lunas</p><div class="bar"><div class="fill" style="width:${p}%"></div></div></div>`}).join('')}</body></html>`;
+</head><body><h1>Kas Kelas — X TJKT 1</h1><p>Pencatatan kas transparan &amp; aman.</p><div class="metrics"><div class="m"><small>Total Kas Masuk</small><b>${money(masuk)}</b></div><div class="m"><small>Total Pengeluaran</small><b>${money(keluar)}</b></div><div class="m"><small>Sisa Saldo</small><b>${money(masuk-keluar)}</b></div></div><table><thead><tr><th>Tanggal</th><th>Keterangan</th><th>Jenis</th><th>Jumlah</th></tr></thead><tbody>${rows.map(t=>`<tr><td>${esc(t.tanggal||'-')}</td><td>${esc(t.ket||'-')}</td><td>${t.jenis==='masuk'?'Pemasukan':'Pengeluaran'}</td><td>${t.jenis==='masuk'?'+':'-'}${money(t.jumlah)}</td></tr>`).join('')}</tbody></table>${folders.map(f=>{const st=Array.isArray(f.students)?f.students:[],p=st.length?Math.round(st.filter(x=>x.status==='sudah').length/st.length*100):0;return `<div class="folder"><h3>${esc(f.name||'Kas Siswa')}</h3><p>${st.filter(x=>x.status==='sudah').length}/${st.length} siswa lunas</p><div class="bar"><div class="fill" style="width:${p}%"></div></div></div>`}).join('')}
+<!-- =========================================================
+     FINAL MOBILE NAV + PIKET EDIT FIX
+     - Exactly 5 primary mobile destinations
+     - Removes duplicate "Lainnya" buttons
+     - Keeps every pill label inside its pill
+     - Restores an explicit "Edit Jadwal" action for admin
+     ========================================================= -->
+<style id="kelasku-final-mobile-nav-piket-fix">
+  /* ---------- Pills: never let labels escape their container ---------- */
+  .mode-switch,
+  .task-filter-tabs,
+  .task-pro-filter-tabs,
+  .report-filter-tabs,
+  .settings-nav,
+  .day-tabs,
+  .day-tabs-wrap,
+  .day-chip-group,
+  .piket-toolbar-group,
+  .piket-integrated-toolbar,
+  .piket-actionbar-actions {
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .mode-switch,
+  .task-filter-tabs,
+  .task-pro-filter-tabs,
+  .report-filter-tabs,
+  #view-settings .settings-nav {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+
+  .mode-switch::-webkit-scrollbar,
+  .task-filter-tabs::-webkit-scrollbar,
+  .task-pro-filter-tabs::-webkit-scrollbar,
+  .report-filter-tabs::-webkit-scrollbar,
+  #view-settings .settings-nav::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .mode-switch > *,
+  .task-filter-tabs > *,
+  .task-pro-filter-tabs > *,
+  .report-filter-tabs > *,
+  #view-settings .settings-nav > button,
+  .day-chip {
+    flex: 0 0 auto !important;
+    min-width: max-content !important;
+    max-width: calc(100vw - 32px) !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    box-sizing: border-box !important;
+  }
+
+  @media (max-width: 900px) {
+    .mode-switch,
+    .task-filter-tabs,
+    .task-pro-filter-tabs,
+    .report-filter-tabs,
+    #view-settings .settings-nav {
+      width: fit-content !important;
+      max-width: 100% !important;
+      gap: 5px !important;
+    }
+
+    .mode-switch > *,
+    .task-filter-tabs > *,
+    .task-pro-filter-tabs > *,
+    .report-filter-tabs > *,
+    #view-settings .settings-nav > button {
+      height: 34px !important;
+      min-height: 34px !important;
+      padding: 0 11px !important;
+      border-radius: 10px !important;
+      font-size: 9px !important;
+      line-height: 1 !important;
+    }
+
+    .day-chip {
+      padding: 7px 10px !important;
+      font-size: 9px !important;
+    }
+  }
+
+  /* ---------- Exactly five mobile nav items ---------- */
+  @media (max-width: 900px) {
+    .phone > .tabbar {
+      display: grid !important;
+      grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+      gap: 3px !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+      padding: 5px 6px calc(5px + env(safe-area-inset-bottom, 0px)) !important;
+      min-height: 60px !important;
+      overflow: hidden !important;
+    }
+
+    .phone > .tabbar .tab {
+      width: 100% !important;
+      min-width: 0 !important;
+      max-width: 100% !important;
+      height: 46px !important;
+      min-height: 46px !important;
+      padding: 3px 1px !important;
+      box-sizing: border-box !important;
+      overflow: hidden !important;
+      white-space: nowrap !important;
+      text-overflow: ellipsis !important;
+      gap: 2px !important;
+      border-radius: 10px !important;
+      font-size: 8px !important;
+      line-height: 1 !important;
+    }
+
+    .phone > .tabbar .tab svg {
+      width: 17px !important;
+      height: 17px !important;
+      flex: 0 0 auto !important;
+    }
+
+    /* Original destinations moved into Lainnya */
+    .phone > .tabbar .tab[data-tab="hp"],
+    .phone > .tabbar .tab[data-tab="jadwal"],
+    .phone > .tabbar .tab[data-tab="settings"],
+    .phone > .tabbar .tab[data-tab="mobile-more"] {
+      display: none !important;
+    }
+
+    /* Only the canonical Lainnya button is visible */
+    .phone > .tabbar #kelasku-more-nav-btn {
+      display: flex !important;
+      width: 100% !important;
+      min-width: 0 !important;
+      max-width: 100% !important;
+      order: 5 !important;
+    }
+
+    /* Any accidental duplicate generated by an older navigation patch */
+    .phone > .tabbar .tab[data-tab="mobile-more"] {
+      display: none !important;
+    }
+  }
+
+  @media (max-width: 380px) {
+    .phone > .tabbar {
+      gap: 2px !important;
+      padding-left: 4px !important;
+      padding-right: 4px !important;
+    }
+
+    .phone > .tabbar .tab {
+      font-size: 7px !important;
+      height: 45px !important;
+      min-height: 45px !important;
+    }
+
+    .phone > .tabbar .tab svg {
+      width: 16px !important;
+      height: 16px !important;
+    }
+  }
+
+  /* ---------- Piket: explicit admin edit control ---------- */
+  .piket-edit-schedule-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    min-height: 32px !important;
+    padding: 0 11px !important;
+    border-radius: 10px !important;
+    border: 1px solid #bfdbfe !important;
+    background: #eff6ff !important;
+    color: #1d4ed8 !important;
+    font-size: 9px !important;
+    font-weight: 850 !important;
+    white-space: nowrap !important;
+    box-sizing: border-box !important;
+    cursor: pointer !important;
+  }
+
+  .piket-edit-schedule-btn:hover {
+    background: #dbeafe !important;
+    border-color: #93c5fd !important;
+  }
+
+  body.dark .piket-edit-schedule-btn {
+    background: #102d4e !important;
+    border-color: #28588a !important;
+    color: #93c5fd !important;
+  }
+
+  body.dark .piket-edit-schedule-btn:hover {
+    background: #14395f !important;
+    border-color: #3b82f6 !important;
+  }
+
+  .piket-edit-schedule-btn:active {
+    transform: scale(.97) !important;
+  }
+
+  @media (max-width: 620px) {
+    #view-jadwal .piket-integrated-toolbar {
+      display: grid !important;
+      grid-template-columns: 1fr !important;
+      gap: 7px !important;
+    }
+
+    #view-jadwal .piket-toolbar-group {
+      width: 100% !important;
+      display: flex !important;
+      overflow-x: auto !important;
+      scrollbar-width: none !important;
+    }
+
+    #view-jadwal .piket-toolbar-group::-webkit-scrollbar {
+      display: none !important;
+    }
+
+    #view-jadwal .piket-edit-schedule-btn {
+      flex: 0 0 auto !important;
+      min-width: max-content !important;
+    }
+
+    #view-jadwal .piket-search-wrap {
+      width: 100% !important;
+      max-width: none !important;
+      margin: 0 !important;
+    }
+  }
+</style>
+
+<script id="kelasku-final-mobile-nav-piket-fix">
+(function(){
+  'use strict';
+
+  function fixMobileNavigation(){
+    const bar = document.querySelector('.phone > .tabbar');
+    if(!bar) return;
+
+    /* Remove the first/legacy dynamically-created More button. */
+    bar.querySelectorAll('.tab[data-tab="mobile-more"]').forEach(el => el.remove());
+
+    /* Hide every non-primary original destination. */
+    ['hp','jadwal','settings'].forEach(key => {
+      const el = bar.querySelector('.tab[data-tab="'+key+'"]');
+      if(el) el.style.display = 'none';
+    });
+
+    ['beranda','tugas','laporan','kas'].forEach(key => {
+      const el = bar.querySelector('.tab[data-tab="'+key+'"]');
+      if(el) el.style.display = '';
+    });
+
+    /* Keep only ONE canonical Lainnya button. */
+    let moreButtons = Array.from(bar.querySelectorAll('#kelasku-more-nav-btn'));
+    let more = moreButtons.shift();
+
+    moreButtons.forEach(el => el.remove());
+
+    if(!more){
+      more = document.createElement('button');
+      more.type = 'button';
+      more.id = 'kelasku-more-nav-btn';
+      more.className = 'tab';
+      more.setAttribute('aria-label','Lainnya');
+      more.innerHTML =
+        '<svg viewBox="0 0 24 24" aria-hidden="true">' +
+        '<circle cx="5" cy="12" r="1.7"></circle>' +
+        '<circle cx="12" cy="12" r="1.7"></circle>' +
+        '<circle cx="19" cy="12" r="1.7"></circle>' +
+        '</svg><span>Lainnya</span>';
+
+      more.addEventListener('click', function(){
+        const sheet = document.getElementById('kelasku-more-sheet') ||
+                      document.getElementById('kelasku-mobile-more');
+        if(sheet) sheet.classList.add('open');
+      });
+
+      bar.appendChild(more);
+    }
+
+    /* Always force the exact visual order. */
+    ['beranda','tugas','laporan','kas'].forEach(key => {
+      const el = bar.querySelector('.tab[data-tab="'+key+'"]');
+      if(el) bar.appendChild(el);
+    });
+    bar.appendChild(more);
+  }
+
+  function fixPiketEditButton(){
+    const toolbar = document.querySelector('#view-jadwal .piket-integrated-toolbar');
+    if(!toolbar) return;
+
+    const group = toolbar.querySelector('.piket-toolbar-group');
+    if(!group) return;
+
+    if(!group.querySelector('.piket-edit-schedule-btn')){
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'piket-toolbar-btn piket-edit-schedule-btn admin-only';
+      btn.innerHTML = '<span>✎</span> Edit Jadwal';
+      btn.title = 'Edit jadwal piket per hari';
+      btn.addEventListener('click', function(){
+        if(typeof window.openPiketJadwalModal === 'function'){
+          window.openPiketJadwalModal();
+        }
+      });
+      group.insertBefore(btn, group.firstChild);
+    }
+
+    /* The old global-shell rule hid the actionbar. Keep it hidden,
+       but expose the actual edit action inside the Piket panel. */
+    const admin = typeof window.isAdmin === 'function' ? window.isAdmin() : false;
+    const btn = group.querySelector('.piket-edit-schedule-btn');
+    if(btn) btn.style.display = admin ? 'inline-flex' : 'none';
+  }
+
+  function run(){
+    fixMobileNavigation();
+    fixPiketEditButton();
+  }
+
+  function boot(){
+    run();
+    setTimeout(run, 100);
+    setTimeout(run, 500);
+    setTimeout(run, 1200);
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', boot);
+  }else{
+    boot();
+  }
+
+  window.addEventListener('resize', run, {passive:true});
+
+  /* Re-apply after navigation/render functions update the DOM. */
+  const observer = new MutationObserver(function(){
+    if(!observer.__scheduled){
+      observer.__scheduled = true;
+      requestAnimationFrame(function(){
+        observer.__scheduled = false;
+        run();
+      });
+    }
+  });
+
+  document.addEventListener('DOMContentLoaded', function(){
+    observer.observe(document.body, {childList:true, subtree:true});
+  });
+})();
+</script>
+
+</body></html>`;
     const w=window.open('','_blank','width=900,height=700');if(!w){showNotification('Popup diblokir browser. Izinkan popup untuk mencetak PDF.','warning');return;}w.document.write(html);w.document.close();w.focus();setTimeout(()=>w.print(),250);
   };
 
