@@ -22905,7 +22905,6 @@ body.dark #view-hp .hp-slot-tag.is-occupied{color:#86efac !important;background:
 @media(max-width:760px){#view-hp #hp-list.hp-command-list > .hp-command-grid{grid-template-columns:repeat(2,minmax(0,1fr)) !important}}
 @media(max-width:480px){#view-hp #hp-list.hp-command-list > .hp-command-grid{grid-template-columns:1fr !important}}
 </style>
-</head><body><h1>Kas Kelas — X TJKT 1</h1><p>Pencatatan kas transparan &amp; aman.</p><div class="metrics"><div class="m"><small>Total Kas Masuk</small><b>${money(masuk)}</b></div><div class="m"><small>Total Pengeluaran</small><b>${money(keluar)}</b></div><div class="m"><small>Sisa Saldo</small><b>${money(masuk-keluar)}</b></div></div><table><thead><tr><th>Tanggal</th><th>Keterangan</th><th>Jenis</th><th>Jumlah</th></tr></thead><tbody>${rows.map(t=>`<tr><td>${esc(t.tanggal||'-')}</td><td>${esc(t.ket||'-')}</td><td>${t.jenis==='masuk'?'Pemasukan':'Pengeluaran'}</td><td>${t.jenis==='masuk'?'+':'-'}${money(t.jumlah)}</td></tr>`).join('')}</tbody></table>${folders.map(f=>{const st=Array.isArray(f.students)?f.students:[],p=st.length?Math.round(st.filter(x=>x.status==='sudah').length/st.length*100):0;return `<div class="folder"><h3>${esc(f.name||'Kas Siswa')}</h3><p>${st.filter(x=>x.status==='sudah').length}/${st.length} siswa lunas</p><div class="bar"><div class="fill" style="width:${p}%"></div></div></div>`}).join('')}
 <style id="jadwal-v81-mode-switch-length">
 /* v81 — Pelajaran/Piket kembali dibuat lebih panjang seperti layout sebelumnya. */
 body.kelasku-authenticated #view-jadwal > .mode-switch{
