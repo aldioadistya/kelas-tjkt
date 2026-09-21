@@ -6774,7 +6774,125 @@ body.dark .view textarea{
 </style>
 
 
+<style id="kelasku-desktop-fullscreen-fix">
+/* =========================================================
+   DESKTOP FULLSCREEN FIX
+   Desktop gets the full available browser width.
+   The existing mobile layout remains untouched.
+   The pointer rule also keeps desktop mode when a desktop
+   browser window is temporarily narrow.
+   ========================================================= */
 
+@media (min-width: 768px), (hover: hover) and (pointer: fine) {
+  html,
+  body{
+    width:100%;
+    min-width:0;
+    height:100%;
+    margin:0;
+  }
+
+  body{
+    display:block;
+    overflow:hidden;
+  }
+
+  .phone{
+    position:relative;
+    width:100vw !important;
+    max-width:none !important;
+    min-width:0;
+    height:100vh !important;
+    height:100dvh !important;
+    max-height:none !important;
+    margin:0 !important;
+    border:0 !important;
+    border-radius:0 !important;
+    box-shadow:none !important;
+    display:grid !important;
+    grid-template-columns:255px minmax(0,1fr) !important;
+    grid-template-rows:100vh !important;
+    overflow:hidden;
+  }
+
+  .phone > .statusbar,
+  .phone > .tabbar{
+    display:none !important;
+  }
+
+  .desktop-sidebar{
+    display:flex !important;
+    grid-column:1;
+    grid-row:1;
+    width:255px;
+    min-width:255px;
+    height:100vh;
+    overflow-y:auto;
+    overflow-x:hidden;
+  }
+
+  .phone > .screen{
+    grid-column:2;
+    grid-row:1;
+    width:100%;
+    min-width:0;
+    height:100vh;
+    overflow-y:auto;
+    overflow-x:hidden;
+    box-sizing:border-box;
+  }
+
+  /* Content can use the desktop canvas naturally, but remains
+     comfortably readable on very wide monitors. */
+  .screen .view{
+    width:100%;
+    max-width:1180px;
+    margin-left:auto;
+    margin-right:auto;
+    box-sizing:border-box;
+  }
+}
+
+@media (min-width:768px) and (max-width:1200px),
+       (hover: hover) and (pointer: fine) and (max-width:1200px){
+  .phone{
+    grid-template-columns:225px minmax(0,1fr) !important;
+  }
+
+  .desktop-sidebar{
+    width:225px;
+    min-width:225px;
+  }
+
+  .phone > .screen{
+    padding-left:26px;
+    padding-right:26px;
+  }
+}
+
+/* Narrow desktop windows: keep desktop navigation usable
+   instead of reverting to the phone shell. */
+@media (min-width:768px) and (max-width:900px),
+       (hover: hover) and (pointer: fine) and (max-width:900px){
+  .phone{
+    grid-template-columns:210px minmax(0,1fr) !important;
+  }
+
+  .desktop-sidebar{
+    width:210px;
+    min-width:210px;
+  }
+
+  .phone > .screen{
+    padding:18px 18px 24px;
+  }
+
+  .desktop-nav-item{
+    padding-left:10px;
+    padding-right:10px;
+  }
+}
+</style>
 
 
 <style id="kelasku-button-final-polish">
@@ -8791,1834 +8909,179 @@ body.dark #app-global-actions .kas71-global-actions .kas71-export{
 }
 </style>
 
-<style id="kelasku-ui-reference-2026">
-/* =========================================================
-   KELASKU — MOBILE UI REFERENCE SYSTEM
-   Reference: supplied UI board (light + dark)
-   Goal: compact, calm, consistent, touch-friendly.
-   ========================================================= */
+<style id="typography-v79-global">
+/* v79 — readability pass: enlarge microcopy and controls that were too small across the app */
+.phone,
+.phone input,
+.phone select,
+.phone textarea,
+.phone button { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
 
-:root{
-  --ref-blue:#2563eb;
-  --ref-blue-2:#3b82f6;
-  --ref-ink:#0f172a;
-  --ref-muted:#64748b;
-  --ref-bg:#f7faff;
-  --ref-card:#ffffff;
-  --ref-line:#dbe5f0;
-  --ref-soft:#eff6ff;
-  --ref-green:#10b981;
-  --ref-red:#f43f5e;
-  --ref-radius:14px;
-  --ref-shadow:0 3px 12px rgba(15,23,42,.055);
-}
+/* Global UI baseline */
+.phone { font-size: 14px; }
+.phone button,
+.phone input,
+.phone select,
+.phone textarea { font-size: 14px; }
 
-body:not(.dark){
-  --ref-bg:#f7faff;
-  --ref-card:#fff;
-  --ref-line:#dbe5f0;
-  --ref-ink:#0f172a;
-  --ref-muted:#64748b;
-}
+/* Shared small text */
+.phone .section-link { font-size: 12px !important; }
+.phone .row-time { font-size: 12px !important; }
+.phone .row-title { font-size: 14px !important; }
+.phone .row-sub { font-size: 12px !important; }
+.phone .empty { font-size: 13px !important; }
+.phone .pill { font-size: 10.5px !important; }
+.phone .day-chip { font-size: 11.5px !important; }
+.phone .htag { font-size: 11px !important; }
+.phone .field label { font-size: 11.5px !important; }
+.phone .field-hint { font-size: 11px !important; }
+.phone .toggle-btn { font-size: 11px !important; }
+.phone .settings-label { font-size: 11.5px !important; }
+.phone .section-kicker { font-size: 10.5px !important; }
+.phone .section-action { font-size: 11px !important; }
 
-body.dark{
-  --ref-bg:#081321;
-  --ref-card:#102236;
-  --ref-line:rgba(148,163,184,.16);
-  --ref-ink:#f8fafc;
-  --ref-muted:#9fb0c4;
-}
+/* Tabs / navigation */
+.phone .tab { font-size: 12px !important; }
+.phone .statusbar { font-size: 14px !important; }
 
-@media (max-width:900px){
-  html,body{
-    width:100%;
-    max-width:100%;
-    overflow-x:hidden !important;
-  }
-  body{
-    background:var(--ref-bg) !important;
-    color:var(--ref-ink);
-  }
-  .screen,.content,.main-content,.view{
-    min-width:0 !important;
-    width:100% !important;
-    max-width:100% !important;
-    overflow-x:clip !important;
-  }
+/* Stats and page headers */
+.phone .stat-label { font-size: 11px !important; }
+.phone .stat-value { font-size: 19px !important; }
+.phone .pagehead h1 { font-size: 22px !important; }
+.phone .pagehead p { font-size: 13px !important; }
+.phone .balance-label { font-size: 12px !important; }
+.phone .balance-value { font-size: 30px !important; }
+.phone .bf-item { font-size: 12px !important; }
+.phone .bf-item b { font-size: 16px !important; }
 
-  /* App canvas */
-  .view{
-    padding:14px 14px calc(84px + env(safe-area-inset-bottom,0px)) !important;
-  }
-  .pagehead{
-    display:flex !important;
-    align-items:flex-start !important;
-    justify-content:space-between !important;
-    gap:10px !important;
-    margin:0 0 12px !important;
-  }
-  .pagehead h1{
-    margin:0 !important;
-    font-size:19px !important;
-    line-height:1.18 !important;
-    letter-spacing:-.02em !important;
-    color:var(--ref-ink) !important;
-  }
-  .pagehead p{
-    margin:4px 0 0 !important;
-    font-size:10.5px !important;
-    line-height:1.45 !important;
-    color:var(--ref-muted) !important;
-  }
+/* Kas */
+.phone .tx-title { font-size: 14px !important; }
+.phone .tx-sub { font-size: 11.5px !important; }
+.phone .tx-amt { font-size: 14px !important; }
+.phone .kas-payment-badge { font-size: 10px !important; }
+.phone .kas-folder-note { font-size: 11px !important; }
+.phone .kas-summary-paid,
+.phone .kas-summary-unpaid,
+.phone .kas-summary-nominal { font-size: 11px !important; }
+.phone .kas-student-avatar { font-size: 11px !important; }
+.phone .kas-student-info strong { font-size: 12.5px !important; }
+.phone .kas-student-info small { font-size: 10.5px !important; }
+.phone .kas-payment-badge { font-size: 10px !important; }
+.phone .kas-folder-empty { font-size: 12px !important; }
+.phone .kas-pro-filters input,
+.phone .kas-pro-filters select { font-size: 13.5px !important; }
+.phone .kas-pro-table th { font-size: 10.5px !important; }
+.phone .kas-pro-table td { font-size: 13px !important; }
+.phone .kas-type-badge { font-size: 10.5px !important; }
+.phone .kas-pro-metric .kpm-label { font-size: 12px !important; }
+.phone .kas-pro-metric .kpm-note { font-size: 11px !important; }
 
-  /* Universal surface: one clean layer, not nested boxes */
-  .card,.section,.dashboard-card,.dashboard-panel,.task-pro-list-wrap,
-  .report-kpi-card,.timeline-card,.hp-slot,.calendar-card,.cal-card,
-  .kas-pro-table,.settings-section,.settings-profile-card{
-    border:1px solid var(--ref-line) !important;
-    border-radius:var(--ref-radius) !important;
-    background:var(--ref-card) !important;
-    box-shadow:var(--ref-shadow) !important;
-    color:var(--ref-ink) !important;
-  }
-  body.dark .card,body.dark .section,body.dark .dashboard-card,
-  body.dark .dashboard-panel,body.dark .task-pro-list-wrap,
-  body.dark .report-kpi-card,body.dark .timeline-card,body.dark .hp-slot,
-  body.dark .calendar-card,body.dark .cal-card,body.dark .kas-pro-table,
-  body.dark .settings-section,body.dark .settings-profile-card{
-    background:#102236 !important;
-    border-color:rgba(148,163,184,.16) !important;
-    box-shadow:0 4px 14px rgba(0,0,0,.14) !important;
-  }
+/* Home / notifications / activity */
+.phone .notify-title { font-size: 12px !important; }
+.phone .notify-text { font-size: 11.5px !important; }
+.phone .notify-time { font-size: 10.5px !important; }
+.phone .activity-main { font-size: 11.5px !important; }
+.phone .activity-meta { font-size: 10.5px !important; }
+.phone .global-search-item .gsi-title { font-size: 12px !important; }
+.phone .global-search-item .gsi-sub { font-size: 10.5px !important; }
+.phone .home-search-input { font-size: 13px !important; }
 
-  /* Remove unnecessary double containers */
-  .section{
-    margin:0 0 12px !important;
-    padding:0 !important;
-    background:transparent !important;
-    border:0 !important;
-    box-shadow:none !important;
-  }
-  .section > .card{
-    padding:12px !important;
-  }
+/* Dashboard */
+.phone .dashboard-user-meta span { font-size: 11px !important; }
+.phone .dashboard-hero .htag { font-size: 11px !important; }
+.phone .dashboard-stat-card .stat-status { font-size: 10px !important; }
+.phone .dashboard-stat-card .stat-label { font-size: 12px !important; }
+.phone .dashboard-notify-badge { font-size: 9px !important; }
+.phone .dashboard-notification-card .empty { font-size: 11px !important; }
+.phone .dashboard-card .announce-description { font-size: 11.5px !important; }
+.phone .dashboard-card .announce-date { font-size: 10.5px !important; }
+.phone .dashboard-card .announce-file { font-size: 10.5px !important; }
+.phone .compact-list .empty { font-size: 11px !important; }
+.phone .dashboard-card .row-time { font-size: 11px !important; }
+.phone .dashboard-card .row-title { font-size: 12.5px !important; }
+.phone .dashboard-card .row-sub { font-size: 10.5px !important; }
+.phone .dashboard-card .task-title { font-size: 12.5px !important; }
 
-  /* Typography */
-  .section-title,.task-pro-summary-title,.jadwal-pro-title-row h2,
-  .piket-integrated-title,.hero-name{
-    color:var(--ref-ink) !important;
-  }
-  .section-kicker,.section-label,.settings-label{
-    color:var(--ref-muted) !important;
-  }
+/* Tugas */
+.phone .task-filter-tab { font-size: 12px !important; }
+.phone .task-column-title { font-size: 12px !important; }
+.phone .task-pro-deadline { font-size: 10.5px !important; }
+.phone .task-pro-tag { font-size: 10.5px !important; }
+.phone .task-pro-desc { font-size: 11.5px !important; }
+.phone .task-pro-actions button { font-size: 11px !important; }
+.phone .task-drive-link a { font-size: 11px !important; }
+.phone #view-tugas .task-pro-summary-sub { font-size: 11.5px !important; }
+.phone #view-tugas .task-pro-clear-btn { font-size: 11px !important; }
+.phone #view-tugas .task-pro-subject-icon { font-size: 10px !important; }
+.phone #view-tugas .task-pro-status-dot { font-size: 10px !important; }
+.phone #view-tugas .task-pro-check-btn { font-size: 11px !important; }
+.phone #view-tugas .task-pro-empty-sub { font-size: 11px !important; }
 
-  /* Touch targets */
-  button,.btn,.mode-btn,.task-filter-tab,.section-action,.fab-add,
-  .piket-toolbar-btn,.jadwal-pro-add{
-    min-height:38px;
-    font-size:11px;
-    border-radius:10px;
-    transition:transform .15s cubic-bezier(.16,1,.3,1),background .15s,border-color .15s;
-  }
-  button:active,.btn:active,.mode-btn:active,.task-filter-tab:active,
-  .section-action:active,.fab-add:active,.piket-toolbar-btn:active{
-    transform:scale(.97);
-  }
+/* Laporan */
+.phone .report-meta { font-size: 10.5px !important; }
+.phone .report-status { font-size: 10px !important; }
+.phone .report-kpi .rk-label { font-size: 10px !important; }
+.phone .report-kpi .rk-value { font-size: 21px !important; }
+.phone .report-bar-label { font-size: 10px !important; }
+.phone .report-action-btn { font-size: 11px !important; }
 
-  /* ================= DASHBOARD ================= */
-  .dashboard-topbar{
-    display:flex !important;
-    align-items:center !important;
-    gap:8px !important;
-    margin-bottom:10px !important;
-  }
-  .dashboard-search{
-    flex:1 1 auto !important;
-    min-width:0 !important;
-  }
-  .dashboard-search input{
-    width:100% !important;
-    min-width:0 !important;
-    height:38px !important;
-    font-size:11px !important;
-  }
-  .dashboard-search-kbd{display:none !important;}
-  .dashboard-user-meta{display:none !important;}
-  .dashboard-user-avatar{
-    width:38px !important;height:38px !important;min-width:38px !important;
-    border-radius:12px !important;
-  }
+/* Jadwal / Piket */
+.phone .cal-day { font-size: 11px !important; }
+.phone .cal-nav-btn { font-size: 11px !important; }
+.phone .cal-month { font-size: 15px !important; }
+.phone .timeline-time { font-size: 12px !important; }
+.phone .timeline-sub { font-size: 11px !important; }
+.phone .piket-person .mini-avatar { font-size: 11px !important; }
+.phone .piket-person .mini-name { font-size: 12px !important; }
 
-  .dashboard-hero{
-    margin:0 0 10px !important;
-    padding:14px !important;
-    border-radius:16px !important;
-    min-height:0 !important;
-  }
-  .dashboard-hero .hero-top{
-    gap:8px !important;
-  }
-  .dashboard-hero .hero-eyebrow{
-    font-size:9px !important;
-    opacity:.82;
-  }
-  .dashboard-hero .hero-name{
-    font-size:18px !important;
-    line-height:1.2 !important;
-  }
-  .dashboard-hero .hero-copy{
-    font-size:10px !important;
-    line-height:1.35 !important;
-  }
-  .dashboard-hero .hero-tags{
-    margin-top:10px !important;
-    gap:5px !important;
-    overflow-x:auto !important;
-    scrollbar-width:none !important;
-  }
-  .dashboard-hero .hero-tags::-webkit-scrollbar{display:none;}
-  .dashboard-hero .htag{
-    flex:0 0 auto !important;
-    font-size:9px !important;
-    padding:5px 8px !important;
-  }
+/* Piket / forms / profile */
+.phone .s-avatar { font-size: 11px !important; }
+.phone .acc-row .acc-info .acc-email { font-size: 10.5px !important; }
+.phone .phone > .login-overlay .login-hero-sub { font-size: 11px !important; }
+.phone .phone > .login-overlay .login-sub { font-size: 12px !important; }
 
-  .dashboard-stat-grid{
-    display:grid !important;
-    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
-    gap:8px !important;
-    margin-bottom:12px !important;
-  }
-  .dashboard-stat-card{
-    min-width:0 !important;
-    padding:10px !important;
-    border-radius:12px !important;
-  }
-  .dashboard-stat-card .stat-icon{
-    width:27px !important;height:27px !important;
-    border-radius:9px !important;
-  }
-  .dashboard-stat-card .stat-label{
-    font-size:9px !important;
-    margin-top:5px !important;
-  }
-  .dashboard-stat-card .stat-value{
-    font-size:16px !important;
-    line-height:1.15 !important;
-  }
-  .dashboard-stat-card .stat-status{
-    font-size:8px !important;
-  }
+/* Pengumpulan HP — specifically lift all 7–10px microcopy seen in cards */
+#view-hp .hp-command-kicker { font-size: 10.5px !important; }
+#view-hp .hp-command-status { font-size: 10px !important; }
+#view-hp .hp-command-heading > p { font-size: 12.5px !important; }
+#view-hp .hp-progress-meta { font-size: 12px !important; }
+#view-hp .hp-progress-kicker { font-size: 10px !important; }
+#view-hp .hp-progress-head strong { font-size: 13px !important; }
+#view-hp .hp-progress-note { font-size: 10px !important; }
+#view-hp .hp-view-switcher button { font-size: 10.5px !important; }
+#view-hp .hp-search-wrap input { font-size: 12px !important; }
+#view-hp .hp-filter-row button { font-size: 10.5px !important; }
+#view-hp .hp-filter-row button span { font-size: 9px !important; }
+#view-hp .hp-student-roll { font-size: 9.5px !important; }
+#view-hp .hp-slot-tag { font-size: 10px !important; }
+#view-hp .hp-student-avatar { font-size: 11.5px !important; }
+#view-hp .hp-student-name { font-size: 13px !important; }
+#view-hp .hp-student-sub { font-size: 10px !important; }
+#view-hp .hp-status-chip { font-size: 10px !important; }
+#view-hp .hp-quick-btn { font-size: 10px !important; }
+#view-hp .hp-command-table th { font-size: 9.5px !important; }
+#view-hp .hp-command-table td { font-size: 11px !important; }
+#view-hp .hp-table-name { font-size: 10.5px !important; }
+#view-hp .hp-rack-head span { font-size: 9.5px !important; }
+#view-hp .hp-rack-num { font-size: 9px !important; }
+#view-hp .hp-rack-name { font-size: 10.5px !important; }
+#view-hp .hp-rack-state { font-size: 8.5px !important; }
+#view-hp .hp-command-empty strong { font-size: 13px !important; }
+#view-hp .hp-command-empty span { font-size: 10px !important; }
+#view-hp .hp-calendar-drawer-head strong { font-size: 13px !important; }
 
-  .dashboard-main-grid,.dashboard-secondary-grid{
-    display:grid !important;
-    grid-template-columns:minmax(0,1fr) !important;
-    gap:10px !important;
-  }
-  .dashboard-panel .section-head{
-    padding:10px 11px !important;
-  }
-  .dashboard-panel .section-title{
-    font-size:13px !important;
-  }
-  .dashboard-panel .section-kicker{
-    font-size:8px !important;
-  }
-  .dashboard-panel > .card{
-    border-radius:12px !important;
-    box-shadow:none !important;
-  }
+/* Keep tiny helper/metadata text readable everywhere while avoiding title inflation */
+.phone small { font-size: 11px; }
+.phone label { line-height: 1.3; }
 
-  /* ================= TABS ================= */
-  .mode-switch,.task-filter-tabs,.day-tabs,.settings-nav{
-    width:max-content !important;
-    max-width:100% !important;
-    display:flex !important;
-    flex-wrap:nowrap !important;
-    overflow-x:auto !important;
-    scrollbar-width:none !important;
-    -webkit-overflow-scrolling:touch;
-  }
-  .mode-switch::-webkit-scrollbar,.task-filter-tabs::-webkit-scrollbar,
-  .day-tabs::-webkit-scrollbar,.settings-nav::-webkit-scrollbar{display:none;}
-  .mode-btn,.task-filter-tab,.day-tabs button,.settings-nav button{
-    flex:0 0 auto !important;
-    white-space:nowrap !important;
-  }
-
-  .mode-switch{
-    padding:3px !important;
-    gap:3px !important;
-    border:1px solid var(--ref-line) !important;
-    border-radius:12px !important;
-    background:var(--ref-card) !important;
-    margin-bottom:10px !important;
-  }
-  .mode-btn{
-    min-height:32px !important;
-    padding:5px 14px !important;
-    border:0 !important;
-    border-radius:9px !important;
-    background:transparent !important;
-    color:var(--ref-muted) !important;
-  }
-  .mode-btn.active{
-    background:var(--ref-blue) !important;
-    color:#fff !important;
-    box-shadow:0 3px 10px rgba(37,99,235,.22) !important;
-  }
-
-  /* ================= JADWAL ================= */
-  .jadwal-pro-head{
-    display:flex !important;
-    align-items:flex-start !important;
-    gap:8px !important;
-    margin-bottom:10px !important;
-  }
-  .jadwal-pro-title-row h2{
-    font-size:17px !important;
-    margin:2px 0 0 !important;
-  }
-  .jadwal-pro-head-copy p{
-    font-size:9.5px !important;
-    margin-top:4px !important;
-  }
-  .jadwal-pro-add{
-    flex:0 0 auto !important;
-    padding:6px 10px !important;
-  }
-  .jadwal-day-rail-wrap{
-    overflow-x:auto !important;
-    scrollbar-width:none !important;
-    margin:0 -2px 10px !important;
-  }
-  .jadwal-day-rail-wrap::-webkit-scrollbar{display:none;}
-  .jadwal-day-rail{
-    width:max-content !important;
-    min-width:100% !important;
-    gap:5px !important;
-  }
-  .jadwal-day-rail button{
-    min-width:54px !important;
-    min-height:34px !important;
-    padding:5px 9px !important;
-    border-radius:10px !important;
-  }
-  .jadwal-pro-list{
-    display:grid !important;
-    grid-template-columns:minmax(0,1fr) !important;
-    gap:7px !important;
-  }
-
-  /* ================= PIKET ================= */
-  .piket-actionbar{
-    margin-bottom:9px !important;
-  }
-  .piket-actionbar-main{
-    display:block !important;
-  }
-  .piket-actionbar-actions{
-    display:flex !important;
-    gap:5px !important;
-    overflow-x:auto !important;
-    scrollbar-width:none !important;
-    margin-top:8px !important;
-  }
-  .piket-actionbar-actions::-webkit-scrollbar{display:none;}
-  .piket-action-btn{flex:0 0 auto !important;}
-  .piket-integrated-panel{
-    padding:11px !important;
-    border-radius:14px !important;
-    background:var(--ref-card) !important;
-    border:1px solid var(--ref-line) !important;
-    box-shadow:var(--ref-shadow) !important;
-  }
-  body.dark .piket-integrated-panel{
-    background:#102236 !important;
-    border-color:rgba(148,163,184,.16) !important;
-  }
-  .piket-integrated-head{
-    gap:8px !important;
-  }
-  .piket-integrated-title{
-    font-size:17px !important;
-  }
-  .piket-integrated-progress{
-    gap:4px !important;
-  }
-  .piket-integrated-progress > div{
-    min-width:45px !important;
-    padding:5px !important;
-    border-radius:9px !important;
-  }
-  .piket-integrated-toolbar{
-    display:flex !important;
-    flex-direction:column !important;
-    gap:7px !important;
-  }
-  .piket-toolbar-group{
-    display:flex !important;
-    gap:5px !important;
-    overflow-x:auto !important;
-    scrollbar-width:none !important;
-  }
-  .piket-toolbar-group::-webkit-scrollbar{display:none;}
-  .piket-toolbar-btn{flex:0 0 auto !important;}
-  .piket-search-wrap{
-    width:100% !important;
-  }
-  .piket-weekly-stats{
-    grid-template-columns:repeat(3,minmax(0,1fr)) !important;
-    gap:6px !important;
-  }
-  .piket-weekly-stat{
-    padding:8px !important;
-    min-width:0 !important;
-  }
-  .piket-weekly-stat-label{
-    font-size:8px !important;
-  }
-  .piket-weekly-stat strong{
-    font-size:15px !important;
-  }
-  .piket-weekly-list{
-    grid-template-columns:minmax(0,1fr) !important;
-    gap:7px !important;
-  }
-  .piket-task-card{
-    min-width:0 !important;
-  }
-
-  /* ================= TUGAS / LAPORAN ================= */
-  .task-pro-pagehead{
-    align-items:flex-start !important;
-    gap:7px !important;
-  }
-  .task-pro-pagehead h1{
-    font-size:19px !important;
-  }
-  .task-pro-primary{
-    flex:0 0 auto !important;
-    padding:7px 10px !important;
-  }
-  .task-pro-toolbar{
-    display:flex !important;
-    flex-direction:column !important;
-    gap:7px !important;
-    margin-bottom:10px !important;
-  }
-  .task-pro-search-wrap{
-    width:100% !important;
-  }
-  .task-filter-tabs{
-    width:100% !important;
-    padding-bottom:2px !important;
-  }
-  .task-filter-tab{
-    padding:6px 11px !important;
-    min-height:32px !important;
-    font-size:9px !important;
-  }
-  .task-pro-smart-list{
-    display:grid !important;
-    grid-template-columns:minmax(0,1fr) !important;
-    gap:7px !important;
-  }
-
-  #view-laporan .section:first-of-type{
-    display:flex !important;
-    justify-content:flex-end !important;
-  }
-  #view-laporan .fab-add{
-    width:auto !important;
-    margin:0 0 2px !important;
-  }
-  #view-laporan .section-head{
-    display:flex !important;
-    flex-direction:column !important;
-    align-items:stretch !important;
-    gap:7px !important;
-  }
-  #view-laporan .section-head > div:last-child{
-    display:flex !important;
-    width:100% !important;
-    gap:6px !important;
-  }
-  #report-search{
-    flex:1 1 auto !important;
-    width:auto !important;
-    min-width:0 !important;
-    height:34px !important;
-  }
-  #report-filter{
-    width:auto !important;
-    min-width:92px !important;
-    height:34px !important;
-  }
-
-  /* ================= KAS ================= */
-  #view-kas .kas-pro-head,
-  #view-kas .kas-toolbar,
-  #view-kas .kas-summary{
-    min-width:0 !important;
-  }
-  .kas-pro-table-wrap,.table-wrap,.table-scroll{
-    width:100% !important;
-    max-width:100% !important;
-    overflow-x:auto !important;
-    -webkit-overflow-scrolling:touch;
-    scrollbar-width:thin;
-  }
-  .kas-pro-table{
-    min-width:620px !important;
-  }
-
-  /* ================= HP ================= */
-  #view-hp .hp-command-grid{
-    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
-    gap:7px !important;
-  }
-  #view-hp .hp-slot{
-    min-width:0 !important;
-  }
-
-  /* ================= SETTINGS ================= */
-  #view-settings .pagehead{
-    margin-bottom:9px !important;
-  }
-  #view-settings .section > .card{
-    padding:11px !important;
-  }
-  #view-settings .acc-row{
-    min-width:0 !important;
-  }
-  #view-settings .settings-nav{
-    max-width:calc(100vw - 28px) !important;
-    margin:0 0 10px !important;
-  }
-  #view-settings .settings-nav button{
-    padding:7px 11px !important;
-    font-size:9.5px !important;
-  }
-  #view-settings .settings-section{
-    padding:10px !important;
-    margin-bottom:8px !important;
-  }
-
-  /* ================= BOTTOM NAV ================= */
-  .tabbar{
-    position:fixed !important;
-    z-index:1000 !important;
-    left:0 !important;
-    right:0 !important;
-    bottom:0 !important;
-    width:100% !important;
-    height:64px !important;
-    padding:5px 8px calc(5px + env(safe-area-inset-bottom,0px)) !important;
-    display:grid !important;
-    grid-template-columns:repeat(5,minmax(0,1fr)) !important;
-    gap:3px !important;
-    background:rgba(255,255,255,.96) !important;
-    border-top:1px solid var(--ref-line) !important;
-    box-shadow:0 -5px 18px rgba(15,23,42,.06) !important;
-    backdrop-filter:blur(12px) !important;
-  }
-  body.dark .tabbar{
-    background:rgba(8,19,33,.96) !important;
-    border-top-color:rgba(148,163,184,.16) !important;
-    box-shadow:0 -5px 18px rgba(0,0,0,.18) !important;
-  }
-  .tabbar .tab{
-    min-width:0 !important;
-    min-height:50px !important;
-    padding:5px 2px !important;
-    display:flex !important;
-    flex-direction:column !important;
-    align-items:center !important;
-    justify-content:center !important;
-    gap:3px !important;
-    border:0 !important;
-    border-radius:11px !important;
-    background:transparent !important;
-    color:#64748b !important;
-    font-size:8px !important;
-    white-space:nowrap !important;
-  }
-  body.dark .tabbar .tab{color:#91a4ba !important;}
-  .tabbar .tab svg{
-    width:18px !important;height:18px !important;
-    flex:0 0 auto !important;
-  }
-  .tabbar .tab.active{
-    color:var(--ref-blue) !important;
-    background:#eff6ff !important;
-  }
-  body.dark .tabbar .tab.active{
-    color:#60a5fa !important;
-    background:rgba(37,99,235,.14) !important;
-  }
-  .tabbar .tab:nth-child(3),.tabbar .tab:nth-child(4),.tabbar .tab:nth-child(5){
-    /* visibility controlled below by JS clone menu */
-  }
-
-  /* Hide desktop-only navigation on phones */
-  .desktop-nav,.sidebar,.desktop-only-nav{display:none !important;}
-}
-
-@media (max-width:420px){
-  .view{padding-left:12px !important;padding-right:12px !important;}
-  .dashboard-stat-grid{gap:6px !important;}
-  .dashboard-stat-card{padding:9px !important;}
-  .dashboard-stat-card .stat-value{font-size:15px !important;}
-  .pagehead h1{font-size:18px !important;}
-  .piket-weekly-stats{gap:5px !important;}
-  .tabbar{padding-left:5px !important;padding-right:5px !important;}
-}
-
-@media (max-width:900px) and (orientation:landscape){
-  .view{
-    padding:10px 16px calc(72px + env(safe-area-inset-bottom,0px)) !important;
-  }
-  .dashboard-stat-grid{
-    grid-template-columns:repeat(4,minmax(0,1fr)) !important;
-  }
-  .dashboard-main-grid,.dashboard-secondary-grid{
-    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
-  }
-  .jadwal-pro-list,.piket-weekly-list{
-    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
-  }
-  .piket-integrated-toolbar{
-    flex-direction:row !important;
-    align-items:center !important;
-  }
-  .piket-search-wrap{max-width:230px !important;margin-left:auto;}
-  .tabbar{height:58px !important;}
+@media (max-width: 760px) {
+  .phone .pagehead h1 { font-size: 21px !important; }
+  .phone .stat-value { font-size: 18px !important; }
+  #view-hp .hp-command-grid { gap: 10px !important; }
+  #view-hp .hp-student-name { font-size: 12.5px !important; }
 }
 </style>
-
-
-
-<style id="kelasku-ui-reference-v2">
-/* ==========================================================
-   KELASKU — MOBILE REFERENCE DESIGN SYSTEM
-   Reference: supplied 12-screen portrait/landscape UI board.
-   Existing application logic is intentionally preserved.
-   ========================================================== */
-:root{
-  --k-bg:#f5f9fe;
-  --k-surface:#fff;
-  --k-surface-soft:#f7fbff;
-  --k-line:#dce8f5;
-  --k-line-2:#c8d9ec;
-  --k-text:#12284a;
-  --k-muted:#71829b;
-  --k-blue:#2563eb;
-  --k-blue-2:#3b82f6;
-  --k-blue-soft:#eaf2ff;
-  --k-green:#16a34a;
-  --k-green-soft:#eafaf1;
-  --k-red:#ef4444;
-  --k-red-soft:#fff0f2;
-  --k-purple:#6366f1;
-  --k-shadow:0 4px 15px rgba(37,99,235,.055);
-  --k-radius:14px;
-}
-*{box-sizing:border-box}
-html,body{max-width:100%;overflow-x:hidden}
-button,input,select,textarea{font:inherit}
-button{cursor:pointer}
-button:active,.btn:active,.fab-add:active,.tab:active,.mode-btn:active{
-  transform:scale(.97);
-  transition:transform .12s cubic-bezier(.16,1,.3,1);
-}
-
-/* ---------- GLOBAL CANVAS ---------- */
-body:not(.dark),
-body:not(.dark) .phone,
-body:not(.dark) .screen,
-body:not(.dark) .content,
-body:not(.dark) .view{
-  background:var(--k-bg)!important;
-  color:var(--k-text)!important;
-}
-body:not(.dark) .card,
-body:not(.dark) .section>.card,
-body:not(.dark) .settings-section,
-body:not(.dark) .settings-profile-card,
-body:not(.dark) .hero,
-body:not(.dark) .stat-card,
-body:not(.dark) .summary-box,
-body:not(.dark) .balance-card{
-  background:var(--k-surface)!important;
-  border:1px solid var(--k-line)!important;
-  box-shadow:var(--k-shadow)!important;
-  border-radius:var(--k-radius)!important;
-}
-input,select,textarea{
-  border:1px solid var(--k-line-2)!important;
-  box-shadow:none!important;
-  border-radius:10px!important;
-}
-input::placeholder,textarea::placeholder{color:#8090a7!important;opacity:1!important}
-
-/* ---------- DESKTOP ---------- */
-@media(min-width:901px){
-  .phone>.screen{
-    background:var(--k-bg)!important;
-  }
-  .pagehead h1{font-size:25px!important;font-weight:850!important;letter-spacing:-.025em}
-  .pagehead p{color:var(--k-muted)!important}
-}
-
-/* ==========================================================
-   MOBILE
-   ========================================================== */
-@media(max-width:900px){
-  body{background:var(--k-bg)!important}
-  .phone{
-    width:100%!important;
-    max-width:100%!important;
-    min-width:0!important;
-    overflow:hidden!important;
-    border-radius:0!important;
-  }
-  .phone>.screen{
-    width:100%!important;
-    min-width:0!important;
-    padding:10px 12px 82px!important;
-    background:var(--k-bg)!important;
-    overflow-x:hidden!important;
-  }
-  .view{
-    width:100%!important;
-    min-width:0!important;
-    max-width:100%!important;
-    overflow-x:hidden!important;
-  }
-  .pagehead{
-    display:flex!important;
-    align-items:center!important;
-    justify-content:space-between!important;
-    gap:8px!important;
-    margin:2px 0 11px!important;
-  }
-  .pagehead h1{
-    margin:0!important;
-    font-size:18px!important;
-    line-height:1.2!important;
-    font-weight:850!important;
-    letter-spacing:-.025em!important;
-  }
-  .pagehead p{
-    margin:3px 0 0!important;
-    font-size:9px!important;
-    line-height:1.35!important;
-    color:var(--k-muted)!important;
-  }
-  .section{margin-top:9px!important;min-width:0!important}
-  .section-title{font-size:12px!important;font-weight:850!important}
-  .section-sub{font-size:9px!important;color:var(--k-muted)!important}
-
-  /* ---------- SHARED CARDS ---------- */
-  .card,.section>.card,.hero,.stat-card,.summary-box,.balance-card,
-  .settings-section,.settings-profile-card{
-    background:#fff!important;
-    border:1px solid #dce8f5!important;
-    border-radius:14px!important;
-    box-shadow:var(--k-shadow)!important;
-  }
-  .card{min-width:0!important}
-  .btn,.fab-add,.section-link{
-    width:max-content!important;
-    max-width:100%!important;
-    min-height:33px!important;
-    padding:7px 10px!important;
-    border-radius:10px!important;
-    font-size:9px!important;
-    font-weight:800!important;
-    white-space:nowrap!important;
-  }
-
-  /* ---------- SEGMENTED CONTROL ---------- */
-  .mode-switch,.task-filter-tabs,.task-pro-filter-tabs{
-    width:max-content!important;
-    max-width:100%!important;
-    display:flex!important;
-    flex-wrap:nowrap!important;
-    gap:3px!important;
-    padding:3px!important;
-    overflow-x:auto!important;
-    scrollbar-width:none!important;
-    background:#edf3fb!important;
-    border:1px solid #dce8f5!important;
-    border-radius:11px!important;
-  }
-  .mode-switch::-webkit-scrollbar,
-  .task-filter-tabs::-webkit-scrollbar,
-  .task-pro-filter-tabs::-webkit-scrollbar{display:none}
-  .mode-btn,.task-filter-tab{
-    flex:0 0 auto!important;
-    min-height:29px!important;
-    padding:6px 12px!important;
-    border:0!important;
-    border-radius:8px!important;
-    background:transparent!important;
-    font-size:9px!important;
-    font-weight:800!important;
-  }
-  .mode-btn.active,.task-filter-tab.active{
-    background:var(--k-blue)!important;
-    color:#fff!important;
-    box-shadow:0 3px 9px rgba(37,99,235,.20)!important;
-  }
-
-  /* ---------- HOME / BERANDA ---------- */
-  #view-beranda .dashboard-main-grid,
-  #view-beranda .dashboard-secondary-grid{
-    grid-template-columns:minmax(0,1fr)!important;
-    gap:9px!important;
-  }
-  #view-beranda .dashboard-hero{
-    padding:13px!important;
-    border-radius:16px!important;
-  }
-  #view-beranda .hero-name{
-    font-size:18px!important;
-    font-weight:850!important;
-  }
-  #view-beranda .hero-copy{font-size:9px!important}
-  #view-beranda .stat-grid{
-    display:grid!important;
-    grid-template-columns:repeat(2,minmax(0,1fr))!important;
-    gap:7px!important;
-  }
-  #view-beranda .stat-card{
-    padding:10px!important;
-    min-width:0!important;
-    border-radius:12px!important;
-  }
-  #view-beranda .stat-card .stat-value{
-    font-size:17px!important;
-    font-weight:850!important;
-  }
-
-  /* ---------- TUGAS ---------- */
-  #view-tugas .task-pro-toolbar{
-    display:flex!important;
-    flex-direction:column!important;
-    gap:7px!important;
-  }
-  #view-tugas .task-pro-search-wrap{width:100%!important}
-  #view-tugas #task-pro-search{
-    width:100%!important;
-    height:34px!important;
-  }
-  #view-tugas .task-pro-filter-tabs{width:100%!important}
-  #view-tugas .task-filter-tab{flex:1 1 0!important;text-align:center}
-  #view-tugas .task-pro-list{
-    display:grid!important;
-    grid-template-columns:1fr!important;
-    gap:7px!important;
-  }
-  #view-tugas .task-card{padding:10px!important;border-radius:13px!important}
-
-  /* ---------- LAPORAN ---------- */
-  #view-laporan #report-search{
-    max-width:100%!important;
-    min-width:0!important;
-    height:33px!important;
-  }
-  #view-laporan #report-stats{
-    display:grid!important;
-    grid-template-columns:repeat(3,minmax(0,1fr))!important;
-    gap:6px!important;
-  }
-  #view-laporan .report-card{
-    padding:10px!important;
-    border-radius:13px!important;
-  }
-
-  /* ---------- KAS ---------- */
-  #view-kas .balance-card{
-    padding:13px!important;
-    border-radius:15px!important;
-  }
-  #view-kas .balance-value{font-size:24px!important;font-weight:900!important}
-  #view-kas .card#kas-list{
-    max-width:100%!important;
-    overflow-x:auto!important;
-    -webkit-overflow-scrolling:touch!important;
-  }
-
-  /* ---------- JADWAL ---------- */
-  #view-jadwal .jadwal-pro-title-row h2{
-    font-size:15px!important;
-    font-weight:850!important;
-  }
-  #view-jadwal .jadwal-day-rail-wrap{
-    overflow-x:auto!important;
-    scrollbar-width:none!important;
-    margin-right:-12px!important;
-    padding-right:12px!important;
-  }
-  #view-jadwal .jadwal-day-rail-wrap::-webkit-scrollbar{display:none}
-  #view-jadwal .jadwal-day-rail{
-    width:max-content!important;
-    min-width:100%!important;
-  }
-  #view-jadwal .jadwal-pro-list{
-    display:grid!important;
-    grid-template-columns:1fr!important;
-    gap:7px!important;
-  }
-  #view-jadwal .jadwal-card,
-  #view-jadwal .piket-card{
-    border-radius:13px!important;
-    padding:10px!important;
-  }
-
-  /* ---------- PIKET ---------- */
-  #view-jadwal .piket-grid{
-    display:grid!important;
-    grid-template-columns:1fr!important;
-    gap:7px!important;
-  }
-  #view-jadwal .piket-actionbar{
-    padding:11px!important;
-    border-radius:14px!important;
-  }
-  #view-jadwal .piket-actionbar-actions{
-    display:flex!important;
-    flex-wrap:wrap!important;
-    gap:5px!important;
-  }
-
-  /* ---------- HP ---------- */
-  #view-hp .hp-command-shell{width:100%!important;min-width:0!important}
-  #view-hp .hp-command-title-row h1{font-size:15px!important}
-  #view-hp .hp-command-actions{
-    display:flex!important;
-    flex-wrap:wrap!important;
-    gap:5px!important;
-  }
-  #view-hp .hp-command-btn{
-    min-height:32px!important;
-    padding:6px 9px!important;
-    font-size:9px!important;
-  }
-
-  /* ---------- USERS ---------- */
-  #view-account-manage .user-card,
-  #view-settings .user-card{
-    border-radius:12px!important;
-  }
-
-  /* ---------- SETTINGS ---------- */
-  #view-settings .settings-nav{
-    display:flex!important;
-    flex-wrap:nowrap!important;
-    width:100%!important;
-    max-width:100%!important;
-    overflow-x:auto!important;
-    scrollbar-width:none!important;
-    gap:4px!important;
-    padding:2px 0 4px!important;
-  }
-  #view-settings .settings-nav::-webkit-scrollbar{display:none}
-  #view-settings .settings-nav button{
-    flex:0 0 auto!important;
-    width:max-content!important;
-    min-width:max-content!important;
-    min-height:30px!important;
-    padding:6px 10px!important;
-    font-size:9px!important;
-    border-radius:9px!important;
-  }
-
-  /* ---------- BOTTOM NAV ---------- */
-  .phone>.tabbar{
-    position:fixed!important;
-    left:0!important;
-    right:0!important;
-    bottom:0!important;
-    z-index:1500!important;
-    display:grid!important;
-    grid-template-columns:repeat(5,minmax(0,1fr))!important;
-    gap:2px!important;
-    min-height:62px!important;
-    padding:5px 7px calc(6px + env(safe-area-inset-bottom))!important;
-    background:rgba(255,255,255,.97)!important;
-    border-top:1px solid #dbe7f5!important;
-    box-shadow:0 -7px 22px rgba(20,55,100,.08)!important;
-    backdrop-filter:blur(14px)!important;
-  }
-  .phone>.tabbar .tab{
-    display:flex!important;
-    width:100%!important;
-    min-width:0!important;
-    height:47px!important;
-    padding:4px 2px!important;
-    align-items:center!important;
-    justify-content:center!important;
-    flex-direction:column!important;
-    gap:2px!important;
-    border:0!important;
-    border-radius:11px!important;
-    background:transparent!important;
-    color:#71829b!important;
-    font-size:8px!important;
-    font-weight:750!important;
-  }
-  .phone>.tabbar .tab svg{width:18px!important;height:18px!important}
-  .phone>.tabbar .tab.active{
-    background:#eaf2ff!important;
-    color:var(--k-blue)!important;
-  }
-
-  /* The reference keeps only 5 primary destinations. */
-  .phone>.tabbar .tab[data-tab="hp"],
-  .phone>.tabbar .tab[data-tab="jadwal"],
-  .phone>.tabbar .tab[data-tab="settings"]{
-    display:none!important;
-  }
-
-  /* ---------- MORE SHEET ---------- */
-  #kelasku-more-nav-btn{
-    display:flex!important;
-    order:5!important;
-  }
-  #kelasku-more-sheet{
-    position:fixed;inset:0;z-index:3000;
-    opacity:0;pointer-events:none;transition:opacity .18s ease;
-  }
-  #kelasku-more-sheet.open{opacity:1;pointer-events:auto}
-  .kelasku-more-backdrop{
-    position:absolute;inset:0;background:rgba(4,15,30,.35);
-    backdrop-filter:blur(6px);
-  }
-  .kelasku-more-panel{
-    position:absolute;left:10px;right:10px;
-    bottom:calc(70px + env(safe-area-inset-bottom));
-    padding:10px;background:#fff;border:1px solid #dce8f5;
-    border-radius:17px;box-shadow:0 18px 45px rgba(15,23,42,.20);
-    transform:translateY(12px);transition:transform .18s ease;
-  }
-  #kelasku-more-sheet.open .kelasku-more-panel{transform:translateY(0)}
-  .kelasku-more-handle{
-    width:32px;height:4px;border-radius:99px;background:#cbd8e8;margin:0 auto 9px;
-  }
-  .kelasku-more-title{
-    padding:2px 4px 9px;font-size:14px;font-weight:850;color:#12284a;
-  }
-  .kelasku-more-grid{
-    display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;
-  }
-  .kelasku-more-grid button{
-    min-height:72px;border:1px solid #dce8f5;border-radius:12px;
-    background:#f7fbff;color:#17304f;display:flex;flex-direction:column;
-    align-items:center;justify-content:center;gap:6px;font-size:9px;font-weight:800;
-  }
-  .kelasku-more-grid button span{font-size:20px}
-
-  /* ---------- LANDSCAPE ---------- */
-  @media (orientation:landscape){
-    .phone>.screen{padding:8px 14px 69px!important}
-    .pagehead{margin-bottom:8px!important}
-    .pagehead h1{font-size:17px!important}
-    #view-beranda .stat-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}
-    #view-beranda .dashboard-main-grid,
-    #view-beranda .dashboard-secondary-grid{
-      grid-template-columns:repeat(2,minmax(0,1fr))!important;
-    }
-    #view-jadwal .jadwal-pro-list,
-    #view-jadwal .piket-grid{
-      grid-template-columns:repeat(2,minmax(0,1fr))!important;
-    }
-    .phone>.tabbar{min-height:53px!important}
-    .phone>.tabbar .tab{height:40px!important}
-  }
-}
-
-/* ==========================================================
-   DARK MODE — reference navy surfaces
-   ========================================================== */
-body.dark,
-body.dark .phone,
-body.dark .screen,
-body.dark .content,
-body.dark .view{
-  background:#071626!important;
-  color:#f3f7ff!important;
-}
-body.dark .card,
-body.dark .section>.card,
-body.dark .hero,
-body.dark .stat-card,
-body.dark .summary-box,
-body.dark .balance-card,
-body.dark .settings-section,
-body.dark .settings-profile-card{
-  background:#0e2238!important;
-  border-color:#1c3a56!important;
-  box-shadow:0 6px 20px rgba(0,0,0,.18)!important;
-}
-body.dark input,
-body.dark select,
-body.dark textarea{
-  background:#0a1b2d!important;
-  color:#f4f8ff!important;
-  border-color:#294963!important;
-}
-body.dark input::placeholder,
-body.dark textarea::placeholder{color:#91a7bf!important}
-body.dark .mode-switch,
-body.dark .task-filter-tabs,
-body.dark .task-pro-filter-tabs{
-  background:#0b1c2f!important;
-  border-color:#1c3a56!important;
-}
-body.dark .mode-btn,
-body.dark .task-filter-tab{color:#9bb0c6!important}
-body.dark .mode-btn.active,
-body.dark .task-filter-tab.active{
-  background:#2563eb!important;
-  color:#fff!important;
-}
-@media(max-width:900px){
-  body.dark .phone>.tabbar{
-    background:rgba(7,22,38,.97)!important;
-    border-top-color:#1c3a56!important;
-    box-shadow:0 -8px 23px rgba(0,0,0,.28)!important;
-  }
-  body.dark .phone>.tabbar .tab{color:#8299b1!important}
-  body.dark .phone>.tabbar .tab.active{
-    background:#102e4d!important;
-    color:#60a5fa!important;
-  }
-  body.dark .kelasku-more-panel{
-    background:#0e2238!important;border-color:#1c3a56!important;
-  }
-  body.dark .kelasku-more-title{color:#f3f7ff}
-  body.dark .kelasku-more-grid button{
-    background:#102a44!important;border-color:#1c3a56!important;color:#f3f7ff!important;
-  }
-  body.dark .kelasku-more-handle{background:#35526d}
-}
-</style>
-
-
-<style id="kelasku-concept-final-polish">
-/* ==========================================================
-   KELASKU — FINAL CONCEPT POLISH
-   Based on the supplied 12-screen UI concept.
-   Goal: clean pills, consistent cards, compact mobile density,
-   no forced full-width controls, no accidental overflow.
-   ========================================================== */
-
-:root{
-  --kc-blue:#2563eb;
-  --kc-blue-2:#3b82f6;
-  --kc-blue-soft:#edf4ff;
-  --kc-bg:#f6faff;
-  --kc-card:#ffffff;
-  --kc-text:#10284a;
-  --kc-muted:#70839c;
-  --kc-line:#dce8f5;
-  --kc-line-strong:#c9daee;
-  --kc-green:#16a36a;
-  --kc-green-soft:#eafaf2;
-  --kc-red:#e5484d;
-  --kc-red-soft:#fff1f2;
-  --kc-radius:14px;
-  --kc-pill:999px;
-  --kc-shadow:0 3px 12px rgba(30,80,140,.055);
-  --kc-ease:cubic-bezier(.16,1,.3,1);
-}
-
-/* ---------- BASE ---------- */
-html,body{max-width:100%;overflow-x:hidden}
-button,[role="button"],input,select,textarea{
-  -webkit-tap-highlight-color:transparent;
-}
-button,[role="button"]{
-  transition:transform .15s var(--kc-ease),background-color .18s ease,
-             border-color .18s ease,color .18s ease,box-shadow .18s ease;
-}
-button:active,[role="button"]:active{transform:scale(.97)}
-button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
-  outline:2px solid rgba(37,99,235,.30);
-  outline-offset:2px;
-}
-
-/* ---------- CONSISTENT SURFACES ---------- */
-.card,.section>.card,.settings-section,.settings-profile-card,
-.hero,.stat-card,.summary-box,.balance-card{
-  border-radius:var(--kc-radius)!important;
-}
-@media(max-width:900px){
-  .phone>.screen{
-    padding:9px 12px 76px!important;
-    overflow-x:hidden!important;
-  }
-  .view{min-width:0!important;max-width:100%!important;overflow-x:hidden!important}
-}
-
-/* ==========================================================
-   PILLS / SEGMENTED CONTROLS
-   ========================================================== */
-.mode-switch,
-.task-filter-tabs,
-.task-pro-filter-tabs,
-.settings-nav,
-.day-tabs{
-  display:flex!important;
-  align-items:center!important;
-  flex-wrap:nowrap!important;
-  width:max-content!important;
-  max-width:100%!important;
-  gap:4px!important;
-  overflow-x:auto!important;
-  scrollbar-width:none!important;
-}
-.mode-switch::-webkit-scrollbar,
-.task-filter-tabs::-webkit-scrollbar,
-.task-pro-filter-tabs::-webkit-scrollbar,
-.settings-nav::-webkit-scrollbar,
-.day-tabs::-webkit-scrollbar{display:none}
-
-.mode-switch{
-  padding:3px!important;
-  border-radius:12px!important;
-  background:#edf3fa!important;
-  border:1px solid var(--kc-line)!important;
-}
-.mode-btn{
-  flex:0 0 auto!important;
-  width:max-content!important;
-  min-width:78px!important;
-  min-height:31px!important;
-  padding:6px 13px!important;
-  border:0!important;
-  border-radius:9px!important;
-  background:transparent!important;
-  color:#687d97!important;
-  font-size:10px!important;
-  font-weight:850!important;
-  white-space:nowrap!important;
-}
-.mode-btn.active{
-  color:#fff!important;
-  background:var(--kc-blue)!important;
-  border-color:var(--kc-blue)!important;
-  box-shadow:0 3px 10px rgba(37,99,235,.18)!important;
-}
-
-.task-filter-tabs,.task-pro-filter-tabs{
-  padding:3px!important;
-  background:#f0f5fb!important;
-  border:1px solid var(--kc-line)!important;
-  border-radius:12px!important;
-}
-.task-filter-tab{
-  flex:0 0 auto!important;
-  width:max-content!important;
-  min-height:30px!important;
-  padding:6px 13px!important;
-  border:0!important;
-  border-radius:9px!important;
-  background:transparent!important;
-  color:#6e829c!important;
-  font-size:9px!important;
-  font-weight:850!important;
-  white-space:nowrap!important;
-}
-.task-filter-tab.active{
-  color:#fff!important;
-  background:var(--kc-blue)!important;
-  border-color:var(--kc-blue)!important;
-  box-shadow:0 3px 10px rgba(37,99,235,.16)!important;
-}
-
-/* Settings pills should behave like the reference: compact and scrollable. */
-#view-settings .settings-nav{
-  margin:10px 0 12px!important;
-  padding:3px!important;
-  background:#f0f5fb!important;
-  border:1px solid var(--kc-line)!important;
-  border-radius:12px!important;
-}
-#view-settings .settings-nav button{
-  flex:0 0 auto!important;
-  width:max-content!important;
-  min-width:max-content!important;
-  min-height:30px!important;
-  padding:6px 12px!important;
-  border:0!important;
-  border-radius:9px!important;
-  background:transparent!important;
-  color:#6e829c!important;
-  font-size:9px!important;
-  font-weight:850!important;
-  white-space:nowrap!important;
-}
-#view-settings .settings-nav button.active{
-  color:#fff!important;
-  background:var(--kc-blue)!important;
-  border-color:var(--kc-blue)!important;
-  box-shadow:0 3px 10px rgba(37,99,235,.16)!important;
-}
-
-/* Day chips: never stretch. */
-.day-tabs{width:100%!important;padding:2px 1px 3px!important}
-.day-chip{
-  flex:0 0 auto!important;
-  width:max-content!important;
-  min-width:42px!important;
-  min-height:29px!important;
-  padding:6px 10px!important;
-  border-radius:var(--kc-pill)!important;
-  background:#fff!important;
-  border:1px solid var(--kc-line)!important;
-  color:#70839c!important;
-  font-size:9px!important;
-  font-weight:850!important;
-  white-space:nowrap!important;
-}
-.day-chip.active{
-  color:#fff!important;
-  background:var(--kc-blue)!important;
-  border-color:var(--kc-blue)!important;
-  box-shadow:0 3px 9px rgba(37,99,235,.16)!important;
-}
-
-/* Generic status pills */
-.status-pill,.badge,.tag,.chip,.report-status,.task-status,
-.kas-status,.hp-status{
-  max-width:100%!important;
-  width:max-content!important;
-  min-height:22px!important;
-  padding:4px 8px!important;
-  border-radius:var(--kc-pill)!important;
-  font-size:8px!important;
-  font-weight:850!important;
-  line-height:1!important;
-  white-space:nowrap!important;
-}
-
-/* ==========================================================
-   COMPACT HEADER / SEARCH
-   ========================================================== */
-.dashboard-topbar{
-  display:flex!important;
-  align-items:center!important;
-  justify-content:space-between!important;
-  gap:8px!important;
-  min-width:0!important;
-}
-.dashboard-search{min-width:0!important;flex:1 1 auto!important}
-.dashboard-search .home-search-input{
-  min-width:0!important;
-  width:100%!important;
-  height:34px!important;
-  padding:7px 10px!important;
-  border-radius:10px!important;
-  background:#fff!important;
-  border:1px solid var(--kc-line)!important;
-  color:var(--kc-text)!important;
-  font-size:9px!important;
-}
-.dashboard-user-menu{flex:0 0 auto!important}
-.dashboard-user-meta{display:none!important}
-.dashboard-user-avatar{
-  width:34px!important;height:34px!important;
-  border-radius:50%!important;
-  border:1px solid var(--kc-line)!important;
-  background:#edf4ff!important;
-  color:var(--kc-blue)!important;
-  font-size:10px!important;font-weight:900!important;
-}
-
-/* ==========================================================
-   CARDS / LISTS
-   ========================================================== */
-@media(max-width:900px){
-  .card,.section>.card,.hero,.stat-card,.summary-box,
-  .settings-section,.settings-profile-card{
-    border:1px solid var(--kc-line)!important;
-    box-shadow:var(--kc-shadow)!important;
-  }
-  .section{margin-top:9px!important}
-  .pagehead{padding:2px 0 7px!important}
-  .pagehead h1{font-size:18px!important;line-height:1.2!important}
-  .pagehead p{font-size:9px!important;line-height:1.35!important;color:var(--kc-muted)!important}
-}
-
-/* Reduce accidental nested-box feeling in common list rows. */
-@media(max-width:900px){
-  .task-pro-card,.report-card,.jadwal-card,.piket-card,
-  .user-card,.notification-card{
-    border-radius:12px!important;
-    box-shadow:none!important;
-  }
-}
-
-/* ==========================================================
-   BERANDA
-   ========================================================== */
-@media(max-width:900px){
-  #view-beranda .dashboard-hero{
-    padding:13px!important;
-    border-radius:15px!important;
-  }
-  #view-beranda .stat-grid{
-    grid-template-columns:repeat(2,minmax(0,1fr))!important;
-    gap:7px!important;
-  }
-  #view-beranda .stat-card{
-    padding:10px!important;
-    border-radius:12px!important;
-  }
-  #view-beranda .stat-card .stat-value{
-    font-size:17px!important;
-    line-height:1!important;
-  }
-}
-
-/* ==========================================================
-   TUGAS / LAPORAN
-   ========================================================== */
-@media(max-width:900px){
-  #view-tugas .task-pro-toolbar{
-    gap:7px!important;
-  }
-  #view-tugas .task-pro-filter-tabs{
-    width:100%!important;
-  }
-  #view-tugas .task-filter-tab{
-    flex:1 1 0!important;
-    text-align:center!important;
-  }
-  #view-tugas .task-pro-list{
-    grid-template-columns:1fr!important;
-    gap:7px!important;
-  }
-  #view-tugas .task-pro-card{
-    padding:10px!important;
-    margin-bottom:0!important;
-  }
-
-  #view-laporan #report-search{
-    width:100%!important;
-    min-width:0!important;
-    height:34px!important;
-  }
-  #view-laporan #report-stats{
-    grid-template-columns:repeat(3,minmax(0,1fr))!important;
-    gap:6px!important;
-  }
-}
-
-/* ==========================================================
-   KAS
-   ========================================================== */
-@media(max-width:900px){
-  #view-kas .balance-card{
-    padding:13px!important;
-    border-radius:15px!important;
-  }
-  #view-kas .balance-value{
-    font-size:23px!important;
-    font-weight:900!important;
-  }
-}
-
-/* ==========================================================
-   JADWAL / PIKET
-   ========================================================== */
-@media(max-width:900px){
-  #view-jadwal>.mode-switch{
-    width:max-content!important;
-    max-width:100%!important;
-    margin:5px 0 8px!important;
-  }
-  #view-jadwal .jadwal-day-rail-wrap{
-    width:100%!important;
-    max-width:100%!important;
-    overflow-x:auto!important;
-    scrollbar-width:none!important;
-  }
-  #view-jadwal .jadwal-day-rail-wrap::-webkit-scrollbar{display:none}
-  #view-jadwal .jadwal-day-rail{
-    width:max-content!important;
-    min-width:100%!important;
-  }
-  #view-jadwal .jadwal-pro-list,
-  #view-jadwal .piket-grid{
-    grid-template-columns:1fr!important;
-    gap:7px!important;
-  }
-}
-
-/* ==========================================================
-   BOTTOM NAV — exact five-primary structure
-   ========================================================== */
-@media(max-width:900px){
-  .phone>.tabbar{
-    left:0!important;right:0!important;bottom:0!important;
-    position:fixed!important;
-    z-index:1600!important;
-    display:grid!important;
-    grid-template-columns:repeat(5,minmax(0,1fr))!important;
-    gap:2px!important;
-    min-height:60px!important;
-    padding:5px 6px calc(5px + env(safe-area-inset-bottom))!important;
-    background:rgba(255,255,255,.97)!important;
-    border-top:1px solid var(--kc-line)!important;
-    box-shadow:0 -6px 20px rgba(20,60,110,.07)!important;
-    backdrop-filter:blur(14px)!important;
-  }
-  .phone>.tabbar .tab{
-    display:flex!important;
-    flex-direction:column!important;
-    align-items:center!important;
-    justify-content:center!important;
-    gap:2px!important;
-    width:100%!important;
-    min-width:0!important;
-    height:46px!important;
-    padding:3px 2px!important;
-    border-radius:10px!important;
-    background:transparent!important;
-    color:#73869e!important;
-    font-size:7.5px!important;
-    font-weight:850!important;
-  }
-  .phone>.tabbar .tab svg{
-    width:17px!important;height:17px!important;
-  }
-  .phone>.tabbar .tab.active{
-    color:var(--kc-blue)!important;
-    background:#edf4ff!important;
-  }
-  /* Original items hidden from primary mobile nav. */
-  .phone>.tabbar .tab[data-tab="hp"],
-  .phone>.tabbar .tab[data-tab="jadwal"],
-  .phone>.tabbar .tab[data-tab="settings"]{
-    display:none!important;
-  }
-  #kelasku-more-nav-btn{
-    display:flex!important;
-    order:5!important;
-  }
-}
-
-/* More sheet */
-#kelasku-more-sheet{
-  z-index:4000!important;
-}
-.kelasku-more-grid button{
-  border-radius:12px!important;
-}
-@media(max-width:900px){
-  .kelasku-more-panel{
-    left:10px!important;right:10px!important;
-    bottom:calc(67px + env(safe-area-inset-bottom))!important;
-    border-radius:16px!important;
-  }
-}
-
-/* ==========================================================
-   LANDSCAPE — compact two-column content, still no overflow
-   ========================================================== */
-@media(max-width:900px) and (orientation:landscape){
-  .phone>.screen{padding:7px 14px 64px!important}
-  .pagehead h1{font-size:17px!important}
-  #view-beranda .stat-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}
-  #view-beranda .dashboard-main-grid,
-  #view-beranda .dashboard-secondary-grid{
-    grid-template-columns:repeat(2,minmax(0,1fr))!important;
-    gap:8px!important;
-  }
-  #view-jadwal .jadwal-pro-list,
-  #view-jadwal .piket-grid{
-    grid-template-columns:repeat(2,minmax(0,1fr))!important;
-  }
-  .phone>.tabbar{min-height:52px!important}
-}
-
-/* ==========================================================
-   DARK MODE
-   ========================================================== */
-body.dark,
-body.dark .phone,
-body.dark .screen,
-body.dark .content,
-body.dark .view{
-  background:#071727!important;
-  color:#f4f8ff!important;
-}
-body.dark .card,
-body.dark .section>.card,
-body.dark .hero,
-body.dark .stat-card,
-body.dark .summary-box,
-body.dark .balance-card,
-body.dark .settings-section,
-body.dark .settings-profile-card{
-  background:#0e2238!important;
-  border-color:#1c3b57!important;
-  box-shadow:0 5px 18px rgba(0,0,0,.16)!important;
-}
-body.dark .mode-switch,
-body.dark .task-filter-tabs,
-body.dark .task-pro-filter-tabs,
-body.dark #view-settings .settings-nav{
-  background:#0a1d30!important;
-  border-color:#1d3b56!important;
-}
-body.dark .mode-btn,
-body.dark .task-filter-tab,
-body.dark #view-settings .settings-nav button{
-  color:#9cb0c6!important;
-}
-body.dark .mode-btn.active,
-body.dark .task-filter-tab.active,
-body.dark #view-settings .settings-nav button.active{
-  background:#2563eb!important;
-  color:#fff!important;
-}
-body.dark .day-chip{
-  background:#0e263e!important;
-  border-color:#1d415e!important;
-  color:#9cb0c6!important;
-}
-body.dark .day-chip.active{
-  background:#2563eb!important;
-  border-color:#2563eb!important;
-  color:#fff!important;
-}
-body.dark .dashboard-search .home-search-input{
-  background:#0a1d30!important;
-  border-color:#294862!important;
-  color:#f4f8ff!important;
-}
-body.dark .dashboard-user-avatar{
-  background:#102e4d!important;
-  border-color:#294862!important;
-  color:#60a5fa!important;
-}
-@media(max-width:900px){
-  body.dark .phone>.tabbar{
-    background:rgba(7,23,39,.97)!important;
-    border-top-color:#1c3b57!important;
-    box-shadow:0 -8px 22px rgba(0,0,0,.27)!important;
-  }
-  body.dark .phone>.tabbar .tab{color:#849ab0!important}
-  body.dark .phone>.tabbar .tab.active{
-    color:#60a5fa!important;
-    background:#102e4d!important;
-  }
-}
-</style>
-
-
-<style id="kelasku-responsive-scale-final">
-/* =========================================================
-   KELASKU — RESPONSIVE SCALE SYSTEM
-   PC / TABLET / MOBILE / SMALL MOBILE
-   Only adjusts visual scale; app logic and features stay intact.
-   ========================================================= */
-
-/* Shared safety: every screen uses the available viewport. */
-html, body {
-  max-width: 100%;
-  overflow-x: hidden;
-}
-
-*, *::before, *::after {
-  box-sizing: border-box;
-}
-
-img, svg, video, canvas {
-  max-width: 100%;
-}
-
-input, select, textarea, button {
-  max-width: 100%;
-  font: inherit;
-}
-
-/* Desktop baseline */
-@media (min-width: 901px) {
-  .pagehead h1 { font-size: 22px !important; line-height: 1.2 !important; }
-  .pagehead p { font-size: 13px !important; line-height: 1.5 !important; }
-  .section-title { font-size: 15px !important; line-height: 1.35 !important; }
-  .section-head { gap: 8px !important; }
-  .card { padding: 16px 18px !important; }
-  .row-item { gap: 12px !important; padding: 11px 0 !important; }
-  .btn, button { min-height: 40px; }
-  .input, input, select, textarea { font-size: 13px !important; }
-  .mode-switch { min-height: 42px; }
-  .mode-switch button { font-size: 13px !important; min-height: 38px; }
-  .screen { padding-left: 20px !important; padding-right: 20px !important; }
-}
-
-/* Tablet / large phone */
-@media (max-width: 900px) {
-  .phone,
-  .screen,
-  .view,
-  .section,
-  .card,
-  .dashboard-card,
-  .dashboard-panel {
-    min-width: 0 !important;
-    max-width: 100% !important;
-  }
-
-  .screen {
-    width: 100% !important;
-    overflow-x: hidden !important;
-  }
-
-  .pagehead h1 { font-size: 20px !important; line-height: 1.2 !important; }
-  .pagehead p { font-size: 12.5px !important; line-height: 1.5 !important; }
-  .section-title { font-size: 14px !important; line-height: 1.35 !important; }
-  .card { padding: 14px 15px !important; }
-  .row-item { gap: 10px !important; padding: 10px 0 !important; }
-  .btn, button { min-height: 42px; }
-  .input, input, select, textarea { font-size: 13px !important; }
-  .mode-switch { width: min(100%, 320px); max-width: 100%; }
-  .mode-switch button { min-height: 40px; font-size: 13px !important; }
-
-  /* Common text blocks: wrap instead of forcing the page wider. */
-  .card h1, .card h2, .card h3, .card h4,
-  .card p, .card span, .card label,
-  .row-item, .row-item span, .row-item strong,
-  .section, .section-head, .section-title {
-    overflow-wrap: anywhere;
-    word-break: normal;
-  }
-
-  /* Grids never create an accidental desktop-width column on mobile. */
-  [class*="grid"] {
-    min-width: 0;
-  }
-}
-
-/* Normal phone */
-@media (max-width: 600px) {
-  .screen {
-    padding: 12px 12px 90px !important;
-  }
-
-  .pagehead {
-    padding: 4px 2px 10px !important;
-  }
-
-  .pagehead h1 {
-    font-size: 19px !important;
-    line-height: 1.2 !important;
-    letter-spacing: -0.01em;
-  }
-
-  .pagehead p {
-    font-size: 12px !important;
-    line-height: 1.45 !important;
-  }
-
-  .section { margin-top: 13px !important; }
-  .section-head { margin-bottom: 7px !important; gap: 6px !important; }
-  .section-title { font-size: 13.5px !important; }
-
-  .card {
-    padding: 13px !important;
-    border-radius: 14px !important;
-  }
-
-  .card h1 { font-size: 19px !important; line-height: 1.25 !important; }
-  .card h2 { font-size: 17px !important; line-height: 1.3 !important; }
-  .card h3 { font-size: 15px !important; line-height: 1.3 !important; }
-  .card h4 { font-size: 14px !important; line-height: 1.35 !important; }
-  .card p, .card li { font-size: 12.5px !important; line-height: 1.5 !important; }
-
-  .row-item {
-    gap: 9px !important;
-    padding: 9px 0 !important;
-  }
-
-  .btn, button {
-    min-height: 42px;
-    font-size: 12.5px !important;
-  }
-
-  .input, input, select, textarea {
-    min-height: 42px;
-    font-size: 13px !important;
-  }
-
-  textarea { min-height: 90px; }
-
-  .mode-switch {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-height: 42px;
-  }
-
-  .mode-switch button {
-    min-height: 40px;
-    font-size: 12.5px !important;
-    padding: 9px 12px !important;
-  }
-
-  /* Don't let long labels make buttons/cards wider than the screen. */
-  button, .btn, .mode-switch button {
-    white-space: normal;
-    overflow-wrap: anywhere;
-  }
-
-  /* Common compact labels/badges. */
-  .badge, .chip, .pill, .tag, .status-badge {
-    font-size: 10.5px !important;
-    line-height: 1.25 !important;
-  }
-
-  /* Touch targets for controls/icons. */
-  button.icon-btn,
-  .icon-btn,
-  [class*="icon-button"] {
-    min-width: 40px;
-    min-height: 40px;
-  }
-}
-
-/* Small phone */
-@media (max-width: 380px) {
-  .screen { padding-left: 10px !important; padding-right: 10px !important; }
-  .pagehead h1 { font-size: 18px !important; }
-  .pagehead p { font-size: 11.5px !important; }
-  .section-title { font-size: 13px !important; }
-  .card { padding: 12px !important; }
-  .card h1 { font-size: 18px !important; }
-  .card h2 { font-size: 16px !important; }
-  .card h3 { font-size: 14px !important; }
-  .card h4 { font-size: 13px !important; }
-  .card p, .card li { font-size: 12px !important; }
-  .btn, button { font-size: 12px !important; min-height: 41px; }
-  .input, input, select, textarea { font-size: 12.5px !important; }
-  .mode-switch button { font-size: 12px !important; padding-left: 9px !important; padding-right: 9px !important; }
-}
-
-/* Landscape phone: use the width without making typography tiny. */
-@media (max-width: 900px) and (orientation: landscape) {
-  .screen { padding-bottom: 78px !important; }
-  .pagehead h1 { font-size: 18px !important; }
-  .card { padding: 12px 14px !important; }
-}
-
-</style>
-</head>
+\n<style id="kelasku-responsive-scale-final">\n/* =========================================================\n   KELASKU — RESPONSIVE SCALE\n   Only adjusts visual scale/containment. Existing features and JS remain untouched.\n   ========================================================= */\n*,*::before,*::after{box-sizing:border-box;}\nimg,svg,video,canvas,input,select,textarea,button{max-width:100%;}\n\n@media (min-width:901px){\n  .screen{width:100%;max-width:none;}\n  .section,.view,.card,.dashboard-card,.settings-section,.modal-card{min-width:0;}\n  .section{font-size:14px;}\n}\n\n@media (max-width:900px){\n  html,body{width:100%;max-width:100%;overflow-x:hidden;}\n  body{font-size:14px;}\n  .phone,.screen,.view,.section{width:100%;max-width:100%;min-width:0;}\n  .screen{padding-left:14px;padding-right:14px;}\n  .section > *, .view > *, .card, .dashboard-card, .settings-section, .modal-card{min-width:0;max-width:100%;}\n\n  /* Typography: slightly smaller than desktop, but never tiny. */\n  h1{font-size:clamp(21px,5.6vw,27px);line-height:1.15;}\n  h2{font-size:clamp(18px,4.8vw,23px);line-height:1.2;}\n  h3{font-size:clamp(15px,4.1vw,19px);line-height:1.25;}\n  p,.text,.description,.subtitle{font-size:13px;line-height:1.45;}\n  label,.field-label,.meta,.muted{font-size:11px;line-height:1.35;}\n  button,.btn,.action-btn{font-size:13px;line-height:1.2;}\n  input,select,textarea{font-size:13px;}\n\n  /* Cards/sections */\n  .card,.dashboard-card,.settings-section{padding:14px;overflow-wrap:anywhere;}\n  .section{gap:12px;}\n  .row,.grid,.flex-row{min-width:0;}\n\n  /* Common grids must be allowed to shrink instead of pushing the page wider. */\n  [class*="grid"]{min-width:0;max-width:100%;}\n  .dashboard-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr));}\n  .dashboard-main-grid,.dashboard-secondary-grid{grid-template-columns:minmax(0,1fr);}\n\n  /* Long content wraps instead of being clipped. */\n  .card-title,.card-text,.row-title,.row-subtitle,.task-title,.task-description,\n  .report-title,.report-description,.settings-title,.settings-description,\n  .student-name,.announce-text,.notification-text{min-width:0;overflow-wrap:anywhere;word-break:normal;}\n\n  /* Pills/tabs may scroll horizontally inside themselves, never the whole page. */\n  .tabs,.segmented,.filter-tabs,.chip-row,.pill-row,.tab-list{\n    max-width:100%;min-width:0;overflow-x:auto;overflow-y:hidden;\n    scrollbar-width:none;-ms-overflow-style:none;\n  }\n  .tabs::-webkit-scrollbar,.segmented::-webkit-scrollbar,.filter-tabs::-webkit-scrollbar,\n  .chip-row::-webkit-scrollbar,.pill-row::-webkit-scrollbar,.tab-list::-webkit-scrollbar{display:none;}\n\n  /* Touch targets */\n  button,.btn,.action-btn,.tab,.chip,.filter-btn{min-height:40px;}\n\n  /* Modals stay inside the viewport. */\n  .modal,.modal-overlay{max-width:100vw;}\n  .modal-card,.modal-content{width:min(100%,calc(100vw - 24px));max-width:calc(100vw - 24px);}\n}\n\n@media (max-width:600px){\n  .screen{padding-left:12px;padding-right:12px;}\n  .card,.dashboard-card,.settings-section{padding:13px;}\n  .dashboard-stat-grid{gap:9px;}\n  .dashboard-stat-card{min-width:0;}\n  .dashboard-stat-card .stat-value{font-size:18px;}\n  .dashboard-stat-card .stat-label{font-size:10px;}\n  .dashboard-stat-card .stat-status{font-size:9px;}\n  .row-item{padding:10px 0;}\n  button,.btn,.action-btn{min-height:42px;padding-left:12px;padding-right:12px;}\n}\n\n@media (max-width:380px){\n  .screen{padding-left:10px;padding-right:10px;}\n  .card,.dashboard-card,.settings-section{padding:12px;}\n  body{font-size:13px;}\n  h1{font-size:20px;}\n  h2{font-size:18px;}\n  h3{font-size:15px;}\n  p,.text,.description,.subtitle{font-size:12.5px;}\n  button,.btn,.action-btn{font-size:12px;min-height:40px;}\n}\n\n@media (max-width:900px) and (orientation:landscape){\n  .screen{padding-left:16px;padding-right:16px;}\n  .dashboard-stat-grid{grid-template-columns:repeat(4,minmax(0,1fr));}\n  .dashboard-main-grid,.dashboard-secondary-grid{grid-template-columns:repeat(2,minmax(0,1fr));}\n}\n</style>\n</head>
 
 <body>
   <!-- Application shell -->
@@ -11144,7 +9607,7 @@ X TJKT 1
       </div>
       <div class="hp-date-switcher" role="group" aria-label="Navigasi tanggal pengumpulan HP">
         <button type="button" onclick="shiftHpSelectedDate(-1)" aria-label="Tanggal sebelumnya">‹</button>
-        <button type="button" class="hp-date-main" onclick="toggleCalendar('hp', event)">
+        <button type="button" class="hp-date-main" onclick="openHpDateCalendar(event)">
           <span id="hp-command-date-short">19 Sep</span><span class="hp-date-main-chevron">⌄</span>
         </button>
         <button type="button" onclick="shiftHpSelectedDate(1)" aria-label="Tanggal berikutnya">›</button>
@@ -11300,7 +9763,6 @@ X TJKT 1
     <div class="piket-integrated-toolbar">
       <div class="piket-toolbar-group" role="group" aria-label="Aksi piket hari ini">
         <button type="button" class="piket-toolbar-btn" onclick="openStatsModal('piket')"><span>▥</span> Statistik</button>
-        <button type="button" id="piket-edit-inline" class="piket-toolbar-btn piket-edit-inline" onclick="openPiketJadwalModal()"><span>✎</span> Edit Jadwal</button>
         <button type="button" class="piket-toolbar-btn admin-only" onclick="resetRoster('piket')"><span>↺</span> Reset</button>
         <button type="button" class="piket-toolbar-btn piket-toolbar-btn-success admin-only" onclick="markAllPiketDone()"><span>✓</span> Semua selesai</button>
       </div>
@@ -21379,70 +19841,102 @@ body.kelasku-authenticated #view-jadwal.active{
 </style>
 
 
-
-
-
-
-
-
-
-
-<style id="kelasku-mobile-shell-final-fix">
-/* Mobile/tablet shell: keep the app full-width until the real desktop breakpoint. */
-@media (max-width:900px){
-  html,body{width:100%;min-width:0;max-width:100%;overflow-x:hidden!important;}
-  .phone{
-    display:flex!important;
-    flex-direction:column!important;
-    width:100vw!important;
-    max-width:none!important;
-    min-width:0!important;
-    height:100dvh!important;
-    max-height:none!important;
-    margin:0!important;
-    border:0!important;
-    border-radius:0!important;
-    overflow:hidden!important;
-  }
-  .desktop-sidebar{display:none!important;}
-  .phone>.statusbar{display:flex!important;width:100%!important;flex:0 0 auto!important;}
-  .phone>.screen{
-    display:block!important;
-    grid-column:auto!important;
-    grid-row:auto!important;
-    width:100%!important;
-    max-width:100%!important;
-    min-width:0!important;
-    flex:1 1 auto!important;
-    padding-left:12px!important;
-    padding-right:12px!important;
-    overflow-x:hidden!important;
-    box-sizing:border-box!important;
-  }
-  .phone>.screen>.view{
-    display:none;
-    width:100%!important;
-    max-width:100%!important;
-    min-width:0!important;
-    margin-left:0!important;
-    margin-right:0!important;
-    box-sizing:border-box!important;
-  }
-  .phone>.screen>.view.active{display:block;}
-  .phone>.tabbar{
-    display:flex!important;
-    width:100%!important;
-    max-width:100%!important;
-    min-width:0!important;
-    flex:0 0 auto!important;
-    position:fixed!important;
-    left:0!important;right:0!important;bottom:0!important;
-    box-sizing:border-box!important;
-  }
-  .view>*{max-width:100%!important;min-width:0!important;box-sizing:border-box;}
-  img,video,canvas,svg,input,select,textarea,button{max-width:100%;box-sizing:border-box;}
+<style id="v80-hp-readability-calendar-fix">
+/* v80 — Pengumpulan HP: perbesar tipografi + perbaiki tombol tanggal agar membuka kalender dengan konsisten. */
+#view-hp .hp-date-overline{font-size:10px !important;letter-spacing:.11em !important;line-height:1.2 !important}
+#view-hp .hp-date-context strong{font-size:13.5px !important;line-height:1.25 !important}
+#view-hp .hp-date-switcher{padding:4px !important;gap:3px !important}
+#view-hp .hp-date-switcher button{width:32px !important;height:31px !important;font-size:19px !important}
+#view-hp .hp-date-switcher .hp-date-main{min-width:88px !important;min-height:31px !important;padding:0 11px !important;font-size:11.5px !important;gap:7px !important}
+#view-hp .hp-date-main-chevron{font-size:11px !important}
+#view-hp .hp-metric-card{min-height:76px !important;padding:13px !important;gap:11px !important}
+#view-hp .hp-metric-icon{width:34px !important;height:34px !important;flex-basis:34px !important;font-size:15px !important}
+#view-hp .hp-metric-copy{gap:4px !important}
+#view-hp .hp-metric-copy span{font-size:10px !important;line-height:1.25 !important}
+#view-hp .hp-metric-copy strong{font-size:23px !important;line-height:1 !important}
+#view-hp .hp-progress-card{padding:15px 16px !important}
+#view-hp .hp-progress-kicker{font-size:9px !important;line-height:1.2 !important}
+#view-hp .hp-progress-head strong{font-size:13px !important;line-height:1.25 !important}
+#view-hp .hp-progress-pct{font-size:20px !important}
+#view-hp .hp-progress-note{font-size:10px !important;line-height:1.3 !important}
+#view-hp .hp-view-switcher button{font-size:11.5px !important;min-height:33px !important;padding:0 10px !important}
+#view-hp .hp-search-wrap{height:39px !important;min-width:260px !important}
+#view-hp .hp-search-wrap input{font-size:13px !important}
+#view-hp .hp-filter-row button{font-size:11px !important;min-height:33px !important;padding:0 10px !important}
+#view-hp .hp-filter-row button span{font-size:9px !important;min-width:19px !important;height:19px !important}
+#view-hp .hp-student-roll{font-size:10px !important}
+#view-hp .hp-slot-tag{font-size:10px !important;padding:4px 8px !important}
+#view-hp .hp-student-main{gap:11px !important;margin-top:11px !important}
+#view-hp .hp-student-avatar{font-size:12px !important}
+#view-hp .hp-student-name{font-size:14px !important;line-height:1.25 !important}
+#view-hp .hp-student-sub{font-size:10.5px !important;line-height:1.35 !important}
+#view-hp .hp-status-chip{font-size:10px !important}
+#view-hp .hp-quick-btn{font-size:10.5px !important}
+#view-hp .hp-calendar-drawer-head{margin-bottom:9px !important}
+#view-hp .hp-calendar-drawer-head strong{font-size:14px !important}
+#view-hp .cal-month{font-size:16px !important}
+#view-hp .cal-day{font-size:12px !important}
+#view-hp .cal-nav-btn{font-size:13px !important}
+#view-hp .cal-picker-months button{font-size:12px !important}
+@media(max-width:760px){
+  #view-hp .hp-date-context strong{font-size:12.5px !important}
+  #view-hp .hp-metric-copy span{font-size:9.5px !important}
+  #view-hp .hp-metric-copy strong{font-size:21px !important}
+  #view-hp .hp-search-wrap{min-width:0 !important;width:100% !important}
+  #view-hp .hp-student-name{font-size:13px !important}
 }
 </style>
+
+<script id="v80-hp-calendar-click-fix">
+(function(){
+  'use strict';
+
+  function openHpDateCalendar(evt){
+    if(evt){ evt.preventDefault(); evt.stopPropagation(); }
+    if(!window.state) return;
+    if(!state.calMinimized || typeof state.calMinimized !== 'object') state.calMinimized={hp:true,piket:true};
+    state.calMinimized.hp = !state.calMinimized.hp;
+    var drawer=document.getElementById('hp-calendar-drawer');
+    if(drawer) drawer.classList.toggle('is-open', !state.calMinimized.hp);
+    try{ if(typeof updateCalendarUI==='function') updateCalendarUI('hp'); }catch(_){ }
+    try{ if(typeof renderHpCalendar==='function') renderHpCalendar(); }catch(_){ }
+    try{ if(typeof renderHpCommandCenter==='function') renderHpCommandCenter(); }catch(_){ }
+    try{ saveState(); }catch(_){ }
+  }
+
+  window.openHpDateCalendar=openHpDateCalendar;
+
+  var btn=document.querySelector('#view-hp .hp-date-main');
+  if(btn){
+    btn.setAttribute('onclick','openHpDateCalendar(event)');
+    btn.style.cursor='pointer';
+    btn.setAttribute('aria-label','Buka atau tutup kalender tanggal');
+    btn.setAttribute('title','Buka kalender');
+  }
+
+  /* Keep the legacy global toggle reliable for HP/Piket as well. */
+  var previousToggle=window.toggleCalendar;
+  window.toggleCalendar=function(type,evt){
+    if(type==='hp' || type==='piket'){
+      if(evt){ evt.preventDefault(); evt.stopPropagation(); }
+      if(!window.state) return;
+      if(!state.calMinimized || typeof state.calMinimized !== 'object') state.calMinimized={hp:true,piket:true};
+      var key=type==='hp'?'hp':'piket';
+      state.calMinimized[key]=!state.calMinimized[key];
+      var drawer=document.getElementById(key==='hp'?'hp-calendar-drawer':'piket-calendar-drawer');
+      if(drawer) drawer.classList.toggle('is-open', !state.calMinimized[key]);
+      try{ if(typeof updateCalendarUI==='function') updateCalendarUI(type); }catch(_){ }
+      try{ if(type==='hp' && typeof renderHpCalendar==='function') renderHpCalendar(); }catch(_){ }
+      try{ if(type==='piket' && typeof renderPiketCalendar==='function') renderPiketCalendar(); }catch(_){ }
+      try{ if(type==='hp' && typeof renderHpCommandCenter==='function') renderHpCommandCenter(); }catch(_){ }
+      try{ if(type==='piket' && typeof renderPiket==='function') renderPiket(); }catch(_){ }
+      try{ saveState(); }catch(_){ }
+      return;
+    }
+    return typeof previousToggle==='function' ? previousToggle.apply(this,arguments) : undefined;
+  };
+})();
+</script>
 </body>
 <!-- Kelasku compatibility patch: resilient Firestore sync + legacy fallback -->
 
@@ -23897,7 +22391,256 @@ body.dark #view-hp .hp-slot-tag.is-occupied{color:#86efac !important;background:
 @media(max-width:760px){#view-hp #hp-list.hp-command-list > .hp-command-grid{grid-template-columns:repeat(2,minmax(0,1fr)) !important}}
 @media(max-width:480px){#view-hp #hp-list.hp-command-list > .hp-command-grid{grid-template-columns:1fr !important}}
 </style>
-</head><body><h1>Kas Kelas — X TJKT 1</h1><p>Pencatatan kas transparan &amp; aman.</p><div class="metrics"><div class="m"><small>Total Kas Masuk</small><b>${money(masuk)}</b></div><div class="m"><small>Total Pengeluaran</small><b>${money(keluar)}</b></div><div class="m"><small>Sisa Saldo</small><b>${money(masuk-keluar)}</b></div></div><table><thead><tr><th>Tanggal</th><th>Keterangan</th><th>Jenis</th><th>Jumlah</th></tr></thead><tbody>${rows.map(t=>`<tr><td>${esc(t.tanggal||'-')}</td><td>${esc(t.ket||'-')}</td><td>${t.jenis==='masuk'?'Pemasukan':'Pengeluaran'}</td><td>${t.jenis==='masuk'?'+':'-'}${money(t.jumlah)}</td></tr>`).join('')}</tbody></table>${folders.map(f=>{const st=Array.isArray(f.students)?f.students:[],p=st.length?Math.round(st.filter(x=>x.status==='sudah').length/st.length*100):0;return `<div class="folder"><h3>${esc(f.name||'Kas Siswa')}</h3><p>${st.filter(x=>x.status==='sudah').length}/${st.length} siswa lunas</p><div class="bar"><div class="fill" style="width:${p}%"></div></div></div>`}).join('')}</body></html>`;
+</head><body><h1>Kas Kelas — X TJKT 1</h1><p>Pencatatan kas transparan &amp; aman.</p><div class="metrics"><div class="m"><small>Total Kas Masuk</small><b>${money(masuk)}</b></div><div class="m"><small>Total Pengeluaran</small><b>${money(keluar)}</b></div><div class="m"><small>Sisa Saldo</small><b>${money(masuk-keluar)}</b></div></div><table><thead><tr><th>Tanggal</th><th>Keterangan</th><th>Jenis</th><th>Jumlah</th></tr></thead><tbody>${rows.map(t=>`<tr><td>${esc(t.tanggal||'-')}</td><td>${esc(t.ket||'-')}</td><td>${t.jenis==='masuk'?'Pemasukan':'Pengeluaran'}</td><td>${t.jenis==='masuk'?'+':'-'}${money(t.jumlah)}</td></tr>`).join('')}</tbody></table>${folders.map(f=>{const st=Array.isArray(f.students)?f.students:[],p=st.length?Math.round(st.filter(x=>x.status==='sudah').length/st.length*100):0;return `<div class="folder"><h3>${esc(f.name||'Kas Siswa')}</h3><p>${st.filter(x=>x.status==='sudah').length}/${st.length} siswa lunas</p><div class="bar"><div class="fill" style="width:${p}%"></div></div></div>`}).join('')}
+<style id="jadwal-v81-mode-switch-length">
+/* v81 — Pelajaran/Piket kembali dibuat lebih panjang seperti layout sebelumnya. */
+body.kelasku-authenticated #view-jadwal > .mode-switch{
+  width:min(100%, 560px) !important;
+  max-width:560px !important;
+  flex:0 0 560px !important;
+}
+body.kelasku-authenticated #view-jadwal > .mode-switch .mode-btn{
+  min-width:0 !important;
+  flex:1 1 0 !important;
+  padding-left:24px !important;
+  padding-right:24px !important;
+}
+@media(max-width:620px){
+  body.kelasku-authenticated #view-jadwal > .mode-switch{
+    width:100% !important;
+    max-width:none !important;
+    flex:0 0 auto !important;
+  }
+}
+</style>
+
+<style id="hp-v82-mobile-grid-only">
+/* v82 — Mobile Pengumpulan HP: tampilkan mode Grid saja agar toolbar tidak penuh. */
+@media (max-width: 760px){
+  #view-hp .hp-view-switcher [data-hp-view="rack"],
+  #view-hp .hp-view-switcher [data-hp-view="table"]{
+    display:none !important;
+  }
+  #view-hp .hp-view-switcher{
+    width:auto !important;
+    flex:0 0 auto !important;
+  }
+  #view-hp .hp-view-switcher [data-hp-view="grid"]{
+    display:inline-flex !important;
+    min-width:76px !important;
+    justify-content:center !important;
+  }
+}
+</style>
+<script id="hp-v82-mobile-grid-logic">
+(function(){
+  function forceMobileGrid(){
+    if(window.matchMedia && window.matchMedia('(max-width: 760px)').matches){
+      try{
+        if(typeof hpCommandViewMode !== 'undefined' && hpCommandViewMode !== 'grid') hpCommandViewMode='grid';
+      }catch(e){}
+      var gridBtn=document.querySelector('#view-hp [data-hp-view="grid"]');
+      if(gridBtn && !gridBtn.classList.contains('is-active')){
+        document.querySelectorAll('#view-hp [data-hp-view]').forEach(function(btn){btn.classList.remove('is-active')});
+        gridBtn.classList.add('is-active');
+      }
+      if(typeof renderHpCommandCenter==='function'){
+        try{renderHpCommandCenter()}catch(e){}
+      }
+    }
+  }
+  document.addEventListener('DOMContentLoaded', forceMobileGrid);
+  window.addEventListener('resize', forceMobileGrid);
+})();
+</script>
+
+<style id="hp-v84-desktop-readability-mobile-simplify">
+/* v84 — Pengumpulan HP: desktop lebih terbaca, mobile lebih ringkas. */
+@media (min-width: 761px){
+  #view-hp .hp-command-kicker{font-size:11px !important;letter-spacing:.11em !important}
+  #view-hp .hp-command-title-row h1{font-size:28px !important;line-height:1.15 !important}
+  #view-hp .hp-command-status{font-size:11px !important}
+  #view-hp .hp-command-heading p{font-size:13px !important;line-height:1.5 !important}
+
+  #view-hp .hp-date-overline{font-size:10px !important;letter-spacing:.1em !important}
+  #view-hp .hp-date-context strong{font-size:15px !important;line-height:1.3 !important}
+  #view-hp .hp-date-switcher > button{font-size:18px !important}
+  #view-hp .hp-date-switcher .hp-date-main{min-width:84px !important;min-height:42px !important;font-size:13px !important}
+  #view-hp .hp-date-switcher .hp-date-main #hp-command-date-short{font-size:13px !important}
+  #view-hp .hp-date-main-chevron{font-size:12px !important}
+
+  #view-hp .hp-metric-card{min-height:88px !important;padding:16px 17px !important}
+  #view-hp .hp-metric-icon{width:34px !important;height:34px !important;font-size:16px !important}
+  #view-hp .hp-metric-copy span{font-size:11px !important;line-height:1.25 !important}
+  #view-hp .hp-metric-copy strong{font-size:25px !important;line-height:1.05 !important}
+
+  #view-hp .hp-progress-card{padding:17px 18px !important}
+  #view-hp .hp-progress-kicker{font-size:10px !important}
+  #view-hp .hp-progress-head strong{font-size:15px !important}
+  #view-hp .hp-progress-pct{font-size:23px !important}
+  #view-hp .hp-progress-note{font-size:11px !important}
+
+  #view-hp .hp-view-switcher button{min-height:40px !important;padding:0 12px !important;font-size:12px !important}
+  #view-hp .hp-search-wrap input{font-size:12px !important}
+  #view-hp .hp-filter-row button{min-height:36px !important;padding:0 11px !important;font-size:11px !important}
+  #view-hp .hp-filter-row button span{min-width:21px !important;height:21px !important;font-size:9px !important}
+
+  #view-hp .hp-student-card{padding:15px !important}
+  #view-hp .hp-student-roll{font-size:9px !important}
+  #view-hp .hp-slot-tag{font-size:9px !important;padding:5px 8px !important}
+  #view-hp .hp-student-main{gap:11px !important;margin-top:12px !important}
+  #view-hp .hp-student-avatar{width:42px !important;height:42px !important;flex-basis:42px !important;font-size:12px !important}
+  #view-hp .hp-student-name{font-size:14px !important}
+  #view-hp .hp-student-sub{font-size:9.5px !important;margin-top:5px !important}
+  #view-hp .hp-student-footer{margin-top:12px !important;padding-top:10px !important}
+  #view-hp .hp-status-chip{font-size:9px !important;padding:6px 9px !important}
+  #view-hp .hp-quick-btn{font-size:10px !important;padding:7px 10px !important}
+}
+
+@media (max-width: 760px){
+  /* Karena mobile memakai Grid saja, kontrol pemilihan mode tidak perlu ditampilkan. */
+  #view-hp .hp-view-switcher{display:none !important}
+  #view-hp .hp-view-toolbar{display:block !important;margin-top:10px !important}
+  #view-hp .hp-search-wrap{width:100% !important;max-width:none !important}
+  #view-hp .hp-filter-row{margin-top:8px !important;gap:6px !important;padding:1px 1px 3px !important;overflow-x:auto !important;white-space:nowrap !important}
+  #view-hp .hp-filter-row button{flex:0 0 auto !important;min-height:34px !important;font-size:10px !important;padding:0 10px !important}
+  #view-hp .hp-filter-row button span{font-size:8px !important;min-width:19px !important;height:19px !important}
+}
+</style>
+
+<style id="jadwal-v85-segmented-fix">
+/* JADWAL v85 — compact horizontal segmented control */
+#view-jadwal > .mode-switch {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px !important;
+  width: fit-content !important;
+  max-width: fit-content !important;
+  height: 40px !important;
+  min-height: 40px !important;
+  padding: 4px !important;
+  margin: 16px 0 0 !important;
+  box-sizing: border-box !important;
+  border-radius: 10px !important;
+  flex: 0 0 auto !important;
+  align-self: flex-start !important;
+  overflow: hidden !important;
+}
+
+#view-jadwal > .mode-switch .mode-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 0 0 auto !important;
+  width: 150px !important;
+  min-width: 150px !important;
+  height: auto !important;
+  min-height: 0 !important;
+  padding: 8px 18px !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  border-radius: 8px !important;
+  line-height: 1.15 !important;
+  white-space: nowrap !important;
+}
+
+@media (max-width: 620px) {
+  #view-jadwal > .mode-switch {
+    width: fit-content !important;
+    max-width: fit-content !important;
+    height: 40px !important;
+    min-height: 40px !important;
+    padding: 4px !important;
+    margin-top: 12px !important;
+  }
+
+  #view-jadwal > .mode-switch .mode-btn {
+    width: 120px !important;
+    min-width: 120px !important;
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 8px 14px !important;
+  }
+}
+</style>
+</body>
+
+<style id="dark-mode-readability-v83">
+/* v83 — Pastikan teks pada kontrol berlatar terang tetap kontras di Dark Mode. */
+body.dark #view-hp .hp-date-switcher .hp-date-main{
+  background:#f8fafc !important;
+  color:#172033 !important;
+  -webkit-text-fill-color:#172033 !important;
+  border-color:#f8fafc !important;
+  opacity:1 !important;
+  text-shadow:none !important;
+}
+body.dark #view-hp .hp-date-switcher .hp-date-main #hp-command-date-short{
+  color:#172033 !important;
+  -webkit-text-fill-color:#172033 !important;
+  font-weight:900 !important;
+}
+body.dark #view-hp .hp-date-switcher .hp-date-main .hp-date-main-chevron{
+  color:#475569 !important;
+  -webkit-text-fill-color:#475569 !important;
+  opacity:1 !important;
+}
+body.dark #view-hp .hp-filter-row button:not(.is-active){
+  background:#f8fafc !important;
+  color:#334155 !important;
+  -webkit-text-fill-color:#334155 !important;
+  border-color:#dbe3ef !important;
+  opacity:1 !important;
+}
+body.dark #view-hp .hp-filter-row button:not(.is-active) span{
+  background:#e2e8f0 !important;
+  color:#334155 !important;
+  -webkit-text-fill-color:#334155 !important;
+  opacity:1 !important;
+}
+body.dark #view-hp .hp-filter-row button.is-active{
+  background:#f8fafc !important;
+  color:#172033 !important;
+  -webkit-text-fill-color:#172033 !important;
+  border-color:#f8fafc !important;
+  opacity:1 !important;
+}
+body.dark #view-hp .hp-filter-row button.is-active span{
+  background:#e2e8f0 !important;
+  color:#334155 !important;
+  -webkit-text-fill-color:#334155 !important;
+  opacity:1 !important;
+}
+body.dark #view-tugas .task-pro-check-btn{
+  color:#172033 !important;
+  -webkit-text-fill-color:#172033 !important;
+  background:#eef2ff !important;
+  border-color:#c7d2fe !important;
+  opacity:1 !important;
+  text-shadow:none !important;
+}
+body.dark #view-tugas .task-pro-check-btn .task-pro-check-icon{
+  color:#172033 !important;
+  -webkit-text-fill-color:#172033 !important;
+  background:#ffffff !important;
+  border-color:#64748b !important;
+  opacity:1 !important;
+}
+body.dark #view-tugas .task-pro-check-btn.is-done{
+  color:#166534 !important;
+  -webkit-text-fill-color:#166534 !important;
+  background:#ecfdf5 !important;
+  border-color:#bbf7d0 !important;
+}
+body.dark #view-tugas .task-pro-check-btn.is-done .task-pro-check-icon{
+  color:#ffffff !important;
+  -webkit-text-fill-color:#ffffff !important;
+  background:#22c55e !important;
+  border-color:#22c55e !important;
+}
+</style>
+</html>`;
     const w=window.open('','_blank','width=900,height=700');if(!w){showNotification('Popup diblokir browser. Izinkan popup untuk mencetak PDF.','warning');return;}w.document.write(html);w.document.close();w.focus();setTimeout(()=>w.print(),250);
   };
 
