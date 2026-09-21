@@ -22541,65 +22541,23 @@ body.dark #view-kas .kas-folder-empty{background:#111c2f!important;border-color:
       const percent=students.length?Math.round(paid/students.length*100):0;
       return '<div class="folder"><h3>'+escSafe(f.name||'Kas Siswa')+'</h3><p>'+paid+'/'+students.length+' siswa lunas</p><div class="bar"><div class="fill" style="width:'+percent+'%"></div></div></div>';
     }).join('');
-    const html='<!doctype html><html lang="id"><head><meta charset="utf-8"><title>Rekap Kas Kelas</title><style>'+
-      'body{font-family:Arial,sans-serif;color:#0f172a;padding:28px}h1{margin:0 0 4px;font-size:20px}p{margin:0 0 18px;color:#64748b;font-size:11px}.metrics{display:flex;gap:10px;margin-bottom:18px}.m{flex:1;border:1px solid #e2e8f0;border-radius:10px;padding:10px}.m small{display:block;color:#64748b;font-size:8px;text-transform:uppercase;font-weight:700}.m b{display:block;margin-top:5px;font-size:15px}table{width:100%;border-collapse:collapse;font-size:9px}th,td{padding:8px;border-bottom:1px solid #e2e8f0;text-align:left}th{background:#f8fafc;font-size:8px;text-transform:uppercase;color:#64748b}.folder{margin-top:18px;border:1px solid #e2e8f0;border-radius:10px;padding:12px}.folder h3{margin:0 0 6px;font-size:12px}.folder p{margin:0 0 7px;font-size:9px}.bar{height:6px;border-radius:999px;background:#eef2f7;overflow:hidden}.fill{height:100%;background:#4338ca}' +
-      '</style>
-<style id="responsive-final-cleanup">
-/* Final responsive cleanup: prevent escaped text and clipped task filters */
-#view-tugas .task-pro-filter-tabs,
-#view-tugas .task-filter-tabs {
-  box-sizing:border-box;
-  min-width:0;
-}
-#view-tugas .task-pro-filter-tabs .task-filter-tab,
-#view-tugas .task-filter-tabs .task-filter-tab {
-  box-sizing:border-box;
-  flex:0 0 auto;
-  min-width:max-content;
-  white-space:nowrap;
-  overflow:visible;
-  text-overflow:clip;
-}
-@media (max-width:900px){
-  #view-tugas .task-pro-filter-tabs {
-    width:100%;
-    max-width:100%;
-    overflow-x:auto;
-    overflow-y:hidden;
-    flex-wrap:nowrap;
-    padding:2px 2px 5px;
-    gap:6px;
-    -webkit-overflow-scrolling:touch;
-  }
-  #view-tugas .task-pro-filter-tabs .task-filter-tab {
-    min-height:40px;
-    height:40px;
-    padding:0 13px;
-    font-size:12px !important;
-    line-height:1;
-  }
-}
-@media (max-width:420px){
-  #view-tugas .task-pro-filter-tabs {
-    gap:5px;
-    padding-right:8px;
-  }
-  #view-tugas .task-pro-filter-tabs .task-filter-tab {
-    min-height:38px;
-    height:38px;
-    padding:0 11px;
-    font-size:11px !important;
-    border-radius:10px !important;
-  }
-}
-
-/* Penitipan HP student cards: never show source escape sequences */
-#view-hp .hp-student-card,
-#view-hp .hp-student-card * {
-  box-sizing:border-box;
-}
-</style>
-</head><body><h1>Kas Kelas — X TJKT 1</h1><p>Pencatatan kas transparan &amp; aman.</p><div class="metrics"><div class="m"><small>Total Kas Masuk</small><b>'+moneySafe(masuk)+'</b></div><div class="m"><small>Total Pengeluaran</small><b>'+moneySafe(keluar)+'</b></div><div class="m"><small>Sisa Saldo</small><b>'+moneySafe(masuk-keluar)+'</b></div></div><table><thead><tr><th>Tanggal</th><th>Keterangan</th><th>Jenis</th><th>Jumlah</th></tr></thead><tbody>'+transactionRows+'</tbody></table>'+folderRows+'</body></html>';
+    const html=`<!doctype html><html lang="id"><head><meta charset="utf-8"><title>Rekap Kas Kelas</title><style>
+body{font-family:Arial,sans-serif;color:#0f172a;padding:28px}
+h1{margin:0 0 4px;font-size:20px}
+p{margin:0 0 18px;color:#64748b;font-size:11px}
+.metrics{display:flex;gap:10px;margin-bottom:18px}
+.m{flex:1;border:1px solid #e2e8f0;border-radius:10px;padding:10px}
+.m small{display:block;color:#64748b;font-size:8px;text-transform:uppercase;font-weight:700}
+.m b{display:block;margin-top:5px;font-size:15px}
+table{width:100%;border-collapse:collapse;font-size:9px}
+th,td{padding:8px;border-bottom:1px solid #e2e8f0;text-align:left}
+th{background:#f8fafc;font-size:8px;text-transform:uppercase;color:#64748b}
+.folder{margin-top:18px;border:1px solid #e2e8f0;border-radius:10px;padding:12px}
+.folder h3{margin:0 0 6px;font-size:12px}
+.folder p{margin:0 0 7px;font-size:9px}
+.bar{height:6px;border-radius:999px;background:#eef2f7;overflow:hidden}
+.fill{height:100%;background:#4338ca}
+</style></head><body><h1>Kas Kelas — X TJKT 1</h1><p>Pencatatan kas transparan &amp; aman.</p><div class="metrics"><div class="m"><small>Total Kas Masuk</small><b>${moneySafe(masuk)}</b></div><div class="m"><small>Total Pengeluaran</small><b>${moneySafe(keluar)}</b></div><div class="m"><small>Sisa Saldo</small><b>${moneySafe(masuk-keluar)}</b></div></div><table><thead><tr><th>Tanggal</th><th>Keterangan</th><th>Jenis</th><th>Jumlah</th></tr></thead><tbody>${transactionRows}</tbody></table>${folderRows}</body></html>`;
     const w=window.open('','_blank','width=900,height=700');
     if(!w){showNotification('Popup diblokir browser. Izinkan popup untuk mencetak PDF.','warning');return;}
     w.document.open();
@@ -22870,6 +22828,177 @@ body.dark #view-tugas .task-pro-check-btn.is-done .task-pro-check-icon{
   -webkit-text-fill-color:#ffffff !important;
   background:#22c55e !important;
   border-color:#22c55e !important;
+}
+</style>
+
+<style id="kelasku-final-ui-fixes-20260921">
+/* =========================================================
+   FINAL UI FIXES
+   1) Jadwal Pelajaran/Piket: no giant empty container on PC.
+   2) Setting: tabs and controls must remain touch/clickable.
+   3) Pengumpulan HP: "Belum Titip/Belum Kumpul" is always a
+      readable red status with white text in light/dark mode,
+      on desktop and mobile.
+   ========================================================= */
+
+/* ---------- 1. JADWAL: compact, stable segmented switch ---------- */
+body.kelasku-authenticated #view-jadwal > .mode-switch{
+  display:inline-flex !important;
+  align-items:stretch !important;
+  justify-content:stretch !important;
+  position:relative !important;
+  z-index:5 !important;
+  width:320px !important;
+  max-width:calc(100% - 2px) !important;
+  height:42px !important;
+  min-height:42px !important;
+  max-height:42px !important;
+  padding:4px !important;
+  margin:0 0 4px 0 !important;
+  box-sizing:border-box !important;
+  flex:0 0 auto !important;
+  align-self:flex-start !important;
+  overflow:hidden !important;
+}
+body.kelasku-authenticated #view-jadwal > .mode-switch .mode-btn{
+  flex:1 1 0 !important;
+  width:auto !important;
+  min-width:0 !important;
+  max-width:none !important;
+  height:34px !important;
+  min-height:34px !important;
+  max-height:34px !important;
+  margin:0 !important;
+  padding:0 14px !important;
+  box-sizing:border-box !important;
+  line-height:1 !important;
+  white-space:nowrap !important;
+}
+body.kelasku-authenticated #view-jadwal > #jadwal-mode-pelajaran:not([style*="display: none"]),
+body.kelasku-authenticated #view-jadwal > #jadwal-mode-piket:not([style*="display: none"]){
+  height:auto !important;
+  min-height:0 !important;
+  max-height:none !important;
+  flex:0 0 auto !important;
+}
+@media (max-width:620px){
+  body.kelasku-authenticated #view-jadwal > .mode-switch{
+    width:100% !important;
+    max-width:320px !important;
+    height:42px !important;
+    min-height:42px !important;
+    max-height:42px !important;
+  }
+}
+
+/* ---------- 2. SETTING: restore real interaction ---------- */
+#view-settings #settings-nav{
+  position:relative !important;
+  z-index:50 !important;
+  pointer-events:auto !important;
+  isolation:isolate;
+}
+#view-settings #settings-nav button{
+  position:relative !important;
+  z-index:51 !important;
+  pointer-events:auto !important;
+  cursor:pointer !important;
+  touch-action:manipulation !important;
+}
+#view-settings .settings-section,
+#view-settings .settings-section *,
+#view-settings .card,
+#view-settings .card *{
+  pointer-events:auto;
+}
+#view-settings .settings-nav button:active,
+#view-settings .settings-nav button:focus{
+  transform:scale(.98);
+}
+#view-settings .settings-nav button.active{
+  background:#2563eb !important;
+  color:#fff !important;
+  border-color:#2563eb !important;
+}
+body.dark #view-settings .settings-nav button.active{
+  background:#3b82f6 !important;
+  color:#fff !important;
+  border-color:#3b82f6 !important;
+}
+
+/* Settings cards: remove accidental oversized/empty shells. */
+#view-settings .section,
+#view-settings .settings-section,
+#view-settings .settings-profile-card{
+  height:auto !important;
+  min-height:0 !important;
+  max-height:none !important;
+  box-sizing:border-box !important;
+}
+@media (max-width:620px){
+  #view-settings .settings-nav{
+    width:100% !important;
+    max-width:100% !important;
+    overflow-x:auto !important;
+    overflow-y:hidden !important;
+    flex-wrap:nowrap !important;
+    scrollbar-width:none !important;
+    -webkit-overflow-scrolling:touch;
+    padding-bottom:3px !important;
+  }
+  #view-settings .settings-nav::-webkit-scrollbar{display:none !important}
+  #view-settings .settings-nav button{
+    flex:0 0 auto !important;
+    min-width:max-content !important;
+  }
+}
+
+/* ---------- 3. PENGUMPULAN HP: red "Belum Titip" ---------- */
+#view-hp .hp-slot-status.todo,
+#view-hp .hp-status-chip.todo,
+#view-hp .hp-command-card .hp-slot-status.todo,
+#view-hp [data-status="belum"] .hp-slot-status,
+#view-hp .hp-filter-row [data-hp-filter="belum"]{
+  background:#dc2626 !important;
+  border:1px solid #b91c1c !important;
+  color:#fff !important;
+  -webkit-text-fill-color:#fff !important;
+  text-shadow:none !important;
+}
+body.dark #view-hp .hp-slot-status.todo,
+body.dark #view-hp .hp-status-chip.todo,
+body.dark #view-hp .hp-command-card .hp-slot-status.todo,
+body.dark #view-hp [data-status="belum"] .hp-slot-status,
+body.dark #view-hp .hp-filter-row [data-hp-filter="belum"]{
+  background:#dc2626 !important;
+  border-color:#f05252 !important;
+  color:#fff !important;
+  -webkit-text-fill-color:#fff !important;
+}
+#view-hp .hp-status-card .hp-slot-status.todo{
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  min-height:30px !important;
+  padding:0 11px !important;
+  border-radius:999px !important;
+  font-weight:900 !important;
+}
+@media (max-width:760px){
+  #view-hp .hp-status-card .hp-slot-status.todo{
+    min-height:30px !important;
+    padding:0 10px !important;
+    font-size:10px !important;
+  }
+}
+
+/* Never display literal escaped newline sequences in visible UI. */
+#view-hp{
+  overflow-wrap:anywhere;
+}
+#view-hp .hp-slot,
+#view-hp .hp-slot *{
+  white-space:normal;
 }
 </style>
 </body>
