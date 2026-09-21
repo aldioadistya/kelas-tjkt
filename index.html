@@ -10422,6 +10422,202 @@ body.dark .dashboard-user-avatar{
 }
 </style>
 
+
+<style id="kelasku-responsive-scale-final">
+/* =========================================================
+   KELASKU — RESPONSIVE SCALE SYSTEM
+   PC / TABLET / MOBILE / SMALL MOBILE
+   Only adjusts visual scale; app logic and features stay intact.
+   ========================================================= */
+
+/* Shared safety: every screen uses the available viewport. */
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+img, svg, video, canvas {
+  max-width: 100%;
+}
+
+input, select, textarea, button {
+  max-width: 100%;
+  font: inherit;
+}
+
+/* Desktop baseline */
+@media (min-width: 901px) {
+  .pagehead h1 { font-size: 22px !important; line-height: 1.2 !important; }
+  .pagehead p { font-size: 13px !important; line-height: 1.5 !important; }
+  .section-title { font-size: 15px !important; line-height: 1.35 !important; }
+  .section-head { gap: 8px !important; }
+  .card { padding: 16px 18px !important; }
+  .row-item { gap: 12px !important; padding: 11px 0 !important; }
+  .btn, button { min-height: 40px; }
+  .input, input, select, textarea { font-size: 13px !important; }
+  .mode-switch { min-height: 42px; }
+  .mode-switch button { font-size: 13px !important; min-height: 38px; }
+  .screen { padding-left: 20px !important; padding-right: 20px !important; }
+}
+
+/* Tablet / large phone */
+@media (max-width: 900px) {
+  .phone,
+  .screen,
+  .view,
+  .section,
+  .card,
+  .dashboard-card,
+  .dashboard-panel {
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .screen {
+    width: 100% !important;
+    overflow-x: hidden !important;
+  }
+
+  .pagehead h1 { font-size: 20px !important; line-height: 1.2 !important; }
+  .pagehead p { font-size: 12.5px !important; line-height: 1.5 !important; }
+  .section-title { font-size: 14px !important; line-height: 1.35 !important; }
+  .card { padding: 14px 15px !important; }
+  .row-item { gap: 10px !important; padding: 10px 0 !important; }
+  .btn, button { min-height: 42px; }
+  .input, input, select, textarea { font-size: 13px !important; }
+  .mode-switch { width: min(100%, 320px); max-width: 100%; }
+  .mode-switch button { min-height: 40px; font-size: 13px !important; }
+
+  /* Common text blocks: wrap instead of forcing the page wider. */
+  .card h1, .card h2, .card h3, .card h4,
+  .card p, .card span, .card label,
+  .row-item, .row-item span, .row-item strong,
+  .section, .section-head, .section-title {
+    overflow-wrap: anywhere;
+    word-break: normal;
+  }
+
+  /* Grids never create an accidental desktop-width column on mobile. */
+  [class*="grid"] {
+    min-width: 0;
+  }
+}
+
+/* Normal phone */
+@media (max-width: 600px) {
+  .screen {
+    padding: 12px 12px 90px !important;
+  }
+
+  .pagehead {
+    padding: 4px 2px 10px !important;
+  }
+
+  .pagehead h1 {
+    font-size: 19px !important;
+    line-height: 1.2 !important;
+    letter-spacing: -0.01em;
+  }
+
+  .pagehead p {
+    font-size: 12px !important;
+    line-height: 1.45 !important;
+  }
+
+  .section { margin-top: 13px !important; }
+  .section-head { margin-bottom: 7px !important; gap: 6px !important; }
+  .section-title { font-size: 13.5px !important; }
+
+  .card {
+    padding: 13px !important;
+    border-radius: 14px !important;
+  }
+
+  .card h1 { font-size: 19px !important; line-height: 1.25 !important; }
+  .card h2 { font-size: 17px !important; line-height: 1.3 !important; }
+  .card h3 { font-size: 15px !important; line-height: 1.3 !important; }
+  .card h4 { font-size: 14px !important; line-height: 1.35 !important; }
+  .card p, .card li { font-size: 12.5px !important; line-height: 1.5 !important; }
+
+  .row-item {
+    gap: 9px !important;
+    padding: 9px 0 !important;
+  }
+
+  .btn, button {
+    min-height: 42px;
+    font-size: 12.5px !important;
+  }
+
+  .input, input, select, textarea {
+    min-height: 42px;
+    font-size: 13px !important;
+  }
+
+  textarea { min-height: 90px; }
+
+  .mode-switch {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 42px;
+  }
+
+  .mode-switch button {
+    min-height: 40px;
+    font-size: 12.5px !important;
+    padding: 9px 12px !important;
+  }
+
+  /* Don't let long labels make buttons/cards wider than the screen. */
+  button, .btn, .mode-switch button {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  /* Common compact labels/badges. */
+  .badge, .chip, .pill, .tag, .status-badge {
+    font-size: 10.5px !important;
+    line-height: 1.25 !important;
+  }
+
+  /* Touch targets for controls/icons. */
+  button.icon-btn,
+  .icon-btn,
+  [class*="icon-button"] {
+    min-width: 40px;
+    min-height: 40px;
+  }
+}
+
+/* Small phone */
+@media (max-width: 380px) {
+  .screen { padding-left: 10px !important; padding-right: 10px !important; }
+  .pagehead h1 { font-size: 18px !important; }
+  .pagehead p { font-size: 11.5px !important; }
+  .section-title { font-size: 13px !important; }
+  .card { padding: 12px !important; }
+  .card h1 { font-size: 18px !important; }
+  .card h2 { font-size: 16px !important; }
+  .card h3 { font-size: 14px !important; }
+  .card h4 { font-size: 13px !important; }
+  .card p, .card li { font-size: 12px !important; }
+  .btn, button { font-size: 12px !important; min-height: 41px; }
+  .input, input, select, textarea { font-size: 12.5px !important; }
+  .mode-switch button { font-size: 12px !important; padding-left: 9px !important; padding-right: 9px !important; }
+}
+
+/* Landscape phone: use the width without making typography tiny. */
+@media (max-width: 900px) and (orientation: landscape) {
+  .screen { padding-bottom: 78px !important; }
+  .pagehead h1 { font-size: 18px !important; }
+  .card { padding: 12px 14px !important; }
+}
+
+</style>
 </head>
 
 <body>
