@@ -9562,6 +9562,7 @@ body.dark .mobile-more-icon{background:#172554;color:#93c5fd}
 <b>Jadwal
 </b>
 </button>
+<button class="desktop-nav-item" data-tab="games" onclick="goTo('games')"><span aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 7h10a4 4 0 0 1 3.9 4.9l-1.1 5a2.5 2.5 0 0 1-4.8.2l-.5-1.4H9.5L9 17.1a2.5 2.5 0 0 1-4.8-.2l-1.1-5A4 4 0 0 1 7 7Z"/><path d="M8 10v4M6 12h4M16.5 11.5h.01M18.5 13.5h.01"/></svg></span><b>Mini Games</b></button>
 <button class="desktop-nav-item" data-tab="tugas" onclick="goTo('tugas')"><span aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 11l3 3 8-8" /><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
 </svg>
 </span>
@@ -10405,6 +10406,49 @@ X TJKT 1
 </div>
 </div>
 </div>
+<div class="view" id="view-games">
+  <div class="pagehead games-pagehead">
+    <div>
+      <h1>Mini Games</h1>
+      <p>Main santai sendiri atau adu catur dengan teman lewat UID.</p>
+    </div>
+  </div>
+  <div class="games-shell">
+    <div class="games-modebar" role="tablist" aria-label="Mode permainan">
+      <button type="button" class="games-mode-btn active" data-game-mode="single" onclick="chessSetMode('single')">♟ <span>Single Player</span></button>
+      <button type="button" class="games-mode-btn" data-game-mode="multi" onclick="chessSetMode('multi')">♞ <span>Multi Player</span></button>
+    </div>
+    <section class="chess-card">
+      <div class="chess-card-head">
+        <div>
+          <span class="games-kicker">CHESS</span>
+          <h2 id="chess-title">Lawan Komputer</h2>
+          <p id="chess-status">Giliran kamu — putih.</p>
+        </div>
+        <button type="button" class="btn btn-ghost chess-new-btn" onclick="chessNewGame()">Game Baru</button>
+      </div>
+      <div id="chess-multi-panel" class="chess-multi-panel" hidden>
+        <label for="chess-opponent-uid">UID teman</label>
+        <div class="chess-uid-row">
+          <input id="chess-opponent-uid" type="text" autocomplete="off" spellcheck="false" placeholder="Masukkan UID lawan...">
+          <button type="button" class="btn btn-primary" onclick="chessChallenge()">Adu</button>
+        </div>
+        <small>Masukkan UID lawan. Game memakai ruang yang sama, jadi lawan cukup membuka Mini Games dengan UID kamu.</small>
+      </div>
+      <div class="chess-board-wrap">
+        <div id="chess-board" class="chess-board" aria-label="Papan catur"></div>
+      </div>
+      <div class="chess-meta">
+        <span id="chess-turn-badge" class="chess-turn-badge">PUTIH</span>
+        <span id="chess-game-id" class="chess-game-id">Single Player</span>
+      </div>
+    </section>
+    <div class="chess-help-card">
+      <strong>Cara main</strong>
+      <span>Klik bidak lalu klik kotak tujuan. Langkah ilegal otomatis ditolak. Di mode multi, langkah tersinkron lewat Firebase.</span>
+    </div>
+  </div>
+</div>
 <div class="tabbar" id="mobile-tabbar" role="navigation" aria-label="Navigasi utama">
   <button class="tab active" data-tab="beranda" onclick="goTo('beranda')" aria-label="Beranda">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
@@ -10441,6 +10485,7 @@ X TJKT 1
     </div>
     <div class="mobile-more-grid">
       <button type="button" class="mobile-more-item" onclick="mobileMoreNavigate('tugas')"><span class="mobile-more-icon">✓</span><span><strong>Tugas</strong><small>Kelola tugas kelas</small></span></button>
+      <button type="button" class="mobile-more-item" onclick="mobileMoreNavigate('games')"><span class="mobile-more-icon">♟</span><span><strong>Mini Games</strong><small>Main catur single / multi</small></span></button>
       <button type="button" class="mobile-more-item" onclick="mobileMoreNavigate('laporan')"><span class="mobile-more-icon">!</span><span><strong>Laporan</strong><small>Lihat dan kelola laporan</small></span></button>
       <button type="button" class="mobile-more-item" onclick="mobileMoreNavigate('settings')"><span class="mobile-more-icon">⚙</span><span><strong>Setelan</strong><small>Pengaturan aplikasi</small></span></button>
       <button type="button" class="mobile-more-item" onclick="mobileMoreNavigate('settings')"><span class="mobile-more-icon">◯</span><span><strong>Profil</strong><small>Akun & tampilan</small></span></button>
@@ -23506,7 +23551,7 @@ body:not(.is-admin) #view-jadwal .piket-actionbar-actions:not(:has(*)) {
     attributeFilter:['class','style','hidden']
   });
 })();
-</script>
+<\/script>
 
 </body></html>`;
     const w=window.open('','_blank','width=900,height=700');
@@ -24083,6 +24128,52 @@ body.dark #view-jadwal .piket-task-progress-badge.is-complete{background:#14532d
   #view-jadwal .piket-actionbar-title strong{font-size:15px!important}
   #view-jadwal .piket-actionbar-title span:not(.piket-actionbar-dot){font-size:9px!important}
 }
+
+/* Mini Games / Chess */
+#view-games{padding-bottom:18px;}
+#view-games .games-pagehead{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;}
+#view-games .games-shell{display:grid;gap:12px;max-width:720px;margin:0 auto;}
+#view-games .games-modebar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;padding:5px;border:1px solid var(--ui-border);background:var(--ui-surface-2);border-radius:14px;}
+#view-games .games-mode-btn{border:0;background:transparent;color:var(--ui-muted);min-height:40px;border-radius:10px;font:800 11px/1 var(--font-sans);cursor:pointer;transition:transform .18s cubic-bezier(.16,1,.3,1),background .18s cubic-bezier(.16,1,.3,1),color .18s cubic-bezier(.16,1,.3,1);}
+#view-games .games-mode-btn.active{background:var(--ui-surface);color:var(--ui-text);box-shadow:0 4px 14px rgba(15,23,42,.08);}
+#view-games .games-mode-btn:active{transform:scale(.98);}
+#view-games .chess-card{border:1px solid var(--ui-border);background:var(--ui-surface);border-radius:20px;padding:14px;box-shadow:var(--ui-shadow);}
+#view-games .chess-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px;}
+#view-games .games-kicker{display:block;font-size:8px;font-weight:900;letter-spacing:.14em;color:var(--ui-blue);margin-bottom:4px;}
+#view-games .chess-card h2{font:800 18px/1.2 var(--font-display);color:var(--ui-text);letter-spacing:-.02em;}
+#view-games .chess-card-head p{font-size:11px;color:var(--ui-muted);margin-top:4px;}
+#view-games .chess-new-btn{min-height:34px;padding:8px 11px;font-size:10px;flex:0 0 auto;}
+#view-games .chess-multi-panel{margin-bottom:12px;padding:11px;border:1px solid var(--ui-border);background:var(--ui-surface-2);border-radius:14px;}
+#view-games .chess-multi-panel[hidden]{display:none;}
+#view-games .chess-multi-panel label{display:block;font-size:10px;font-weight:900;color:var(--ui-text);margin-bottom:6px;}
+#view-games .chess-uid-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px;}
+#view-games .chess-uid-row input{min-width:0;height:38px;border:1px solid var(--ui-border-strong);border-radius:10px;padding:0 10px;background:var(--ui-surface);color:var(--ui-text);font:600 11px var(--font-sans);outline:none;}
+#view-games .chess-uid-row input:focus{border-color:var(--ui-blue);box-shadow:0 0 0 3px rgba(37,99,235,.10);}
+#view-games .chess-multi-panel small{display:block;margin-top:7px;color:var(--ui-muted);font-size:9px;line-height:1.45;}
+#view-games .chess-board-wrap{display:flex;justify-content:center;}
+#view-games .chess-board{width:min(100%,560px);aspect-ratio:1;border:5px solid var(--ui-border-strong);border-radius:14px;overflow:hidden;display:grid;grid-template-columns:repeat(8,1fr);box-shadow:0 14px 30px rgba(15,23,42,.10);background:#d8e1ec;}
+#view-games .chess-square{border:0;display:flex;align-items:center;justify-content:center;position:relative;padding:0;cursor:pointer;font-family:"Times New Roman",serif;font-size:clamp(27px,7vw,54px);line-height:1;user-select:none;}
+#view-games .chess-square.light{background:#f0d9b5;color:#1f2937;}
+#view-games .chess-square.dark{background:#b58863;color:#f8fafc;}
+body.dark #view-games .chess-square.light{background:#d6b98b;color:#111827;}
+body.dark #view-games .chess-square.dark{background:#7b5138;color:#fff;}
+#view-games .chess-square.selected{box-shadow:inset 0 0 0 4px #2563eb;}
+#view-games .chess-square.legal::after{content:"";position:absolute;width:18%;aspect-ratio:1;border-radius:50%;background:rgba(37,99,235,.65);}
+#view-games .chess-square.capture::after{content:"";position:absolute;inset:7%;border:4px solid rgba(220,38,38,.72);border-radius:50%;}
+#view-games .chess-square.check{box-shadow:inset 0 0 0 5px #dc2626;}
+#view-games .chess-meta{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:10px;}
+#view-games .chess-turn-badge{display:inline-flex;align-items:center;min-height:26px;padding:5px 9px;border-radius:999px;background:var(--ui-blue-soft);color:var(--ui-blue);font-size:9px;font-weight:900;letter-spacing:.08em;}
+#view-games .chess-game-id{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ui-muted);font-size:9px;font-weight:700;}
+#view-games .chess-help-card{display:grid;gap:3px;padding:12px 14px;border:1px solid var(--ui-border);background:var(--ui-surface-2);border-radius:14px;color:var(--ui-muted);font-size:10px;line-height:1.5;}
+#view-games .chess-help-card strong{color:var(--ui-text);font-size:11px;}
+@media(max-width:600px){
+  #view-games .chess-card{padding:11px;border-radius:17px;}
+  #view-games .chess-card-head{gap:8px;}
+  #view-games .chess-card h2{font-size:16px;}
+  #view-games .chess-new-btn{font-size:9px;padding:7px 9px;}
+  #view-games .chess-board{border-width:4px;border-radius:11px;}
+  #view-games .chess-square{font-size:clamp(24px,10.5vw,44px);}
+}
 </style>
 
 <script id="worldclass-tugas-laporan-v2">
@@ -24498,6 +24589,93 @@ body:not(.is-admin) #view-settings [data-setting-cat="security"]{
     });
     observer.observe(document.body,{attributes:true,attributeFilter:['class']});
   }catch(e){}
+})();
+</script>
+<script id="kelasku-mini-games-chess-v1">
+(function(){
+  'use strict';
+  const files='abcdefgh';
+  const glyph={K:'♔',Q:'♕',R:'♖',B:'♗',N:'♘',P:'♙',k:'♚',q:'♛',r:'♜',b:'♝',n:'♞',p:'♟'};
+  const start=['rnbqkbnr','pppppppp','........','........','........','........','PPPPPPPP','RNBQKBNR'].join('');
+  const C={white:'w',black:'b'};
+  const G={mode:'single',board:start,turn:'w',selected:-1,legal:[],gameId:'',unsub:null,busy:false,opponentUid:'',orientation:'w',winner:null,status:'playing'};
+  const $=id=>document.getElementById(id);
+  const authUser=()=>window.firebase&&firebase.auth?firebase.auth().currentUser:null;
+  const firestore=()=>window.firebase&&firebase.firestore?firebase.firestore():null;
+  const uid=()=>{const u=authUser();return u&&u.uid?u.uid:''};
+  const cloneBoard=b=>String(b||start).split('');
+  const colorOf=p=>p==='.'?'':(p===p.toUpperCase()?'w':'b');
+  const enemy=c=>c==='w'?'b':'w';
+  const row=i=>Math.floor(i/8), col=i=>i%8;
+  const inside=(r,c)=>r>=0&&r<8&&c>=0&&c<8;
+  const idx=(r,c)=>r*8+c;
+  function findKing(board,c){const k=c==='w'?'K':'k';return board.indexOf(k);}
+  function attacked(board,sq,by){
+    const r=row(sq),c=col(sq);
+    const pawn=by==='w'?'P':'p';
+    const pr=r+(by==='w'?1:-1);
+    for(const dc of [-1,1]){if(inside(pr,c+dc)&&board[idx(pr,c+dc)]===pawn)return true;}
+    const knight=by==='w'?'N':'n';
+    for(const [dr,dc] of [[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]]){if(inside(r+dr,c+dc)&&board[idx(r+dr,c+dc)]===knight)return true;}
+    const king=by==='w'?'K':'k';
+    for(let dr=-1;dr<=1;dr++)for(let dc=-1;dc<=1;dc++){if((dr||dc)&&inside(r+dr,c+dc)&&board[idx(r+dr,c+dc)]===king)return true;}
+    const rays=(dirs,chars)=>{for(const [dr,dc] of dirs){let rr=r+dr,cc=c+dc;while(inside(rr,cc)){const p=board[idx(rr,cc)];if(p!=='.'){if(chars.includes(p))return true;break;}rr+=dr;cc+=dc;}}return false;};
+    if(rays([[-1,0],[1,0],[0,-1],[0,1]],by==='w'?'RQ':'rq'))return true;
+    if(rays([[-1,-1],[-1,1],[1,-1],[1,1]],by==='w'?'BQ':'bq'))return true;
+    return false;
+  }
+  function inCheck(board,c){const k=findKing(board,c);return k<0||attacked(board,k,enemy(c));}
+  function pseudo(board,from){
+    const p=board[from],c=colorOf(p),t=p.toUpperCase(),r=row(from),co=col(from),out=[];
+    const add=(rr,cc)=>{if(!inside(rr,cc))return false;const to=idx(rr,cc),q=board[to];if(q==='.')out.push(to);else{if(colorOf(q)!==c)out.push(to);return false;}return true;};
+    if(t==='P'){
+      const dir=c==='w'?-1:1,startRow=c==='w'?6:1,nr=r+dir;
+      if(inside(nr,co)&&board[idx(nr,co)]==='.'){
+        out.push(idx(nr,co));const nr2=r+dir*2;if(r===startRow&&board[idx(nr2,co)]==='.')out.push(idx(nr2,co));
+      }
+      for(const dc of [-1,1]){const rr=r+dir,cc=co+dc;if(inside(rr,cc)){const q=board[idx(rr,cc)];if(q!=='.'&&colorOf(q)!==c)out.push(idx(rr,cc));}}
+    }else if(t==='N'){
+      for(const [dr,dc] of [[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]])add(r+dr,co+dc);
+    }else if(t==='K'){
+      for(let dr=-1;dr<=1;dr++)for(let dc=-1;dc<=1;dc++)if(dr||dc)add(r+dr,co+dc);
+    }else{
+      const dirs=[];if(t==='B'||t==='Q')dirs.push([-1,-1],[-1,1],[1,-1],[1,1]);if(t==='R'||t==='Q')dirs.push([-1,0],[1,0],[0,-1],[0,1]);
+      for(const [dr,dc] of dirs){let rr=r+dr,cc=co+dc;while(add(rr,cc)){rr+=dr;cc+=dc;}}
+    }
+    return out;
+  }
+  function applyMove(board,from,to){const b=board.slice(),p=b[from];b[to]=p;b[from]='.';if(p==='P'&&row(to)===0)b[to]='Q';if(p==='p'&&row(to)===7)b[to]='q';return b;}
+  function legalFrom(board,from,turn){const p=board[from];if(colorOf(p)!==turn)return[];return pseudo(board,from).filter(to=>!inCheck(applyMove(board,from,to),turn));}
+  function allLegal(board,turn){const out=[];for(let i=0;i<64;i++)if(colorOf(board[i])===turn)for(const to of legalFrom(board,i,turn))out.push({from:i,to});return out;}
+  function sanish(m){return files[col(m.from)]+(8-row(m.from))+files[col(m.to)]+(8-row(m.to));}
+  function setStatus(text){const e=$('chess-status');if(e)e.textContent=text;}
+  function render(){
+    const boardEl=$('chess-board');if(!boardEl)return;boardEl.innerHTML='';
+    const order=[];for(let r=0;r<8;r++)for(let c=0;c<8;c++)order.push(G.orientation==='w'?idx(r,c):idx(7-r,7-c));
+    const checkSq=inCheck(G.board,G.turn)?findKing(G.board,G.turn):-1;
+    order.forEach(i=>{const b=document.createElement('button');b.type='button';b.className='chess-square '+(((row(i)+col(i))%2===0)?'light':'dark');b.dataset.square=i;b.textContent=glyph[G.board[i]]||'';if(i===G.selected)b.classList.add('selected');if(G.legal.includes(i))b.classList.add(G.board[i]==='.'?'legal':'capture');if(i===checkSq)b.classList.add('check');b.setAttribute('aria-label',`${files[col(i)]}${8-row(i)} ${G.board[i]==='.'?'kosong':G.board[i]}`);b.onclick=()=>clickSquare(i);boardEl.appendChild(b);});
+    const badge=$('chess-turn-badge');if(badge)badge.textContent=G.winner?('MENANG: '+G.winner.toUpperCase()):G.turn==='w'?'PUTIH':'HITAM';
+    const id=$('chess-game-id');if(id)id.textContent=G.gameId||'Single Player';
+    const title=$('chess-title');if(title)title.textContent=G.mode==='single'?'Lawan Komputer':'Adu Teman';
+  }
+  function finishIfNeeded(){const moves=allLegal(G.board,G.turn);if(moves.length)return false;G.status='finished';G.winner=inCheck(G.board,G.turn)?enemy(G.turn):'draw';if(G.winner==='draw')setStatus('Remis — tidak ada langkah legal.');else setStatus((G.winner==='w'?'Putih':'Hitam')+' menang.');return true;}
+  function clickSquare(i){if(G.busy||G.status==='finished')return;if(G.mode==='multi'&&!isMyTurn())return;const p=G.board[i];if(G.selected<0){if(colorOf(p)===G.turn){G.selected=i;G.legal=legalFrom(G.board,i,G.turn);render();}return;}if(i===G.selected){G.selected=-1;G.legal=[];render();return;}if(G.legal.includes(i)){playMove(G.selected,i);return;}if(colorOf(p)===G.turn){G.selected=i;G.legal=legalFrom(G.board,i,G.turn);render();}else{G.selected=-1;G.legal=[];render();}}
+  function isMyTurn(){const me=uid();if(!me)return false;return G.turn==='w'?G.whiteUid===me:G.blackUid===me;}
+  function afterLocalMove(){G.selected=-1;G.legal=[];if(finishIfNeeded())return;setStatus(G.turn==='w'?'Giliran putih.':'Giliran hitam.');render();}
+  async function playMove(from,to){if(G.busy)return;G.busy=true;try{const next=applyMove(G.board,from,to);if(G.mode==='multi'){const fs=firestore();if(!fs||!G.gameId)throw new Error('Game online belum siap.');const ref=fs.collection('kelasku_chess_games').doc(G.gameId);await fs.runTransaction(async tx=>{const snap=await tx.get(ref);if(!snap.exists)throw new Error('Game tidak ditemukan.');const d=snap.data();const me=uid();const turn=d.turn||'w';const mine=turn==='w'?d.whiteUid===me:d.blackUid===me;if(!mine)throw new Error('Bukan giliran kamu.');const board=cloneBoard(d.board);if(board[from]!==G.board[from]||board[to]!==G.board[to])throw new Error('Papan sudah berubah.');const legal=legalFrom(board,from,turn);if(!legal.includes(to))throw new Error('Langkah tidak legal.');const moved=applyMove(board,from,to);const nextTurn=enemy(turn);const moves=allLegal(moved,nextTurn);let status='playing',winner=null;if(!moves.length){status='finished';winner=inCheck(moved,nextTurn)?turn:'draw';}tx.update(ref,{board:moved.join(''),turn:nextTurn,status,winner,lastMove:sanish({from,to}),updatedAt:firebase.firestore.FieldValue.serverTimestamp()});});return;}G.board=next;G.turn=enemy(G.turn);afterLocalMove();if(G.mode==='single'&&G.turn==='b'&&G.status==='playing'){setTimeout(aiMove,260);}}catch(e){setStatus(e&&e.message?e.message:'Langkah gagal.');}finally{G.busy=false;}}
+  function aiMove(){if(G.mode!=='single'||G.turn!=='b'||G.status==='finished')return;const moves=allLegal(G.board,'b');if(!moves.length){finishIfNeeded();render();return;}moves.sort((a,b)=>scoreMove(b)-scoreMove(a));const top=moves.slice(0,Math.min(5,moves.length));const m=top[Math.floor(Math.random()*top.length)];G.board=applyMove(G.board,m.from,m.to);G.turn='w';afterLocalMove();}
+  function scoreMove(m){const p=G.board[m.to];return p==='.'?0:({P:1,N:3,B:3,R:5,Q:9,K:100,p:1,n:3,b:3,r:5,q:9,k:100}[p]||0)+Math.random();}
+  function detach(){if(G.unsub){try{G.unsub();}catch(_){ }G.unsub=null;}}
+  function gameDocId(a,b){return 'pair_'+[a,b].sort().join('_');}
+  function bindGame(docId){const fs=firestore();if(!fs)return;detach();G.gameId=docId;G.unsub=fs.collection('kelasku_chess_games').doc(docId).onSnapshot(s=>{if(!s.exists){setStatus('Game belum dibuat.');return;}const d=s.data();G.board=cloneBoard(d.board);G.turn=d.turn||'w';G.whiteUid=d.whiteUid||'';G.blackUid=d.blackUid||'';G.status=d.status||'playing';G.winner=d.winner||null;G.orientation=uid()===G.blackUid?'b':'w';G.selected=-1;G.legal=[];if(G.status==='finished'){if(G.winner==='draw')setStatus('Remis.');else setStatus((G.winner==='w'?'Putih':'Hitam')+' menang.');}else if(!uid())setStatus('Login untuk bermain.');else if(isMyTurn())setStatus('Giliran kamu.');else setStatus('Giliran lawan.');render();},e=>setStatus('Sinkronisasi game gagal: '+(e.code||'permission-denied')));}
+  async function autoJoinMyGame(){const me=uid(),fs=firestore();if(!me||!fs)return false;try{const col=fs.collection('kelasku_chess_games');const [w,b]=await Promise.all([col.where('whiteUid','==',me).limit(1).get(),col.where('blackUid','==',me).limit(1).get()]);const snaps=[...w.docs,...b.docs].filter(x=>{const d=x.data()||{};return d.status!=='finished';});if(!snaps.length)return false;bindGame(snaps[0].id);return true;}catch(e){setStatus('Belum bisa mencari game online: '+(e.code||'permission-denied'));return false;}}
+  async function challenge(){const me=uid(),opp=String($('chess-opponent-uid')?.value||'').trim();if(!me){setStatus('Login dulu untuk bermain multi.');return;}if(!opp){setStatus('Masukkan UID lawan.');return;}if(opp===me){setStatus('UID lawan harus berbeda.');return;}const fs=firestore();if(!fs){setStatus('Firebase belum siap.');return;}const id=gameDocId(me,opp);const white=[me,opp].sort()[0]===me?'w':'b';const ref=fs.collection('kelasku_chess_games').doc(id);G.opponentUid=opp;try{await ref.set({whiteUid:white==='w'?me:opp,blackUid:white==='b'?me:opp,board:start,turn:'w',status:'playing',winner:null,lastMove:'',createdAt:firebase.firestore.FieldValue.serverTimestamp(),updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});G.mode='multi';G.whiteUid=white==='w'?me:opp;G.blackUid=white==='b'?me:opp;G.orientation=white==='w'?'w':'b';bindGame(id);setStatus('Game online dibuat. Menunggu lawan membuka game.');}catch(e){setStatus('Gagal membuat game: '+(e.code||e.message||'permission-denied'));}}
+  async function setMode(mode){G.mode=mode;G.status='playing';G.winner=null;G.selected=-1;G.legal=[];const panel=$('chess-multi-panel');if(panel)panel.hidden=mode!=='multi';document.querySelectorAll('#view-games .games-mode-btn').forEach(b=>b.classList.toggle('active',b.dataset.gameMode===mode));detach();if(mode==='single'){G.board=start;G.turn='w';G.gameId='';G.orientation='w';setStatus('Giliran kamu — putih.');render();}else{G.board=start;G.turn='w';G.gameId='';G.orientation='w';setStatus('Mencari game online...');render();const found=await autoJoinMyGame();if(!found)setStatus('Masukkan UID teman untuk membuat game.');}}
+  function newGame(){if(G.mode==='multi'){const opp=String($('chess-opponent-uid')?.value||'').trim();if(opp){challenge();return;}setStatus('Masukkan UID lawan lalu tekan Adu.');return;}detach();G.board=start;G.turn='w';G.status='playing';G.winner=null;G.selected=-1;G.legal=[];G.gameId='';G.orientation='w';setStatus('Giliran kamu — putih.');render();}
+  function boot(){document.querySelectorAll('.view').forEach(v=>{if(v.id!=='view-games')return;});render();}
+  window.chessSetMode=setMode;window.chessNewGame=newGame;window.chessChallenge=challenge;
+  document.addEventListener('DOMContentLoaded',boot,{once:true});
+  document.addEventListener('click',e=>{const t=e.target.closest('.desktop-nav-item,.tab,.mobile-more-item');if(t&&((t.dataset.tab==='games')||t.textContent.includes('Mini Games')))setTimeout(render,0);});
 })();
 </script>
 </body>
