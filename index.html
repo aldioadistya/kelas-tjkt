@@ -8044,6 +8044,37 @@ input, textarea, select, [contenteditable="true"] {
 }
 </style>
 
+<style id="kelasku-chess-fullscreen-v8">
+.chess-shell.is-fullscreen{position:fixed!important;inset:0!important;z-index:2147483000!important;width:100vw!important;height:100dvh!important;max-width:none!important;max-height:none!important;min-height:0!important;margin:0!important;padding:8px!important;box-sizing:border-box!important;overflow:hidden!important;border-radius:0!important}
+.chess-shell.is-fullscreen .chess-topbar{width:100%!important;max-width:none!important;margin:0 0 6px!important;flex:0 0 auto!important}
+.chess-shell.is-fullscreen .chess-grid{display:grid!important;grid-template-columns:minmax(0,1fr)!important;width:100%!important;height:calc(100dvh - 66px)!important;min-height:0!important;max-width:none!important;margin:0!important}
+.chess-shell.is-fullscreen .chess-side{display:none!important}
+.chess-shell.is-fullscreen .chess-play-area{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;width:100%!important;height:100%!important;min-height:0!important;max-width:none!important;margin:0!important;padding:0!important;box-sizing:border-box!important}
+.chess-shell.is-fullscreen .chess-matchbar{width:min(100%,900px)!important;flex:0 0 auto!important;margin:0 0 5px!important}
+.chess-shell.is-fullscreen .chess-board-frame{flex:0 0 auto!important;width:min(100%,calc(100dvh - 100px),calc(100vw - 16px))!important;max-width:900px!important;padding:4px!important;box-sizing:border-box!important}
+.chess-shell.is-fullscreen .chess-board{width:100%!important;max-width:none!important;aspect-ratio:1/1!important;margin:0!important}
+.chess-shell.is-fullscreen .chess-actions{flex:0 0 auto!important;margin-top:5px!important}
+.chess-shell.is-fullscreen .chess-mode-row,.chess-shell.is-fullscreen .chess-subtitle{display:none!important}
+@media(max-width:700px){.chess-shell.is-fullscreen{padding:3px!important}.chess-shell.is-fullscreen .chess-topbar{padding:5px!important;margin-bottom:3px!important}.chess-shell.is-fullscreen .chess-grid{height:calc(100dvh - 48px)!important}.chess-shell.is-fullscreen .chess-board-frame{width:min(calc(100vw - 6px),calc(100dvh - 70px))!important;padding:2px!important}}
+@media(orientation:landscape){.chess-shell.is-fullscreen .chess-grid{height:calc(100dvh - 58px)!important}.chess-shell.is-fullscreen .chess-play-area{flex-direction:row!important;gap:8px!important}.chess-shell.is-fullscreen .chess-matchbar{width:auto!important;max-width:190px!important;margin:0!important}.chess-shell.is-fullscreen .chess-board-frame{width:min(calc(100dvh - 66px),calc(100vw - 210px))!important}.chess-shell.is-fullscreen .chess-actions{margin:0!important}}
+</style>
+
+<style id="kelasku-chess-remove-minimize-v9">
+/* v9: fullscreen only — minimize is intentionally removed */
+.chess-shell .chess-minimize-btn,
+.chess-shell [data-chess-action="minimize"],
+.chess-shell [data-action="minimize"]{
+  display:none !important;
+}
+.chess-shell.is-minimized{
+  display:block !important;
+}
+.chess-shell.is-minimized .chess-grid,
+.chess-shell.is-minimized .chess-play-area{
+  display:block !important;
+}
+</style>
+
 </head>
 
 <body>
@@ -18445,6 +18476,40 @@ body:not(.dark) .chess-online-state{background:#f8fafc;border-color:#dbe3ee;colo
       e.preventDefault();
     }
   }, {passive:false});
+})();
+</script>
+
+
+<script id="kelasku-chess-fullscreen-only-v9">
+(function(){
+  'use strict';
+
+  function shell(){
+    return document.querySelector('#view-catur .chess-shell') ||
+           document.querySelector('.chess-shell');
+  }
+
+  function sync(){
+    var s = shell();
+    var active = !!(s && s.classList.contains('is-fullscreen'));
+    document.documentElement.classList.toggle('chess-fullscreen-active', active);
+    document.body.classList.toggle('chess-fullscreen-active', active);
+  }
+
+  // The normal chess UI can toggle is-fullscreen itself.
+  // This observer only keeps the document state synchronized.
+  var observer = new MutationObserver(sync);
+  observer.observe(document.documentElement, {
+    attributes:true,
+    attributeFilter:['class']
+  });
+  observer.observe(document.body, {
+    subtree:true,
+    attributes:true,
+    attributeFilter:['class']
+  });
+
+  sync();
 })();
 </script>
 
