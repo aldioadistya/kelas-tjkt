@@ -8321,6 +8321,87 @@ body.is-admin #view-beranda .dashboard-panel-announcements .section-action.admin
 }
 </style>
 
+
+<style id="kelasku-chess-score-combined-v13">
+/* v13: "Minimalkan" is replaced by one combined Skor panel. */
+.chess-score-modal{
+  position:fixed;
+  inset:0;
+  z-index:2147482000;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+}
+.chess-score-modal.is-open{display:flex}
+.chess-score-modal-backdrop{
+  position:absolute;
+  inset:0;
+  background:rgba(2,6,23,.72);
+  backdrop-filter:blur(8px);
+}
+.chess-score-modal-dialog{
+  position:relative;
+  width:min(620px,100%);
+  max-height:min(88dvh,760px);
+  overflow:auto;
+  padding:16px;
+  border:1px solid var(--chess-border,#334155);
+  border-radius:20px;
+  background:var(--chess-shell-bg,#0f172a);
+  box-shadow:0 30px 90px rgba(0,0,0,.45);
+}
+.chess-score-modal-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:12px;
+}
+.chess-score-close{
+  width:36px;
+  height:36px;
+  border:1px solid var(--chess-border,#334155);
+  border-radius:10px;
+  background:var(--chess-control-bg,#111827);
+  color:var(--chess-text,#f8fafc);
+  font-size:24px;
+  line-height:1;
+  cursor:pointer;
+}
+.chess-score-modal-body{
+  display:grid;
+  gap:12px;
+}
+.chess-score-modal-body > .card{
+  margin:0 !important;
+}
+.chess-score-modal-body .chess-online-card{
+  display:none !important;
+}
+@media(max-width:520px){
+  .chess-score-modal{padding:10px}
+  .chess-score-modal-dialog{
+    max-height:92dvh;
+    padding:12px;
+    border-radius:16px;
+  }
+  .chess-score-modal-body{gap:10px}
+}
+</style>
+
+
+<style id="kelasku-chess-no-minimize-v13">
+.chess-shell .chess-minimize-btn,
+.chess-shell [data-chess-action="minimize"],
+.chess-shell [data-action="minimize"],
+.chess-shell .chess-minimize,
+.chess-shell button[title*="Minimalkan"],
+.chess-shell button[aria-label*="Minimalkan"]{
+  display:none !important;
+}
+</style>
+
 </head>
 
 <body>
@@ -9150,7 +9231,22 @@ X TJKT 1
     <h1>♟ Catur</h1>
     <p>Main sendiri, 2 pemain satu HP, atau online dengan teman.</p>
   </div>
-  <div class="chess-shell">
+  
+<div class="chess-score-modal" id="chess-score-modal" aria-hidden="true">
+  <div class="chess-score-modal-backdrop" onclick="toggleChessScorePanel(false)"></div>
+  <div class="chess-score-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="chess-score-modal-title">
+    <div class="chess-score-modal-head">
+      <div>
+        <div class="section-kicker">PERFORMA</div>
+        <div class="section-title" id="chess-score-modal-title">Skor</div>
+      </div>
+      <button type="button" class="chess-score-close" onclick="toggleChessScorePanel(false)" aria-label="Tutup skor">×</button>
+    </div>
+    <div class="chess-score-modal-body" id="chess-score-modal-body"></div>
+  </div>
+</div>
+
+<div class="chess-shell">
     <div class="chess-mode-confirm" id="chess-mode-confirm" aria-hidden="true">
       <div class="chess-mode-confirm-backdrop" data-chess-confirm-cancel></div>
       <div class="chess-mode-confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="chess-confirm-title">
@@ -9182,6 +9278,7 @@ X TJKT 1
           <button class="chess-mode-btn" data-chess-mode="online" onclick="setChessMode('online')"><span>🌐</span> Online</button>
         </div>
         <div class="chess-view-actions" aria-label="Tampilan papan catur">
+          <button type="button" class="chess-view-btn" id="chess-score-btn" onclick="toggleChessScorePanel()" title="Skor">🏆 <span>Skor</span></button>
           <button type="button" class="chess-view-btn" id="chess-fullscreen-btn" onclick="toggleChessFullscreen()" title="Layar penuh">⛶ <span>Layar penuh</span></button>
         </div>
       </div>
@@ -18791,6 +18888,66 @@ body:not(.dark) .chess-online-state{background:#f8fafc;border-color:#dbe3ee;colo
   if (typeof deletePengumumanCurrent === 'function') {
     window.deletePengumumanCurrent = deletePengumumanCurrent;
   }
+})();
+</script>
+
+
+<script id="kelasku-chess-score-combined-js-v13">
+(function(){
+  'use strict';
+  var scoreParent=null, scoreNext=null, leaderboardParent=null, leaderboardNext=null;
+
+  function getEls(){
+    return {
+      modal:document.getElementById('chess-score-modal'),
+      body:document.getElementById('chess-score-modal-body'),
+      side:document.querySelector('#view-catur .chess-side'),
+      score:document.querySelector('#view-catur .chess-score-card'),
+      leaderboard:document.querySelector('#view-catur .chess-leaderboard-card')
+    };
+  }
+
+  window.toggleChessScorePanel=function(force){
+    var e=getEls();
+    if(!e.modal || !e.body) return;
+    var open=(force===undefined) ? !e.modal.classList.contains('is-open') : !!force;
+
+    if(open){
+      if(!e.score || !e.leaderboard) return;
+      if(!scoreParent) scoreParent=e.score.parentNode;
+      if(!leaderboardParent) leaderboardParent=e.leaderboard.parentNode;
+      if(!scoreNext) scoreNext=e.score.nextSibling;
+      if(!leaderboardNext) leaderboardNext=e.leaderboard.nextSibling;
+
+      e.body.appendChild(e.score);
+      e.body.appendChild(e.leaderboard);
+      e.modal.classList.add('is-open');
+      e.modal.setAttribute('aria-hidden','false');
+      document.body.classList.add('chess-score-open');
+      var close=e.modal.querySelector('.chess-score-close');
+      if(close) close.focus();
+    }else{
+      e.modal.classList.remove('is-open');
+      e.modal.setAttribute('aria-hidden','true');
+      document.body.classList.remove('chess-score-open');
+
+      if(e.score && scoreParent){
+        if(scoreNext && scoreNext.parentNode===scoreParent) scoreParent.insertBefore(e.score,scoreNext);
+        else scoreParent.appendChild(e.score);
+      }
+      if(e.leaderboard && leaderboardParent){
+        if(leaderboardNext && leaderboardNext.parentNode===leaderboardParent) leaderboardParent.insertBefore(e.leaderboard,leaderboardNext);
+        else leaderboardParent.appendChild(e.leaderboard);
+      }
+    }
+  };
+
+  document.addEventListener('keydown',function(ev){
+    if(ev.key==='Escape'){
+      var modal=document.getElementById('chess-score-modal');
+      if(modal && modal.classList.contains('is-open')) window.toggleChessScorePanel(false);
+    }
+  });
 })();
 </script>
 
