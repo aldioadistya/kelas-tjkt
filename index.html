@@ -8075,6 +8075,128 @@ input, textarea, select, [contenteditable="true"] {
 }
 </style>
 
+
+<style id="kelasku-chess-real-fullscreen-v10">
+/* v10: native Fullscreen API and .is-fullscreen use the same full-board layout */
+.chess-shell:fullscreen,
+.chess-shell:-webkit-full-screen{
+  position:fixed !important;
+  inset:0 !important;
+  z-index:2147483000 !important;
+  width:100vw !important;
+  height:100vh !important;
+  height:100dvh !important;
+  max-width:none !important;
+  max-height:none !important;
+  min-height:0 !important;
+  margin:0 !important;
+  padding:6px !important;
+  box-sizing:border-box !important;
+  overflow:hidden !important;
+  border-radius:0 !important;
+  background:var(--chess-shell-bg) !important;
+}
+.chess-shell:fullscreen .chess-topbar,
+.chess-shell:-webkit-full-screen .chess-topbar{
+  width:100% !important;
+  max-width:none !important;
+  margin:0 0 4px !important;
+  flex:0 0 auto !important;
+}
+.chess-shell:fullscreen .chess-grid,
+.chess-shell:-webkit-full-screen .chess-grid{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) !important;
+  width:100% !important;
+  height:calc(100dvh - 52px) !important;
+  min-height:0 !important;
+  max-width:none !important;
+  margin:0 !important;
+}
+.chess-shell:fullscreen .chess-side,
+.chess-shell:-webkit-full-screen .chess-side{
+  display:none !important;
+}
+.chess-shell:fullscreen .chess-play-area,
+.chess-shell:-webkit-full-screen .chess-play-area{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  width:100% !important;
+  height:100% !important;
+  min-height:0 !important;
+  max-width:none !important;
+  margin:0 !important;
+  padding:0 !important;
+  box-sizing:border-box !important;
+}
+.chess-shell:fullscreen .chess-matchbar,
+.chess-shell:-webkit-full-screen .chess-matchbar{
+  width:min(100%,900px) !important;
+  flex:0 0 auto !important;
+  margin:0 0 4px !important;
+}
+.chess-shell:fullscreen .chess-board-frame,
+.chess-shell:-webkit-full-screen .chess-board-frame{
+  flex:0 0 auto !important;
+  width:min(calc(100vw - 12px),calc(100dvh - 74px)) !important;
+  max-width:calc(100dvh - 74px) !important;
+  padding:2px !important;
+  box-sizing:border-box !important;
+}
+.chess-shell:fullscreen .chess-board,
+.chess-shell:-webkit-full-screen .chess-board{
+  width:100% !important;
+  max-width:none !important;
+  aspect-ratio:1 / 1 !important;
+  margin:0 !important;
+}
+.chess-shell:fullscreen .chess-actions,
+.chess-shell:-webkit-full-screen .chess-actions{
+  margin-top:4px !important;
+}
+.chess-shell:fullscreen .chess-mode-row,
+.chess-shell:fullscreen .chess-subtitle,
+.chess-shell:-webkit-full-screen .chess-mode-row,
+.chess-shell:-webkit-full-screen .chess-subtitle{
+  display:none !important;
+}
+@media (orientation:landscape){
+  .chess-shell:fullscreen .chess-grid,
+  .chess-shell:-webkit-full-screen .chess-grid{
+    height:calc(100dvh - 48px) !important;
+  }
+  .chess-shell:fullscreen .chess-play-area,
+  .chess-shell:-webkit-full-screen .chess-play-area{
+    flex-direction:row !important;
+    gap:8px !important;
+  }
+  .chess-shell:fullscreen .chess-matchbar,
+  .chess-shell:-webkit-full-screen .chess-matchbar{
+    width:auto !important;
+    max-width:180px !important;
+    margin:0 !important;
+  }
+  .chess-shell:fullscreen .chess-board-frame,
+  .chess-shell:-webkit-full-screen .chess-board-frame{
+    width:min(calc(100dvh - 56px),calc(100vw - 205px)) !important;
+    max-width:none !important;
+  }
+}
+@media (max-width:700px){
+  .chess-shell:fullscreen,
+  .chess-shell:-webkit-full-screen{
+    padding:3px !important;
+  }
+  .chess-shell:fullscreen .chess-board-frame,
+  .chess-shell:-webkit-full-screen .chess-board-frame{
+    width:min(calc(100vw - 6px),calc(100dvh - 62px)) !important;
+    max-width:none !important;
+  }
+}
+</style>
+
 </head>
 
 <body>
@@ -18353,9 +18475,11 @@ body:not(.dark) .chess-online-state{background:#f8fafc;border-color:#dbe3ee;colo
     try{
       if(document.fullscreenElement===shell){
         await document.exitFullscreen();
+        shell.classList.remove('is-fullscreen');
       }else if(shell.requestFullscreen){
         shell.classList.remove('is-minimized');
-        setChessMinimizeButton(false);
+        shell.classList.add('is-fullscreen');
+        if(typeof setChessMinimizeButton==='function') setChessMinimizeButton(false);
         await shell.requestFullscreen();
       }else{
         shell.classList.toggle('is-fullscreen');
@@ -18510,6 +18634,19 @@ body:not(.dark) .chess-online-state{background:#f8fafc;border-color:#dbe3ee;colo
   });
 
   sync();
+})();
+</script>
+
+
+<script id="kelasku-chess-fullscreen-exit-sync-v10">
+(function(){
+  document.addEventListener('fullscreenchange', function(){
+    var shell=document.querySelector('#view-catur .chess-shell');
+    if(!shell) return;
+    if(document.fullscreenElement !== shell){
+      shell.classList.remove('is-fullscreen');
+    }
+  });
 })();
 </script>
 
