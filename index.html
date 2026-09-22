@@ -8785,6 +8785,9 @@ X TJKT 1
        <select id="kas-filter-premium" class="kas-premium-filter" aria-label="Filter transaksi">
          <option value="all">Semua Jenis</option><option value="masuk">Pemasukan</option><option value="keluar">Pengeluaran</option>
        </select>
+       <select id="kas-period-premium" class="kas-premium-filter" aria-label="Filter waktu">
+         <option value="all">Semua waktu</option><option value="week">Minggu ini</option><option value="month">Bulan ini</option>
+       </select>
       <div class="section-link" onclick="openExportModal()">Export</div>
       <button type="button" class="kas-history-toggle" onclick="window.toggleKasHistory()"
         aria-expanded="true" aria-controls="kas-history-body">
@@ -15225,15 +15228,6 @@ X TJKT 1
       const metrics=document.createElement('div'); metrics.className='kas-pro-metrics'; metrics.id='kas-pro-metrics';
       metrics.innerHTML=`<div class="kas-pro-metric kpm-in"><div class="kpm-top"><div class="kpm-label">Total Kas Masuk</div><div class="kpm-icon">${icon('M12 5v14M7 10l5-5 5 5')}</div></div><div class="kpm-value" id="kas-pro-in">Rp 0</div><div class="kpm-note">Pemasukan tercatat</div></div><div class="kas-pro-metric kpm-out"><div class="kpm-top"><div class="kpm-label">Total Pengeluaran</div><div class="kpm-icon">${icon('M12 19V5M7 14l5 5 5-5')}</div></div><div class="kpm-value" id="kas-pro-out">Rp 0</div><div class="kpm-note">Pengeluaran tercatat</div></div><div class="kas-pro-metric kpm-bal"><div class="kpm-top"><div class="kpm-label">Sisa Saldo</div><div class="kpm-icon">${icon('M4 7h16v10H4zM7 11h4')}</div></div><div class="kpm-value" id="kas-pro-bal">Rp 0</div><div class="kpm-note">Saldo berjalan</div></div>`;
       if(oldBalance) oldBalance.replaceWith(metrics); else v.insertBefore(metrics,v.firstChild.nextSibling);
-      const txSection=[...v.querySelectorAll('.section')].find(x=>x.querySelector('#kas-list'));
-      if(txSection && !document.getElementById('kas-pro-toolbar')){
-        const head=txSection.querySelector('.section-head');
-        if(head){
-          const toolbar=document.createElement('div'); toolbar.className='kas-pro-toolbar'; toolbar.id='kas-pro-toolbar';
-          toolbar.innerHTML=`<div class="kas-pro-filters"><input id="kas-pro-search" type="search" placeholder="Cari transaksi..." oninput="renderKas()"><select id="kas-pro-filter"><option value="all">Semua jenis</option><option value="masuk">Pemasukan</option><option value="keluar">Pengeluaran</option></select><select id="kas-pro-period"><option value="all">Semua waktu</option><option value="week">Minggu ini</option><option value="month">Bulan ini</option></select></div>`;
-          head.insertAdjacentElement('afterend',toolbar);
-        }
-      }
       v.dataset.proReady='1';
     }
 
@@ -15264,7 +15258,7 @@ X TJKT 1
       const keluar=data.filter(t=>t.jenis==='keluar').reduce((a,t)=>a+Number(t.jumlah||0),0);
       const set=(id,val)=>{const e=document.getElementById(id);if(e)e.textContent=money(val)};
       set('kas-pro-in',masuk); set('kas-pro-out',keluar); set('kas-pro-bal',masuk-keluar);
-      const q=(document.getElementById('kas-pro-search')?.value||'').trim().toLowerCase(); const filter=document.getElementById('kas-pro-filter')?.value||'all'; const period=document.getElementById('kas-pro-period')?.value||'all';
+      const q=(document.getElementById('kas-search-premium')?.value||'').trim().toLowerCase(); const filter=document.getElementById('kas-filter-premium')?.value||'all'; const period=document.getElementById('kas-period-premium')?.value||'all';
       let list=data.filter(t=>(filter==='all'||t.jenis===filter)&&kasDateOk(t.tanggal,period)&&(!q||[t.ket,t.tanggal,t.jenis,t.jumlah].join(' ').toLowerCase().includes(q))).slice().sort((a,b)=>(parseKasDate(b.tanggal)?.getTime()||0)-(parseKasDate(a.tanggal)?.getTime()||0));
       const wrap=document.getElementById('kas-list'); if(!wrap)return;
       wrap.className='kas-pro-table';
@@ -15358,11 +15352,10 @@ X TJKT 1
     }
 
     let taskFilter='all';
-    function injectTaskFilters(){const v=document.getElementById('view-tugas');if(!v||document.getElementById('task-filter-tabs'))return;const head=v.querySelector('.pagehead');const tabs=document.createElement('div');tabs.id='task-filter-tabs';tabs.className='task-filter-tabs';tabs.innerHTML=[['all','Semua'],['active','Aktif'],['soon','Mendekati Deadline'],['done','Selesai']].map(x=>`<button class="task-filter-tab ${x[0]==='all'?'active':''}" data-task-filter="${x[0]}">${x[1]}</button>`).join('');head.after(tabs);tabs.addEventListener('click',e=>{const b=e.target.closest('[data-task-filter]');if(!b)return;taskFilter=b.dataset.taskFilter;tabs.querySelectorAll('.task-filter-tab').forEach(x=>x.classList.toggle('active',x===b));professionalRenderTugas();});}
     function daysLeft(d){if(!d)return 999;const a=new Date();a.setHours(0,0,0,0);const b=new Date(d+'T00:00:00');return Math.ceil((b-a)/86400000)}
     function taskMatches(t){const left=daysLeft(t.tenggat);if(taskFilter==='done')return !!t.selesai;if(taskFilter==='active')return !t.selesai;if(taskFilter==='soon')return !t.selesai&&left<=3;return true}
     function professionalRenderTugas(){
-      injectTaskFilters(); autoCleanDoneTugas(); const all=(state.tugas||[]).filter(taskMatches); const open=all.filter(t=>!t.selesai),done=all.filter(t=>t.selesai); const hint=document.getElementById('tugas-autoclean-hint');if(hint)hint.textContent='';
+      autoCleanDoneTugas(); const all=(state.tugas||[]).filter(taskMatches); const open=all.filter(t=>!t.selesai),done=all.filter(t=>t.selesai); const hint=document.getElementById('tugas-autoclean-hint');if(hint)hint.textContent='';
       const renderCard=t=>{const displayTaskName=String(t.nama||'').replace(/\bvidio\b/gi,'video');const displayTaskDesc=String(t.deskripsi||'').replace(/\bvidio\b/gi,'video');const left=daysLeft(t.tenggat);const dc=t.selesai?'deadline-safe':left<=1?'deadline-danger':left<=3?'deadline-soon':'deadline-safe';const dl=t.selesai?'Selesai':t.tenggat?(left<0?'Lewat deadline':left===0?'Hari ini':left===1?'H-1':`H-${left}`):'Tanpa deadline';const clickable=isAdmin()?` role="button" tabindex="0" title="Klik untuk membuka editor" onclick="openTugasModal(${Number(t.id)})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openTugasModal(${Number(t.id)})}"`:'';const action=isAdmin()?`<div class="task-pro-actions"><button type="button" onclick="event.stopPropagation();toggleTugas(${Number(t.id)})">${t.selesai?'Buka lagi':'Tandai selesai'}</button></div>`:'';let driveLink='';try{const raw=String(t.driveLink||'').trim();if(raw){const u=new URL(raw);const host=u.hostname.toLowerCase();if(u.protocol==='https:'&&(host==='drive.google.com'||host==='docs.google.com'))driveLink=u.href;}}catch(_){}return `<div class="task-pro-card"${clickable}><div class="task-pro-top"><div class="task-pro-title">${esc(displayTaskName)}</div><span class="task-pro-deadline ${dc}">${dl}</span></div><div class="task-pro-meta"><span class="task-pro-tag">${esc(t.mapel||'Tanpa mapel')}</span>${t.tenggat?`<span class="task-pro-tag">${esc(t.tenggat)}</span>`:''}${driveLink?'<span class="task-pro-tag task-pill-drive">☁️ Google Drive</span>':''}</div>${displayTaskDesc?`<div class="task-pro-desc">${esc(displayTaskDesc)}</div>`:''}${driveLink?`<div class="task-drive-link"><a href="${esc(driveLink)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">☁️ Buka folder Google Drive untuk mengumpulkan</a></div>`:''}${renderTaskFiles(t)}${action}</div>`};
       const a=document.getElementById('tugas-open-list'),b=document.getElementById('tugas-done-list');if(a){a.className='task-column';a.innerHTML=`<div class="task-column-title">Aktif</div>${open.length?open.map(renderCard).join(''):'<div class="empty" style="padding:28px 12px">Tidak ada tugas aktif.</div>'}`;}if(b){b.className='task-column';b.innerHTML=`<div class="task-column-title">Selesai</div>${done.length?done.map(renderCard).join(''):'<div class="empty" style="padding:28px 12px">Belum ada tugas selesai.</div>'}`;}
       const openSection=a?.closest('.section'); const doneSection=b?.closest('.section');
@@ -15473,7 +15466,7 @@ X TJKT 1
     window.renderReports=function(){if(typeof oldRenderReports==='function')oldRenderReports();updateReportUI();};
 
     function boot(){
-      try{ensureKasEnhancements();injectTaskFilters();injectReportUI();injectSettingsNav();}catch(e){console.warn('Module V6 UI init',e)}
+      try{ensureKasEnhancements();injectReportUI();injectSettingsNav();}catch(e){console.warn('Module V6 UI init',e)}
     }
     if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
   })();
@@ -18191,21 +18184,16 @@ body.dark .cal-card .cal-nav-btn{color:#f8fafc !important;background:transparent
   if(typeof oldRenderTugas==='function') window.renderTugas=function(){oldRenderTugas.apply(this,arguments);requestAnimationFrame(applyKelaskuTaskFilter);};
 
   function applyKasPremiumFilter(){
-    var q=(document.getElementById('kas-search-premium')?.value||'').trim().toLowerCase();
-    var type=document.getElementById('kas-filter-premium')?.value||'all';
-    document.querySelectorAll('#kas-list .tx-item').forEach(function(item){
-      var text=(item.textContent||'').toLowerCase();
-      var isMinus=/pengeluaran|keluar|^-/.test(text);
-      var isPlus=/pemasukan|masuk|\+/.test(text);
-      var okType=type==='all'||(type==='masuk'&&isPlus&&!isMinus)||(type==='keluar'&&isMinus);
-      item.style.display=okType&&(!q||text.includes(q))?'':'none';
-    });
+    if(typeof professionalRenderKas==='function') professionalRenderKas();
   }
-  document.addEventListener('input',function(e){if(e.target&&e.target.id==='kas-search-premium') applyKasPremiumFilter();});
-  document.addEventListener('change',function(e){if(e.target&&e.target.id==='kas-filter-premium') applyKasPremiumFilter();});
+  document.addEventListener('input',function(e){
+    if(e.target&&e.target.id==='kas-search-premium') applyKasPremiumFilter();
+  });
+  document.addEventListener('change',function(e){
+    if(e.target&&['kas-filter-premium','kas-period-premium'].includes(e.target.id)) applyKasPremiumFilter();
+  });
   setInterval(function(){
     if(document.getElementById('view-tugas')?.classList.contains('active')) applyKelaskuTaskFilter();
-    if(document.getElementById('view-kas')?.classList.contains('active')) applyKasPremiumFilter();
   },1200);
 
   /* Close More sheet with Escape. */
