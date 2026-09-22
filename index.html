@@ -8907,7 +8907,7 @@ X TJKT 1
       <aside class="chess-side">
         <div class="card chess-score-card">
           <div class="chess-card-head"><div><div class="section-kicker">PERFORMA SAYA</div><div class="section-title">Skor Catur</div></div><span class="chess-trophy">🏆</span></div>
-          <div class="chess-score-label">TOTAL SKOR</div>
+          <div class="chess-score-label">TOTAL SKOR · ONLINE</div>
           <div class="chess-my-score" id="chess-my-score">0</div>
           <div class="chess-score-grid"><span>🏆 Menang <b id="chess-my-wins">0</b></span><span>🤝 Seri <b id="chess-my-draws">0</b></span><span>❌ Kalah <b id="chess-my-losses">0</b></span></div>
         </div>
@@ -18060,23 +18060,47 @@ body:not(.dark) .chess-online-state{background:#f8fafc;border-color:#dbe3ee;colo
     wrap.innerHTML=rows.slice(0,30).map((r,i)=>`<div class="chess-rank-row"><b>${i+1}</b><div><b>${escapeHtml(r.name||'Siswa')}</b><div class="chess-rank-meta">${r.wins||0} menang · ${r.draws||0} seri · ${r.losses||0} kalah</div></div><span class="chess-rank-score">${r.score||0}</span></div>`).join('');
   }
   async function addChessResult(result,roomId){
-    if(!currentUser||!roomId||!db)return false;
+    // Skor kompetitif HANYA diberikan untuk pertandingan ONLINE.
+    // Mode Komputer dan 2 Pemain tidak pernah memanggil fungsi ini.
+    if(chessMode!=='online'||!currentUser||!roomId||!db)return false;
+    if(!['win','draw','loss'].includes(result))return false;
     const uid=currentUser.uid,ref=db.collection('kelasku_chess_stats').doc(uid),rref=db.collection('kelasku_chess_rooms').doc(roomId);
     try{
       let claimed=false;
       await db.runTransaction(async tx=>{
-        const rs=await tx.get(rref);if(!rs.exists)throw new Error('Room tidak ditemukan');
-        const rd=rs.data()||{};const scored=Array.isArray(rd.scoredUids)?rd.scoredUids.slice():[];
+        const rs=await tx.get(rref);
+        if(!rs.exists)throw new Error('Room tidak ditemukan');
+        const rd=rs.data()||{};
+        // Hanya pemain room yang boleh menerima hasil pertandingan room tersebut.
+        if(rd.whiteUid!==uid&&rd.blackUid!==uid)throw new Error('Kamu bukan pemain room ini');
+        const scored=Array.isArray(rd.scoredUids)?rd.scoredUids.slice():[];
         if(scored.includes(uid)){claimed=false;return;}
-        const ss=await tx.get(ref);const old=ss.exists?(ss.data()||{}):{};
-        const st={wins:Number(old.wins)||0,draws:Number(old.draws)||0,losses:Number(old.losses)||0,score:Number(old.score)||0,username:String(old.username||userName())};
-        if(result==='win'){st.wins++;st.score+=3}else if(result==='draw'){st.draws++;st.score+=1}else st.losses++;
-        st.updatedAt=firebase.firestore.FieldValue.serverTimestamp();scored.push(uid);claimed=true;
-        tx.set(ref,st,{merge:true});tx.update(rref,{scoredUids:scored,updatedAt:firebase.firestore.FieldValue.serverTimestamp()});
+        const ss=await tx.get(ref);
+        const old=ss.exists?(ss.data()||{}):{};
+        const st={
+          wins:Number(old.wins)||0,
+          draws:Number(old.draws)||0,
+          losses:Number(old.losses)||0,
+          score:Number(old.score)||0,
+          username:String(old.username||userName())
+        };
+        if(result==='win'){st.wins++;st.score+=3}
+        else if(result==='draw'){st.draws++;st.score+=1}
+        else{st.losses++;}
+        st.updatedAt=firebase.firestore.FieldValue.serverTimestamp();
+        scored.push(uid);
+        claimed=true;
+        tx.set(ref,st,{merge:true});
+        tx.update(rref,{scoredUids:scored,updatedAt:firebase.firestore.FieldValue.serverTimestamp()});
         chessStatsCache[uid]=st;
       });
-      await loadChessStats();return claimed;
-    }catch(e){console.warn('Chess score save failed',e);showNotification('Skor belum tersimpan. Periksa izin Firebase untuk kelasku_chess_stats dan kelasku_chess_rooms.','warning',5000);return false;}
+      await loadChessStats();
+      return claimed;
+    }catch(e){
+      console.warn('Chess score save failed',e);
+      showNotification('Skor online belum tersimpan. Periksa izin Firebase untuk kelasku_chess_stats dan kelasku_chess_rooms.','warning',5000);
+      return false;
+    }
   }
   let pendingChessMode=null;
   function chessGameHasProgress(){
