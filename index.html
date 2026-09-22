@@ -13,7 +13,7 @@
 <html lang="id">
   <head>
     <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
   <title>Kelasku — X TJKT 1</title>
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" sizes="192x192" href="icons-192.png">
@@ -8023,6 +8023,24 @@ body:not(.dark) .cal-card .cal-nav-btn:hover{
   body:not(.dark) .cal-card{
     box-shadow:0 1px 2px rgba(15,23,42,.035),0 5px 16px rgba(15,23,42,.035) !important;
   }
+}
+</style>
+
+
+<style id="kelasku-global-no-zoom-v7">
+/* v7: prevent page zoom globally; normal scroll/swipe/tap remain enabled */
+html {
+  touch-action: pan-x pan-y;
+  -ms-touch-action: pan-x pan-y;
+}
+body {
+  touch-action: pan-x pan-y;
+  -ms-touch-action: pan-x pan-y;
+  overscroll-behavior-x: none;
+}
+input, textarea, select, [contenteditable="true"] {
+  touch-action: pan-x pan-y;
+  -ms-touch-action: pan-x pan-y;
 }
 </style>
 
@@ -18326,6 +18344,107 @@ body:not(.dark) .chess-online-state{background:#f8fafc;border-color:#dbe3ee;colo
   }
   document.addEventListener('fullscreenchange',updateChessFullscreenButton);
   window.__kelaskuChessClick=chessClick;window.setChessMode=setChessMode;window.newChessGame=newChessGame;window.flipChessBoard=flipChessBoard;window.createChessRoom=createChessRoom;window.joinChessRoom=joinChessRoom;window.copyChessRoomCode=copyChessRoomCode;window.leaveChessRoom=leaveChessRoom;window.renderChessStats=renderChessStats;window.__kelaskuChessInit=()=>{bindChessModeConfirm();loadChessStats();newChessGame();};
+})();
+</script>
+
+
+<style id="kelasku-chess-focus-v6">
+/* Chess focus mode: fullscreen/minimize are for the chess play area itself. */
+.chess-shell.is-minimized .chess-grid{display:none !important}
+.chess-shell.is-minimized .chess-topbar{margin-bottom:0 !important}
+.chess-shell.is-minimized .chess-header-actions{display:flex !important}
+.chess-shell.is-fullscreen{position:fixed !important;inset:0 !important;z-index:99999 !important;width:100vw !important;height:100dvh !important;min-height:100dvh !important;max-height:100dvh !important;margin:0 !important;padding:12px !important;overflow:auto !important;border-radius:0 !important;box-sizing:border-box !important;background:var(--chess-shell-bg) !important}
+.chess-shell.is-fullscreen .chess-topbar{width:100% !important;max-width:none !important;margin:0 0 10px !important}
+.chess-shell.is-fullscreen .chess-grid{width:100% !important;max-width:none !important;min-height:0 !important;grid-template-columns:minmax(0,1fr) !important;margin:0 !important}
+.chess-shell.is-fullscreen .chess-side{display:none !important}
+.chess-shell.is-fullscreen .chess-play-area{width:min(100%,calc(100dvh - 112px)) !important;max-width:900px !important;margin:0 auto !important;padding:10px !important}
+.chess-shell.is-fullscreen .chess-board-frame{width:100% !important;padding:6px !important}
+.chess-shell.is-fullscreen .chess-board{width:min(100%,calc(100dvh - 190px),calc(100vw - 42px)) !important;max-width:900px !important;margin:auto !important}
+.chess-shell.is-fullscreen .chess-actions{margin-top:8px !important}
+.chess-shell.is-fullscreen .chess-mode-row{display:none !important}
+.chess-shell.is-fullscreen .chess-subtitle{display:none !important}
+.chess-shell.is-fullscreen .chess-header-actions{justify-content:flex-end !important}
+.chess-shell.is-fullscreen .chess-view-btn span{display:inline !important}
+.chess-board{touch-action:none !important;-webkit-user-select:none !important;user-select:none !important;-webkit-touch-callout:none !important}
+@media(max-width:700px){
+  .chess-shell.is-fullscreen{padding:6px !important}
+  .chess-shell.is-fullscreen .chess-topbar{padding:8px !important;margin-bottom:6px !important}
+  .chess-shell.is-fullscreen .chess-play-area{width:100% !important;padding:5px !important}
+  .chess-shell.is-fullscreen .chess-matchbar{margin-bottom:6px !important}
+  .chess-shell.is-fullscreen .chess-board{width:min(calc(100vw - 22px),calc(100dvh - 145px)) !important}
+  .chess-shell.is-fullscreen .chess-actions{display:none !important}
+  .chess-shell.is-fullscreen .chess-view-btn{padding:7px 9px !important}
+  .chess-shell.is-fullscreen .chess-view-btn span{display:none !important}
+}
+</style>
+
+
+<script id="kelasku-chess-zoom-guard-v6">
+(function(){
+  // Keep the app from being pinch/double-tap zoomed while preserving normal page scrolling.
+  function isChessTarget(e){return !!(e.target && e.target.closest && e.target.closest('#view-catur'));}
+  ['gesturestart','gesturechange','gestureend'].forEach(function(type){
+    document.addEventListener(type,function(e){if(isChessTarget(e))e.preventDefault();},{passive:false});
+  });
+  document.addEventListener('wheel',function(e){
+    if(isChessTarget(e) && (e.ctrlKey || e.metaKey)) e.preventDefault();
+  },{passive:false});
+  let lastTouchEnd=0;
+  document.addEventListener('touchend',function(e){
+    if(!isChessTarget(e))return;
+    const now=Date.now();
+    if(now-lastTouchEnd<=300)e.preventDefault();
+    lastTouchEnd=now;
+  },{passive:false});
+})();
+</script>
+
+<script id="kelasku-global-no-zoom-js-v7">
+(function(){
+  'use strict';
+
+  // Prevent pinch zoom while keeping ordinary one-finger scrolling/tapping.
+  document.addEventListener('touchstart', function(e){
+    if (e.touches && e.touches.length > 1) {
+      e.preventDefault();
+    }
+  }, {passive:false});
+
+  document.addEventListener('touchmove', function(e){
+    if (e.touches && e.touches.length > 1) {
+      e.preventDefault();
+    }
+  }, {passive:false});
+
+  // Prevent Safari/iOS gesture zoom.
+  document.addEventListener('gesturestart', function(e){
+    e.preventDefault();
+  }, {passive:false});
+
+  document.addEventListener('gesturechange', function(e){
+    e.preventDefault();
+  }, {passive:false});
+
+  document.addEventListener('gestureend', function(e){
+    e.preventDefault();
+  }, {passive:false});
+
+  // Prevent double-tap zoom, but leave normal taps intact.
+  var lastTouchEnd = 0;
+  document.addEventListener('touchend', function(e){
+    var now = Date.now();
+    if (now - lastTouchEnd <= 300) {
+      e.preventDefault();
+    }
+    lastTouchEnd = now;
+  }, {passive:false});
+
+  // Prevent Ctrl/Cmd + wheel zoom; ordinary wheel scrolling remains.
+  document.addEventListener('wheel', function(e){
+    if (e.ctrlKey || e.metaKey) {
+      e.preventDefault();
+    }
+  }, {passive:false});
 })();
 </script>
 
