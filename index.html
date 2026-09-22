@@ -8816,22 +8816,36 @@ X TJKT 1
   </div>
   <div class="chess-shell">
     <div class="chess-topbar">
-      <div><div class="section-kicker">MINI GAMES</div><div class="section-title">Kelasku Chess</div></div>
-      <div class="chess-mode-row">
-        <button class="chess-mode-btn active" data-chess-mode="ai" onclick="setChessMode('ai')">🤖 vs Komputer</button>
-        <button class="chess-mode-btn" data-chess-mode="local" onclick="setChessMode('local')">📱 2 Pemain</button>
-        <button class="chess-mode-btn" data-chess-mode="online" onclick="setChessMode('online')">🌐 Online</button>
+      <div class="chess-brand">
+        <div class="chess-brand-icon">♟</div>
+        <div>
+          <div class="section-kicker">MINI GAMES · KELASKU</div>
+          <div class="section-title">Chess Arena</div>
+          <div class="chess-subtitle">Asah strategi. Tantang teman. Kumpulkan skor.</div>
+        </div>
+      </div>
+      <div class="chess-mode-row" role="tablist" aria-label="Mode permainan">
+        <button class="chess-mode-btn active" data-chess-mode="ai" onclick="setChessMode('ai')"><span>🤖</span> Komputer</button>
+        <button class="chess-mode-btn" data-chess-mode="local" onclick="setChessMode('local')"><span>📱</span> 2 Pemain</button>
+        <button class="chess-mode-btn" data-chess-mode="online" onclick="setChessMode('online')"><span>🌐</span> Online</button>
       </div>
     </div>
     <div class="chess-grid">
-      <div>
-        <div class="chess-status" id="chess-status">Giliran Putih</div>
-        <div class="chess-board" id="chess-board" aria-label="Papan catur"></div>
-        <div class="chess-actions"><button class="btn btn-primary" onclick="newChessGame()">↻ Permainan Baru</button><button class="btn btn-ghost" onclick="flipChessBoard()">⇅ Balik Papan</button></div>
+      <div class="chess-play-area">
+        <div class="chess-matchbar">
+          <div class="chess-player-chip"><span class="chess-avatar chess-avatar-white">♙</span><div><small>PUTIH</small><strong>Kamu</strong></div></div>
+          <div class="chess-turn-pill" id="chess-status">Giliran Putih</div>
+          <div class="chess-player-chip chess-player-black"><span class="chess-avatar chess-avatar-black">♟</span><div><small>HITAM</small><strong>Komputer</strong></div></div>
+        </div>
+        <div class="chess-board-frame">
+          <div class="chess-board" id="chess-board" aria-label="Papan catur"></div>
+        </div>
+        <div class="chess-actions"><button class="btn btn-primary" onclick="newChessGame()">↻ <span>Permainan Baru</span></button><button class="btn btn-ghost" onclick="flipChessBoard()">⇅ <span>Balik Papan</span></button></div>
       </div>
       <aside class="chess-side">
         <div class="card chess-score-card">
-          <div class="section-kicker">STATISTIK SAYA</div>
+          <div class="chess-card-head"><div><div class="section-kicker">PERFORMA SAYA</div><div class="section-title">Skor Catur</div></div><span class="chess-trophy">🏆</span></div>
+          <div class="chess-score-label">TOTAL SKOR</div>
           <div class="chess-my-score" id="chess-my-score">0</div>
           <div class="chess-score-grid"><span>🏆 Menang <b id="chess-my-wins">0</b></span><span>🤝 Seri <b id="chess-my-draws">0</b></span><span>❌ Kalah <b id="chess-my-losses">0</b></span></div>
         </div>
@@ -8842,7 +8856,7 @@ X TJKT 1
           <div class="field-hint" id="chess-online-info">Buat room lalu kirim kodenya ke teman.</div>
         </div>
         <div class="card chess-leaderboard-card">
-          <div class="section-head" style="margin-bottom:8px;"><div><div class="section-kicker">SKOR SISWA</div><div class="section-title">Statistik Kelas</div></div></div>
+          <div class="section-head chess-leaderboard-head" style="margin-bottom:8px;"><div><div class="section-kicker">SKOR SISWA</div><div class="section-title">Leaderboard Kelas</div></div><span class="chess-live-dot">LIVE</span></div>
           <div id="chess-leaderboard"></div>
         </div>
       </aside>
@@ -17801,6 +17815,10 @@ body.dark .cal-card .cal-nav-btn{color:#f8fafc !important;background:transparent
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+<style id="kelasku-chess-premium-ui">
+/* ===== Chess Arena — premium product UI layer ===== */
+.chess-shell{position:relative;margin-top:16px}.chess-topbar{padding:18px 20px;border:1px solid var(--glass-border);border-radius:18px;background:linear-gradient(135deg,rgba(30,41,59,.78),rgba(15,23,42,.72));box-shadow:0 16px 45px rgba(0,0,0,.18);display:flex;justify-content:space-between;gap:18px;align-items:center;margin-bottom:14px}.chess-brand{display:flex;align-items:center;gap:13px;min-width:0}.chess-brand-icon{width:42px;height:42px;display:grid;place-items:center;border-radius:13px;background:linear-gradient(145deg,#3b82f6,#2563eb);color:#fff;font-size:25px;box-shadow:0 8px 24px rgba(59,130,246,.28)}.chess-subtitle{font-size:11px;color:var(--text-soft);margin-top:3px}.chess-mode-row{display:flex;gap:5px;padding:4px;border:1px solid var(--glass-border);background:rgba(2,6,23,.28);border-radius:12px;flex-wrap:wrap}.chess-mode-btn{border:0;background:transparent;color:var(--text-soft);border-radius:9px;padding:9px 11px;font-size:11px;font-weight:800;cursor:pointer;transition:.18s ease}.chess-mode-btn span{margin-right:4px}.chess-mode-btn:hover{background:rgba(255,255,255,.055);color:var(--text-main)}.chess-mode-btn.active{background:var(--primary);color:#fff;box-shadow:0 5px 16px rgba(59,130,246,.22)}.chess-grid{display:grid;grid-template-columns:minmax(420px,1.45fr) minmax(300px,.7fr);gap:14px;align-items:start}.chess-play-area{padding:14px;border:1px solid var(--glass-border);border-radius:18px;background:linear-gradient(180deg,rgba(15,23,42,.78),rgba(8,12,20,.7));box-shadow:0 18px 50px rgba(0,0,0,.14)}.chess-matchbar{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;margin-bottom:12px}.chess-player-chip{display:flex;align-items:center;gap:9px;min-width:0}.chess-player-chip.chess-player-black{justify-content:flex-end;text-align:right}.chess-player-chip small{display:block;font-size:8px;letter-spacing:.12em;font-weight:900;color:var(--text-soft)}.chess-player-chip strong{display:block;font-size:11px;color:var(--text-main);margin-top:1px}.chess-avatar{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-size:18px;border:1px solid var(--glass-border)}.chess-avatar-white{background:#f8fafc;color:#111827}.chess-avatar-black{background:#111827;color:#f8fafc}.chess-turn-pill{justify-self:center;white-space:nowrap;padding:7px 11px;border-radius:999px;border:1px solid rgba(59,130,246,.35);background:rgba(59,130,246,.1);color:#bfdbfe;font-size:10px;font-weight:850}.chess-board-frame{display:grid;place-items:center;padding:8px;border-radius:17px;background:linear-gradient(145deg,#1e293b,#0f172a);border:1px solid var(--glass-border)}.chess-board{width:min(100%,640px);aspect-ratio:1/1;display:grid;grid-template-columns:repeat(8,1fr);border-radius:11px;overflow:hidden;border:2px solid rgba(255,255,255,.1);box-shadow:0 22px 55px rgba(0,0,0,.35),0 0 0 1px rgba(0,0,0,.35);user-select:none}.chess-square{display:flex;align-items:center;justify-content:center;font-size:clamp(30px,5vw,58px);line-height:1;cursor:pointer;position:relative;transition:filter .12s ease}.chess-square:hover{filter:brightness(1.06)}.chess-square.light{background:#f1dfbd}.chess-square.dark{background:#b48760}.chess-square.selected{box-shadow:inset 0 0 0 4px #60a5fa,inset 0 0 25px rgba(59,130,246,.18)}.chess-square.legal:after{content:'';width:19%;height:19%;border-radius:50%;background:rgba(37,99,235,.8);position:absolute;box-shadow:0 1px 5px rgba(0,0,0,.25)}.chess-square.capture:after{content:'';position:absolute;inset:7%;border:3px solid rgba(37,99,235,.82);border-radius:50%}.chess-piece{font-family:'Segoe UI Symbol','Noto Sans Symbols 2',serif;text-shadow:0 3px 2px rgba(0,0,0,.22)}.chess-actions{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:11px}.chess-actions .btn{border-radius:10px}.chess-side{display:grid;gap:12px}.chess-score-card,.chess-online-card,.chess-leaderboard-card{padding:15px;border-radius:16px}.chess-card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}.chess-trophy{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.18)}.chess-score-label{font-size:8px;font-weight:900;letter-spacing:.12em;color:var(--text-soft);margin-top:13px}.chess-my-score{font-size:40px;line-height:1;font-weight:950;letter-spacing:-.04em;margin:4px 0 12px}.chess-score-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.chess-score-grid span{font-size:9px;padding:9px 8px;border:1px solid var(--glass-border);border-radius:10px;background:rgba(255,255,255,.018);color:var(--text-soft)}.chess-score-grid b{display:block;color:var(--text-main);font-size:15px;margin-top:3px}.chess-online-actions{display:flex;gap:7px}.chess-online-actions .btn{flex:1}.chess-leaderboard-head{align-items:center}.chess-live-dot{font-size:7px;font-weight:900;letter-spacing:.1em;padding:4px 7px;border-radius:999px;color:#86efac;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.18)}.chess-rank-row{display:grid;grid-template-columns:27px 1fr auto;gap:8px;align-items:center;padding:9px 2px;border-bottom:1px solid var(--glass-border);font-size:11px}.chess-rank-row:last-child{border-bottom:0}.chess-rank-row> b:first-child{width:25px;height:25px;display:grid;place-items:center;border-radius:8px;background:rgba(255,255,255,.04);color:var(--text-soft)}.chess-rank-score{font-weight:950;font-size:13px}.chess-rank-meta{color:var(--text-soft);font-size:9px;margin-top:2px}@media(max-width:900px){.chess-grid{grid-template-columns:1fr}.chess-side{grid-template-columns:repeat(2,minmax(0,1fr))}.chess-leaderboard-card{grid-column:1/-1}}@media(max-width:700px){.chess-topbar{display:block;padding:15px}.chess-mode-row{margin-top:13px}.chess-grid{grid-template-columns:1fr}.chess-play-area{padding:9px}.chess-matchbar{gap:6px}.chess-avatar{width:27px;height:27px}.chess-player-chip strong{font-size:10px}.chess-turn-pill{font-size:9px;padding:6px 8px}.chess-board-frame{padding:5px}.chess-side{grid-template-columns:1fr}.chess-score-grid{grid-template-columns:repeat(3,1fr)}}@media(max-width:430px){.chess-brand-icon{width:36px;height:36px;font-size:21px}.chess-subtitle{font-size:10px}.chess-mode-btn{padding:8px 6px;font-size:9px}.chess-mode-btn span{display:block;margin:0 0 2px}.chess-player-chip small{font-size:7px}.chess-player-chip strong{font-size:9px}.chess-turn-pill{max-width:100px;text-align:center;white-space:normal}}
+</style>
 <script id="kelasku-chess-module">
 (function(){
   let chessGame=null,chessMode='ai',chessSelected=null,chessFlipped=false,chessRoomId=null,chessRoomUnsub=null,chessOnlineColor=null,chessOnlineMoveCount=0;
