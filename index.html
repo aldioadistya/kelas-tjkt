@@ -8809,6 +8809,47 @@ X TJKT 1
 </div>
 </div>
 </div>
+<div class="view" id="view-lainnya">
+  <div class="pagehead">
+    <h1>Lainnya</h1>
+    <p>Akses fitur tambahan Kelasku tanpa memenuhi navigasi utama.</p>
+  </div>
+  <div class="more-menu-grid">
+    <button class="more-menu-card" type="button" onclick="goTo('tugas')">
+      <span class="more-menu-icon task-icon">✓</span>
+      <span class="more-menu-copy"><strong>Tugas</strong><small>Kelola dan lihat tugas kelas</small></span>
+      <span class="more-menu-arrow">›</span>
+    </button>
+    <button class="more-menu-card" type="button" onclick="goTo('laporan')">
+      <span class="more-menu-icon report-icon">!</span>
+      <span class="more-menu-copy"><strong>Laporan</strong><small>Kirim dan pantau laporan</small></span>
+      <span class="more-menu-arrow">›</span>
+    </button>
+    <button class="more-menu-card" type="button" onclick="goTo('settings')">
+      <span class="more-menu-icon settings-icon">⚙</span>
+      <span class="more-menu-copy"><strong>Setelan</strong><small>Profil dan pengaturan aplikasi</small></span>
+      <span class="more-menu-arrow">›</span>
+    </button>
+  </div>
+
+  <div class="mini-games-section">
+    <div class="mini-games-head">
+      <div>
+        <div class="section-kicker">HIBURAN</div>
+        <h2>Mini Games</h2>
+        <p>Game ringan untuk dimainkan sendiri atau bersama teman.</p>
+      </div>
+      <span class="mini-games-badge">1 Game</span>
+    </div>
+    <div class="mini-games-list">
+      <button class="mini-game-card" type="button" onclick="goTo('catur')">
+        <span class="mini-game-piece" aria-hidden="true">♞</span>
+        <span class="mini-game-copy"><strong>Catur</strong><small>Komputer · 2 Pemain · Online</small></span>
+        <span class="mini-game-play">Main ›</span>
+      </button>
+    </div>
+  </div>
+</div>
 <div class="view" id="view-catur">
   <div class="pagehead">
     <h1>♟ Catur</h1>
@@ -8839,10 +8880,16 @@ X TJKT 1
           <div class="chess-subtitle">Asah strategi. Tantang teman. Kumpulkan skor.</div>
         </div>
       </div>
-      <div class="chess-mode-row" role="tablist" aria-label="Mode permainan">
-        <button class="chess-mode-btn active" data-chess-mode="ai" onclick="setChessMode('ai')"><span>🤖</span> Komputer</button>
-        <button class="chess-mode-btn" data-chess-mode="local" onclick="setChessMode('local')"><span>📱</span> 2 Pemain</button>
-        <button class="chess-mode-btn" data-chess-mode="online" onclick="setChessMode('online')"><span>🌐</span> Online</button>
+      <div class="chess-header-actions">
+        <div class="chess-mode-row" role="tablist" aria-label="Mode permainan">
+          <button class="chess-mode-btn active" data-chess-mode="ai" onclick="setChessMode('ai')"><span>🤖</span> Komputer</button>
+          <button class="chess-mode-btn" data-chess-mode="local" onclick="setChessMode('local')"><span>📱</span> 2 Pemain</button>
+          <button class="chess-mode-btn" data-chess-mode="online" onclick="setChessMode('online')"><span>🌐</span> Online</button>
+        </div>
+        <div class="chess-view-actions" aria-label="Tampilan papan catur">
+          <button type="button" class="chess-view-btn" id="chess-minimize-btn" onclick="toggleChessMinimize()" aria-expanded="true" title="Minimalkan catur">− <span>Minimalkan</span></button>
+          <button type="button" class="chess-view-btn" id="chess-fullscreen-btn" onclick="toggleChessFullscreen()" title="Layar penuh">⛶ <span>Layar penuh</span></button>
+        </div>
       </div>
     </div>
     <div class="chess-grid">
@@ -9105,21 +9152,8 @@ HP
 </svg>
 Jadwal
 </button>
-<button class="tab" data-tab="tugas" onclick="goTo('tugas')"><svg viewBox="0 0 24 24"><path d="M9 11l3 3 8-8" /><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
-</svg>
-Tugas
-</button>
-<button class="tab" data-tab="laporan" onclick="goTo('laporan')"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><path d="M12 8v4" /><path d="M12 16h.01" />
-</svg>
-Laporan
-</button>
-<button class="tab" data-tab="catur" onclick="goTo('catur')"><span aria-hidden="true">♟</span><b>Catur</b></button>
-<button class="tab" data-tab="settings" onclick="goTo('settings')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06A1.65 1.65 0 0019.4 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" />
-</svg>
-Setelan
-</button>
-</div>
-<div class="modal-bg" id="modal-kas">
+<button class="tab" data-tab="lainnya" onclick="goTo('lainnya')"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="19" cy="12" r="1.7"/></svg>Lainnya</button>
+</div><div class="modal-bg" id="modal-kas">
   <div class="modal">
     <h3 id="kas-modal-title">
       Tambah Transaksi Kas
@@ -14787,7 +14821,10 @@ Setelan
       target.removeAttribute('aria-hidden');
 
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      const tab = document.querySelector('.tab[data-tab="' + name + '"]');
+      // Menu sekunder (Tugas/Laporan/Catur/Setelan) tetap berada di bawah
+      // Bottom Nav utama: Lainnya.
+      const primaryMobileTab = ['tugas','laporan','catur','settings'].includes(name) ? 'lainnya' : name;
+      const tab = document.querySelector('.tab[data-tab="' + primaryMobileTab + '"]');
       if (tab) tab.classList.add('active');
 
       document.querySelectorAll('.desktop-nav-btn, .desktop-nav-item')
@@ -17912,6 +17949,47 @@ body.dark .cal-card .cal-nav-btn{color:#f8fafc !important;background:transparent
 .chess-actions{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:11px}.chess-actions .btn{border-radius:11px}.chess-side{display:grid;gap:12px}.chess-score-card,.chess-online-card,.chess-leaderboard-card{padding:15px;border-radius:17px}.chess-card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}.chess-trophy{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.18)}.chess-score-label{font-size:8px;font-weight:900;letter-spacing:.12em;color:#64748b;margin-top:13px}.chess-my-score{font-size:40px;line-height:1;font-weight:950;letter-spacing:-.04em;margin:4px 0 12px}.chess-score-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.chess-score-grid span{font-size:9px;padding:9px 8px;border:1px solid rgba(148,163,184,.13);border-radius:10px;background:rgba(255,255,255,.018);color:#94a3b8}.chess-score-grid b{display:block;color:#f8fafc;font-size:15px;margin-top:3px}.chess-online-actions{display:flex;gap:7px}.chess-online-actions .btn{flex:1}.chess-leaderboard-head{align-items:center}.chess-live-dot{font-size:7px;font-weight:900;letter-spacing:.1em;padding:4px 7px;border-radius:999px;color:#86efac;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.18)}.chess-rank-row{display:grid;grid-template-columns:27px 1fr auto;gap:8px;align-items:center;padding:9px 2px;border-bottom:1px solid rgba(148,163,184,.11);font-size:11px}.chess-rank-row:last-child{border-bottom:0}.chess-rank-row>b:first-child{width:25px;height:25px;display:grid;place-items:center;border-radius:8px;background:rgba(148,163,184,.06);color:#94a3b8}.chess-rank-score{font-weight:950;font-size:13px}.chess-rank-meta{color:#64748b;font-size:9px;margin-top:2px}
 @media(max-width:900px){.chess-grid{grid-template-columns:1fr}.chess-side{grid-template-columns:repeat(2,minmax(0,1fr))}.chess-leaderboard-card{grid-column:1/-1}}@media(max-width:700px){.chess-topbar{display:block;padding:15px}.chess-mode-row{margin-top:13px}.chess-grid{grid-template-columns:1fr}.chess-play-area{padding:9px}.chess-matchbar{gap:6px}.chess-avatar{width:29px;height:29px}.chess-player-chip strong{font-size:10px}.chess-turn-pill{font-size:9px;padding:6px 8px}.chess-board-frame{padding:5px}.chess-side{grid-template-columns:1fr}.chess-score-grid{grid-template-columns:repeat(3,1fr)}}@media(max-width:430px){.chess-brand-icon{width:36px;height:36px;font-size:21px}.chess-subtitle{font-size:10px}.chess-mode-btn{padding:8px 6px;font-size:9px}.chess-mode-btn span{display:block;margin:0 0 2px}.chess-player-chip small{font-size:7px}.chess-player-chip strong{font-size:9px}.chess-turn-pill{max-width:100px;text-align:center;white-space:normal}}
 </style>
+<style id="kelasku-chess-modern-controls-v5">
+/* Chess Arena v5: fullscreen, minimize, and theme-aware surfaces */
+.chess-header-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap;min-width:0}
+.chess-view-actions{display:flex;gap:5px;padding:4px;border:1px solid var(--chess-border);background:var(--chess-control-bg);border-radius:13px}
+.chess-view-btn{border:0;background:transparent;color:var(--chess-muted);border-radius:9px;padding:8px 10px;font-size:10px;font-weight:850;cursor:pointer;white-space:nowrap}
+.chess-view-btn:hover{background:var(--chess-hover);color:var(--chess-text)}
+.chess-shell{--chess-shell-bg:linear-gradient(180deg,#0f172a,#080c14);--chess-card-bg:rgba(15,23,42,.88);--chess-card-border:rgba(148,163,184,.14);--chess-control-bg:rgba(2,6,23,.5);--chess-border:rgba(148,163,184,.14);--chess-text:#f8fafc;--chess-muted:#94a3b8;--chess-board-light:#e7edf5;--chess-board-dark:#586b82;--chess-board-border:rgba(255,255,255,.16);--chess-frame-bg:linear-gradient(145deg,#111c2f,#0a101d);}
+.chess-shell.is-minimized .chess-grid{display:none}
+.chess-shell.is-minimized .chess-topbar{margin-bottom:0}
+.chess-shell.is-minimized .chess-play-area{display:none}
+.chess-shell.is-fullscreen{padding:18px;overflow:auto;background:var(--chess-shell-bg);min-height:100%;box-sizing:border-box}
+.chess-shell.is-fullscreen .chess-grid{grid-template-columns:minmax(420px,760px) minmax(300px,420px);max-width:1220px;margin:0 auto}
+.chess-shell.is-fullscreen .chess-topbar{max-width:1220px;margin-left:auto;margin-right:auto}
+.chess-shell.is-fullscreen .chess-board{max-width:min(760px,calc(100vw - 80px))}
+.chess-shell.is-fullscreen .chess-board-frame{max-height:none}
+.chess-topbar{background:var(--chess-card-bg);border-color:var(--chess-card-border)}
+.chess-play-area{background:var(--chess-card-bg);border-color:var(--chess-card-border)}
+.chess-board-frame{background:var(--chess-frame-bg);border-color:var(--chess-card-border)}
+.chess-board{border-color:var(--chess-board-border)}
+.chess-square.light{background:var(--chess-board-light)}
+.chess-square.dark{background:var(--chess-board-dark)}
+.chess-player-chip strong,.chess-confirm-copy h3{color:var(--chess-text)}
+.chess-player-chip small,.chess-subtitle{color:var(--chess-muted)}
+body:not(.dark) .chess-shell{--chess-shell-bg:linear-gradient(180deg,#eef3f8,#e7edf5);--chess-card-bg:rgba(255,255,255,.94);--chess-card-border:#d5deea;--chess-control-bg:#f4f7fb;--chess-border:#d5deea;--chess-text:#0f172a;--chess-muted:#64748b;--chess-board-light:#f7f1e6;--chess-board-dark:#aebfd0;--chess-board-border:#c6d1de;--chess-frame-bg:linear-gradient(145deg,#dfe7f0,#f8fafc)}
+body:not(.dark) .chess-shell.is-fullscreen{box-shadow:inset 0 0 0 1px #d5deea}
+body:not(.dark) .chess-mode-row{background:#f4f7fb;border-color:#d5deea}
+body:not(.dark) .chess-mode-btn{color:#64748b}
+body:not(.dark) .chess-mode-btn:hover{background:#e8eef6;color:#0f172a}
+body:not(.dark) .chess-mode-btn.active{color:#fff;background:#2563eb}
+body:not(.dark) .chess-view-actions{background:#f4f7fb;border-color:#d5deea}
+body:not(.dark) .chess-view-btn{color:#475569}
+body:not(.dark) .chess-view-btn:hover{background:#e5ebf3;color:#0f172a}
+body:not(.dark) .chess-turn-pill{background:#e8f0ff;border-color:#bfd4fb;color:#1d4ed8}
+body:not(.dark) .chess-score-grid span{background:#f8fafc;border-color:#dbe3ee;color:#64748b}
+body:not(.dark) .chess-score-grid b{color:#0f172a}
+body:not(.dark) .chess-rank-row{border-color:#e2e8f0}
+body:not(.dark) .chess-rank-meta{color:#64748b}
+body:not(.dark) .chess-online-state{background:#f8fafc;border-color:#dbe3ee;color:#475569}
+@media(max-width:900px){.chess-header-actions{justify-content:flex-start;margin-top:10px}.chess-view-actions{width:max-content}.chess-shell.is-fullscreen{padding:10px}.chess-shell.is-fullscreen .chess-grid{grid-template-columns:1fr}.chess-shell.is-fullscreen .chess-board{max-width:min(92vw,680px)}}
+@media(max-width:520px){.chess-header-actions{display:grid;grid-template-columns:1fr}.chess-mode-row{justify-content:center}.chess-view-actions{width:100%;display:grid;grid-template-columns:1fr 1fr}.chess-view-btn span{font-size:9px}.chess-shell.is-fullscreen{padding:6px}.chess-shell.is-fullscreen .chess-board{max-width:96vw}.chess-shell.is-fullscreen .chess-topbar{border-radius:14px;padding:12px}.chess-shell.is-fullscreen .chess-play-area{border-radius:14px;padding:7px}}
+</style>
 <style id="chess-mode-confirm-ui">
 .chess-mode-confirm{display:none;position:fixed;inset:0;z-index:9999;align-items:center;justify-content:center;padding:18px}
 .chess-mode-confirm.is-open{display:flex}
@@ -18183,6 +18261,46 @@ body.dark .cal-card .cal-nav-btn{color:#f8fafc !important;background:transparent
     chessRoomId=null;chessOnlineColor=null;chessOnlineMoveCount=0;chessOnlineBusy=false;setRoomTools(false);
     if(manual){setOnlineState('Keluar dari room','idle');setOnlineInfo('Kamu bisa membuat atau bergabung ke room baru.');newChessGame();}
   }
+  function setChessMinimizeButton(minimized){
+    const b=document.getElementById('chess-minimize-btn');
+    if(!b)return;
+    b.setAttribute('aria-expanded',String(!minimized));
+    b.title=minimized?'Buka kembali catur':'Minimalkan catur';
+    b.innerHTML=minimized?'＋ <span>Buka Catur</span>':'− <span>Minimalkan</span>';
+  }
+  function toggleChessMinimize(){
+    const shell=document.querySelector('#view-catur .chess-shell');
+    if(!shell)return;
+    const minimized=shell.classList.toggle('is-minimized');
+    setChessMinimizeButton(minimized);
+  }
+  async function toggleChessFullscreen(){
+    const shell=document.querySelector('#view-catur .chess-shell');
+    if(!shell)return;
+    try{
+      if(document.fullscreenElement===shell){
+        await document.exitFullscreen();
+      }else if(shell.requestFullscreen){
+        shell.classList.remove('is-minimized');
+        setChessMinimizeButton(false);
+        await shell.requestFullscreen();
+      }else{
+        shell.classList.toggle('is-fullscreen');
+      }
+    }catch(e){
+      shell.classList.toggle('is-fullscreen');
+    }
+    updateChessFullscreenButton();
+  }
+  function updateChessFullscreenButton(){
+    const shell=document.querySelector('#view-catur .chess-shell');
+    const b=document.getElementById('chess-fullscreen-btn');
+    if(!b)return;
+    const on=document.fullscreenElement===shell||shell?.classList.contains('is-fullscreen');
+    b.title=on?'Keluar dari layar penuh':'Layar penuh';
+    b.innerHTML=on?'⛶ <span>Keluar penuh</span>':'⛶ <span>Layar penuh</span>';
+  }
+  document.addEventListener('fullscreenchange',updateChessFullscreenButton);
   window.__kelaskuChessClick=chessClick;window.setChessMode=setChessMode;window.newChessGame=newChessGame;window.flipChessBoard=flipChessBoard;window.createChessRoom=createChessRoom;window.joinChessRoom=joinChessRoom;window.copyChessRoomCode=copyChessRoomCode;window.leaveChessRoom=leaveChessRoom;window.renderChessStats=renderChessStats;window.__kelaskuChessInit=()=>{bindChessModeConfirm();loadChessStats();newChessGame();};
 })();
 </script>
@@ -19750,4 +19868,18 @@ body.dark .task-pill-file{
   }
   .task-pill-file{font-size:9px !important;}
 }
+
+/* =========================================================
+   LAINNYA + MINI GAMES NAVIGATION
+   ========================================================= */
+.more-menu-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:16px}
+.more-menu-card,.mini-game-card{appearance:none;border:1px solid var(--glass-border);background:var(--glass-card);color:var(--text-main);border-radius:16px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:11px;padding:14px;box-shadow:0 8px 24px rgba(0,0,0,.06);transition:transform .16s ease,border-color .16s ease,background .16s ease}
+.more-menu-card:hover,.mini-game-card:hover{transform:translateY(-1px);border-color:rgba(59,130,246,.35)}
+.more-menu-card:active,.mini-game-card:active{transform:translateY(0)}
+.more-menu-icon{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;flex:0 0 38px;font-weight:900;font-size:17px;background:var(--ui-blue-soft);color:var(--ui-blue)}
+.report-icon{background:rgba(245,158,11,.12);color:#d97706}.settings-icon{background:rgba(100,116,139,.12);color:var(--text-main)}
+.more-menu-copy,.mini-game-copy{min-width:0;display:flex;flex-direction:column;gap:3px;flex:1}.more-menu-copy strong,.mini-game-copy strong{font-size:13px;font-weight:850}.more-menu-copy small,.mini-game-copy small{font-size:10px;line-height:1.35;color:var(--text-soft)}
+.more-menu-arrow{font-size:22px;color:var(--text-soft);line-height:1}.mini-games-section{margin-top:18px;border:1px solid var(--glass-border);background:var(--glass-card);border-radius:18px;padding:16px}.mini-games-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}.mini-games-head h2{margin:2px 0 3px;font-size:18px;letter-spacing:-.02em}.mini-games-head p{margin:0;color:var(--text-soft);font-size:10px}.mini-games-badge{white-space:nowrap;border:1px solid var(--glass-border);background:var(--ui-surface);color:var(--text-soft);border-radius:999px;padding:6px 9px;font-size:9px;font-weight:800}.mini-games-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.mini-game-card{width:100%;padding:12px;background:var(--ui-surface)}.mini-game-piece{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(145deg,#e2e8f0,#94a3b8);color:#0f172a;font-size:27px;line-height:1;flex:0 0 42px;box-shadow:inset 0 1px 0 rgba(255,255,255,.7)}.mini-game-play{font-size:10px;font-weight:850;color:var(--ui-blue);white-space:nowrap}
+body.dark .more-menu-card,body.dark .mini-game-card,body.dark .mini-games-section{box-shadow:none}
+@media(max-width:700px){.more-menu-grid{grid-template-columns:1fr}.mini-games-list{grid-template-columns:1fr}.more-menu-card{padding:13px}.mini-games-section{padding:14px}}
 </style>
