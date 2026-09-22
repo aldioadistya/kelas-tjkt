@@ -8197,6 +8197,130 @@ input, textarea, select, [contenteditable="true"] {
 }
 </style>
 
+
+<style id="kelasku-chess-fullscreen-final-v11">
+/* v11: fullscreen is a reversible in-app focus mode; no minimize control */
+html.chess-fullscreen-active,
+body.chess-fullscreen-active{
+  overflow:hidden !important;
+}
+.chess-shell.is-fullscreen{
+  position:fixed !important;
+  inset:0 !important;
+  z-index:2147483000 !important;
+  width:100vw !important;
+  height:100vh !important;
+  height:100dvh !important;
+  max-width:none !important;
+  max-height:none !important;
+  min-height:0 !important;
+  margin:0 !important;
+  padding:8px !important;
+  box-sizing:border-box !important;
+  overflow:hidden !important;
+  border-radius:0 !important;
+  background:var(--chess-shell-bg) !important;
+}
+.chess-shell.is-fullscreen .chess-topbar{
+  width:100% !important;
+  max-width:none !important;
+  margin:0 0 5px !important;
+}
+.chess-shell.is-fullscreen .chess-grid{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) !important;
+  width:100% !important;
+  height:calc(100dvh - 62px) !important;
+  min-height:0 !important;
+  max-width:none !important;
+  margin:0 !important;
+}
+.chess-shell.is-fullscreen .chess-side{display:none !important}
+.chess-shell.is-fullscreen .chess-play-area{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  width:100% !important;
+  height:100% !important;
+  min-height:0 !important;
+  padding:0 !important;
+  margin:0 !important;
+  max-width:none !important;
+  box-sizing:border-box !important;
+}
+.chess-shell.is-fullscreen .chess-matchbar{
+  width:min(100%,900px) !important;
+  flex:0 0 auto !important;
+  margin:0 0 4px !important;
+}
+.chess-shell.is-fullscreen .chess-board-frame{
+  flex:0 0 auto !important;
+  width:min(calc(100vw - 16px),calc(100dvh - 82px)) !important;
+  max-width:none !important;
+  padding:3px !important;
+  box-sizing:border-box !important;
+}
+.chess-shell.is-fullscreen .chess-board{
+  width:100% !important;
+  max-width:none !important;
+  aspect-ratio:1/1 !important;
+  margin:0 !important;
+}
+.chess-shell.is-fullscreen .chess-actions{margin-top:4px !important}
+.chess-shell.is-fullscreen .chess-mode-row,
+.chess-shell.is-fullscreen .chess-subtitle{display:none !important}
+
+@media (orientation:landscape){
+  .chess-shell.is-fullscreen .chess-grid{
+    height:calc(100dvh - 54px) !important;
+  }
+  .chess-shell.is-fullscreen .chess-play-area{
+    flex-direction:row !important;
+    gap:8px !important;
+  }
+  .chess-shell.is-fullscreen .chess-matchbar{
+    width:auto !important;
+    max-width:190px !important;
+    margin:0 !important;
+  }
+  .chess-shell.is-fullscreen .chess-board-frame{
+    width:min(calc(100dvh - 64px),calc(100vw - 215px)) !important;
+  }
+}
+@media (max-width:700px){
+  .chess-shell.is-fullscreen{padding:3px !important}
+  .chess-shell.is-fullscreen .chess-topbar{
+    margin-bottom:3px !important;
+    padding:6px !important;
+  }
+  .chess-shell.is-fullscreen .chess-grid{
+    height:calc(100dvh - 48px) !important;
+  }
+  .chess-shell.is-fullscreen .chess-board-frame{
+    width:min(calc(100vw - 6px),calc(100dvh - 60px)) !important;
+    padding:2px !important;
+  }
+}
+</style>
+
+
+<style id="kelasku-pengumuman-edit-fix-v12">
+/* v12: keep announcement edit control visible for Admin/Super Admin.
+   A later global .admin-only{display:none!important} rule was hiding it. */
+body.is-admin #view-beranda .announce-title-btn.admin-only,
+body.is-admin #view-beranda .announce-actions .admin-only,
+body.is-admin #view-beranda .dashboard-panel-announcements .section-action.admin-only{
+  display:block !important;
+}
+body.is-admin #view-beranda .announce-actions .admin-only{
+  display:inline-flex !important;
+}
+body.is-admin #view-beranda .dashboard-panel-announcements .section-action.admin-only{
+  display:inline-flex !important;
+}
+</style>
+
 </head>
 
 <body>
@@ -9058,7 +9182,6 @@ X TJKT 1
           <button class="chess-mode-btn" data-chess-mode="online" onclick="setChessMode('online')"><span>🌐</span> Online</button>
         </div>
         <div class="chess-view-actions" aria-label="Tampilan papan catur">
-          <button type="button" class="chess-view-btn" id="chess-minimize-btn" onclick="toggleChessMinimize()" aria-expanded="true" title="Minimalkan catur">− <span>Minimalkan</span></button>
           <button type="button" class="chess-view-btn" id="chess-fullscreen-btn" onclick="toggleChessFullscreen()" title="Layar penuh">⛶ <span>Layar penuh</span></button>
         </div>
       </div>
@@ -18456,38 +18579,27 @@ body:not(.dark) .chess-online-state{background:#f8fafc;border-color:#dbe3ee;colo
     chessRoomId=null;chessOnlineColor=null;chessOnlineMoveCount=0;chessOnlineBusy=false;setRoomTools(false);
     if(manual){setOnlineState('Keluar dari room','idle');setOnlineInfo('Kamu bisa membuat atau bergabung ke room baru.');newChessGame();}
   }
-  function setChessMinimizeButton(minimized){
-    const b=document.getElementById('chess-minimize-btn');
-    if(!b)return;
-    b.setAttribute('aria-expanded',String(!minimized));
-    b.title=minimized?'Buka kembali catur':'Minimalkan catur';
-    b.innerHTML=minimized?'＋ <span>Buka Catur</span>':'− <span>Minimalkan</span>';
-  }
-  function toggleChessMinimize(){
+  function toggleChessFullscreen(){
     const shell=document.querySelector('#view-catur .chess-shell');
     if(!shell)return;
-    const minimized=shell.classList.toggle('is-minimized');
-    setChessMinimizeButton(minimized);
-  }
-  async function toggleChessFullscreen(){
-    const shell=document.querySelector('#view-catur .chess-shell');
-    if(!shell)return;
-    try{
-      if(document.fullscreenElement===shell){
-        await document.exitFullscreen();
-        shell.classList.remove('is-fullscreen');
-      }else if(shell.requestFullscreen){
-        shell.classList.remove('is-minimized');
-        shell.classList.add('is-fullscreen');
-        if(typeof setChessMinimizeButton==='function') setChessMinimizeButton(false);
-        await shell.requestFullscreen();
-      }else{
-        shell.classList.toggle('is-fullscreen');
-      }
-    }catch(e){
-      shell.classList.toggle('is-fullscreen');
+
+    const entering=!shell.classList.contains('is-fullscreen');
+
+    if(entering){
+      shell.classList.remove('is-minimized');
+      shell.classList.add('is-fullscreen');
+      document.documentElement.classList.add('chess-fullscreen-active');
+      document.body.classList.add('chess-fullscreen-active');
+    }else{
+      shell.classList.remove('is-fullscreen');
+      document.documentElement.classList.remove('chess-fullscreen-active');
+      document.body.classList.remove('chess-fullscreen-active');
     }
+
     updateChessFullscreenButton();
+    requestAnimationFrame(function(){
+      window.dispatchEvent(new Event('resize'));
+    });
   }
   function updateChessFullscreenButton(){
     const shell=document.querySelector('#view-catur .chess-shell');
@@ -18498,14 +18610,14 @@ body:not(.dark) .chess-online-state{background:#f8fafc;border-color:#dbe3ee;colo
     b.innerHTML=on?'⛶ <span>Keluar penuh</span>':'⛶ <span>Layar penuh</span>';
   }
   document.addEventListener('fullscreenchange',updateChessFullscreenButton);
-  window.__kelaskuChessClick=chessClick;window.setChessMode=setChessMode;window.newChessGame=newChessGame;window.flipChessBoard=flipChessBoard;window.createChessRoom=createChessRoom;window.joinChessRoom=joinChessRoom;window.copyChessRoomCode=copyChessRoomCode;window.leaveChessRoom=leaveChessRoom;window.renderChessStats=renderChessStats;window.__kelaskuChessInit=()=>{bindChessModeConfirm();loadChessStats();newChessGame();};
+  window.toggleChessFullscreen=toggleChessFullscreen;window.__kelaskuChessClick=chessClick;window.setChessMode=setChessMode;window.newChessGame=newChessGame;window.flipChessBoard=flipChessBoard;window.createChessRoom=createChessRoom;window.joinChessRoom=joinChessRoom;window.copyChessRoomCode=copyChessRoomCode;window.leaveChessRoom=leaveChessRoom;window.renderChessStats=renderChessStats;window.__kelaskuChessInit=()=>{bindChessModeConfirm();loadChessStats();newChessGame();};
 })();
 </script>
 
 
 <style id="kelasku-chess-focus-v6">
 /* Chess focus mode: fullscreen/minimize are for the chess play area itself. */
-.chess-shell.is-minimized .chess-grid{display:none !important}
+.chess-shell.is-minimized .chess-grid{display:block !important}
 .chess-shell.is-minimized .chess-topbar{margin-bottom:0 !important}
 .chess-shell.is-minimized .chess-header-actions{display:flex !important}
 .chess-shell.is-fullscreen{position:fixed !important;inset:0 !important;z-index:99999 !important;width:100vw !important;height:100dvh !important;min-height:100dvh !important;max-height:100dvh !important;margin:0 !important;padding:12px !important;overflow:auto !important;border-radius:0 !important;box-sizing:border-box !important;background:var(--chess-shell-bg) !important}
@@ -18647,6 +18759,38 @@ body:not(.dark) .chess-online-state{background:#f8fafc;border-color:#dbe3ee;colo
       shell.classList.remove('is-fullscreen');
     }
   });
+})();
+</script>
+
+
+<script id="kelasku-chess-fullscreen-escape-v11">
+(function(){
+  document.addEventListener('keydown',function(e){
+    if(e.key!=='Escape')return;
+    var shell=document.querySelector('#view-catur .chess-shell');
+    if(!shell || !shell.classList.contains('is-fullscreen'))return;
+    shell.classList.remove('is-fullscreen');
+    document.documentElement.classList.remove('chess-fullscreen-active');
+    document.body.classList.remove('chess-fullscreen-active');
+    if(typeof window.updateChessFullscreenButton==='function') window.updateChessFullscreenButton();
+  });
+})();
+</script>
+
+
+<script id="kelasku-pengumuman-edit-global-v12">
+(function(){
+  // The renderer uses inline onclick="openPengumumanModal(id)".
+  // Explicitly expose the existing function without replacing its logic.
+  if (typeof openPengumumanModal === 'function') {
+    window.openPengumumanModal = openPengumumanModal;
+  }
+  if (typeof submitPengumuman === 'function') {
+    window.submitPengumuman = submitPengumuman;
+  }
+  if (typeof deletePengumumanCurrent === 'function') {
+    window.deletePengumumanCurrent = deletePengumumanCurrent;
+  }
 })();
 </script>
 
