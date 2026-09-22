@@ -8026,293 +8026,6 @@ body:not(.dark) .cal-card .cal-nav-btn:hover{
 }
 </style>
 
-<style id="kelasku-premium-refactor">
-/* ============================================================
-   KELASKU — PREMIUM PRODUCT SYSTEM
-   Visual-only refactor + navigation organization. Existing
-   application logic and data contracts are intentionally kept.
-   ============================================================ */
-:root{
-  --kk-bg:#080C14;
-  --kk-surface:#0F172A;
-  --kk-surface-2:#111C30;
-  --kk-surface-3:#0B1220;
-  --kk-border:rgba(255,255,255,.08);
-  --kk-border-strong:rgba(255,255,255,.12);
-  --kk-blue:#3B82F6;
-  --kk-blue-soft:rgba(59,130,246,.12);
-  --kk-blue-glow:0 0 0 1px rgba(59,130,246,.18),0 10px 30px rgba(37,99,235,.12);
-  --kk-text:#F8FAFC;
-  --kk-muted:#94A3B8;
-  --kk-dim:#64748B;
-  --kk-green:#22C55E;
-  --kk-green-soft:rgba(34,197,94,.12);
-  --kk-red:#EF4444;
-  --kk-red-soft:rgba(239,68,68,.12);
-  --kk-yellow:#F59E0B;
-  --kk-yellow-soft:rgba(245,158,11,.12);
-  --kk-cyan:#22D3EE;
-  --kk-radius:14px;
-  --kk-radius-sm:10px;
-  --kk-ease:cubic-bezier(.2,.8,.2,1);
-}
-
-html{background:var(--kk-bg)}
-body.dark{
-  background:var(--kk-bg)!important;
-  color:var(--kk-text)!important;
-}
-body.dark .phone,
-body.dark .screen,
-body.dark .content,
-body.dark .app-shell{background:var(--kk-bg)!important}
-body.dark .phone{box-shadow:none!important}
-body.dark .screen{padding-bottom:92px}
-
-/* Surfaces: remove the old bright/glassy-template feeling. */
-body.dark .card,
-body.dark .section,
-body.dark .balance-card,
-body.dark .hero,
-body.dark .dashboard-card,
-body.dark .stat-card,
-body.dark .cal-card,
-body.dark .piket-weekly-hero,
-body.dark .piket-weekly-section,
-body.dark .settings-section,
-body.dark .modal,
-body.dark .search-box,
-body.dark .dashboard-search,
-body.dark .pagehead,
-body.dark .task-column,
-body.dark .report-card,
-body.dark .report-item,
-body.dark .tx-item,
-body.dark .student-row,
-body.dark .timeline-card,
-body.dark .kas-history-section,
-body.dark .kas-siswa-section{
-  background:rgba(15,23,42,.82)!important;
-  border:1px solid var(--kk-border)!important;
-  box-shadow:0 18px 50px rgba(0,0,0,.18)!important;
-  backdrop-filter:blur(12px);
-  -webkit-backdrop-filter:blur(12px);
-}
-body.dark .section,
-body.dark .settings-section{border-radius:var(--kk-radius)!important}
-body.dark .card{border-radius:var(--kk-radius-sm)!important}
-body.dark .hero{border-radius:18px!important;background:linear-gradient(145deg,rgba(15,23,42,.96),rgba(17,28,48,.84))!important;box-shadow:var(--kk-blue-glow)!important}
-
-/* No heavy solid borders anywhere in the product surfaces. */
-body.dark *{border-color:var(--kk-border)!important}
-body.dark input,body.dark select,body.dark textarea{
-  background:rgba(8,12,20,.72)!important;
-  color:var(--kk-text)!important;
-  border:1px solid var(--kk-border)!important;
-  border-radius:10px!important;
-}
-body.dark input:focus,body.dark select:focus,body.dark textarea:focus{
-  border-color:rgba(59,130,246,.55)!important;
-  box-shadow:0 0 0 3px rgba(59,130,246,.10)!important;
-  outline:none!important;
-}
-body.dark button.btn-primary,body.dark .fab-add{
-  background:var(--kk-blue)!important;
-  color:#fff!important;
-  border-color:rgba(59,130,246,.4)!important;
-  box-shadow:0 8px 24px rgba(59,130,246,.18)!important;
-}
-body.dark .btn-ghost,
-body.dark .section-action,
-body.dark .section-link,
-body.dark .bulk-all-btn{
-  background:rgba(255,255,255,.035)!important;
-  color:var(--kk-muted)!important;
-  border:1px solid var(--kk-border)!important;
-}
-body.dark .btn-ghost:hover,body.dark .section-action:hover,body.dark .section-link:hover{background:var(--kk-blue-soft)!important;color:#BFDBFE!important}
-body.dark .btn-danger,.body.dark .btn-danger{background:var(--kk-red-soft)!important;color:#FCA5A5!important;border-color:rgba(239,68,68,.18)!important}
-
-/* Typography hierarchy */
-body.dark .pagehead h1{color:var(--kk-text)!important;font-size:clamp(22px,3vw,30px)!important;letter-spacing:-.035em!important}
-body.dark .pagehead p,.body.dark .field-hint{color:var(--kk-muted)!important}
-body.dark .section-title,.body.dark .hero-name{color:var(--kk-text)!important;letter-spacing:-.025em}
-body.dark .section-kicker,.body.dark .settings-label{color:var(--kk-dim)!important;letter-spacing:.11em}
-body.dark .row-sub,.body.dark .tx-sub,.body.dark .task-desc,.body.dark .dashboard-user-role{color:var(--kk-muted)!important}
-
-/* Desktop navigation */
-body.dark .desktop-sidebar{background:#0A101C!important;border-right:1px solid var(--kk-border)!important;box-shadow:none!important}
-body.dark .desktop-nav-item{color:var(--kk-muted)!important;border-radius:10px!important}
-body.dark .desktop-nav-item:hover{background:rgba(255,255,255,.04)!important;color:var(--kk-text)!important}
-body.dark .desktop-nav-item.active{background:var(--kk-blue-soft)!important;color:#BFDBFE!important;box-shadow:inset 2px 0 0 var(--kk-blue)!important}
-body.dark .desktop-brand-title{color:var(--kk-text)!important}
-body.dark .desktop-brand-sub{color:var(--kk-dim)!important}
-
-/* Mobile bottom nav — exactly five destinations. */
-.tabbar{position:fixed!important;z-index:2000!important;left:50%!important;bottom:12px!important;transform:translateX(-50%)!important;width:min(430px,calc(100% - 20px))!important;min-height:64px!important;padding:7px!important;display:grid!important;grid-template-columns:repeat(5,1fr)!important;gap:4px!important;background:rgba(15,23,42,.88)!important;border:1px solid var(--kk-border)!important;border-radius:18px!important;box-shadow:0 18px 50px rgba(0,0,0,.35)!important;backdrop-filter:blur(18px)!important;-webkit-backdrop-filter:blur(18px)!important}
-.tabbar .tab{min-width:0!important;height:50px!important;border:0!important;border-radius:12px!important;background:transparent!important;color:var(--kk-dim)!important;font-size:10px!important;font-weight:700!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:4px!important;padding:5px 2px!important;transition:all .18s var(--kk-ease)!important}
-.tabbar .tab svg{width:20px!important;height:20px!important;fill:none!important;stroke:currentColor!important;stroke-width:1.8!important}
-.tabbar .tab.active{background:var(--kk-blue-soft)!important;color:#60A5FA!important;box-shadow:inset 0 0 0 1px rgba(59,130,246,.12)!important}
-.tabbar .tab:active{transform:scale(.96)}
-@media(min-width:861px){.tabbar,.kelasku-more-menu{display:none!important}}
-
-/* More sheet */
-.kelasku-more-menu{position:fixed;inset:0;z-index:3000;display:none}
-.kelasku-more-menu.open{display:block}
-.kelasku-more-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.58);backdrop-filter:blur(3px)}
-.kelasku-more-sheet{position:absolute;left:50%;bottom:0;transform:translate(-50%,0);width:min(430px,100%);padding:10px 14px calc(18px + env(safe-area-inset-bottom));background:rgba(15,23,42,.97);border:1px solid var(--kk-border);border-bottom:0;border-radius:20px 20px 0 0;box-shadow:0 -20px 60px rgba(0,0,0,.35);backdrop-filter:blur(18px)}
-.kelasku-more-handle{width:38px;height:4px;border-radius:99px;background:#334155;margin:2px auto 16px}
-.kelasku-more-title{font-size:18px;font-weight:800;color:var(--kk-text);padding:0 4px 12px;letter-spacing:-.02em}
-.kelasku-more-item{width:100%;display:grid;grid-template-columns:36px minmax(0,1fr) 18px;align-items:center;gap:10px;padding:12px 8px;margin:3px 0;border:0!important;border-radius:12px;background:transparent;color:var(--kk-text);text-align:left}
-.kelasku-more-item:hover{background:rgba(255,255,255,.04)}
-.kelasku-more-icon{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:var(--kk-blue-soft);color:#60A5FA;font-weight:800}
-.kelasku-more-item b{display:block;font-size:13px}.kelasku-more-item small{display:block;margin-top:3px;color:var(--kk-muted);font-size:10px}.kelasku-more-chevron{color:var(--kk-dim);font-size:22px}
-
-/* Dashboard */
-.dashboard-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
-.dashboard-stat-card{min-height:128px!important;padding:16px!important}
-.dashboard-stat-card .stat-value{font-size:24px!important;font-weight:800!important;letter-spacing:-.04em!important}
-.dashboard-stat-card .stat-icon{width:34px!important;height:34px!important;border-radius:10px!important;background:rgba(59,130,246,.10)!important;color:#60A5FA!important}
-.report-home-card{display:none!important}
-.dashboard-main-grid,.dashboard-secondary-grid{gap:12px!important}
-.dashboard-notification-card,.compact-list,#pengumuman-list{max-height:330px;overflow:auto}
-.dashboard-notification-card>*:nth-child(n+4),#pengumuman-list>*:nth-child(n+4){display:none!important}
-
-/* Kas */
-.balance-card{background:linear-gradient(145deg,#0F172A,#111C30)!important;box-shadow:var(--kk-blue-glow)!important}
-.balance-value{font-size:30px!important;font-weight:800!important;letter-spacing:-.045em}
-.kas-history-section .kas-history-head{align-items:center}
-.kas-history-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
-#kas-list .tx-item{background:rgba(255,255,255,.025)!important;border-radius:12px!important;margin:5px 0!important}
-#kas-in{color:#4ADE80!important}#kas-out{color:#F87171!important}
-
-/* HP */
-.hp-summary-actions{display:flex!important;gap:8px!important;flex-wrap:wrap!important}
-.hp-summary-box{flex:1 1 120px!important;background:rgba(255,255,255,.025)!important;border:1px solid var(--kk-border)!important;border-radius:12px!important}
-.hp-summary-collected{color:#4ADE80!important;background:var(--kk-green-soft)!important}
-.hp-summary-remaining{color:#FBBF24!important;background:var(--kk-yellow-soft)!important}
-#view-hp .search-box{display:flex!important;align-items:center!important;gap:8px!important}
-#view-hp .student-row{min-height:58px!important;padding:10px!important;transition:transform .15s var(--kk-ease),background .15s ease!important}
-#view-hp .student-row:active{transform:scale(.99);background:rgba(59,130,246,.06)!important}
-
-/* Jadwal / Piket */
-#view-jadwal .mode-switch{background:rgba(255,255,255,.035)!important;border:1px solid var(--kk-border)!important;border-radius:12px!important;padding:4px!important}
-#view-jadwal .mode-switch button{border-radius:9px!important}
-#view-jadwal .mode-switch button.active{background:var(--kk-blue)!important;color:white!important;box-shadow:0 8px 20px rgba(59,130,246,.18)!important}
-#view-jadwal .timeline:before{background:rgba(59,130,246,.24)!important}
-#view-jadwal .timeline-card:before{box-shadow:0 0 0 4px rgba(59,130,246,.10)!important;background:var(--kk-blue)!important}
-#view-jadwal .piket-weekly-head-actions{display:flex!important;align-items:center!important;gap:8px!important;flex-wrap:wrap!important}
-#view-jadwal .piket-weekly-head-actions .btn{width:auto!important;margin:0!important;min-height:38px!important;white-space:nowrap}
-
-/* Tugas */
-#view-tugas .section-head{gap:10px!important}
-#view-tugas .task-column,#view-tugas .section{border-radius:14px!important}
-#view-tugas .pill-due{background:var(--kk-yellow-soft)!important;color:#FBBF24!important;border:0!important}
-#view-tugas .pill-due.overdue{background:var(--kk-red-soft)!important;color:#FCA5A5!important}
-#view-tugas .btn-primary{font-weight:800!important}
-#view-tugas .btn:not(.btn-primary):not(.btn-danger){background:rgba(255,255,255,.03)!important}
-
-/* Laporan */
-#view-laporan .section-head>div:last-child{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-#view-laporan #report-search{width:min(260px,100%)!important;min-height:40px!important}
-#view-laporan #report-filter{min-height:40px!important}
-#view-laporan .report-item,#view-laporan .card{border-radius:12px!important}
-
-/* Settings */
-#view-settings .section>.card{padding:16px!important}
-#view-settings .profile-avatar-editor{box-shadow:0 0 0 1px rgba(59,130,246,.22),0 8px 24px rgba(59,130,246,.12)!important}
-#view-settings .avatar-reset-btn,#view-settings button[onclick="logout()"]{background:var(--kk-red-soft)!important;color:#FCA5A5!important;border:1px solid rgba(239,68,68,.16)!important}
-#view-settings .manage-toggle,#view-settings .role-group summary{background:rgba(255,255,255,.025)!important;border:1px solid var(--kk-border)!important;border-radius:10px!important}
-
-/* Consistent micro-controls */
-body.dark .tag,.body.dark .htag,.body.dark .pill,.body.dark .badge{border:1px solid var(--kk-border)!important;border-radius:999px!important}
-body.dark .htag{background:rgba(255,255,255,.04)!important;color:var(--kk-muted)!important}
-body.dark .empty{color:var(--kk-dim)!important}
-
-@media(max-width:560px){
-  body.dark .screen{padding-left:12px!important;padding-right:12px!important}
-  .dashboard-stat-card{min-height:112px!important}
-  .dashboard-stat-card .stat-value{font-size:21px!important}
-  .pagehead{margin-bottom:10px!important}
-  .pagehead h1{font-size:22px!important}
-}
-</style>
-
-<style id="kelasku-modal-scroll-fix">
-/* ===== Modal scroll stability fix =====
-   Semua modal menggunakan viewport overlay + internal scrolling.
-   Background tetap diam, isi modal tetap bisa di-scroll dengan mouse/touch.
-*/
-html,
-body{
-  overscroll-behavior:none;
-}
-
-.modal-bg{
-  position:fixed !important;
-  inset:0 !important;
-  width:100vw !important;
-  height:100dvh !important;
-  min-height:100vh !important;
-  overflow:hidden !important;
-  align-items:flex-end !important;
-  justify-content:center !important;
-  box-sizing:border-box;
-  overscroll-behavior:contain;
-  -webkit-overflow-scrolling:touch;
-}
-
-.modal-bg .modal{
-  box-sizing:border-box;
-  width:min(100%, 680px);
-  max-width:calc(100vw - 24px);
-  max-height:min(86dvh, 820px) !important;
-  min-height:0 !important;
-  overflow-y:auto !important;
-  overflow-x:hidden !important;
-  overscroll-behavior:contain;
-  -webkit-overflow-scrolling:touch;
-  touch-action:pan-y;
-  scrollbar-gutter:stable;
-  flex:0 1 auto;
-}
-
-/* Form modal yang panjang tetap dapat mencapai tombol paling bawah. */
-.modal-bg .modal .modal-actions{
-  position:sticky;
-  bottom:-1px;
-  z-index:3;
-  padding-top:10px;
-  padding-bottom:2px;
-  background:inherit;
-}
-
-/* Khusus mobile: manfaatkan tinggi layar semaksimal mungkin. */
-@media (max-width:600px){
-  .modal-bg{
-    align-items:flex-end !important;
-  }
-
-  .modal-bg .modal{
-    width:100%;
-    max-width:none;
-    max-height:88dvh !important;
-    border-radius:18px 18px 0 0;
-  }
-}
-
-/* Jangan biarkan modal khusus yang sudah punya layout flex kehilangan
-   tinggi/scroll internalnya. */
-.piket-rotation-modal-pro{
-  min-height:0 !important;
-}
-
-.piket-rotation-modal-pro > .piket-rotation-panel{
-  min-height:0;
-  overflow-y:auto;
-  -webkit-overflow-scrolling:touch;
-}
-</style>
 </head>
 
 <body>
@@ -8475,6 +8188,7 @@ body{
 <b>Laporan
 </b>
 </button>
+<button class="desktop-nav-item" data-tab="catur" onclick="goTo('catur')"><span aria-hidden="true" style="font-size:18px;line-height:1;">♟</span><b>Catur</b></button>
 <button class="desktop-nav-item" data-tab="settings" onclick="goTo('settings')"><span aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06A1.65 1.65 0 0019.4 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" />
 </svg>
 </span>
@@ -8781,13 +8495,6 @@ X TJKT 1
   <div class="section-head kas-history-head">
     <div class="section-title">Riwayat Transaksi</div>
     <div class="kas-history-actions">
-       <input id="kas-search-premium" class="kas-premium-search" type="search" placeholder="Cari transaksi..." aria-label="Cari transaksi">
-       <select id="kas-filter-premium" class="kas-premium-filter" aria-label="Filter transaksi">
-         <option value="all">Semua Jenis</option><option value="masuk">Pemasukan</option><option value="keluar">Pengeluaran</option>
-       </select>
-       <select id="kas-period-premium" class="kas-premium-filter" aria-label="Filter waktu">
-         <option value="all">Semua waktu</option><option value="week">Minggu ini</option><option value="month">Bulan ini</option>
-       </select>
       <div class="section-link" onclick="openExportModal()">Export</div>
       <button type="button" class="kas-history-toggle" onclick="window.toggleKasHistory()"
         aria-expanded="true" aria-controls="kas-history-body">
@@ -8985,7 +8692,6 @@ X TJKT 1
     </div>
     <div class="piket-weekly-head-actions">
       <button class="btn btn-ghost admin-only piket-rotation-settings-btn" type="button" onclick="openPiketRotationModal()">⚙️ Atur rotasi</button>
-<button class="btn btn-ghost admin-only piket-jadwal-settings-btn" type="button" onclick="openPiketJadwalModal()">⚙️ Atur Jadwal Piket per Hari</button>
     </div>
   </div>
   <div class="piket-weekly-stats" id="piket-weekly-stats">
@@ -8995,7 +8701,8 @@ X TJKT 1
   </div>
   <div id="piket-weekly-list" class="piket-weekly-list"></div>
 </div>
-
+<button class="btn btn-ghost admin-only" style="width:100%; margin-top:10px; padding:11px;" onclick="openPiketJadwalModal()">⚙️ Atur Jadwal Piket per Hari
+</button>
 <div class="section">
   <div class="section-head">
     <div class="date-label" id="piket-date-label">
@@ -9038,14 +8745,6 @@ X TJKT 1
   <div class="section">
     <button class="fab-add admin-only" onclick="openTugasModal()">＋ Tambah Tugas
   </button>
-</div>
-<div class="section task-filter-section">
-  <div class="task-filter-pills" role="tablist" aria-label="Filter tugas">
-    <button type="button" class="task-filter-pill active" data-task-filter="all" onclick="setKelaskuTaskFilter('all')">Semua</button>
-    <button type="button" class="task-filter-pill" data-task-filter="active" onclick="setKelaskuTaskFilter('active')">Aktif</button>
-    <button type="button" class="task-filter-pill" data-task-filter="near" onclick="setKelaskuTaskFilter('near')">Mendekati Deadline</button>
-    <button type="button" class="task-filter-pill" data-task-filter="done" onclick="setKelaskuTaskFilter('done')">Selesai</button>
-  </div>
 </div>
 <div class="section">
   <div class="section-head">
@@ -9109,6 +8808,46 @@ X TJKT 1
 <div class="card" id="report-list">
 </div>
 </div>
+</div>
+<div class="view" id="view-catur">
+  <div class="pagehead">
+    <h1>♟ Catur</h1>
+    <p>Main sendiri, 2 pemain satu HP, atau online dengan teman.</p>
+  </div>
+  <div class="chess-shell">
+    <div class="chess-topbar">
+      <div><div class="section-kicker">MINI GAMES</div><div class="section-title">Kelasku Chess</div></div>
+      <div class="chess-mode-row">
+        <button class="chess-mode-btn active" data-chess-mode="ai" onclick="setChessMode('ai')">🤖 vs Komputer</button>
+        <button class="chess-mode-btn" data-chess-mode="local" onclick="setChessMode('local')">📱 2 Pemain</button>
+        <button class="chess-mode-btn" data-chess-mode="online" onclick="setChessMode('online')">🌐 Online</button>
+      </div>
+    </div>
+    <div class="chess-grid">
+      <div>
+        <div class="chess-status" id="chess-status">Giliran Putih</div>
+        <div class="chess-board" id="chess-board" aria-label="Papan catur"></div>
+        <div class="chess-actions"><button class="btn btn-primary" onclick="newChessGame()">↻ Permainan Baru</button><button class="btn btn-ghost" onclick="flipChessBoard()">⇅ Balik Papan</button></div>
+      </div>
+      <aside class="chess-side">
+        <div class="card chess-score-card">
+          <div class="section-kicker">STATISTIK SAYA</div>
+          <div class="chess-my-score" id="chess-my-score">0</div>
+          <div class="chess-score-grid"><span>🏆 Menang <b id="chess-my-wins">0</b></span><span>🤝 Seri <b id="chess-my-draws">0</b></span><span>❌ Kalah <b id="chess-my-losses">0</b></span></div>
+        </div>
+        <div class="card chess-online-card" id="chess-online-panel" style="display:none;">
+          <div class="section-kicker">ONLINE</div>
+          <div class="field"><label>Kode Room</label><input id="chess-room-code" maxlength="8" placeholder="Contoh: K7X92"></div>
+          <div class="chess-online-actions"><button class="btn btn-primary" onclick="createChessRoom()">Buat Room</button><button class="btn btn-ghost" onclick="joinChessRoom()">Gabung</button></div>
+          <div class="field-hint" id="chess-online-info">Buat room lalu kirim kodenya ke teman.</div>
+        </div>
+        <div class="card chess-leaderboard-card">
+          <div class="section-head" style="margin-bottom:8px;"><div><div class="section-kicker">SKOR SISWA</div><div class="section-title">Statistik Kelas</div></div></div>
+          <div id="chess-leaderboard"></div>
+        </div>
+      </aside>
+    </div>
+  </div>
 </div>
 <div class="view" id="view-settings">
   <div class="pagehead">
@@ -9318,43 +9057,36 @@ X TJKT 1
 </div>
 </div>
 </div>
-<div class="tabbar" role="navigation" aria-label="Navigasi utama">
-  <button class="tab active" data-tab="beranda" onclick="goTo('beranda')" aria-label="Beranda">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
-    <span>Beranda</span>
-  </button>
-  <button class="tab" data-tab="kas" onclick="goTo('kas')" aria-label="Kas">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg>
-    <span>Kas</span>
-  </button>
-  <button class="tab" data-tab="hp" onclick="goTo('hp')" aria-label="Titip HP">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
-    <span>HP</span>
-  </button>
-  <button class="tab" data-tab="jadwal" onclick="goTo('jadwal')" aria-label="Jadwal">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg>
-    <span>Jadwal</span>
-  </button>
-  <button class="tab tab-more" type="button" data-tab="more" onclick="toggleKelaskuMoreMenu(event)" aria-expanded="false" aria-controls="kelasku-more-menu" aria-label="Lainnya">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg>
-    <span>Lainnya</span>
-  </button>
-</div>
-<div id="kelasku-more-menu" class="kelasku-more-menu" aria-hidden="true">
-  <div class="kelasku-more-backdrop" onclick="closeKelaskuMoreMenu()"></div>
-  <div class="kelasku-more-sheet" role="menu" aria-label="Menu lainnya">
-    <div class="kelasku-more-handle"></div>
-    <div class="kelasku-more-title">Lainnya</div>
-    <button type="button" class="kelasku-more-item" role="menuitem" onclick="goToFromMore('tugas')">
-      <span class="kelasku-more-icon">✓</span><span><b>Tugas</b><small>Kelola dan pantau deadline</small></span><span class="kelasku-more-chevron">›</span>
-    </button>
-    <button type="button" class="kelasku-more-item" role="menuitem" onclick="goToFromMore('laporan')">
-      <span class="kelasku-more-icon">!</span><span><b>Laporan</b><small>Aspirasi dan status laporan</small></span><span class="kelasku-more-chevron">›</span>
-    </button>
-    <button type="button" class="kelasku-more-item" role="menuitem" onclick="goToFromMore('settings')">
-      <span class="kelasku-more-icon">⚙</span><span><b>Setelan</b><small>Profil, tampilan, dan sistem</small></span><span class="kelasku-more-chevron">›</span>
-    </button>
-  </div>
+<div class="tabbar">
+  <button class="tab active" data-tab="beranda" onclick="goTo('beranda')"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8" /><path d="M5 10v10h14V10" />
+</svg>
+Beranda
+</button>
+<button class="tab" data-tab="kas" onclick="goTo('kas')"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2" /><circle cx="12" cy="12" r="2.5" />
+</svg>
+Kas
+</button>
+<button class="tab" data-tab="hp" onclick="goTo('hp')"><svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2" /><line x1="11" y1="18" x2="13" y2="18" />
+</svg>
+HP
+</button>
+<button class="tab" data-tab="jadwal" onclick="goTo('jadwal')"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" /><line x1="3" y1="9" x2="21" y2="9" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="16" y1="2" x2="16" y2="6" />
+</svg>
+Jadwal
+</button>
+<button class="tab" data-tab="tugas" onclick="goTo('tugas')"><svg viewBox="0 0 24 24"><path d="M9 11l3 3 8-8" /><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
+</svg>
+Tugas
+</button>
+<button class="tab" data-tab="laporan" onclick="goTo('laporan')"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><path d="M12 8v4" /><path d="M12 16h.01" />
+</svg>
+Laporan
+</button>
+<button class="tab" data-tab="catur" onclick="goTo('catur')"><span aria-hidden="true">♟</span><b>Catur</b></button>
+<button class="tab" data-tab="settings" onclick="goTo('settings')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06A1.65 1.65 0 0019.4 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" />
+</svg>
+Setelan
+</button>
 </div>
 <div class="modal-bg" id="modal-kas">
   <div class="modal">
@@ -10066,6 +9798,7 @@ X TJKT 1
       piketRotationMode: 'auto',
       piketWeeklyAssignments: {},
       tugas: [],
+      chessStats: {},
       jadwal: {
           Senin: [{ jam: "07:15-08:45", mapel: "Matematika", guru: "Bu Rina" }],
           Selasa: [{ jam: "07:15-08:45", mapel: "Administrasi Jaringan", guru: "Pak Budi" }],
@@ -10091,7 +9824,7 @@ X TJKT 1
   const FULL_DAY_NAMES = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
   const MONTH_LABEL = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
   const DOW_LABEL = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
-  let darkMode = localStorage.getItem('kelasku-theme') !== 'light';
+  let darkMode = localStorage.getItem('kelasku-theme') === 'dark';
   const KELASKU_PASSWORD_MIN_LENGTH = 8;
   const KELASKU_PASSWORD_REQUIRE_SPECIAL = true;
   let reauthResolver = null;
@@ -15038,6 +14771,8 @@ X TJKT 1
       const content = document.querySelector('.content');
       if (content) content.scrollTop = 0;
 
+      if (name === 'catur' && typeof window.__kelaskuChessInit === 'function') { window.__kelaskuChessInit(); }
+
       if (name === 'settings' && typeof renderAccountList === 'function') {
           renderAccountList();
       }
@@ -15228,6 +14963,15 @@ X TJKT 1
       const metrics=document.createElement('div'); metrics.className='kas-pro-metrics'; metrics.id='kas-pro-metrics';
       metrics.innerHTML=`<div class="kas-pro-metric kpm-in"><div class="kpm-top"><div class="kpm-label">Total Kas Masuk</div><div class="kpm-icon">${icon('M12 5v14M7 10l5-5 5 5')}</div></div><div class="kpm-value" id="kas-pro-in">Rp 0</div><div class="kpm-note">Pemasukan tercatat</div></div><div class="kas-pro-metric kpm-out"><div class="kpm-top"><div class="kpm-label">Total Pengeluaran</div><div class="kpm-icon">${icon('M12 19V5M7 14l5 5 5-5')}</div></div><div class="kpm-value" id="kas-pro-out">Rp 0</div><div class="kpm-note">Pengeluaran tercatat</div></div><div class="kas-pro-metric kpm-bal"><div class="kpm-top"><div class="kpm-label">Sisa Saldo</div><div class="kpm-icon">${icon('M4 7h16v10H4zM7 11h4')}</div></div><div class="kpm-value" id="kas-pro-bal">Rp 0</div><div class="kpm-note">Saldo berjalan</div></div>`;
       if(oldBalance) oldBalance.replaceWith(metrics); else v.insertBefore(metrics,v.firstChild.nextSibling);
+      const txSection=[...v.querySelectorAll('.section')].find(x=>x.querySelector('#kas-list'));
+      if(txSection && !document.getElementById('kas-pro-toolbar')){
+        const head=txSection.querySelector('.section-head');
+        if(head){
+          const toolbar=document.createElement('div'); toolbar.className='kas-pro-toolbar'; toolbar.id='kas-pro-toolbar';
+          toolbar.innerHTML=`<div class="kas-pro-filters"><input id="kas-pro-search" type="search" placeholder="Cari transaksi..." oninput="renderKas()"><select id="kas-pro-filter"><option value="all">Semua jenis</option><option value="masuk">Pemasukan</option><option value="keluar">Pengeluaran</option></select><select id="kas-pro-period"><option value="all">Semua waktu</option><option value="week">Minggu ini</option><option value="month">Bulan ini</option></select></div>`;
+          head.insertAdjacentElement('afterend',toolbar);
+        }
+      }
       v.dataset.proReady='1';
     }
 
@@ -15258,7 +15002,7 @@ X TJKT 1
       const keluar=data.filter(t=>t.jenis==='keluar').reduce((a,t)=>a+Number(t.jumlah||0),0);
       const set=(id,val)=>{const e=document.getElementById(id);if(e)e.textContent=money(val)};
       set('kas-pro-in',masuk); set('kas-pro-out',keluar); set('kas-pro-bal',masuk-keluar);
-      const q=(document.getElementById('kas-search-premium')?.value||'').trim().toLowerCase(); const filter=document.getElementById('kas-filter-premium')?.value||'all'; const period=document.getElementById('kas-period-premium')?.value||'all';
+      const q=(document.getElementById('kas-pro-search')?.value||'').trim().toLowerCase(); const filter=document.getElementById('kas-pro-filter')?.value||'all'; const period=document.getElementById('kas-pro-period')?.value||'all';
       let list=data.filter(t=>(filter==='all'||t.jenis===filter)&&kasDateOk(t.tanggal,period)&&(!q||[t.ket,t.tanggal,t.jenis,t.jumlah].join(' ').toLowerCase().includes(q))).slice().sort((a,b)=>(parseKasDate(b.tanggal)?.getTime()||0)-(parseKasDate(a.tanggal)?.getTime()||0));
       const wrap=document.getElementById('kas-list'); if(!wrap)return;
       wrap.className='kas-pro-table';
@@ -15352,10 +15096,11 @@ X TJKT 1
     }
 
     let taskFilter='all';
+    function injectTaskFilters(){const v=document.getElementById('view-tugas');if(!v||document.getElementById('task-filter-tabs'))return;const head=v.querySelector('.pagehead');const tabs=document.createElement('div');tabs.id='task-filter-tabs';tabs.className='task-filter-tabs';tabs.innerHTML=[['all','Semua'],['active','Aktif'],['soon','Mendekati Deadline'],['done','Selesai']].map(x=>`<button class="task-filter-tab ${x[0]==='all'?'active':''}" data-task-filter="${x[0]}">${x[1]}</button>`).join('');head.after(tabs);tabs.addEventListener('click',e=>{const b=e.target.closest('[data-task-filter]');if(!b)return;taskFilter=b.dataset.taskFilter;tabs.querySelectorAll('.task-filter-tab').forEach(x=>x.classList.toggle('active',x===b));professionalRenderTugas();});}
     function daysLeft(d){if(!d)return 999;const a=new Date();a.setHours(0,0,0,0);const b=new Date(d+'T00:00:00');return Math.ceil((b-a)/86400000)}
     function taskMatches(t){const left=daysLeft(t.tenggat);if(taskFilter==='done')return !!t.selesai;if(taskFilter==='active')return !t.selesai;if(taskFilter==='soon')return !t.selesai&&left<=3;return true}
     function professionalRenderTugas(){
-      autoCleanDoneTugas(); const all=(state.tugas||[]).filter(taskMatches); const open=all.filter(t=>!t.selesai),done=all.filter(t=>t.selesai); const hint=document.getElementById('tugas-autoclean-hint');if(hint)hint.textContent='';
+      injectTaskFilters(); autoCleanDoneTugas(); const all=(state.tugas||[]).filter(taskMatches); const open=all.filter(t=>!t.selesai),done=all.filter(t=>t.selesai); const hint=document.getElementById('tugas-autoclean-hint');if(hint)hint.textContent='';
       const renderCard=t=>{const displayTaskName=String(t.nama||'').replace(/\bvidio\b/gi,'video');const displayTaskDesc=String(t.deskripsi||'').replace(/\bvidio\b/gi,'video');const left=daysLeft(t.tenggat);const dc=t.selesai?'deadline-safe':left<=1?'deadline-danger':left<=3?'deadline-soon':'deadline-safe';const dl=t.selesai?'Selesai':t.tenggat?(left<0?'Lewat deadline':left===0?'Hari ini':left===1?'H-1':`H-${left}`):'Tanpa deadline';const clickable=isAdmin()?` role="button" tabindex="0" title="Klik untuk membuka editor" onclick="openTugasModal(${Number(t.id)})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openTugasModal(${Number(t.id)})}"`:'';const action=isAdmin()?`<div class="task-pro-actions"><button type="button" onclick="event.stopPropagation();toggleTugas(${Number(t.id)})">${t.selesai?'Buka lagi':'Tandai selesai'}</button></div>`:'';let driveLink='';try{const raw=String(t.driveLink||'').trim();if(raw){const u=new URL(raw);const host=u.hostname.toLowerCase();if(u.protocol==='https:'&&(host==='drive.google.com'||host==='docs.google.com'))driveLink=u.href;}}catch(_){}return `<div class="task-pro-card"${clickable}><div class="task-pro-top"><div class="task-pro-title">${esc(displayTaskName)}</div><span class="task-pro-deadline ${dc}">${dl}</span></div><div class="task-pro-meta"><span class="task-pro-tag">${esc(t.mapel||'Tanpa mapel')}</span>${t.tenggat?`<span class="task-pro-tag">${esc(t.tenggat)}</span>`:''}${driveLink?'<span class="task-pro-tag task-pill-drive">☁️ Google Drive</span>':''}</div>${displayTaskDesc?`<div class="task-pro-desc">${esc(displayTaskDesc)}</div>`:''}${driveLink?`<div class="task-drive-link"><a href="${esc(driveLink)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">☁️ Buka folder Google Drive untuk mengumpulkan</a></div>`:''}${renderTaskFiles(t)}${action}</div>`};
       const a=document.getElementById('tugas-open-list'),b=document.getElementById('tugas-done-list');if(a){a.className='task-column';a.innerHTML=`<div class="task-column-title">Aktif</div>${open.length?open.map(renderCard).join(''):'<div class="empty" style="padding:28px 12px">Tidak ada tugas aktif.</div>'}`;}if(b){b.className='task-column';b.innerHTML=`<div class="task-column-title">Selesai</div>${done.length?done.map(renderCard).join(''):'<div class="empty" style="padding:28px 12px">Belum ada tugas selesai.</div>'}`;}
       const openSection=a?.closest('.section'); const doneSection=b?.closest('.section');
@@ -15466,7 +15211,7 @@ X TJKT 1
     window.renderReports=function(){if(typeof oldRenderReports==='function')oldRenderReports();updateReportUI();};
 
     function boot(){
-      try{ensureKasEnhancements();injectReportUI();injectSettingsNav();}catch(e){console.warn('Module V6 UI init',e)}
+      try{ensureKasEnhancements();injectTaskFilters();injectReportUI();injectSettingsNav();}catch(e){console.warn('Module V6 UI init',e)}
     }
     if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
   })();
@@ -18049,951 +17794,65 @@ body.dark .cal-card .cal-nav-btn{color:#f8fafc !important;background:transparent
     .piket-manual-row select{width:100%}
   }
 </style>
-<style id="kelasku-premium-controls">
-.task-filter-section{margin-top:10px!important;padding:6px!important}
-.task-filter-pills{display:flex;gap:7px;flex-wrap:wrap}
-.task-filter-pill{border:1px solid var(--kk-border)!important;background:rgba(255,255,255,.035)!important;color:var(--kk-muted)!important;border-radius:999px!important;padding:8px 12px!important;font:700 10px/1.1 'Plus Jakarta Sans',sans-serif!important;cursor:pointer;transition:.18s var(--kk-ease)}
-.task-filter-pill.active{background:var(--kk-blue-soft)!important;color:#60A5FA!important;border-color:rgba(59,130,246,.22)!important}
-.kas-premium-search,.kas-premium-filter{height:36px!important;min-width:0!important;font-size:11px!important}
-.kas-premium-search{width:190px!important}.kas-premium-filter{width:125px!important}
-@media(max-width:620px){.kas-premium-search{width:145px!important;flex:1}.kas-premium-filter{width:115px!important;flex:0 0 115px}.kas-history-actions{width:100%}}
+
+<style id="kelasku-chess-css">
+.chess-shell{margin-top:12px}.chess-topbar{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:12px}.chess-mode-row{display:flex;gap:6px;flex-wrap:wrap}.chess-mode-btn{border:1px solid var(--glass-border);background:var(--glass-card);color:var(--text-main);border-radius:10px;padding:8px 10px;font-size:11px;font-weight:750;cursor:pointer}.chess-mode-btn.active{background:var(--primary);border-color:var(--primary);color:#fff}.chess-grid{display:grid;grid-template-columns:minmax(280px,620px) minmax(260px,1fr);gap:14px;align-items:start}.chess-board{width:min(92vw,600px);aspect-ratio:1/1;display:grid;grid-template-columns:repeat(8,1fr);border-radius:14px;overflow:hidden;border:1px solid var(--glass-border);box-shadow:0 12px 30px rgba(0,0,0,.16);user-select:none}.chess-square{display:flex;align-items:center;justify-content:center;font-size:clamp(28px,5vw,52px);line-height:1;cursor:pointer;position:relative}.chess-square.light{background:#f0d9b5}.chess-square.dark{background:#b58863}.chess-square.selected{box-shadow:inset 0 0 0 4px rgba(59,130,246,.85)}.chess-square.legal:after{content:'';width:20%;height:20%;border-radius:50%;background:rgba(59,130,246,.72);position:absolute}.chess-square.capture:after{content:'';position:absolute;inset:8%;border:4px solid rgba(59,130,246,.72);border-radius:50%}.chess-piece{font-family:'Segoe UI Symbol','Noto Sans Symbols 2',serif;text-shadow:0 2px 1px rgba(0,0,0,.22)}.chess-status{padding:9px 12px;border:1px solid var(--glass-border);background:var(--glass-card);border-radius:10px;margin-bottom:8px;font-size:12px;font-weight:750}.chess-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}.chess-side{display:grid;gap:10px}.chess-score-card,.chess-online-card,.chess-leaderboard-card{padding:14px}.chess-my-score{font-size:32px;font-weight:900;margin:3px 0 8px}.chess-score-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.chess-score-grid span{font-size:10px;padding:8px;border:1px solid var(--glass-border);border-radius:9px;color:var(--text-soft)}.chess-score-grid b{display:block;color:var(--text-main);font-size:14px;margin-top:2px}.chess-online-actions{display:flex;gap:7px}.chess-online-actions .btn{flex:1}.chess-rank-row{display:grid;grid-template-columns:28px 1fr auto;gap:7px;align-items:center;padding:8px 0;border-bottom:1px solid var(--glass-border);font-size:11px}.chess-rank-row:last-child{border-bottom:0}.chess-rank-score{font-weight:850}.chess-rank-meta{color:var(--text-soft);font-size:9px;margin-top:2px}@media(max-width:760px){.chess-topbar{display:block}.chess-mode-row{margin-top:9px}.chess-grid{grid-template-columns:1fr}.chess-board{width:min(94vw,520px);margin:auto}.chess-side{grid-template-columns:1fr}.chess-score-grid{grid-template-columns:repeat(3,1fr)}}
 </style>
-<script id="kelasku-premium-refactor-js">
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+<script id="kelasku-chess-module">
 (function(){
-  'use strict';
-  function closeMore(){
-    var menu=document.getElementById('kelasku-more-menu');
-    var btn=document.querySelector('.tabbar .tab-more');
-    if(menu) { menu.classList.remove('open'); menu.setAttribute('aria-hidden','true'); }
-    if(btn) btn.setAttribute('aria-expanded','false');
-    document.body.classList.remove('kelasku-more-open');
+  let chessGame=null,chessMode='ai',chessSelected=null,chessFlipped=false,chessRoomId=null,chessRoomUnsub=null,chessOnlineColor=null,chessOnlineMoveCount=0;
+  let chessStatsCache={};
+  const glyph={'wK':'♔','wQ':'♕','wR':'♖','wB':'♗','wN':'♘','wP':'♙','bK':'♚','bQ':'♛','bR':'♜','bB':'♝','bN':'♞','bP':'♟'};
+  async function loadChessStats(){
+    if(!currentUser)return;
+    try{
+      const snap=await db.collection('kelasku_chess_stats').get();
+      chessStatsCache={};
+      snap.forEach(doc=>{const d=doc.data()||{};chessStatsCache[doc.id]={wins:Number(d.wins)||0,draws:Number(d.draws)||0,losses:Number(d.losses)||0,score:Number(d.score)||0,name:String(d.name||'Siswa')};});
+    }catch(e){console.warn('Chess stats load failed',e);}
+    renderChessStats();
   }
-  window.closeKelaskuMoreMenu=closeMore;
-  window.toggleKelaskuMoreMenu=function(e){
-    if(e) e.stopPropagation();
-    var menu=document.getElementById('kelasku-more-menu');
-    var btn=document.querySelector('.tabbar .tab-more');
-    if(!menu) return;
-    var open=menu.classList.toggle('open');
-    menu.setAttribute('aria-hidden',open?'false':'true');
-    if(btn) btn.setAttribute('aria-expanded',open?'true':'false');
-    document.body.classList.toggle('kelasku-more-open',open);
-  };
-  window.goToFromMore=function(name){
-    closeMore();
-    if(typeof window.goTo==='function') window.goTo(name);
-  };
-
-  /* Keep the active state of the five-item mobile bar correct even when a
-     destination is reached from the More sheet. */
-  var oldGoTo=window.goTo;
-  if(typeof oldGoTo==='function'){
-    window.goTo=function(name){
-      closeMore();
-      oldGoTo.apply(this,arguments);
-      var more=document.querySelector('.tabbar .tab-more');
-      if(more) more.classList.toggle('active', ['tugas','laporan','settings'].indexOf(name)>=0);
-    };
+  function myChessStat(){const uid=currentUser&&currentUser.uid;return uid?(chessStatsCache[uid]||{wins:0,draws:0,losses:0,score:0,name:(currentUser.username||'Saya')}):{wins:0,draws:0,losses:0,score:0,name:'Saya'};}
+  function renderChessStats(){
+    const st=myChessStat();
+    ['wins','draws','losses','score'].forEach(k=>{const e=document.getElementById('chess-my-'+k);if(e)e.textContent=st[k]||0});
+    const wrap=document.getElementById('chess-leaderboard');if(!wrap)return;
+    const rows=Object.entries(chessStatsCache).map(([uid,v])=>({uid,...v})).sort((a,b)=>(b.score||0)-(a.score||0));
+    if(!rows.length){wrap.innerHTML='<div class="empty">Belum ada skor pertandingan.</div>';return;}
+    wrap.innerHTML=rows.slice(0,30).map((r,i)=>`<div class="chess-rank-row"><b>${i+1}</b><div><b>${escapeHtml(r.name||'Siswa')}</b><div class="chess-rank-meta">${r.wins||0} menang · ${r.draws||0} seri · ${r.losses||0} kalah</div></div><span class="chess-rank-score">${r.score||0}</span></div>`).join('');
   }
-
-  /* Merge consecutive identical lessons on the dashboard without touching
-     the underlying schedule data. */
-  function mergeHomeSchedule(){
-    var list=document.getElementById('home-jadwal-list');
-    if(!list) return;
-    var rows=[].slice.call(list.querySelectorAll('.row-item'));
-    if(rows.length<2) return;
-    function parseTime(v){
-      var m=(v||'').match(/(\d{1,2})[:.](\d{2})/); return m ? (+m[1]*60 + +m[2]) : null;
-    }
-    for(var i=rows.length-2;i>=0;i--){
-      var a=rows[i],b=rows[i+1];
-      var ta=a.querySelector('.row-time'),tb=b.querySelector('.row-time');
-      var na=a.querySelector('.row-title'),nb=b.querySelector('.row-title');
-      if(!ta||!tb||!na||!nb) continue;
-      var va=(na.textContent||'').trim().toLowerCase(),vb=(nb.textContent||'').trim().toLowerCase();
-      var aEnd=(ta.textContent||'').match(/(?:-|–|—)\s*(\d{1,2}[:.]\d{2})/);
-      var bStart=(tb.textContent||'').match(/^(\d{1,2}[:.]\d{2})/);
-      var aStart=parseTime((ta.textContent||'')); var bStartMin=parseTime(bStart?bStart[1]:'');
-      var contiguous=aEnd&&bStartMin!=null&&parseTime(aEnd[1])===bStartMin;
-      if(va && va===vb && contiguous){
-        var start=(ta.textContent||'').match(/\d{1,2}[:.]\d{2}/);
-        var end=(tb.textContent||'').match(/(?:-|–|—)\s*(\d{1,2}[:.]\d{2})/);
-        if(start&&end) ta.textContent=start[0]+' - '+end[1];
-        b.remove();
-      }
-    }
+  async function addChessResult(result){
+    if(chessMode!=='online'||!currentUser)return;
+    const uid=currentUser.uid;const ref=db.collection('kelasku_chess_stats').doc(uid);
+    try{
+      await db.runTransaction(async tx=>{
+        const snap=await tx.get(ref);const old=snap.exists?(snap.data()||{}):{};
+        const st={wins:Number(old.wins)||0,draws:Number(old.draws)||0,losses:Number(old.losses)||0,score:Number(old.score)||0,name:String(old.name||currentUser.username||'Siswa')};
+        if(result==='win'){st.wins++;st.score+=3}else if(result==='draw'){st.draws++;st.score+=1}else st.losses++;
+        st.updatedAt=Date.now();tx.set(ref,st,{merge:true});
+        chessStatsCache[uid]=st;
+      });
+    }catch(e){console.warn('Chess score save failed',e);showNotification('Skor belum tersimpan. Periksa izin Firebase untuk kelasku_chess_stats.','warning',5000);}
+    await loadChessStats();
   }
-  var originalRenderHome=window.renderHome;
-  if(typeof originalRenderHome==='function'){
-    window.renderHome=function(){
-      originalRenderHome.apply(this,arguments);
-      requestAnimationFrame(mergeHomeSchedule);
-    };
-  }
-
-  /* Small, safe display-only cleanup for names in known student-name nodes. */
-  function properName(value){
-    return String(value||'').trim().replace(/\s+/g,' ').split(' ').map(function(part){
-      if(!part) return part;
-      return part.charAt(0).toUpperCase()+part.slice(1).toLowerCase();
-    }).join(' ');
-  }
-  function normalizeStudentNameNodes(root){
-    if(!root) return;
-    root.querySelectorAll('.s-name,[data-student-name],.student-name').forEach(function(el){
-      if(el.childElementCount===0) el.textContent=properName(el.textContent);
-    });
-  }
-  function normalizeVisibleNames(){ normalizeStudentNameNodes(document); }
-  setTimeout(normalizeVisibleNames,500);
-  setInterval(normalizeVisibleNames,2500);
-
-  /* Display-only time cleanup: HH.MM.SS -> HH:MM where the app renders a
-     standalone clock-like token. */
-  function normalizeClockText(root){
-    if(!root) return;
-    var walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
-    var node;
-    while(node=walker.nextNode()){
-      if(!node.nodeValue || node.parentElement && node.parentElement.closest('script,style,textarea,input')) continue;
-      node.nodeValue=node.nodeValue.replace(/\b(\d{1,2})[.]([0-5]\d)[.]([0-5]\d)\b/g,function(_,h,m){return String(h).padStart(2,'0')+':'+m;});
-    }
-  }
-  setTimeout(function(){normalizeClockText(document.body)},800);
-
-  var kelaskuTaskFilter='all';
-  window.setKelaskuTaskFilter=function(filter){
-    kelaskuTaskFilter=filter||'all';
-    document.querySelectorAll('.task-filter-pill').forEach(function(btn){btn.classList.toggle('active',btn.getAttribute('data-task-filter')===kelaskuTaskFilter);});
-    applyKelaskuTaskFilter();
-  };
-  function applyKelaskuTaskFilter(){
-    var open=document.getElementById('tugas-open-list'), done=document.getElementById('tugas-done-list');
-    if(!open||!done) return;
-    var openSection=open.closest('.section'), doneSection=done.closest('.section');
-    if(openSection) openSection.style.display=kelaskuTaskFilter==='done'?'none':'';
-    if(doneSection) doneSection.style.display=(kelaskuTaskFilter==='active'||kelaskuTaskFilter==='near')?'none':'';
-    open.querySelectorAll('.task-item').forEach(function(item){
-      var text=(item.textContent||'').toLowerCase();
-      var near=/(besok|dalam 1 hari|dalam 2 hari|h-1|h-2|hari ini)/i.test(text);
-      item.style.display=(kelaskuTaskFilter==='near'&&!near)?'none':'';
-    });
-  }
-  var oldRenderTugas=window.renderTugas;
-  if(typeof oldRenderTugas==='function') window.renderTugas=function(){oldRenderTugas.apply(this,arguments);requestAnimationFrame(applyKelaskuTaskFilter);};
-
-  function applyKasPremiumFilter(){
-    if(typeof professionalRenderKas==='function') professionalRenderKas();
-  }
-  document.addEventListener('input',function(e){
-    if(e.target&&e.target.id==='kas-search-premium') applyKasPremiumFilter();
-  });
-  document.addEventListener('change',function(e){
-    if(e.target&&['kas-filter-premium','kas-period-premium'].includes(e.target.id)) applyKasPremiumFilter();
-  });
-  setInterval(function(){
-    if(document.getElementById('view-tugas')?.classList.contains('active')) applyKelaskuTaskFilter();
-  },1200);
-
-  /* Close More sheet with Escape. */
-  document.addEventListener('keydown',function(e){if(e.key==='Escape') closeMore();});
-})();
-</script>
-
-<style id="kelasku-world-class-design-system">
-/* =========================================================
-   KELASKU — WORLD-CLASS PRODUCT UI PASS
-   Visual + interaction polish only. Existing data/JS preserved.
-   ========================================================= */
-:root{
-  --kw-bg:#080c14;
-  --kw-surface:#0f172a;
-  --kw-surface-2:#111c2f;
-  --kw-border:rgba(255,255,255,.08);
-  --kw-border-strong:rgba(255,255,255,.13);
-  --kw-blue:#3b82f6;
-  --kw-blue-2:#60a5fa;
-  --kw-text:#f8fafc;
-  --kw-muted:#94a3b8;
-  --kw-dim:#64748b;
-  --kw-green:#22c55e;
-  --kw-red:#ef4444;
-  --kw-yellow:#f59e0b;
-  --kw-cyan:#22d3ee;
-  --kw-radius:16px;
-  --kw-radius-sm:12px;
-  --kw-shadow:0 18px 55px rgba(0,0,0,.28);
-  --kw-shadow-blue:0 0 28px rgba(59,130,246,.13);
-  --kw-ease:cubic-bezier(.22,1,.36,1);
-}
-
-/* ---------- global dark atmosphere ---------- */
-body.dark{
-  background:#080c14 !important;
-  color:var(--kw-text) !important;
-}
-body.dark .phone{
-  background:rgba(8,12,20,.94) !important;
-  border:1px solid var(--kw-border) !important;
-  box-shadow:0 30px 90px rgba(0,0,0,.42),0 0 50px rgba(59,130,246,.05) !important;
-}
-body.dark .ambient-mesh .blob{opacity:.16 !important;filter:blur(90px) !important}
-body.dark .blob-1{background:#2563eb !important}
-body.dark .blob-2{background:#7c3aed !important}
-body.dark .blob-3{background:#06b6d4 !important}
-
-/* ---------- app chrome ---------- */
-body.dark .statusbar{
-  background:rgba(8,12,20,.72) !important;
-  border-bottom:1px solid var(--kw-border) !important;
-  backdrop-filter:blur(18px) saturate(140%) !important;
-  -webkit-backdrop-filter:blur(18px) saturate(140%) !important;
-}
-body.dark .screen{
-  padding:18px 18px 28px !important;
-  scroll-behavior:smooth;
-  scrollbar-width:none;
-}
-body.dark .screen::-webkit-scrollbar{display:none}
-
-/* ---------- top-level surfaces ---------- */
-body.dark .section,
-body.dark .card,
-body.dark .dashboard-card,
-body.dark .stat-card,
-body.dark .balance-card,
-body.dark .task-item,
-body.dark .task-pro-card,
-body.dark .report-kpi,
-body.dark .report-kpi-card,
-body.dark .report-chart-card,
-body.dark .settings-profile-card,
-body.dark .settings-section,
-body.dark .calendar-card,
-body.dark .cal-card,
-body.dark .kas-pro-metric,
-body.dark .kas-pro-table,
-body.dark .timeline-card,
-body.dark .hp-slot,
-body.dark .hp-status-section,
-body.dark .piket-weekly-section{
-  background:rgba(15,23,42,.78) !important;
-  border:1px solid var(--kw-border) !important;
-  box-shadow:0 10px 35px rgba(0,0,0,.16) !important;
-  backdrop-filter:blur(12px) saturate(125%) !important;
-  -webkit-backdrop-filter:blur(12px) saturate(125%) !important;
-}
-body.dark .section:hover,
-body.dark .card:hover,
-body.dark .dashboard-card:hover,
-body.dark .stat-card:hover{
-  border-color:rgba(255,255,255,.11) !important;
-}
-
-/* ---------- typography hierarchy ---------- */
-body.dark .pagehead h1,
-body.dark .section-title,
-body.dark .hero-name,
-body.dark .settings-title,
-body.dark .modal h3{
-  color:#f8fafc !important;
-  letter-spacing:-.035em !important;
-}
-body.dark .pagehead p,
-body.dark .hero-copy,
-body.dark .section-kicker,
-body.dark .field-hint,
-body.dark .settings-desc,
-body.dark .text-muted,
-body.dark .muted,
-body.dark .subtext{
-  color:#94a3b8 !important;
-}
-body.dark .section-kicker{
-  font-size:10px !important;
-  font-weight:800 !important;
-  letter-spacing:.12em !important;
-}
-
-/* ---------- buttons ---------- */
-body.dark .btn,
-body.dark .section-action,
-body.dark .fab-add,
-body.dark .mode-btn,
-body.dark .theme-btn{
-  transition:transform .18s var(--kw-ease),background .18s ease,border-color .18s ease,box-shadow .18s ease,color .18s ease !important;
-}
-body.dark .btn-primary,
-body.dark .fab-add{
-  background:linear-gradient(135deg,#3b82f6,#2563eb) !important;
-  color:#fff !important;
-  border:1px solid rgba(96,165,250,.38) !important;
-  box-shadow:0 8px 24px rgba(37,99,235,.24),0 0 24px rgba(59,130,246,.12) !important;
-}
-body.dark .btn-primary:hover,
-body.dark .fab-add:hover{transform:translateY(-1px);box-shadow:0 12px 30px rgba(37,99,235,.30),0 0 30px rgba(59,130,246,.15) !important}
-body.dark .btn-primary:active,
-body.dark .fab-add:active{transform:translateY(0) scale(.985)}
-body.dark .btn-ghost,
-body.dark .section-action,
-body.dark .mode-btn{
-  background:rgba(255,255,255,.035) !important;
-  color:#cbd5e1 !important;
-  border:1px solid var(--kw-border) !important;
-}
-body.dark .btn-ghost:hover,
-body.dark .section-action:hover,
-body.dark .mode-btn:hover{background:rgba(59,130,246,.09) !important;border-color:rgba(96,165,250,.28) !important;color:#dbeafe !important}
-body.dark button:focus-visible,
-body.dark input:focus-visible,
-body.dark select:focus-visible,
-body.dark textarea:focus-visible{outline:2px solid rgba(59,130,246,.65) !important;outline-offset:2px !important}
-
-/* ---------- dashboard hero ---------- */
-body.dark .dashboard-hero,
-body.dark .hero{
-  position:relative !important;
-  overflow:hidden !important;
-  background:linear-gradient(145deg,rgba(18,35,66,.96),rgba(15,23,42,.88)) !important;
-  border:1px solid rgba(96,165,250,.18) !important;
-  box-shadow:0 18px 50px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.035) !important;
-}
-body.dark .dashboard-hero:after,
-body.dark .hero:after{
-  content:"";position:absolute;inset:auto -90px -120px auto;width:280px;height:280px;border-radius:50%;
-  background:rgba(59,130,246,.13);filter:blur(60px);pointer-events:none;
-}
-body.dark .hero-name{font-size:clamp(24px,6vw,32px) !important;font-weight:850 !important}
-body.dark .hero-tags .htag{
-  background:rgba(59,130,246,.10) !important;
-  border:1px solid rgba(96,165,250,.18) !important;
-  color:#bfdbfe !important;
-}
-body.dark .dashboard-user-avatar,
-body.dark .hero .avatar{
-  border:1px solid rgba(96,165,250,.32) !important;
-  box-shadow:0 0 0 5px rgba(59,130,246,.07),0 8px 20px rgba(0,0,0,.25) !important;
-}
-
-/* ---------- dashboard stats ---------- */
-body.dark .dashboard-stat-grid{gap:12px !important}
-body.dark .dashboard-stat-card{
-  min-height:132px !important;
-  padding:15px !important;
-  position:relative;
-  overflow:hidden;
-}
-body.dark .dashboard-stat-card:after{
-  content:"";position:absolute;right:-35px;bottom:-55px;width:120px;height:120px;border-radius:50%;background:rgba(59,130,246,.055);filter:blur(4px);pointer-events:none;
-}
-body.dark .dashboard-stat-card .stat-value{font-size:25px !important;font-weight:850 !important;letter-spacing:-.035em !important}
-body.dark .dashboard-stat-card .stat-icon{box-shadow:inset 0 0 0 1px rgba(255,255,255,.05) !important}
-
-/* ---------- list rhythm / cards ---------- */
-body.dark .row-item,
-body.dark .tx-item,
-body.dark .student-row,
-body.dark .task-item,
-body.dark .announce-item,
-body.dark .activity-item,
-body.dark .notify-item{
-  border-color:rgba(255,255,255,.065) !important;
-}
-body.dark .row-item:hover,
-body.dark .tx-item:hover,
-body.dark .student-row:hover,
-body.dark .task-item:hover,
-body.dark .announce-item:hover,
-body.dark .notify-item:hover{
-  background:rgba(59,130,246,.035) !important;
-}
-
-/* ---------- form controls ---------- */
-body.dark .field input,
-body.dark .field select,
-body.dark .field textarea,
-body.dark .search-box,
-body.dark .search-box input,
-body.dark input,
-body.dark select,
-body.dark textarea{
-  background:rgba(2,6,23,.48) !important;
-  color:#f8fafc !important;
-  border-color:rgba(255,255,255,.09) !important;
-}
-body.dark .field input:hover,
-body.dark .field select:hover,
-body.dark .field textarea:hover,
-body.dark .search-box:hover{border-color:rgba(255,255,255,.14) !important}
-body.dark .field input:focus,
-body.dark .field select:focus,
-body.dark .field textarea:focus,
-body.dark .search-box:focus-within{border-color:rgba(59,130,246,.60) !important;box-shadow:0 0 0 3px rgba(59,130,246,.09) !important}
-
-/* ---------- Kas ---------- */
-body.dark #view-kas .balance-card{
-  background:linear-gradient(145deg,#102a50,#0f172a) !important;
-  border-color:rgba(96,165,250,.20) !important;
-  box-shadow:0 18px 50px rgba(0,0,0,.25),0 0 35px rgba(59,130,246,.08) !important;
-}
-body.dark #view-kas .kas-pro-metric{min-height:96px !important}
-body.dark #view-kas .kas-pro-metric:first-child{background:rgba(34,197,94,.07) !important;border-color:rgba(34,197,94,.14) !important}
-body.dark #view-kas .kas-pro-metric:nth-child(2){background:rgba(239,68,68,.07) !important;border-color:rgba(239,68,68,.14) !important}
-body.dark #view-kas .kas-pro-metric:nth-child(3){background:rgba(59,130,246,.07) !important;border-color:rgba(59,130,246,.14) !important}
-
-/* ---------- HP ---------- */
-body.dark #view-hp .hp-summary-box{background:rgba(15,23,42,.72) !important;border:1px solid var(--kw-border) !important}
-body.dark #view-hp .hp-summary-collected{background:rgba(34,197,94,.10) !important;border-color:rgba(34,197,94,.20) !important;color:#86efac !important}
-body.dark #view-hp .hp-summary-remaining{background:rgba(239,68,68,.08) !important;border-color:rgba(239,68,68,.18) !important;color:#fda4af !important}
-body.dark #view-hp .hp-status-section{padding:16px !important}
-body.dark #view-hp .hp-person-row{padding:10px 8px;border-radius:12px;transition:background .18s ease,transform .18s var(--kw-ease)}
-body.dark #view-hp .hp-person-row:hover{background:rgba(255,255,255,.035);transform:translateX(2px)}
-
-/* ---------- Jadwal / Piket ---------- */
-body.dark #view-jadwal .mode-switcher,
-body.dark #view-jadwal .jadwal-mode-switcher{background:rgba(2,6,23,.52) !important;border:1px solid var(--kw-border) !important;padding:4px !important;border-radius:14px !important}
-body.dark #view-jadwal .mode-btn.active{background:#172b4b !important;color:#dbeafe !important;border-color:rgba(96,165,250,.24) !important;box-shadow:0 4px 14px rgba(0,0,0,.18) !important}
-body.dark .timeline-card{position:relative !important}
-body.dark .timeline-card:before{background:linear-gradient(#3b82f6,rgba(59,130,246,.10)) !important}
-body.dark .timeline-dot{box-shadow:0 0 0 5px rgba(59,130,246,.08),0 0 18px rgba(59,130,246,.25) !important}
-body.dark .piket-weekly-head-actions{gap:8px !important;flex-wrap:wrap !important}
-body.dark .piket-weekly-head-actions .btn{width:auto !important;margin:0 !important;padding:9px 12px !important;min-height:38px !important}
-body.dark .piket-chip,
-body.dark .piket-tag{background:rgba(59,130,246,.08) !important;border:1px solid rgba(96,165,250,.16) !important;color:#bfdbfe !important}
-
-/* ---------- Tugas ---------- */
-body.dark #view-tugas .task-filter,
-body.dark #view-tugas .task-tabs,
-body.dark .task-filter-tabs{gap:7px !important;overflow-x:auto !important;scrollbar-width:none !important}
-body.dark #view-tugas .task-filter::-webkit-scrollbar,
-body.dark #view-tugas .task-tabs::-webkit-scrollbar,
-body.dark .task-filter-tabs::-webkit-scrollbar{display:none}
-body.dark #view-tugas .task-filter button,
-body.dark #view-tugas .task-tabs button,
-body.dark .task-filter-tabs button{border-radius:999px !important;border:1px solid var(--kw-border) !important;background:rgba(255,255,255,.025) !important;color:#94a3b8 !important;padding:8px 12px !important;white-space:nowrap !important}
-body.dark #view-tugas .task-filter button.active,
-body.dark #view-tugas .task-tabs button.active,
-body.dark .task-filter-tabs button.active{background:rgba(59,130,246,.13) !important;border-color:rgba(96,165,250,.28) !important;color:#dbeafe !important}
-body.dark .task-pro-card{transition:transform .2s var(--kw-ease),border-color .2s ease,box-shadow .2s ease}
-body.dark .task-pro-card:hover{transform:translateY(-2px);border-color:rgba(96,165,250,.18) !important;box-shadow:0 16px 36px rgba(0,0,0,.22) !important}
-body.dark .task-pill-file{background:rgba(59,130,246,.09) !important;color:#bfdbfe !important;border-color:rgba(96,165,250,.18) !important}
-
-/* ---------- Laporan ---------- */
-body.dark #view-laporan .report-kpi{min-height:92px !important}
-body.dark #view-laporan .report-kpi:hover{transform:translateY(-1px);box-shadow:0 12px 28px rgba(0,0,0,.20) !important}
-body.dark #view-laporan .report-kpi .rk-value{font-size:24px !important;font-weight:850 !important}
-body.dark #view-laporan .report-chart-card{box-shadow:0 12px 34px rgba(0,0,0,.18) !important}
-
-/* ---------- Settings ---------- */
-body.dark #view-settings .settings-profile-card{
-  background:linear-gradient(145deg,rgba(18,35,66,.86),rgba(15,23,42,.82)) !important;
-  border-color:rgba(96,165,250,.16) !important;
-}
-body.dark #view-settings .settings-section{transition:border-color .18s ease,background .18s ease}
-body.dark #view-settings .settings-section:hover{background:rgba(17,28,47,.88) !important;border-color:rgba(255,255,255,.11) !important}
-body.dark #view-settings .settings-label{font-weight:800 !important;color:#e2e8f0 !important}
-body.dark #view-settings .settings-desc{color:#94a3b8 !important}
-body.dark #view-settings .settings-tabs,
-body.dark #view-settings .settings-tabbar{background:rgba(2,6,23,.45) !important;border:1px solid var(--kw-border) !important;padding:4px !important;border-radius:14px !important}
-body.dark #view-settings .settings-tab.active,
-body.dark #view-settings .settings-tabs .active{background:rgba(59,130,246,.13) !important;color:#dbeafe !important;border-color:rgba(96,165,250,.20) !important}
-body.dark #view-settings .btn-danger,
-body.dark #view-settings .danger,
-body.dark #view-settings [class*="delete"]{border-color:rgba(239,68,68,.18) !important;background:rgba(239,68,68,.08) !important;color:#fda4af !important}
-
-/* ---------- bottom navigation ---------- */
-body.dark .tabbar{
-  background:rgba(8,12,20,.84) !important;
-  border-top:1px solid var(--kw-border) !important;
-  backdrop-filter:blur(20px) saturate(145%) !important;
-  -webkit-backdrop-filter:blur(20px) saturate(145%) !important;
-  padding:8px 8px max(8px,env(safe-area-inset-bottom)) !important;
-  box-shadow:0 -12px 35px rgba(0,0,0,.20) !important;
-}
-body.dark .tabbar .tab{
-  border-radius:14px !important;
-  color:#64748b !important;
-  transition:color .18s ease,background .18s ease,transform .18s var(--kw-ease) !important;
-}
-body.dark .tabbar .tab svg{width:19px !important;height:19px !important;transition:transform .18s var(--kw-ease)}
-body.dark .tabbar .tab.active{background:rgba(59,130,246,.10) !important;color:#60a5fa !important}
-body.dark .tabbar .tab.active svg{transform:translateY(-1px);filter:drop-shadow(0 0 8px rgba(59,130,246,.35))}
-body.dark .tabbar .tab:active{transform:scale(.96)}
-body.dark .kelasku-more-sheet{
-  background:rgba(15,23,42,.96) !important;
-  border:1px solid var(--kw-border) !important;
-  box-shadow:0 -20px 60px rgba(0,0,0,.40) !important;
-  backdrop-filter:blur(22px) saturate(145%) !important;
-}
-body.dark .kelasku-more-item{border-color:rgba(255,255,255,.06) !important;background:rgba(255,255,255,.02) !important}
-body.dark .kelasku-more-item:hover{background:rgba(59,130,246,.07) !important}
-body.dark .kelasku-more-icon{background:rgba(59,130,246,.10) !important;color:#60a5fa !important;border:1px solid rgba(96,165,250,.14) !important}
-
-/* ---------- modal: premium sheet + reliable scrolling ---------- */
-body.dark .modal-bg{
-  background:rgba(2,6,23,.68) !important;
-  backdrop-filter:blur(7px) !important;
-  -webkit-backdrop-filter:blur(7px) !important;
-  align-items:flex-end !important;
-  overflow:hidden !important;
-  overscroll-behavior:contain !important;
-}
-body.dark .modal{
-  width:min(100%,620px) !important;
-  max-height:min(88vh,760px) !important;
-  margin:0 auto !important;
-  padding:20px !important;
-  border-radius:20px 20px 0 0 !important;
-  background:rgba(15,23,42,.97) !important;
-  border:1px solid var(--kw-border-strong) !important;
-  box-shadow:0 -18px 55px rgba(0,0,0,.34) !important;
-  backdrop-filter:blur(20px) saturate(135%) !important;
-  -webkit-backdrop-filter:blur(20px) saturate(135%) !important;
-  overflow-y:auto !important;
-  overflow-x:hidden !important;
-  overscroll-behavior:contain !important;
-  -webkit-overflow-scrolling:touch !important;
-  scrollbar-width:thin !important;
-  scrollbar-color:rgba(96,165,250,.55) transparent !important;
-}
-body.dark .modal::-webkit-scrollbar{width:6px !important}
-body.dark .modal::-webkit-scrollbar-track{background:transparent !important}
-body.dark .modal::-webkit-scrollbar-thumb{background:rgba(96,165,250,.45) !important;border-radius:999px !important}
-body.dark .modal h3{font-size:18px !important;margin-bottom:18px !important}
-body.dark .modal-actions{padding-top:4px !important;position:sticky;bottom:-20px;background:linear-gradient(transparent,rgba(15,23,42,.98) 28%) !important;margin:14px -20px -20px !important;padding:20px !important;z-index:3}
-
-/* ---------- desktop sidebar ---------- */
-body.dark .desktop-sidebar{
-  background:rgba(8,12,20,.78) !important;
-  border-right:1px solid var(--kw-border) !important;
-  backdrop-filter:blur(18px) saturate(135%) !important;
-  -webkit-backdrop-filter:blur(18px) saturate(135%) !important;
-}
-body.dark .desktop-nav-item{border-radius:12px !important;color:#64748b !important}
-body.dark .desktop-nav-item:hover{background:rgba(59,130,246,.06) !important;color:#cbd5e1 !important}
-body.dark .desktop-nav-item.active{background:rgba(59,130,246,.10) !important;color:#60a5fa !important;border:1px solid rgba(96,165,250,.12) !important}
-
-/* ---------- touch + responsive ---------- */
-@media(max-width:720px){
-  body.dark .screen{padding:14px 12px 24px !important}
-  body.dark .pagehead{margin-bottom:14px !important}
-  body.dark .pagehead h1{font-size:25px !important}
-  body.dark .section{border-radius:15px !important}
-  body.dark .dashboard-stat-card{min-height:120px !important;padding:13px !important}
-  body.dark .dashboard-stat-card .stat-value{font-size:22px !important}
-  body.dark .modal{max-height:92vh !important;padding:18px !important;border-radius:18px 18px 0 0 !important}
-  body.dark .modal-actions{margin-left:-18px !important;margin-right:-18px !important;margin-bottom:-18px !important}
-}
-@media(min-width:721px){
-  body.dark .screen{padding:22px 24px 34px !important}
-}
-@media(prefers-reduced-motion:reduce){
-  body.dark *,body.dark *::before,body.dark *::after{scroll-behavior:auto !important;transition-duration:.01ms !important;animation-duration:.01ms !important}
-}
-</style>
-
-<style id="kelasku-final-design-audit-v46">
-/* Final product-design pass: hierarchy, interaction, responsive behavior, and modal ergonomics. */
-:root{
-  --k-bg:#080C14;
-  --k-surface:#0F172A;
-  --k-surface-2:#111C31;
-  --k-border:rgba(255,255,255,.08);
-  --k-border-hover:rgba(59,130,246,.28);
-  --k-blue:#3B82F6;
-  --k-blue-soft:rgba(59,130,246,.12);
-  --k-text:#F8FAFC;
-  --k-muted:#94A3B8;
-  --k-dim:#64748B;
-  --k-radius:16px;
-  --k-radius-sm:12px;
-  --k-ease:cubic-bezier(.22,1,.36,1);
-}
-body.dark{
-  background:
-    radial-gradient(900px 420px at 15% -10%,rgba(59,130,246,.09),transparent 60%),
-    radial-gradient(700px 360px at 90% 0%,rgba(56,189,248,.045),transparent 60%),
-    var(--k-bg) !important;
-  color:var(--k-text);
-}
-body.dark .card,
-body.dark .section,
-body.dark .dashboard-card,
-body.dark .dashboard-stat-card,
-body.dark .stat-card,
-body.dark .task-item,
-body.dark .task-pro-card,
-body.dark .report-kpi,
-body.dark .report-chart-card,
-body.dark .report-kpi-card,
-body.dark .timeline-card,
-body.dark .hp-slot,
-body.dark .kas-pro-metric,
-body.dark .kas-pro-table,
-body.dark .settings-profile-card,
-body.dark .settings-section,
-body.dark .calendar-card,
-body.dark .cal-card{
-  background:linear-gradient(180deg,rgba(15,23,42,.92),rgba(15,23,42,.78)) !important;
-  border:1px solid var(--k-border) !important;
-  box-shadow:0 10px 30px rgba(0,0,0,.16) !important;
-  border-radius:var(--k-radius) !important;
-  backdrop-filter:blur(12px);
-  -webkit-backdrop-filter:blur(12px);
-}
-body.dark .card:hover,
-body.dark .dashboard-card:hover,
-body.dark .task-item:hover,
-body.dark .task-pro-card:hover,
-body.dark .hp-slot:hover{
-  border-color:var(--k-border-hover) !important;
-  transform:translateY(-1px);
-  box-shadow:0 14px 34px rgba(0,0,0,.22),0 0 0 1px rgba(59,130,246,.035) !important;
-}
-body.dark button.btn,
-body.dark button.primary,
-body.dark .btn-primary,
-body.dark .fab-add{
-  border-radius:12px !important;
-  transition:transform .18s var(--k-ease),box-shadow .18s var(--k-ease),background .18s var(--k-ease),border-color .18s var(--k-ease);
-}
-body.dark button.btn:hover,
-body.dark .btn-primary:hover,
-body.dark .fab-add:hover{
-  box-shadow:0 8px 24px rgba(59,130,246,.18);
-}
-body.dark button:focus-visible,
-body.dark .btn:focus-visible,
-body.dark input:focus-visible,
-body.dark select:focus-visible,
-body.dark textarea:focus-visible{
-  outline:2px solid rgba(59,130,246,.75) !important;
-  outline-offset:2px;
-}
-body.dark input,
-body.dark select,
-body.dark textarea{
-  background:rgba(8,12,20,.52) !important;
-  border:1px solid var(--k-border) !important;
-  color:var(--k-text) !important;
-  border-radius:12px !important;
-  transition:border-color .18s var(--k-ease),box-shadow .18s var(--k-ease),background .18s var(--k-ease);
-}
-body.dark input:hover,
-body.dark select:hover,
-body.dark textarea:hover{
-  border-color:rgba(148,163,184,.18) !important;
-}
-body.dark input:focus,
-body.dark select:focus,
-body.dark textarea:focus{
-  border-color:rgba(59,130,246,.55) !important;
-  box-shadow:0 0 0 3px rgba(59,130,246,.10) !important;
-  background:rgba(15,23,42,.78) !important;
-}
-body.dark .tabbar{
-  background:rgba(9,14,24,.86) !important;
-  border-top:1px solid var(--k-border) !important;
-  box-shadow:0 -12px 30px rgba(0,0,0,.22) !important;
-  backdrop-filter:blur(18px) saturate(130%);
-  -webkit-backdrop-filter:blur(18px) saturate(130%);
-}
-body.dark .tabbar .tab{
-  color:#7f8da3 !important;
-  border-radius:12px !important;
-  transition:color .18s var(--k-ease),background .18s var(--k-ease),transform .18s var(--k-ease);
-}
-body.dark .tabbar .tab.active{
-  color:#dbeafe !important;
-  background:rgba(59,130,246,.10) !important;
-}
-body.dark .tabbar .tab.active svg{filter:drop-shadow(0 0 7px rgba(59,130,246,.35))}
-body.dark .kelasku-more-sheet{
-  background:rgba(15,23,42,.96) !important;
-  border:1px solid var(--k-border) !important;
-  box-shadow:0 -20px 60px rgba(0,0,0,.42) !important;
-  backdrop-filter:blur(20px);
-  -webkit-backdrop-filter:blur(20px);
-}
-body.dark .kelasku-more-item{
-  border:1px solid rgba(255,255,255,.055) !important;
-  background:rgba(255,255,255,.025) !important;
-  border-radius:14px !important;
-  transition:background .18s var(--k-ease),border-color .18s var(--k-ease),transform .18s var(--k-ease);
-}
-body.dark .kelasku-more-item:hover{
-  background:rgba(59,130,246,.08) !important;
-  border-color:rgba(59,130,246,.18) !important;
-}
-body.dark .desktop-nav-item{
-  border:1px solid transparent !important;
-  border-radius:12px !important;
-  transition:background .18s var(--k-ease),color .18s var(--k-ease),transform .18s var(--k-ease),border-color .18s var(--k-ease) !important;
-}
-body.dark .desktop-nav-item:hover{
-  background:rgba(255,255,255,.035) !important;
-  border-color:rgba(255,255,255,.055) !important;
-  transform:translateX(1px);
-}
-body.dark .desktop-nav-item.active{
-  background:rgba(59,130,246,.10) !important;
-  border-color:rgba(59,130,246,.10) !important;
-  box-shadow:inset 2px 0 0 #3B82F6,0 6px 18px rgba(0,0,0,.10) !important;
-}
-body.dark .section-title,
-body.dark .view h1,
-body.dark .view h2{
-  letter-spacing:-.02em;
-}
-body.dark .stat-value,
-body.dark .dashboard-stat-value,
-body.dark .metric-value{
-  letter-spacing:-.035em;
-  font-variant-numeric:tabular-nums;
-}
-body.dark .badge,
-body.dark .pill,
-body.dark .chip,
-body.dark .task-filter,
-body.dark .filter-pill{
-  border:1px solid rgba(255,255,255,.07) !important;
-  border-radius:999px !important;
-}
-body.dark .badge.active,
-body.dark .pill.active,
-body.dark .chip.active,
-body.dark .task-filter.active,
-body.dark .filter-pill.active{
-  background:rgba(59,130,246,.13) !important;
-  border-color:rgba(59,130,246,.24) !important;
-  color:#bfdbfe !important;
-}
-body.dark .modal{
-  padding:16px !important;
-  overscroll-behavior:contain;
-}
-body.dark .modal-bg{
-  background:rgba(2,6,23,.72) !important;
-  backdrop-filter:blur(7px);
-  -webkit-backdrop-filter:blur(7px);
-}
-body.dark .modal > *:not(.modal-bg),
-body.dark .modal-content,
-body.dark .modal-panel,
-body.dark .modal-card{
-  max-height:calc(100dvh - 32px);
-}
-body.dark .modal-content,
-body.dark .modal-panel,
-body.dark .modal-card{
-  overflow-y:auto !important;
-  overflow-x:hidden;
-  overscroll-behavior:contain;
-  -webkit-overflow-scrolling:touch;
-  scrollbar-width:thin;
-  scrollbar-color:rgba(148,163,184,.28) transparent;
-  background:linear-gradient(180deg,rgba(15,23,42,.98),rgba(10,16,28,.98)) !important;
-  border:1px solid var(--k-border) !important;
-  border-radius:18px !important;
-  box-shadow:0 24px 80px rgba(0,0,0,.48) !important;
-}
-body.dark .modal-content::-webkit-scrollbar,
-body.dark .modal-panel::-webkit-scrollbar,
-body.dark .modal-card::-webkit-scrollbar{width:6px}
-body.dark .modal-content::-webkit-scrollbar-track,
-body.dark .modal-panel::-webkit-scrollbar-track,
-body.dark .modal-card::-webkit-scrollbar-track{background:transparent}
-body.dark .modal-content::-webkit-scrollbar-thumb,
-body.dark .modal-panel::-webkit-scrollbar-thumb,
-body.dark .modal-card::-webkit-scrollbar-thumb{
-  background:rgba(148,163,184,.25);
-  border-radius:999px;
-}
-body.dark .modal-actions{
-  position:sticky;
-  bottom:0;
-  z-index:4;
-  margin-top:16px;
-  padding-top:12px;
-  padding-bottom:2px;
-  background:linear-gradient(180deg,transparent,rgba(15,23,42,.97) 28%);
-}
-@media (max-width:720px){
-  body.dark .card,
-  body.dark .section,
-  body.dark .dashboard-card,
-  body.dark .dashboard-stat-card,
-  body.dark .stat-card,
-  body.dark .task-item,
-  body.dark .task-pro-card,
-  body.dark .report-kpi,
-  body.dark .report-chart-card,
-  body.dark .report-kpi-card,
-  body.dark .timeline-card,
-  body.dark .hp-slot,
-  body.dark .kas-pro-metric,
-  body.dark .kas-pro-table,
-  body.dark .settings-profile-card,
-  body.dark .settings-section,
-  body.dark .calendar-card,
-  body.dark .cal-card{
-    border-radius:14px !important;
-  }
-  body.dark .modal{padding:8px !important;align-items:flex-end !important}
-  body.dark .modal-content,
-  body.dark .modal-panel,
-  body.dark .modal-card{
-    width:100%;
-    max-height:calc(100dvh - 16px);
-    border-radius:20px 20px 12px 12px !important;
-  }
-  body.dark .modal-actions{
-    padding-bottom:max(4px,env(safe-area-inset-bottom));
-  }
-  body.dark .tabbar{
-    padding-bottom:max(6px,env(safe-area-inset-bottom)) !important;
-  }
-}
-@media (prefers-reduced-motion:reduce){
-  *,*::before,*::after{
-    scroll-behavior:auto !important;
-    transition-duration:.01ms !important;
-    animation-duration:.01ms !important;
-    animation-iteration-count:1 !important;
-  }
-}
-</style>
-
-
-<style id="kelasku-final-world-class-polish-v47">
-/* FINAL PRODUCT-DESIGN PASS: visual hierarchy, density, states and responsive polish. */
-:root{
-  --wc-bg:#080c14;--wc-surface:#0f172a;--wc-surface-2:#111c31;
-  --wc-border:rgba(255,255,255,.08);--wc-blue:#3b82f6;--wc-blue-soft:rgba(59,130,246,.12);
-  --wc-text:#f8fafc;--wc-muted:#94a3b8;--wc-dim:#64748b;
-  --wc-green:rgba(34,197,94,.12);--wc-red:rgba(239,68,68,.12);--wc-yellow:rgba(234,179,8,.12);
-}
-/* Shared geometry: calm, compact and consistent. */
-body.dark .view .section,body.dark .view .card,body.dark .view .dashboard-card,
-body.dark .view .dashboard-stat-card,body.dark .view .stat-card,body.dark .view .task-item,
-body.dark .view .report-kpi,body.dark .view .report-chart-card,body.dark .view .hp-slot,
-body.dark .view .kas-pro-metric,body.dark .view .kas-pro-table,body.dark .view .settings-section,
-body.dark .view .calendar-card,body.dark .view .cal-card{
-  background:linear-gradient(180deg,rgba(15,23,42,.92),rgba(11,18,31,.92)) !important;
-  border:1px solid var(--wc-border) !important;
-  box-shadow:0 10px 34px rgba(0,0,0,.16) !important;
-}
-body.dark .view .section:hover,body.dark .view .card:hover,body.dark .view .dashboard-stat-card:hover,
-body.dark .view .task-item:hover,body.dark .view .hp-slot:hover{
-  border-color:rgba(59,130,246,.18) !important;
-}
-body.dark .view .pagehead h1,body.dark .view .section-head h2,body.dark .view .section-head h3{letter-spacing:-.025em}
-body.dark .view .muted,body.dark .view .subtle,body.dark .view .pagehead p{color:var(--wc-muted)}
-/* Inputs: one visual language everywhere. */
-body.dark input:not([type="checkbox"]):not([type="radio"]),body.dark textarea,body.dark select{
-  background:rgba(2,6,23,.42) !important;color:var(--wc-text) !important;
-  border:1px solid var(--wc-border) !important;border-radius:10px !important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.025) !important;
-}
-body.dark input:focus,body.dark textarea:focus,body.dark select:focus{
-  outline:none !important;border-color:rgba(59,130,246,.55) !important;
-  box-shadow:0 0 0 3px rgba(59,130,246,.10) !important;
-}
-/* Buttons: clear hierarchy without heavy borders. */
-body.dark .btn{border-color:var(--wc-border) !important;border-radius:10px !important;font-weight:750 !important}
-body.dark .btn-primary,body.dark .fab-add{
-  background:linear-gradient(135deg,#3b82f6,#2563eb) !important;color:#fff !important;border-color:transparent !important;
-  box-shadow:0 7px 24px rgba(37,99,235,.22) !important;
-}
-body.dark .btn-primary:hover,body.dark .fab-add:hover{transform:translateY(-1px);box-shadow:0 10px 30px rgba(37,99,235,.30) !important}
-body.dark .btn:active,body.dark .fab-add:active{transform:translateY(0) scale(.985)}
-/* Dashboard: strong first-screen hierarchy. */
-body.dark #view-beranda .dashboard-stat-card,
-body.dark #view-beranda .stat-card{min-height:106px !important;padding:16px !important}
-body.dark #view-beranda .dashboard-stat-card .value,
-body.dark #view-beranda .stat-card .value{font-size:clamp(22px,3vw,30px) !important;letter-spacing:-.04em}
-body.dark #view-beranda .announce-item{border-bottom:1px solid rgba(255,255,255,.06) !important;padding:12px 0 !important}
-/* Kas: finance semantics are visible but soft. */
-body.dark #view-kas .kas-pro-metric.income,.dark .income{background:var(--wc-green) !important}
-body.dark #view-kas .kas-pro-metric.expense,.dark .expense{background:var(--wc-red) !important}
-body.dark #view-kas .kas-search-row,body.dark #view-kas .filter-row{gap:8px !important}
-/* HP: status and touch targets. */
-body.dark #view-hp .hp-slot{min-height:58px !important}
-body.dark #view-hp button,body.dark #view-hp [role="button"]{min-height:40px}
-/* Jadwal/Piket: quieter timeline and cleaner chips. */
-body.dark #view-jadwal .day-tabs,body.dark #view-jadwal .segmented-control,
-body.dark #view-jadwal .piket-weekly-head-actions{gap:8px !important}
-body.dark #view-jadwal .timeline-dot{box-shadow:0 0 0 4px rgba(59,130,246,.10),0 0 14px rgba(59,130,246,.18)}
-body.dark #view-jadwal .piket-chip,body.dark #view-jadwal .chip{border-radius:999px !important;background:rgba(59,130,246,.10) !important;border-color:rgba(59,130,246,.16) !important}
-/* Tugas: filters and deadline hierarchy. */
-body.dark #view-tugas .task-filter,body.dark #view-tugas .filter-pill,body.dark #view-tugas .badge,
-body.dark #view-tugas .pill{border-radius:999px !important}
-body.dark #view-tugas .task-filter.active,body.dark #view-tugas .filter-pill.active{background:var(--wc-blue-soft) !important;color:#bfdbfe !important;border-color:rgba(59,130,246,.24) !important}
-body.dark #view-tugas .deadline-danger{background:var(--wc-red) !important;color:#fca5a5 !important}
-body.dark #view-tugas .deadline-warning{background:var(--wc-yellow) !important;color:#fde68a !important}
-/* Laporan: metrics become scannable. */
-body.dark #view-laporan .report-kpi,body.dark #view-laporan .report-kpi-card{min-height:88px !important;padding:14px !important}
-body.dark #view-laporan .report-kpi .value,body.dark #view-laporan .report-kpi-card .value{font-size:24px !important;letter-spacing:-.03em}
-/* Settings: clear groups, not a wall of controls. */
-body.dark #view-settings .settings-profile-card{background:linear-gradient(135deg,rgba(59,130,246,.12),rgba(15,23,42,.9)) !important;border-color:rgba(59,130,246,.18) !important}
-body.dark #view-settings .settings-label{color:#cbd5e1 !important;letter-spacing:.01em}
-/* Focus-visible is intentionally visible for keyboard users. */
-body.dark :where(button,a,input,select,textarea,[tabindex]):focus-visible{
-  outline:2px solid rgba(96,165,250,.82) !important;outline-offset:2px !important;
-}
-/* Light mode receives the same geometry instead of a separate visual system. */
-body:not(.dark) .view .section,body:not(.dark) .view .card,body:not(.dark) .view .dashboard-card,
-body:not(.dark) .view .dashboard-stat-card,body:not(.dark) .view .stat-card,body:not(.dark) .view .task-item,
-body:not(.dark) .view .report-kpi,body:not(.dark) .view .report-chart-card,body:not(.dark) .view .hp-slot,
-body:not(.dark) .view .kas-pro-metric,body:not(.dark) .view .kas-pro-table,body:not(.dark) .view .settings-section{
-  border:1px solid rgba(15,23,42,.08) !important;border-radius:14px !important;box-shadow:0 6px 24px rgba(15,23,42,.05) !important;
-}
-body:not(.dark) input:not([type="checkbox"]):not([type="radio"]),body:not(.dark) textarea,body:not(.dark) select{
-  border:1px solid rgba(15,23,42,.12) !important;border-radius:10px !important;
-}
-body:not(.dark) input:focus,body:not(.dark) textarea:focus,body:not(.dark) select:focus{
-  outline:none !important;border-color:rgba(37,99,235,.55) !important;box-shadow:0 0 0 3px rgba(37,99,235,.10) !important;
-}
-body:not(.dark) :where(button,a,input,select,textarea,[tabindex]):focus-visible{outline:2px solid rgba(37,99,235,.65) !important;outline-offset:2px !important}
-/* Modal engineering: every long form gets one reliable scroll owner. */
-.modal{overscroll-behavior:contain !important}
-.modal-content,.modal-panel,.modal-card{
-  max-height:calc(100dvh - 24px) !important;overflow-y:auto !important;overflow-x:hidden !important;
-  overscroll-behavior:contain !important;-webkit-overflow-scrolling:touch !important;
-}
-.modal-content > form,.modal-panel > form,.modal-card > form{min-height:0 !important}
-.modal-actions{position:sticky !important;bottom:0 !important;z-index:20 !important}
-@media(max-width:720px){
-  .modal{padding:8px !important;align-items:flex-end !important}
-  .modal-content,.modal-panel,.modal-card{width:100% !important;max-height:calc(100dvh - 12px) !important;border-radius:20px 20px 12px 12px !important}
-  .modal-actions{padding-bottom:max(8px,env(safe-area-inset-bottom)) !important}
-  .view .section{margin-top:14px !important;margin-bottom:14px !important}
-  .view .pagehead{margin-bottom:14px !important}
-  .btn{min-height:40px}
-}
-@media(min-width:1000px){
-  .view{max-width:1180px;margin-inline:auto}
-  .view .pagehead{padding-inline:2px}
-}
-</style>
-<script id="kelasku-final-design-qa-v47">
-(function(){
-  'use strict';
-  /* Keep long modals usable after dynamic content is inserted. */
-  function refreshModalScroll(){
-    document.querySelectorAll('.modal-content,.modal-panel,.modal-card').forEach(function(el){
-      el.style.setProperty('max-height','calc(100dvh - 24px)','important');
-      el.style.setProperty('overflow-y','auto','important');
-      el.style.setProperty('overscroll-behavior','contain','important');
-      el.style.setProperty('-webkit-overflow-scrolling','touch','important');
-    });
-  }
-  document.addEventListener('click',function(e){
-    if(e.target.closest && e.target.closest('.modal,.modal-open,[data-modal]')) setTimeout(refreshModalScroll,0);
-  },true);
-  window.addEventListener('resize',refreshModalScroll,{passive:true});
-  refreshModalScroll();
+  function setChessMode(mode){chessMode=mode;chessSelected=null;document.querySelectorAll('[data-chess-mode]').forEach(b=>b.classList.toggle('active',b.dataset.chessMode===mode));const p=document.getElementById('chess-online-panel');if(p)p.style.display=mode==='online'?'block':'none';if(mode!=='online')leaveChessRoom();newChessGame();}
+  function boardSquares(){const out=[];for(let r=0;r<8;r++)for(let c=0;c<8;c++)out.push(String.fromCharCode(97+c)+(8-r));return chessFlipped?out.reverse():out}
+  function renderChessBoard(){const b=document.getElementById('chess-board');if(!b||!chessGame)return;const squares=boardSquares();b.innerHTML=squares.map((sq,i)=>{const c=chessGame.get(sq),row=Math.floor(i/8),col=i%8,light=(row+col)%2===0,moves=chessSelected?chessGame.moves({square:chessSelected,verbose:true}):[],legal=moves.some(m=>m.to===sq),capture=legal&&!!chessGame.get(sq);return `<div class="chess-square ${light?'light':'dark'} ${chessSelected===sq?'selected':''} ${legal?'legal':''} ${capture?'capture':''}" onclick="window.__kelaskuChessClick('${sq}')">${c?`<span class="chess-piece">${glyph[c.color+c.type.toUpperCase()]||''}</span>`:''}</div>`}).join('');let text='Giliran '+(chessGame.turn()==='w'?'Putih':'Hitam');if(chessGame.isCheck())text+=' · Skak';if(chessGame.isGameOver())text=chessGame.isCheckmate()?('Skakmat · '+(chessGame.turn()==='w'?'Hitam':'Putih')+' menang'):'Permainan seri';const st=document.getElementById('chess-status');if(st)st.textContent=text;}
+  function chessClick(sq){if(!chessGame||chessGame.isGameOver())return;const piece=chessGame.get(sq);if(chessMode==='online'&&chessOnlineColor!==chessGame.turn())return;if(chessSelected){const legal=chessGame.moves({square:chessSelected,verbose:true}).find(m=>m.to===sq);if(legal){const move=chessGame.move({from:chessSelected,to:sq,promotion:'q'});chessSelected=null;afterChessMove(move);return;}chessSelected=null;}if(piece&&piece.color===chessGame.turn())chessSelected=sq;renderChessBoard();}
+  async function afterChessMove(move){renderChessBoard();if(chessGame.isGameOver()){await finishChessGame();return;}if(chessMode==='online')await publishChessMove(move);if(chessMode==='ai'&&chessGame.turn()==='b')setTimeout(chessAiMove,260);}
+  function chessAiMove(){if(!chessGame||chessMode!=='ai'||chessGame.isGameOver()||chessGame.turn()!=='b')return;const moves=chessGame.moves({verbose:true});if(!moves.length)return;const captures=moves.filter(m=>m.captured),pool=captures.length?captures:moves,move=pool[Math.floor(Math.random()*pool.length)];chessGame.move({from:move.from,to:move.to,promotion:'q'});renderChessBoard();if(chessGame.isGameOver())finishChessGame();}
+  async function finishChessGame(){renderChessBoard();if(chessMode!=='online'||chessGame.__scored)return;chessGame.__scored=true;let result='draw';if(chessGame.isCheckmate()){const winner=chessGame.turn()==='w'?'b':'w';result=winner===chessOnlineColor?'win':'loss';}await addChessResult(result);const info=document.getElementById('chess-online-info');if(info)info.textContent=result==='win'?'Kamu menang! +3 skor':result==='loss'?'Kamu kalah. +0 skor':'Seri. +1 skor';if(chessRoomId){try{await db.collection('kelasku_chess_rooms').doc(chessRoomId).set({status:'finished',finishedAt:Date.now()},{merge:true});}catch(e){}}}
+  function newChessGame(){if(typeof Chess==='undefined'){const st=document.getElementById('chess-status');if(st)st.textContent='Modul catur belum termuat. Periksa koneksi internet.';return;}chessGame=new Chess();chessSelected=null;chessOnlineMoveCount=0;renderChessBoard();}
+  function flipChessBoard(){chessFlipped=!chessFlipped;renderChessBoard();}
+  function createChessRoom(){if(!currentUser)return;const code=Math.random().toString(36).slice(2,7).toUpperCase();chessRoomId=code;chessOnlineColor='w';db.collection('kelasku_chess_rooms').doc(code).set({white:currentUser.uid,black:null,turn:'w',fen:new Chess().fen(),status:'waiting',createdAt:Date.now(),expiresAt:Date.now()+86400000}).then(()=>{const input=document.getElementById('chess-room-code');if(input)input.value=code;const info=document.getElementById('chess-online-info');if(info)info.textContent='Room '+code+' dibuat. Kirim kode ini ke teman.';listenChessRoom();newChessGame();}).catch(e=>showNotification('Gagal membuat room: '+(e.message||e),'error'));}
+  function joinChessRoom(){if(!currentUser)return;const input=document.getElementById('chess-room-code'),code=(input&&input.value||'').trim().toUpperCase();if(!code){showNotification('Masukkan kode room.','warning');return;}db.collection('kelasku_chess_rooms').doc(code).get().then(async s=>{if(!s.exists){showNotification('Room tidak ditemukan.','error');return;}const d=s.data()||{};if(d.expiresAt&&Date.now()>Number(d.expiresAt)){showNotification('Room sudah kedaluwarsa.','error');return;}if(d.white===currentUser.uid||d.black===currentUser.uid){chessOnlineColor=d.white===currentUser.uid?'w':'b';}else if(!d.black){chessOnlineColor='b';await s.ref.set({black:currentUser.uid,status:'playing',turn:'w',fen:d.fen||new Chess().fen(),updatedAt:Date.now()},{merge:true});}else{showNotification('Room sudah penuh.','error');return;}chessRoomId=code;listenChessRoom();}).catch(e=>showNotification('Gagal bergabung: '+(e.message||e),'error'));}
+  function listenChessRoom(){if(chessRoomUnsub)chessRoomUnsub();chessRoomUnsub=db.collection('kelasku_chess_rooms').doc(chessRoomId).onSnapshot(s=>{if(!s.exists)return;const d=s.data()||{};if(d.fen&&(!chessGame||chessGame.fen()!==d.fen)){chessGame=new Chess(d.fen);chessSelected=null;renderChessBoard();}if(d.status==='playing'){const info=document.getElementById('chess-online-info');if(info)info.textContent='Room '+chessRoomId+' aktif · Kamu '+(chessOnlineColor==='w'?'Putih':'Hitam');}if(d.status==='finished'&&chessRoomUnsub){chessRoomUnsub();chessRoomUnsub=null;}});}
+  async function publishChessMove(move){if(!chessRoomId)return;try{await db.collection('kelasku_chess_rooms').doc(chessRoomId).set({fen:chessGame.fen(),turn:chessGame.turn(),lastMove:{from:move.from,to:move.to,san:move.san},moveNumber:++chessOnlineMoveCount,updatedAt:Date.now()},{merge:true});}catch(e){showNotification('Gerakan belum tersinkron.','error');}}
+  function leaveChessRoom(){if(chessRoomUnsub){chessRoomUnsub();chessRoomUnsub=null;}chessRoomId=null;chessOnlineColor=null;}
+  window.__kelaskuChessClick=chessClick;window.setChessMode=setChessMode;window.newChessGame=newChessGame;window.flipChessBoard=flipChessBoard;window.createChessRoom=createChessRoom;window.joinChessRoom=joinChessRoom;window.renderChessStats=renderChessStats;window.__kelaskuChessInit=()=>{loadChessStats();newChessGame();};
 })();
 </script>
 
@@ -19012,7 +17871,6 @@ body:not(.dark) :where(button,a,input,select,textarea,[tabindex]):focus-visible{
   .piket-weekly-label{margin-top:5px;font-size:10px;font-weight:700;color:var(--ui-muted)}
   .piket-weekly-head-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
   .piket-rotation-settings-btn{padding:8px 11px;font-size:10px;border-radius:11px;white-space:nowrap}
-  .piket-jadwal-settings-btn{padding:8px 11px;font-size:10px;border-radius:11px;white-space:nowrap}
   .piket-rotation-badge{display:inline-flex;align-items:center;justify-content:center;min-height:26px;padding:0 9px;border-radius:999px;font-size:9px;font-weight:900;border:1px solid var(--ui-border);background:var(--ui-surface);color:var(--ui-muted);letter-spacing:.02em}
   .piket-rotation-badge.auto{background:var(--ui-blue-soft);border-color:rgba(37,99,235,.18);color:var(--ui-blue)}
   .piket-rotation-badge.manual{background:var(--ui-amber-soft);border-color:rgba(180,83,9,.18);color:var(--ui-amber)}
