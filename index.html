@@ -12716,6 +12716,240 @@ body.dark .tabbar{box-shadow:0 -8px 22px rgba(0,0,0,.18)!important}.tab{color:va
 button,a,input,select,textarea{font-family:var(--font-sans)}:focus-visible{outline:2px solid var(--ui-primary)!important;outline-offset:2px}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
 
+
+/* =========================================================
+   KELASKU — MODERN PRODUCT UI
+   Visual layer only. Existing HTML + JavaScript behavior stays intact.
+   Reference: compact premium mobile dashboard, dark-first, clean surfaces.
+   ========================================================= */
+:root{
+  --ui-bg:#0b0f17;
+  --ui-surface:#151a24;
+  --ui-surface-2:#1b202c;
+  --ui-surface-3:#202635;
+  --ui-surface-hover:#252c3b;
+  --ui-border:#2a3140;
+  --ui-border-strong:#353d4f;
+  --ui-text:#f5f7fb;
+  --ui-text-2:#c4cad7;
+  --ui-text-3:#8e97aa;
+  --ui-text-4:#697386;
+  --ui-primary:#5146e5;
+  --ui-primary-hover:#5c52ed;
+  --ui-primary-soft:#27245d;
+  --ui-primary-border:#5b54e9;
+  --ui-success:#35d6a0;
+  --ui-success-soft:#103d35;
+  --ui-warning:#f2c866;
+  --ui-danger:#f2748b;
+  --ui-radius-xs:8px;
+  --ui-radius-sm:12px;
+  --ui-radius-md:16px;
+  --ui-radius-lg:20px;
+  --ui-radius-pill:999px;
+  --ui-shadow:0 10px 30px rgba(0,0,0,.18);
+  --ui-shadow-soft:0 5px 18px rgba(0,0,0,.12);
+  --ui-ease:cubic-bezier(.16,1,.3,1);
+  --ui-spring:cubic-bezier(.34,1.56,.64,1);
+}
+html,body{background:var(--ui-bg);color:var(--ui-text)}
+body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+body.dark{--ui-bg:#0b0f17}
+body:not(.dark){
+  --ui-bg:#f4f6fa;
+  --ui-surface:#ffffff;
+  --ui-surface-2:#ffffff;
+  --ui-surface-3:#f7f8fb;
+  --ui-surface-hover:#f0f2f7;
+  --ui-border:#e1e5ec;
+  --ui-border-strong:#d4dae4;
+  --ui-text:#171b24;
+  --ui-text-2:#465064;
+  --ui-text-3:#727d91;
+  --ui-text-4:#98a1b1;
+  --ui-primary:#4f46e5;
+  --ui-primary-hover:#5b52ed;
+  --ui-primary-soft:#eef0ff;
+  --ui-primary-border:#d8d5ff;
+  --ui-success:#138a68;
+  --ui-success-soft:#e8f8f2;
+  --ui-warning:#9a6b08;
+  --ui-danger:#c63d5c;
+  --ui-shadow:0 12px 28px rgba(25,34,52,.08);
+  --ui-shadow-soft:0 4px 14px rgba(25,34,52,.06);
+}
+body,body.dark,.phone,.screen,.content,.view{background:var(--ui-bg)}
+.phone{border:0!important;border-radius:0!important;box-shadow:none!important;overflow:hidden}
+.screen{scrollbar-width:thin;scrollbar-color:var(--ui-border-strong) transparent}
+.screen::-webkit-scrollbar{width:6px}.screen::-webkit-scrollbar-thumb{background:var(--ui-border-strong);border-radius:99px}
+
+/* Top app header */
+.statusbar{
+  height:58px!important;
+  padding:0 18px!important;
+  background:var(--ui-bg)!important;
+  border-bottom:1px solid var(--ui-border)!important;
+  color:var(--ui-text)!important;
+  gap:10px;
+}
+.statusbar-left,.statusbar-right{gap:8px!important}
+.statusbar-left>span,.statusbar-right>span{color:var(--ui-text-3)}
+.statusbar strong,.statusbar b{color:var(--ui-text)!important}
+.statusbar .theme-btn{
+  width:34px!important;height:34px!important;border-radius:10px!important;
+  background:var(--ui-surface-2)!important;border:1px solid var(--ui-border)!important;
+  color:var(--ui-text-2)!important;box-shadow:none!important;
+  transition:transform .18s var(--ui-ease),background .18s var(--ui-ease),border-color .18s var(--ui-ease)
+}
+.theme-btn:hover{background:var(--ui-surface-hover)!important;border-color:var(--ui-border-strong)!important;transform:translateY(-1px)}
+
+/* Desktop shell */
+@media(min-width:901px){
+  body{background:var(--ui-bg)!important}
+  .phone{width:100vw!important;max-width:none!important;height:100vh!important;max-height:none!important;display:grid!important;grid-template-columns:250px minmax(0,1fr)!important;grid-template-rows:100vh!important;background:var(--ui-bg)!important}
+  .desktop-sidebar{width:250px!important;min-width:250px!important;background:var(--ui-surface)!important;border-right:1px solid var(--ui-border)!important;box-shadow:none!important}
+  .desktop-brand{padding:20px 18px!important;border-bottom:1px solid var(--ui-border)!important;gap:11px!important}
+  .desktop-brand-logo{width:42px!important;height:42px!important;min-width:42px!important;border-radius:12px!important;background:var(--ui-primary-soft)!important;box-shadow:none!important}
+  .desktop-brand-logo img{width:38px!important;height:38px!important;border-radius:10px!important}
+  .desktop-brand-title{font-size:16px!important;color:var(--ui-text)!important}
+  .desktop-brand-sub{font-size:10px!important;color:var(--ui-text-3)!important}
+  .desktop-nav{padding:14px 10px!important;gap:4px!important}
+  .desktop-nav-item{min-height:42px!important;padding:10px 12px!important;border-radius:11px!important;color:var(--ui-text-3)!important;font-size:12px!important;font-weight:700!important;transition:background .18s var(--ui-ease),color .18s var(--ui-ease),transform .18s var(--ui-ease)!important}
+  .desktop-nav-item:hover{background:var(--ui-surface-3)!important;color:var(--ui-text)!important;transform:translateX(1px)}
+  .desktop-nav-item.active{background:var(--ui-primary-soft)!important;color:#a9a5ff!important}
+  .desktop-nav-item.active:before{left:0!important;top:8px!important;bottom:8px!important;width:3px!important;background:var(--ui-primary)!important;border-radius:0 4px 4px 0!important}
+  .phone>.screen{padding:0!important;background:var(--ui-bg)!important}
+  .phone>.screen>.view{max-width:1180px!important;margin:0 auto!important;padding:28px 34px 40px!important}
+}
+
+/* Mobile content rhythm */
+@media(max-width:900px){
+  .statusbar{height:58px!important}
+  .phone{width:100vw!important;max-width:none!important;height:100dvh!important;max-height:none!important;border:0!important}
+  .screen{padding:0!important}
+  .screen>.view{padding:18px 16px 26px!important}
+}
+
+/* Page headings */
+.pagehead{margin:0 0 18px!important;padding:0!important}
+.pagehead h1,.page-title,.view-title{
+  color:var(--ui-text)!important;font-family:'Sora','Plus Jakarta Sans',sans-serif!important;
+  font-size:22px!important;line-height:1.18!important;letter-spacing:-.035em!important;font-weight:800!important
+}
+.pagehead p,.page-subtitle{color:var(--ui-text-3)!important;font-size:12px!important;line-height:1.55!important}
+.section{margin-top:18px!important}
+.section-head{margin:0 2px 9px!important;padding:0!important;min-height:24px!important}
+.section-title{font-family:'Sora','Plus Jakarta Sans',sans-serif!important;color:var(--ui-text)!important;font-size:12px!important;font-weight:800!important;letter-spacing:.015em!important;text-transform:uppercase!important}
+.section-link{font-size:10px!important;color:var(--ui-text-3)!important;background:transparent!important;border:0!important;padding:5px 7px!important}
+.section-link:hover{color:var(--ui-text)!important;background:var(--ui-surface-hover)!important}
+
+/* Shared surfaces */
+.card,.panel,.dashboard-card,.dashboard-panel,.stat-card,.balance-card,.task-pro-card,.task-column,.timeline-card,.calendar-card,.cal-card,.hp-slot,.report-kpi-card,.kas-pro-table,.hero-card,.dashboard-hero,.home-hero{
+  background:var(--ui-surface-2)!important;
+  border:1px solid var(--ui-border)!important;
+  box-shadow:none!important;
+  backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+}
+.card,.panel,.dashboard-card,.dashboard-panel,.task-pro-card,.task-column,.timeline-card,.calendar-card,.cal-card,.hp-slot,.report-kpi-card,.hero-card{border-radius:var(--ui-radius-md)!important}
+.card:hover,.dashboard-card:hover,.task-pro-card:hover,.timeline-card:hover,.hp-slot:hover{border-color:var(--ui-border-strong)!important}
+
+/* Dashboard */
+.dashboard-topbar{margin-bottom:16px!important}
+.dashboard-search{height:40px!important;border-radius:12px!important;background:var(--ui-surface)!important;border:1px solid var(--ui-border)!important;box-shadow:none!important;color:var(--ui-text)!important}
+.dashboard-search:focus-within{border-color:var(--ui-primary)!important;box-shadow:0 0 0 3px rgba(81,70,229,.13)!important}
+.dashboard-search input{color:var(--ui-text)!important}
+.dashboard-user-meta strong{color:var(--ui-text)!important}.dashboard-user-meta span{color:var(--ui-text-3)!important}
+.dashboard-user-avatar{background:var(--ui-primary-soft)!important;border:1px solid var(--ui-primary-border)!important}
+.dashboard-hero{border-radius:20px!important;background:var(--ui-primary)!important;border-color:transparent!important;box-shadow:var(--ui-shadow)!important;overflow:hidden}
+.dashboard-hero *,.home-hero *,.hero-card *{color:inherit}
+.dashboard-stat-grid{gap:10px!important}
+.dashboard-stat-card{padding:15px!important;border-radius:15px!important;background:var(--ui-surface-2)!important;border:1px solid var(--ui-border)!important}
+.dashboard-stat-card .stat-value{font-size:22px!important;color:var(--ui-text)!important;font-weight:800!important}
+.dashboard-stat-card .stat-label{font-size:10px!important;color:var(--ui-text-3)!important}
+.dashboard-stat-card .stat-status{font-size:9px!important;color:var(--ui-text-3)!important}
+
+/* Primary actions */
+.btn,.fab-add,.btn-primary,.bulk-all-btn,.mode-btn,.toggle-btn,.day-chip,.cal-nav-btn,.roster-choice-btn,.task-file,.announce-file{
+  border-radius:11px!important;font-family:'Plus Jakarta Sans',sans-serif!important;font-weight:750!important;
+  transition:transform .18s var(--ui-ease),background .18s var(--ui-ease),border-color .18s var(--ui-ease),box-shadow .18s var(--ui-ease),color .18s var(--ui-ease)!important
+}
+.btn:hover,.fab-add:hover,.btn-primary:hover,.bulk-all-btn:hover,.mode-btn:hover,.toggle-btn:hover,.day-chip:hover,.cal-nav-btn:hover{transform:translateY(-1px)}
+.btn:active,.fab-add:active,.btn-primary:active,.bulk-all-btn:active,.mode-btn:active,.toggle-btn:active,.day-chip:active,.cal-nav-btn:active{transform:translateY(0) scale(.985)}
+.btn-primary,.fab-add,.mode-btn.active,.day-chip.active,.tab.active{
+  background:var(--ui-primary)!important;color:#fff!important;border-color:var(--ui-primary)!important;box-shadow:0 7px 18px rgba(81,70,229,.22)!important
+}
+.btn-ghost,.section-link,.theme-btn,.cal-nav-btn,.bulk-all-btn,.kas-history-toggle,.toggle-btn,.day-chip,.tab:not(.active){
+  background:var(--ui-surface-3)!important;color:var(--ui-text-2)!important;border:1px solid var(--ui-border)!important
+}
+.btn-ghost:hover,.section-link:hover,.cal-nav-btn:hover,.bulk-all-btn:hover,.kas-history-toggle:hover,.toggle-btn:hover,.day-chip:hover,.tab:not(.active):hover{background:var(--ui-surface-hover)!important;border-color:var(--ui-border-strong)!important;color:var(--ui-text)!important}
+
+/* Forms */
+input,select,textarea,.field,.search-box,#hp-search{
+  background:var(--ui-surface)!important;color:var(--ui-text)!important;border:1px solid var(--ui-border)!important;border-radius:11px!important;box-shadow:none!important
+}
+input::placeholder,textarea::placeholder{color:var(--ui-text-4)!important;opacity:1!important}
+input:focus,select:focus,textarea:focus,.field:focus-within,.search-box:focus-within{outline:none!important;border-color:var(--ui-primary)!important;box-shadow:0 0 0 3px rgba(81,70,229,.12)!important}
+
+/* Status / badges */
+.badge,.chip,.pill,.status-badge,.announce-meta,.tag{
+  border-radius:var(--ui-radius-pill)!important;font-weight:800!important;letter-spacing:.01em
+}
+.success,.badge-success,.status-done,.hp-slot-status.done{color:var(--ui-success)!important;background:var(--ui-success-soft)!important;border-color:rgba(53,214,160,.18)!important}
+.warning,.badge-warning,.status-todo,.hp-slot-status.todo{color:var(--ui-warning)!important}
+
+/* Calendar */
+.calendar-card,.cal-card{overflow:hidden!important}
+.cal-head{background:transparent!important;border-color:var(--ui-border)!important}
+.cal-grid{gap:5px!important}
+.cal-day{height:38px!important;border-radius:11px!important;color:var(--ui-text-2)!important;background:transparent!important}
+.cal-day:hover{background:var(--ui-surface-hover)!important;color:var(--ui-text)!important}
+.cal-day.active,.cal-day.selected{background:var(--ui-primary)!important;color:#fff!important}
+
+/* Lists / rows */
+.row-item,.announce-item,.task-item,.tx-item,.report-item,.student-row{border-color:var(--ui-border)!important}
+.row-title,.task-title,.s-name,.tx-title,.report-title,.announce-title,.announce-title-btn{color:var(--ui-text)!important}
+.row-sub,.task-meta,.s-meta,.tx-meta,.report-meta,.announce-description,.announce-date{color:var(--ui-text-3)!important}
+.empty{color:var(--ui-text-4)!important}
+
+/* Piket / schedule / Kas cards without changing their content */
+#view-jadwal .mode-switch,#view-jadwal .mode-b{background:var(--ui-surface-2)!important;border-color:var(--ui-border)!important}
+#view-jadwal .mode-b.active{background:var(--ui-primary)!important;color:#fff!important;border-color:var(--ui-primary)!important}
+#view-kas .kas-folder,#view-kas .kas-card,#view-kas .kas-pro-table{background:var(--ui-surface-2)!important;border-color:var(--ui-border)!important;border-radius:16px!important}
+#view-kas .kas-folder:hover,#view-kas .kas-card:hover{border-color:var(--ui-border-strong)!important}
+
+/* Bottom mobile navigation — compact like the reference */
+@media(max-width:900px){
+  .tabbar{
+    min-height:66px!important;padding:7px 6px 9px!important;
+    background:rgba(11,15,23,.98)!important;border-top:1px solid var(--ui-border)!important;
+    box-shadow:0 -8px 24px rgba(0,0,0,.16)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important
+  }
+  body:not(.dark) .tabbar{background:rgba(255,255,255,.98)!important;box-shadow:0 -8px 24px rgba(25,34,52,.08)!important}
+  .tab{gap:4px!important;padding:6px 5px!important;border:0!important;border-radius:10px!important;background:transparent!important;color:var(--ui-text-4)!important;box-shadow:none!important;font-size:9px!important;font-weight:700!important;min-height:52px!important}
+  .tab svg{width:21px!important;height:21px!important}
+  .tab.active{background:transparent!important;color:var(--ui-primary)!important;box-shadow:none!important}
+  body.dark .tab.active{color:#aaa5ff!important}
+  .tab.active svg{filter:none!important}
+}
+
+/* Small screens: preserve reference density without crowding */
+@media(max-width:430px){
+  .screen>.view{padding-left:16px!important;padding-right:16px!important}
+  .pagehead h1,.page-title,.view-title{font-size:21px!important}
+  .section{margin-top:16px!important}
+  .card,.panel,.dashboard-card,.task-pro-card,.timeline-card,.calendar-card,.cal-card,.hp-slot{border-radius:16px!important}
+}
+@media(max-width:360px){
+  .statusbar{padding:0 14px!important}
+  .screen>.view{padding-left:13px!important;padding-right:13px!important}
+  .tab{font-size:8px!important}
+}
+
+/* Motion: restrained and natural */
+@media(prefers-reduced-motion:reduce){
+  *,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+
 </style>
 </head>
 
