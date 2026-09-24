@@ -1,0 +1,74 @@
+<div class="view" id="view-hp">
+  <div class="pagehead">
+    <h1>
+      Pengumpulan HP
+    </h1>
+    <p>
+      Absensi kedisiplinan pengumpulan smartphone
+    </p>
+  </div>
+  <div class="card cal-card" id="hp-cal-card">
+    <div class="cal-head">
+      <div class="cal-nav-btn" onclick="calShift(-1)">
+        ‹
+      </div>
+      <div class="cal-month" id="cal-month-label">
+        <span class="cal-month-click" onclick="toggleCalendar('hp', event)">September
+      </span>
+      <span class="cal-year-click" onclick="openMonthYearPicker('hp', event)">2026
+    </span>
+  </div>
+  <div class="cal-btn-group">
+    <div class="cal-nav-btn" onclick="calShift(1)">
+      ›
+    </div>
+  </div>
+</div>
+<div class="cal-month-picker" id="hp-month-picker">
+</div>
+<div class="cal-body-wrap" id="hp-cal-body">
+  <div id="cal-dow-row" class="cal-grid">
+  </div>
+  <div id="cal-grid" class="cal-grid" style="margin-top:4px;">
+  </div>
+</div>
+</div>
+<div class="summary-row hp-summary-actions" role="group" aria-label="Filter pengumpulan HP">
+  <button type="button" class="summary-box hp-summary-box hp-summary-collected" id="hp-summary-collected" onclick="setHpSummaryFilter('collected')" aria-pressed="false">
+    <span class="n" id="hp-collected">0</span>
+    <span class="l">Sudah Titip</span>
+  </button>
+  <button type="button" class="summary-box hp-summary-box hp-summary-remaining" id="hp-summary-remaining" onclick="setHpSummaryFilter('remaining')" aria-pressed="false">
+    <span class="n" id="hp-remaining">0</span>
+    <span class="l">Belum Titip</span>
+  </button>
+</div>
+<div class="section">
+  <div class="section-head">
+    <div class="date-label" id="hp-date-label">
+      Hari Ini
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <div class="section-link" onclick="openStatsModal('hp')">
+        Statistik
+      </div>
+      <div class="section-link admin-only" onclick="resetRoster('hp')">
+        Reset
+      </div>
+      <button class="bulk-all-btn admin-only" type="button" onclick="toggleAllRoster('hp')">☐ Semua Sudah
+    </button>
+  </div>
+</div>
+<div class="search-box">
+  <span class="search-icon">🔍
+</span>
+<input type="text" id="hp-search" placeholder="Cari nama siswa..." oninput="onRosterSearch('hp')">
+</div>
+<div class="roster-list-wrap" id="hp-list-wrap">
+  <div class="card" id="hp-list">
+  </div>
+</div>
+<button class="fab-add admin-only" style="margin-top:10px;" onclick="openStudentModal()">＋ Tambah Siswa
+</button>
+</div>
+</div>

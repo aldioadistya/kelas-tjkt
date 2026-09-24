@@ -1,0 +1,64 @@
+<div class="view" id="view-kas">
+  <div class="pagehead">
+    <h1>
+      Kas Kelas
+    </h1>
+    <p>
+      Transparansi &amp; rekapitulasi keuangan kelas
+    </p>
+  </div>
+  <div class="balance-card">
+    <div class="balance-label">
+      Total Saldo Kas
+    </div>
+    <div class="balance-value" id="kas-saldo">
+      Rp0
+    </div>
+    <div class="balance-foot">
+      <div class="bf-item">
+        Pemasukan<b id="kas-in">Rp0
+      </b>
+    </div>
+    <div class="bf-item">
+      Pengeluaran<b id="kas-out">Rp0
+    </b>
+  </div>
+</div>
+</div>
+<div class="section" style="margin-top:12px;">
+  <button class="fab-add admin-only" onclick="openKasAddModal()">+ Catat Transaksi
+</button>
+</div>
+<div class="section kas-history-section" id="kas-history-section">
+  <div class="section-head kas-history-head">
+    <div class="section-title">Riwayat Transaksi</div>
+    <div class="kas-history-actions">
+      <div class="section-link" onclick="openExportModal()">Export</div>
+      <button type="button" class="kas-history-toggle" onclick="window.toggleKasHistory()"
+        aria-expanded="true" aria-controls="kas-history-body">
+        <span class="kas-history-toggle-text">Minimalkan</span>
+      </button>
+    </div>
+  </div>
+  <div id="kas-history-body" class="kas-history-body">
+    <div class="card" id="kas-list"></div>
+  </div>
+</div>
+<div class="section kas-siswa-section">
+  <div class="section-head">
+    <div>
+      <div class="section-title">
+        Kas Siswa
+      </div>
+      <div class="field-hint" style="margin-top:3px;">
+        Catatan pembayaran kas per anak. Siswa hanya dapat melihat.
+      </div>
+    </div>
+    <button class="btn btn-primary admin-only" style="padding:8px 11px;font-size:11px;" onclick="openKasFolderModal()">＋ Folder
+  </button>
+</div>
+<div id="kas-folder-list" class="kas-folder-list">
+</div>
+</div>
+
+</div>

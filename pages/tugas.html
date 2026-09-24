@@ -1,0 +1,37 @@
+<div class="view" id="view-tugas">
+  <div class="pagehead">
+    <h1>
+      Manajemen Tugas
+    </h1>
+    <p>
+      Pantau deadline &amp; kumpulkan berkas tugas
+    </p>
+  </div>
+  <div class="section">
+    <button class="fab-add admin-only" onclick="openTugasModal()">＋ Tambah Tugas
+  </button>
+</div>
+<div class="section">
+  <div class="section-head">
+    <div class="section-title">
+      Belum Selesai
+    </div>
+  </div>
+  <div class="card" id="tugas-open-list">
+  </div>
+</div>
+<div class="section">
+  <div class="section-head">
+    <div class="section-title">
+      Sudah Selesai
+    </div>
+    <div class="section-link admin-only" onclick="clearDoneTugas()">
+      🗑️ Bersihkan
+    </div>
+  </div>
+  <div class="field-hint" id="tugas-autoclean-hint" style="margin:-4px 0 8px;">
+  </div>
+  <div class="card" id="tugas-done-list">
+  </div>
+</div>
+</div>

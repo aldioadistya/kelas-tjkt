@@ -1,0 +1,135 @@
+<div class="view" id="view-jadwal">
+  <div class="pagehead">
+    <h1>
+      Jadwal Kelas
+    </h1>
+    <p>
+      Jadwal pelajaran &amp; daftar piket kebersihan
+    </p>
+  </div>
+  <div class="mode-switch">
+    <button class="mode-btn active" id="mode-pelajaran" onclick="setJadwalMode('pelajaran')">Pelajaran
+  </button>
+  <button class="mode-btn" id="mode-piket" onclick="setJadwalMode('piket')">Piket
+</button>
+</div>
+<div id="jadwal-mode-pelajaran">
+  <div class="day-tabs" id="day-tabs" aria-label="Pilih hari">
+    <button type="button" class="day-chip active" data-jadwal-day="Senin">Senin
+  </button>
+  <button type="button" class="day-chip" data-jadwal-day="Selasa">Selasa
+</button>
+<button type="button" class="day-chip" data-jadwal-day="Rabu">Rabu
+</button>
+<button type="button" class="day-chip" data-jadwal-day="Kamis">Kamis
+</button>
+<button type="button" class="day-chip" data-jadwal-day="Jumat">Jumat
+</button>
+</div>
+<div class="section">
+  <button class="fab-add admin-only" onclick="openJadwalModal()">＋ Tambah Jam
+</button>
+</div>
+<div class="section">
+  <div class="card" id="jadwal-list">
+  </div>
+</div>
+</div>
+<div id="jadwal-mode-piket" style="display:none;">
+  <div class="card cal-card" id="piket-cal-card">
+    <div class="cal-head">
+      <div class="cal-nav-btn" onclick="piketCalShift(-1)">
+        ‹
+      </div>
+      <div class="cal-month" id="piket-cal-month-label">
+        <span class="cal-month-click" onclick="toggleCalendar('piket', event)">September
+      </span>
+      <span class="cal-year-click" onclick="openMonthYearPicker('piket', event)">2026
+    </span>
+  </div>
+  <div class="cal-btn-group">
+    <div class="cal-nav-btn" onclick="piketCalShift(1)">
+      ›
+    </div>
+  </div>
+</div>
+<div class="cal-month-picker" id="piket-month-picker">
+</div>
+<div class="cal-body-wrap" id="piket-cal-body">
+  <div id="piket-cal-dow-row" class="cal-grid">
+  </div>
+  <div id="piket-cal-grid" class="cal-grid" style="margin-top:4px;">
+  </div>
+</div>
+</div>
+<div class="summary-row">
+  <div class="summary-box" style="background:var(--teal-glass);">
+    <div class="n" style="color:var(--teal)" id="piket-collected">
+      0
+    </div>
+    <div class="l" style="color:var(--teal)">
+      Sudah Piket
+    </div>
+  </div>
+  <div class="summary-box" style="background:var(--rose-glass);">
+    <div class="n" style="color:var(--rose)" id="piket-remaining">
+      0
+    </div>
+    <div class="l" style="color:var(--rose)">
+      Belum Piket
+    </div>
+  </div>
+</div>
+<div class="section piket-weekly-section piket-weekly-pro" id="piket-weekly-section">
+  <div class="piket-weekly-hero">
+    <div class="piket-weekly-copy">
+      <div class="piket-weekly-kicker"><span class="piket-weekly-kicker-dot"></span> ROTASI MINGGUAN</div>
+      <div class="piket-weekly-title-row">
+        <div class="section-title piket-weekly-title">Tugas Piket Minggu Ini</div>
+        <span class="piket-rotation-badge" id="piket-rotation-badge">Otomatis</span>
+      </div>
+      <div class="piket-weekly-label" id="piket-weekly-label">-</div>
+    </div>
+    <div class="piket-weekly-head-actions">
+      <button class="btn btn-ghost admin-only piket-rotation-settings-btn" type="button" onclick="openPiketRotationModal()">⚙️ Atur rotasi</button>
+    </div>
+  </div>
+  <div class="piket-weekly-stats" id="piket-weekly-stats">
+    <div class="piket-weekly-stat"><span class="piket-weekly-stat-label">Peserta</span><strong id="piket-weekly-stat-students">0</strong></div>
+    <div class="piket-weekly-stat"><span class="piket-weekly-stat-label">Tugas</span><strong id="piket-weekly-stat-tasks">0</strong></div>
+    <div class="piket-weekly-stat"><span class="piket-weekly-stat-label">Terbagi</span><strong id="piket-weekly-stat-assigned">0</strong></div>
+  </div>
+  <div id="piket-weekly-list" class="piket-weekly-list"></div>
+</div>
+<button class="btn btn-ghost admin-only" style="width:100%; margin-top:10px; padding:11px;" onclick="openPiketJadwalModal()">⚙️ Atur Jadwal Piket per Hari
+</button>
+<div class="section">
+  <div class="section-head">
+    <div class="date-label" id="piket-date-label">
+      Hari Ini
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <div class="section-link" onclick="openStatsModal('piket')">
+        Statistik
+      </div>
+      <div class="section-link admin-only" onclick="resetRoster('piket')">
+        Reset
+      </div>
+      <button class="bulk-all-btn admin-only" type="button" onclick="toggleAllRoster('piket')">☐ Semua Sudah
+    </button>
+  </div>
+</div>
+<div class="search-box">
+  <span class="search-icon">🔍
+</span>
+<input type="text" id="piket-search" placeholder="Cari nama siswa..." oninput="onRosterSearch('piket')">
+</div>
+<div class="roster-list-wrap" id="piket-list-wrap">
+  <div class="card" id="piket-list">
+  </div>
+</div>
+<button class="fab-add admin-only" style="margin-top:10px;" onclick="openStudentModal()">＋ Tambah Siswa
+</button>
+</div>
+</div>
+</div>

@@ -1,0 +1,262 @@
+<div class="view active" id="view-beranda">
+    <div class="dashboard-topbar">
+      <div class="dashboard-search">
+        <span class="dashboard-search-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5">
+      </circle>
+      <path d="m16 16 5 5">
+    </path>
+  </svg>
+</span>
+<input class="home-search-input" id="global-search-input" type="text" placeholder="Cari di Kelasku..." oninput="renderGlobalSearch()" aria-label="Cari di Kelasku"><span class="dashboard-search-kbd">⌘ K
+</span>
+<div id="global-search-results" class="global-search-results dashboard-search-results">
+</div>
+</div>
+<div class="dashboard-user-menu">
+  <div class="dashboard-user-meta">
+    <strong id="dashboard-user-name">Pengguna
+  </strong>
+  <span id="dashboard-user-role">Siswa
+</span>
+</div>
+<button type="button" class="dashboard-user-avatar" id="dashboard-user-avatar" onclick="openAvatarPicker()" aria-label="Ubah avatar profil" title="Ubah avatar profil">
+  TJ
+</button>
+</div>
+</div>
+<div class="hero dashboard-hero">
+  <div class="hero-top">
+    <div>
+      <div class="hero-eyebrow">
+        Ringkasan kelas
+      </div>
+      <div class="hero-name" id="greeting-user">
+        Halo, Pengguna
+      </div>
+      <div class="hero-copy">
+        Kelola aktivitas kelas dengan cepat dari satu tempat.
+      </div>
+    </div>
+    <button type="button" class="avatar" id="hero-avatar" onclick="openAvatarPicker()" aria-label="Ubah avatar profil" title="Ubah avatar profil">
+      TJ
+    </button>
+  </div>
+  <div class="hero-tags">
+    <span class="htag"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 4l9 6.5">
+  </path>
+  <path d="M5 10v9h14v-9">
+</path>
+<path d="M9 19v-5h6v5">
+</path>
+</svg>
+X TJKT 1
+</span>
+<span class="htag" id="tag-today">Jumat, 04 Sep
+</span>
+</div>
+</div>
+<div class="stat-grid dashboard-stat-grid">
+  <div class="stat-card dashboard-stat-card">
+    <div class="stat-top">
+      <div class="stat-icon dashboard-icon-blue">
+        <svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2">
+      </rect>
+      <path d="M3 10h18">
+    </path>
+    <circle cx="16" cy="14" r="1.5">
+  </circle>
+</svg>
+</div>
+<div class="stat-status">
+  Keuangan
+</div>
+</div>
+<div class="stat-label">
+  Saldo Kas
+</div>
+<div class="stat-value" id="home-saldo">
+  Rp0
+</div>
+</div>
+<div class="stat-card dashboard-stat-card">
+  <div class="stat-top">
+    <div class="stat-icon dashboard-icon-violet">
+      <svg viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2">
+    </rect>
+    <path d="M10 18.5h4">
+  </path>
+</svg>
+</div>
+<div class="stat-status">
+  Hari ini
+</div>
+</div>
+<div class="stat-label">
+  Titip HP
+</div>
+<div class="stat-value" id="home-hp">
+  0/0
+</div>
+</div>
+<div class="stat-card dashboard-stat-card">
+  <div class="stat-top">
+    <div class="stat-icon dashboard-icon-teal">
+      <svg viewBox="0 0 24 24"><path d="M8 7h8">
+    </path>
+    <path d="M6 10h12">
+  </path>
+  <path d="M5 13h14">
+</path>
+<path d="M8 16h8">
+</path>
+</svg>
+</div>
+<div class="stat-status">
+  Hari ini
+</div>
+</div>
+<div class="stat-label">
+  Piket Hari Ini
+</div>
+<div class="stat-value" id="home-piket-count">
+  0/0
+</div>
+</div>
+<div class="stat-card dashboard-stat-card">
+  <div class="stat-top">
+    <div class="stat-icon dashboard-icon-amber">
+      <svg viewBox="0 0 24 24"><path d="M6 4h12v16H6z">
+    </path>
+    <path d="M9 8h6">
+  </path>
+  <path d="M9 12h6">
+</path>
+<path d="M9 16h4">
+</path>
+</svg>
+</div>
+<div class="stat-status">
+  Aktif
+</div>
+</div>
+<div class="stat-label">
+  Tugas Aktif
+</div>
+<div class="stat-value" id="home-tugas">
+  0
+</div>
+</div>
+<div class="stat-card dashboard-stat-card report-home-card" onclick="goTo('laporan')">
+  <div class="stat-top">
+    <div class="stat-icon dashboard-icon-rose">
+      <svg viewBox="0 0 24 24"><path d="M6 3h9l3 3v15H6z">
+    </path>
+    <path d="M15 3v4h4">
+  </path>
+  <path d="M9 12h6">
+</path>
+<path d="M9 15h6">
+</path>
+</svg>
+</div>
+<div class="stat-status">
+  Perlu ditinjau
+</div>
+</div>
+<div class="stat-label">
+  Laporan
+</div>
+<div class="stat-value" id="home-reports">
+  0
+</div>
+</div>
+</div>
+<div class="dashboard-main-grid">
+  <section class="section dashboard-panel dashboard-panel-announcements">
+    <div class="section-head">
+      <div>
+        <div class="section-kicker">
+          INFORMASI KELAS
+        </div>
+        <div class="section-title">
+          Pengumuman
+        </div>
+      </div>
+      <button class="section-action admin-only" type="button" onclick="openPengumumanModal()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14">
+    </path>
+  </svg>
+  Tambah
+</button>
+</div>
+<div class="card dashboard-card" id="pengumuman-list">
+</div>
+</section>
+<section class="section dashboard-panel dashboard-panel-notifications">
+  <div class="section-head">
+    <div>
+      <div class="section-kicker">
+        PEMBARUAN
+      </div>
+      <div class="section-title">
+        Notifikasi<span id="home-notify-badge" class="dashboard-notify-badge" style="display:none;">0 baru
+      </span>
+    </div>
+  </div>
+  <button class="section-action" type="button" onclick="markAllNotificationsRead()">Tandai dibaca
+</button>
+</div>
+<div class="card dashboard-card dashboard-notification-card" id="home-notifications">
+</div>
+</section>
+</div>
+<div class="dashboard-secondary-grid">
+  <section class="section dashboard-panel">
+    <div class="section-head">
+      <div>
+        <div class="section-kicker">
+          HARI INI
+        </div>
+        <div class="section-title">
+          Jadwal Hari Ini
+        </div>
+      </div>
+      <button class="section-action" type="button" onclick="goTo('jadwal')">Lihat semua
+    </button>
+  </div>
+  <div class="card dashboard-card compact-list" id="home-jadwal-list">
+  </div>
+</section>
+<section class="section dashboard-panel">
+  <div class="section-head">
+    <div>
+      <div class="section-kicker">
+        KEBERSIHAN
+      </div>
+      <div class="section-title">
+        Piket Hari Ini
+      </div>
+    </div>
+    <button class="section-action" type="button" onclick="goTo('jadwal'); setJadwalMode('piket');">Lihat semua
+  </button>
+</div>
+<div class="card dashboard-card compact-list" id="home-piket-list">
+</div>
+</section>
+<section class="section dashboard-panel">
+  <div class="section-head">
+    <div>
+      <div class="section-kicker">
+        DEADLINE
+      </div>
+      <div class="section-title">
+        Tugas Terdekat
+      </div>
+    </div>
+    <button class="section-action" type="button" onclick="goTo('tugas')">Lihat semua
+  </button>
+</div>
+<div class="card dashboard-card compact-list" id="home-tugas-list">
+</div>
+</section>
+</div>
+</div>

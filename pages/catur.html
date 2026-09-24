@@ -1,0 +1,92 @@
+<div class="view" id="view-catur">
+  <div class="pagehead">
+    <h1>♟ Catur</h1>
+    <p>Main sendiri, 2 pemain satu HP, atau online dengan teman.</p>
+  </div>
+  
+<div class="chess-score-modal" id="chess-score-modal" aria-hidden="true">
+  <div class="chess-score-modal-backdrop" onclick="toggleChessScorePanel(false)"></div>
+  <div class="chess-score-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="chess-score-modal-title">
+    <div class="chess-score-modal-head">
+      <div>
+        <div class="section-kicker">PERFORMA</div>
+        <div class="section-title" id="chess-score-modal-title">Skor</div>
+      </div>
+      <button type="button" class="chess-score-close" onclick="toggleChessScorePanel(false)" aria-label="Tutup skor">×</button>
+    </div>
+    <div class="chess-score-modal-body" id="chess-score-modal-body"></div>
+  </div>
+</div>
+
+<div class="chess-shell">
+    <div class="chess-mode-confirm" id="chess-mode-confirm" aria-hidden="true">
+      <div class="chess-mode-confirm-backdrop" data-chess-confirm-cancel></div>
+      <div class="chess-mode-confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="chess-confirm-title">
+        <div class="chess-confirm-icon">!</div>
+        <div class="chess-confirm-copy">
+          <div class="section-kicker">PERGANTIAN MODE</div>
+          <h3 id="chess-confirm-title">Pertandingan masih berlangsung</h3>
+          <p id="chess-confirm-text">Jika berganti mode sekarang, permainan saat ini akan dihentikan.</p>
+        </div>
+        <div class="chess-confirm-actions">
+          <button type="button" class="btn btn-ghost" data-chess-confirm-cancel>Batal</button>
+          <button type="button" class="btn btn-danger" id="chess-confirm-ok">Ganti Mode</button>
+        </div>
+      </div>
+    </div>
+    <div class="chess-topbar">
+      <div class="chess-brand">
+        <div class="chess-brand-icon">♟</div>
+        <div>
+          <div class="section-kicker">MINI GAMES · KELASKU</div>
+          <div class="section-title">Chess Arena</div>
+          <div class="chess-subtitle">Asah strategi. Tantang teman. Kumpulkan skor.</div>
+        </div>
+      </div>
+      <div class="chess-header-actions">
+        <div class="chess-mode-row" role="tablist" aria-label="Mode permainan">
+          <button class="chess-mode-btn active" data-chess-mode="ai" onclick="setChessMode('ai')"><span>🤖</span> Komputer</button>
+          <button class="chess-mode-btn" data-chess-mode="local" onclick="setChessMode('local')"><span>📱</span> 2 Pemain</button>
+          <button class="chess-mode-btn" data-chess-mode="online" onclick="setChessMode('online')"><span>🌐</span> Online</button>
+        </div>
+        <div class="chess-view-actions" aria-label="Tampilan papan catur">
+          <button type="button" class="chess-view-btn" id="chess-score-btn" onclick="toggleChessScorePanel()" title="Skor">🏆 <span>Skor</span></button>
+          <button type="button" class="chess-view-btn" id="chess-fullscreen-btn" onclick="toggleChessFullscreen()" title="Layar penuh">⛶ <span>Layar penuh</span></button>
+        </div>
+      </div>
+    </div>
+    <div class="chess-grid">
+      <div class="chess-play-area">
+        <div class="chess-matchbar">
+          <div class="chess-player-chip"><span class="chess-avatar chess-avatar-white">♙</span><div><small>PUTIH</small><strong>Kamu</strong></div></div>
+          <div class="chess-turn-pill" id="chess-status">Giliran Putih</div>
+          <div class="chess-player-chip chess-player-black"><span class="chess-avatar chess-avatar-black">♟</span><div><small>HITAM</small><strong>Komputer</strong></div></div>
+        </div>
+        <div class="chess-board-frame">
+          <div class="chess-board" id="chess-board" aria-label="Papan catur"></div>
+        </div>
+        <div class="chess-actions"><button class="btn btn-primary" onclick="newChessGame()">↻ <span>Permainan Baru</span></button><button class="btn btn-ghost" onclick="flipChessBoard()">⇅ <span>Balik Papan</span></button></div>
+      </div>
+      <aside class="chess-side">
+        <div class="card chess-score-card">
+          <div class="chess-card-head"><div><div class="section-kicker">PERFORMA SAYA</div><div class="section-title">Skor Catur</div></div><span class="chess-trophy">🏆</span></div>
+          <div class="chess-score-label">TOTAL SKOR · ONLINE</div>
+          <div class="chess-my-score" id="chess-my-score">0</div>
+          <div class="chess-score-grid"><span>🏆 Menang <b id="chess-my-wins">0</b></span><span>🤝 Seri <b id="chess-my-draws">0</b></span><span>❌ Kalah <b id="chess-my-losses">0</b></span></div>
+        </div>
+        <div class="card chess-online-card" id="chess-online-panel" style="display:none;">
+          <div class="section-kicker">ONLINE</div>
+          <div class="field"><label>Kode Room</label><input id="chess-room-code" maxlength="8" inputmode="text" autocomplete="off" spellcheck="false" placeholder="Masukkan kode room, contoh K7X92"></div>
+          <div class="chess-online-actions"><button class="btn btn-primary" onclick="createChessRoom()">Buat Room</button><button class="btn btn-ghost" onclick="joinChessRoom()">Gabung</button></div>
+          <div class="chess-online-room-tools" id="chess-online-room-tools" style="display:none;"><button class="btn btn-ghost" type="button" onclick="copyChessRoomCode()">⧉ Salin kode</button><button class="btn btn-ghost" type="button" onclick="leaveChessRoom(true)">Keluar Room</button></div>
+          <div class="chess-online-state" id="chess-online-state"><span class="chess-online-dot"></span><span id="chess-online-state-text">Siap membuat room</span></div>
+          <div class="field-hint" id="chess-online-info">Buat room lalu kirim kodenya ke teman.</div>
+        </div>
+        <div class="card chess-leaderboard-card">
+          <div class="section-head chess-leaderboard-head" style="margin-bottom:8px;"><div><div class="section-kicker">SKOR SISWA</div><div class="section-title">Leaderboard Kelas</div></div><span class="chess-live-dot">LIVE</span></div>
+          <div id="chess-leaderboard"></div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>

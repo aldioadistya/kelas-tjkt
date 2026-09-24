@@ -1,0 +1,39 @@
+<div class="view" id="view-laporan">
+  <div class="pagehead">
+    <h1>
+      Laporan Siswa
+    </h1>
+    <p>
+      Sampaikan aspirasi atau aduan secara aman
+    </p>
+  </div>
+  <div class="section">
+    <button class="fab-add" onclick="openReportModal()">＋ Buat Laporan
+  </button>
+</div>
+<div class="section">
+  <div class="section-head">
+    <div class="section-title">
+      Daftar Laporan<span id="report-unread-badge" style="display:none; margin-left:5px; font-size:9px; padding:2px 7px; border-radius:99px; background:var(--rose-glass); color:var(--rose);">0 baru
+    </span>
+  </div>
+  <div style="display:flex; gap:6px; align-items:center;">
+    <input id="report-search" type="text" placeholder="Cari laporan..." oninput="renderReports()" style="width:130px; padding:5px 8px; border-radius:6px; border:1px solid var(--glass-border); background:var(--input-bg); color:var(--text-main); font-size:10px;"><select id="report-filter" onchange="renderReports()" style="padding:3px 8px; border-radius:6px; border:1px solid var(--glass-border); font-size:10px; background:var(--glass-card); color:var(--text-main);"><option value="all">Semua
+  </option>
+  <option value="pending">Menunggu
+</option>
+<option value="reviewed">Ditinjau
+</option>
+<option value="resolved">Selesai
+</option>
+<option value="rejected">Ditolak
+</option>
+</select>
+</div>
+</div>
+<div id="report-stats" style="display:flex; gap:6px; flex-wrap:wrap; margin:0 0 8px;">
+</div>
+<div class="card" id="report-list">
+</div>
+</div>
+</div>
