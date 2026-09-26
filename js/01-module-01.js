@@ -3392,16 +3392,29 @@ function clientSafeError(fallback) { return String(fallback || 'Terjadi kendala.
       saveState(); renderTugas(); renderBeranda(); showNotification('Tugas yang sudah selesai berhasil dibersihkan.', 'success');
   }
   function normalizeAttachment(file) {
+      // Kompatibel dengan format lama dan metadata Google Drive dari bridge.
+      if (typeof file === 'string') {
+          const raw = file.trim();
+          if (!raw) return null;
+          return { name: 'File', data: '', driveFileId: '', driveUrl: isAllowedAttachmentHost(raw) ? raw : '', sizeBytes: 0, mimeType: '', storage: isAllowedAttachmentHost(raw) ? 'google-drive' : '' };
+      }
       if (!file || typeof file !== 'object') return null;
-      const driveFileId = String(file.driveFileId || file.driveId || file.fileId || file.id || '').trim();
-      const driveUrl = String(file.driveUrl || file.url || file.fileUrl || '').trim();
+      const nested = file.file && typeof file.file === 'object' ? file.file : {};
+      const driveFileId = String(
+          file.driveFileId || file.driveId || file.fileId || file.id ||
+          nested.driveFileId || nested.driveId || nested.fileId || nested.id || ''
+      ).trim();
+      const driveUrl = String(
+          file.driveUrl || file.url || file.fileUrl || file.viewUrl || file.webViewLink || file.webContentLink || file.downloadUrl ||
+          nested.driveUrl || nested.url || nested.fileUrl || nested.viewUrl || nested.webViewLink || nested.webContentLink || ''
+      ).trim();
       return {
-          name: file.name || file.file || 'File',
-          data: file.data || file.fileData || '',
+          name: (typeof file.file === 'string' ? file.file : (file.name || nested.name || 'File')),
+          data: file.data || file.fileData || nested.data || nested.fileData || '',
           driveFileId,
           driveUrl,
-          sizeBytes: Number(file.sizeBytes || file.size || 0),
-          mimeType: file.mimeType || file.fileMimeType || '',
+          sizeBytes: Number(file.sizeBytes || file.size || nested.sizeBytes || nested.size || 0),
+          mimeType: file.mimeType || file.fileMimeType || nested.mimeType || nested.fileMimeType || '',
           storage: file.storage || (driveFileId || driveUrl ? 'google-drive' : '')
       };
   }
@@ -3525,9 +3538,13 @@ function clientSafeError(fallback) { return String(fallback || 'Terjadi kendala.
   }
   function attachmentUrl(file) {
       if (!file) return '';
-      const id = String(file.driveFileId || file.driveId || file.fileId || '').trim();
+      const nested = file.file && typeof file.file === 'object' ? file.file : {};
+      const id = String(file.driveFileId || file.driveId || file.fileId || file.id || nested.driveFileId || nested.driveId || nested.fileId || nested.id || '').trim();
       if (id) return 'https://drive.google.com/file/d/' + encodeURIComponent(id) + '/view';
-      const directUrl = String(file.driveUrl || file.url || file.fileUrl || '').trim();
+      const directUrl = String(
+          file.driveUrl || file.url || file.fileUrl || file.viewUrl || file.webViewLink || file.webContentLink || file.downloadUrl ||
+          nested.driveUrl || nested.url || nested.fileUrl || nested.viewUrl || nested.webViewLink || nested.webContentLink || ''
+      ).trim();
       return directUrl && isAllowedAttachmentHost(directUrl) ? directUrl : '';
   }
   function openStoredAttachment(file) {
@@ -3561,14 +3578,25 @@ function clientSafeError(fallback) { return String(fallback || 'Terjadi kendala.
           base64: base64FromDataUrl(prepared.data),
           sizeBytes: prepared.sizeBytes || 0
       });
-      const file = result.file || {};
+      const file = result.file || result.data || result.result || {};
+      const driveFileId = String(
+          file.driveFileId || file.driveId || file.fileId || file.id || file.fileID || ''
+      ).trim();
+      const driveUrl = String(
+          file.driveUrl || file.url || file.fileUrl || file.viewUrl || file.webViewLink || file.webContentLink || file.downloadUrl || ''
+      ).trim();
+      // Jangan simpan lampiran Drive jika bridge mengaku sukses tetapi
+      // tidak mengembalikan lokasi file yang dapat dibuka.
+      if (!driveFileId && !(driveUrl && isAllowedAttachmentHost(driveUrl))) {
+          throw new Error('Upload Google Drive berhasil diproses, tetapi lokasi file tidak dikembalikan. Periksa Google Apps Script lalu coba upload lagi.');
+      }
       return {
           name: file.name || prepared.name,
           data: '',
-          driveFileId: String(file.driveFileId || file.fileId || file.id || '').trim(),
-          driveUrl: String(file.driveUrl || file.url || '').trim(),
-          sizeBytes: Number(file.sizeBytes || prepared.sizeBytes || 0),
-          mimeType: file.mimeType || prepared.mimeType || '',
+          driveFileId,
+          driveUrl: driveUrl && isAllowedAttachmentHost(driveUrl) ? driveUrl : '',
+          sizeBytes: Number(file.sizeBytes || file.size || prepared.sizeBytes || 0),
+          mimeType: file.mimeType || file.fileMimeType || prepared.mimeType || '',
           storage: 'google-drive'
       };
   }
