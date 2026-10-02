@@ -48,7 +48,7 @@ function clientSafeError(fallback) { return String(fallback || 'Terjadi kendala.
               messagingSenderId: '24953961039',
               appId: '1:24953961039:web:4ad80d05e9f4be771c083a'
           },
-          driveApiUrl: 'https://script.google.com/macros/s/AKfycbxkCOpaqCYnQ7HOgK61t189lvHap3wCjP9jj9ks73XbQJdWgHFnGUdye0hxjoh8Z1mveQ/exec'
+          driveApiUrl: 'https://script.google.com/macros/s/AKfycbyfP6IGVnvLEmsMonXf4N2tgEDVqkmIEUtN7SYatfAfuokaniJP2WNWsy3s4fsXLonM-w/exec'
       };
   const firebaseConfig = runtimeEnv.firebaseConfig || {};
   if (!firebaseConfig.apiKey || !firebaseConfig.authDomain || !firebaseConfig.projectId || !firebaseConfig.appId) {
