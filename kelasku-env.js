@@ -4,7 +4,7 @@
 
 window.KELASKU_ENV = {
   firebaseConfig: {
-    apiKey: 'AIzaSyAhrh00F2N07_Lx-QT6sHi_ygsvWfds1eQ',
+    apiKey: 'API_KEY_KAMU',
     authDomain: 'apps-kelas.firebaseapp.com',
     projectId: 'apps-kelas',
     storageBucket: 'apps-kelas.firebasestorage.app',
@@ -12,5 +12,5 @@ window.KELASKU_ENV = {
     appId: '1:24953961039:web:4ad80d9e9f4be771c083a'
   },
 
-  driveApiUrl: 'https://script.google.com/macros/s/AKfycbxkCOpaqCYnQ7HOgK61t189lvHap3wCjP9jj9ks73XbQJdWgHFnGUdye0hxjoh8Z1mveQ/exec'
+  driveApiUrl: 'https://script.google.com/macros/s/AKfycbyfP6IGVnvLEmsMonXf4N2tgEDVqkmIEUtN7SYatfAfuokaniJP2WNWsy3s4fsXLonM-w/exec'
 };
