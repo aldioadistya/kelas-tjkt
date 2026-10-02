@@ -4,7 +4,7 @@
 
 window.KELASKU_ENV = {
   firebaseConfig: {
-    apiKey: 'API_KEY_KAMU',
+    apiKey: 'AIzaSyAhrh00F2N07_Lx-QT6sHi_ygsvWfds1eQ',
     authDomain: 'apps-kelas.firebaseapp.com',
     projectId: 'apps-kelas',
     storageBucket: 'apps-kelas.firebasestorage.app',
