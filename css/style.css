@@ -12550,3 +12550,14 @@ body.dark .task-pill-file{
 .more-menu-arrow{font-size:22px;color:var(--text-soft);line-height:1}.mini-games-section{margin-top:18px;border:1px solid var(--glass-border);background:var(--glass-card);border-radius:18px;padding:16px}.mini-games-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}.mini-games-head h2{margin:2px 0 3px;font-size:18px;letter-spacing:-.02em}.mini-games-head p{margin:0;color:var(--text-soft);font-size:10px}.mini-games-badge{white-space:nowrap;border:1px solid var(--glass-border);background:var(--ui-surface);color:var(--text-soft);border-radius:999px;padding:6px 9px;font-size:9px;font-weight:800}.mini-games-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.mini-game-card{width:100%;padding:12px;background:var(--ui-surface)}.mini-game-piece{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(145deg,#e2e8f0,#94a3b8);color:#0f172a;font-size:27px;line-height:1;flex:0 0 42px;box-shadow:inset 0 1px 0 rgba(255,255,255,.7)}.mini-game-play{font-size:10px;font-weight:850;color:var(--ui-blue);white-space:nowrap}
 body.dark .more-menu-card,body.dark .mini-game-card,body.dark .mini-games-section{box-shadow:none}
 @media(max-width:700px){.more-menu-grid{grid-template-columns:1fr}.mini-games-list{grid-template-columns:1fr}.more-menu-card{padding:13px}.mini-games-section{padding:14px}}
+
+
+/* ===== Safe-area untuk notch / dynamic island (status bar) ===== */
+.statusbar{
+  min-height: calc(50px + env(safe-area-inset-top, 0px));
+  padding-top: env(safe-area-inset-top, 0px);
+  box-sizing: border-box;
+}
+.phone{
+  padding-top: 0;
+}
