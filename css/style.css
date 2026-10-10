@@ -9141,7 +9141,13 @@ body:not(.dark) [role="button"]:active{
   }
 
   /* Settings: remove the gray/charcoal appearance visible in the screenshot. */
-  body.dark #view-settings,
+  /* Pembungkus halaman harus transparan (sama seperti halaman lain),
+     warna kartu hanya untuk elemen di dalamnya. */
+  body.dark #view-settings{
+    background:transparent !important;
+    border-color:transparent !important;
+    box-shadow:none !important;
+  }
   body.dark #view-settings .settings-wrap,
   body.dark #view-settings .settings-content,
   body.dark #view-settings .settings-section,
